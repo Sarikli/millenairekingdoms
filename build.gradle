@@ -1,0 +1,320 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.148'
+}
+
+version = mod_version
+group = mod_group_id
+base.archivesName = mod_id
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+sourceSets {
+    gametest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+configurations {
+    gametestImplementation.extendsFrom implementation
+    gametestRuntimeOnly.extendsFrom runtimeOnly
+}
+
+def stageServerJar = tasks.register('stageServerJar', Copy) {
+    from tasks.named('jar')
+    into layout.projectDirectory.dir('run/server-jar/mods')
+    rename { 'millenairekingdoms.jar' }
+}
+def stageGameTestJar = tasks.register('stageGameTestJar', Copy) {
+    from tasks.named('jar')
+    into layout.projectDirectory.dir('run/gametest/mods')
+    rename { 'millenairekingdoms.jar' }
+}
+
+neoForge {
+    version = project.neo_version
+    addModdingDependenciesTo(sourceSets.gametest)
+
+    mods {
+        "${mod_id}" { sourceSet sourceSets.main }
+        millenairekingdoms_tests { sourceSet sourceSets.gametest }
+    }
+
+    runs {
+        client {
+            client()
+            loadedMods = [mods.millenairekingdoms]
+            gameDirectory = file('run/client')
+        }
+        server {
+            server()
+            loadedMods = [mods.millenairekingdoms]
+            gameDirectory = file('run/server')
+            programArgument '--nogui'
+        }
+        serverJar {
+            server()
+            loadedMods = []
+            gameDirectory = file('run/server-jar')
+            programArgument '--nogui'
+            taskBefore stageServerJar
+        }
+        gameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        gameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
+        warGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_war_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        warGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_war_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
+        stage5GameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_stage5_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        stage5GameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_stage5_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
+        capitalGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_capital_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        capitalGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_capital_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
+        autonomyGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_autonomy_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        autonomyGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_autonomy_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
+        foundingGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_founding_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        foundingGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_founding_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
+        guiGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_gui_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        guiGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_gui_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
+        configureEach {
+            logLevel = org.slf4j.event.Level.INFO
+            jvmArguments.addAll '-Xms512m', '-Xmx3G'
+        }
+    }
+
+}
+
+def millenaireJar = layout.projectDirectory.file("millenaire-${millenaire_version}.jar")
+
+dependencies {
+    // Available for compilation and development runs; never embedded in our JAR.
+    implementation files(millenaireJar)
+}
+
+def verifyMillenaireJar = tasks.register('verifyMillenaireJar') {
+    group = 'verification'
+    description = 'Checks that the original Millénaire dependency is present and unchanged.'
+    inputs.file(millenaireJar)
+    inputs.property('expectedSha256', millenaire_sha256)
+    doLast {
+        def digest = java.security.MessageDigest.getInstance('SHA-256')
+        millenaireJar.asFile.withInputStream { stream ->
+            byte[] buffer = new byte[8192]
+            int count
+            while ((count = stream.read(buffer)) != -1) {
+                digest.update(buffer, 0, count)
+            }
+        }
+        def actual = digest.digest().encodeHex().toString()
+        if (actual != inputs.properties.expectedSha256) {
+            throw new GradleException("Original Millénaire JAR checksum mismatch: ${actual}")
+        }
+        logger.lifecycle("Original Millénaire ${millenaire_version} SHA-256 verified: ${actual}")
+    }
+}
+
+def metadataProperties = [
+    mod_id: mod_id,
+    mod_name: mod_name,
+    mod_version: mod_version,
+    mod_license: mod_license,
+    minecraft_version_range: minecraft_version_range,
+    neo_version_range: neo_version_range,
+    loader_version_range: loader_version_range,
+    millenaire_version: millenaire_version
+]
+
+def generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
+    inputs.properties(metadataProperties)
+    filteringCharset = 'UTF-8'
+    expand(metadataProperties)
+    from 'src/main/templates'
+    into layout.buildDirectory.dir('generated/sources/modMetadata')
+}
+
+sourceSets.main.resources.srcDir(generateModMetadata)
+neoForge.ideSyncTask(generateModMetadata)
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+
+tasks.named('compileJava') { dependsOn verifyMillenaireJar }
+tasks.named('check') { dependsOn verifyMillenaireJar }
+tasks.named('check') { dependsOn tasks.named('gametestClasses') }
+tasks.named('runGameTestServerReload') { dependsOn tasks.named('runGameTestServer') }
+tasks.named('runServer', JavaExec) { standardInput = System.in }
+tasks.named('runServerJar', JavaExec) { standardInput = System.in }
+tasks.register('verifyConquest') {
+    group = 'verification'
+    description = 'Runs real server integration tests, then restarts the server to verify persisted progress.'
+    dependsOn tasks.named('runGameTestServerReload')
+}
+tasks.named('jar', Jar) {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+    manifest.attributes('Implementation-Title': mod_name, 'Implementation-Version': mod_version)
+}
+
+tasks.named('wrapper', Wrapper) {
+    gradleVersion = '8.14.3'
+    distributionType = Wrapper.DistributionType.BIN
+}
+
+// Focused stage-4.1 suite; does not execute the broader conquest/NPC test suites.
+tasks.named('runWarGameTestServerReload') { dependsOn tasks.named('runWarGameTestServer') }
+tasks.register('verifyWars') {
+    group = 'verification'
+    description = 'Runs only war/peace tests and verifies war persistence after a server restart.'
+    dependsOn tasks.named('runWarGameTestServerReload')
+}
+
+// Stage-5 suite (rulers, economy, diplomacy): write round, then a separate JVM checks persistence.
+tasks.named('runStage5GameTestServerReload') { dependsOn tasks.named('runStage5GameTestServer') }
+tasks.register('verifyStage5') {
+    group = 'verification'
+    description = 'Runs only stage-5 politics, economy and diplomacy tests, then verifies persistence after a restart.'
+    dependsOn tasks.named('runStage5GameTestServerReload')
+}
+
+// Stage-6.1 suite (natural NPC capitals): write round, then a separate JVM checks the capital after a restart.
+tasks.named('runCapitalGameTestServerReload') { dependsOn tasks.named('runCapitalGameTestServer') }
+tasks.register('verifyCapitals') {
+    group = 'verification'
+    description = 'Runs only the natural-capital tests on real Millénaire villages, then verifies them after a restart.'
+    dependsOn tasks.named('runCapitalGameTestServerReload')
+}
+
+// Stage-6.2 suite (NPC autonomy, conquest orders, peace): write round, then a separate JVM checks persistence.
+tasks.named('runAutonomyGameTestServerReload') { dependsOn tasks.named('runAutonomyGameTestServer') }
+tasks.register('verifyAutonomy') {
+    group = 'verification'
+    description = 'Runs only the stage-6.2 NPC politics and conquest-order tests, then verifies persistence after a restart.'
+    dependsOn tasks.named('runAutonomyGameTestServerReload')
+}
+
+// Kingdom screen and treasury suite: server-side action checks and real coin withdrawals, then a restart round.
+tasks.named('runGuiGameTestServerReload') { dependsOn tasks.named('runGuiGameTestServer') }
+tasks.register('verifyGui') {
+    group = 'verification'
+    description = 'Runs only the kingdom screen (server side) and treasury tests, then verifies them after a restart.'
+    dependsOn tasks.named('runGuiGameTestServerReload')
+}
+
+// 1.1.0 suite (kingdom founding by development): write round, then a separate JVM checks the founded kingdom after a restart.
+tasks.named('runFoundingGameTestServerReload') { dependsOn tasks.named('runFoundingGameTestServer') }
+tasks.register('verifyFounding') {
+    group = 'verification'
+    description = 'Runs only the 1.1.0 kingdom-founding tests on real Millénaire records and villages, then verifies them after a restart.'
+    dependsOn tasks.named('runFoundingGameTestServerReload')
+}
