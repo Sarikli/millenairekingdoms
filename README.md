@@ -160,4 +160,5 @@ only when the log contains `All N required tests passed`.
 
 ## License
 
-All rights reserved. Millénaire is a separate mod by its own authors and is not distributed with this project.
+Released under the [MIT License](LICENSE). Millénaire is a separate mod by its own authors; it is not covered by this
+license and is not distributed with this project.
