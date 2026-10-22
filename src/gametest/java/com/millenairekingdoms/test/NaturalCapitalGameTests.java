@@ -410,8 +410,11 @@ public final class NaturalCapitalGameTests {
                 net.minecraft.world.level.block.Rotation.NONE, BuildingInstance.Status.COMPLETE, a.getTownhall().getPlanSetId(), a.getTownhall().getVariant(), 0));
         copy.attach(ka, member.getId().uuid());
         int coins = a.getTownhall().getInventory().getCount(level, ModItems.DENIER.get());
-        copy.startDay(0, Map.of());
-        boolean paid = EconomyService.runDay(level, copy, 1);
+        // Other suites may already have advanced the persistent ledger. Never assume that its day can be reset to 0.
+        long previousDay = Math.max(7, copy.day());
+        copy.startDay(previousDay, Map.of());
+        h.assertTrue(!EconomyService.runDay(level, copy, previousDay), "An already booked day is never taxed twice");
+        boolean paid = EconomyService.runDay(level, copy, previousDay + 1);
         int after = a.getTownhall().getInventory().getCount(level, ModItems.DENIER.get());
         manager(level).removeVillage(member.getId());
         h.assertTrue(paid && after == coins + EconomyService.DENIERS_PER_LEVEL && copy.owed(ka) == 0, "Income paid into the natural capital's town hall (" + coins + " -> " + after + ")");

@@ -12,6 +12,7 @@
 | M4 | P2 | `kingdom/KingdomSavedData.java:358–373`, `autonomy/RaidOrderService.java:89–96` | Oyuncu aynı tick'te çekilip yeniden hükümdar olursa eski emir hâlâ aynı UUID'ye ait görünüyor; eski yetki dönemi yeniden canlanıyor. | Yeni test: çekilme/yeniden talep sonrasında eski emir hâlâ mevcut. |
 | M5 | P2 / istenen davranış açığı | `command/KingdomCommands.java:54–68`, `command/KingdomsCommands.java:189–212` | Oyuncu krallık adları desteklenirken köy hedefleri ve yönetici hedefleri UUID argümanlarıyla sınırlı. Kullanıcının isimle komut koruma koşulu bu tabanda tam karşılanmıyor. | Adla yönetici komutu regresyon testi sözdizimi reddiyle başarısız. |
 | M6 | P3 | `gradle.properties:16`, `releases/1.1.0/millenairekingdoms-1.1.0.jar` | Kaynak lisansı MIT; dağıtılan JAR etiketi All Rights Reserved. | JAR içerikleri karşılaştırıldı: sınıflar aynı, yalnızca metadata farklı. |
+| M7 | P3 / test güvenilirliği | `test/NaturalCapitalGameTests.java:413–414` | Test kaydının günü ilerlemişken `startDay(0)` gün sayacını geri alamaz; ardından gün 1 vergisi haklı olarak reddedilir. Başkent testi bunu ekonomi arızası sanır. | `before-capital-calendar.log`: gerçek köy oluşturma geçti; gelir denemesi 0 → 0 ile başarısız oldu. Test mevcut günün sonrasını kullanır ve eski günün reddini ayrıca doğrular. |
 
 `verification/1.1.1/before-autonomy.log`: 20 testten dört yeni hata testi başarısız; kalan 16 test geçti. `before-names.log`: yeni isim testi başarısız. Böylece düzeltmeler yalnızca varsayımlara dayanmaz.
 
@@ -49,3 +50,5 @@
 - Java kaynakları sunucu thread'i varsayımıyla tasarlanmıştır. Doğrulanmış event/komut/payload girişleri ana thread'dedir; gelecekte asenkron çağrı eklenirken bu sınır korunmalıdır.
 
 Yeni mekanik, siyasi harita, Kraliyet İnşaat Talebi veya büyük mimari yeniden yazım planlanmamıştır.
+
+Son test koşularında paketler birbirinden ayrı geçici dünyalarda çalıştırılır; her paketin yazma ve ayrı JVM okuma turu aynı dünyayı paylaşır. Doğal başkent paketinin başlangıç noktası yakınında başka başkent olmaması koşulu korunur. Önceki başarısız test dünyası ve günlükleri tanı için saklanır; kullanıcı dünyaları kullanılmaz.
