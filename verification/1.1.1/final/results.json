@@ -1,0 +1,87 @@
+[
+  {
+    "task": "build",
+    "exit": 0,
+    "passed": [],
+    "expected": null,
+    "ok": true,
+    "seconds": 5.7
+  },
+  {
+    "task": "verifyWars",
+    "exit": 0,
+    "passed": [
+      30,
+      30
+    ],
+    "expected": 30,
+    "ok": true,
+    "seconds": 24.2
+  },
+  {
+    "task": "verifyConquest",
+    "exit": 0,
+    "passed": [
+      25,
+      25
+    ],
+    "expected": 25,
+    "ok": true,
+    "seconds": 23.8
+  },
+  {
+    "task": "verifyStage5",
+    "exit": 0,
+    "passed": [
+      24,
+      24
+    ],
+    "expected": 24,
+    "ok": true,
+    "seconds": 25.1
+  },
+  {
+    "task": "verifyCapitals",
+    "exit": 0,
+    "passed": [
+      5,
+      5
+    ],
+    "expected": 5,
+    "ok": true,
+    "seconds": 93.1
+  },
+  {
+    "task": "verifyAutonomy",
+    "exit": 0,
+    "passed": [
+      22,
+      22
+    ],
+    "expected": 22,
+    "ok": true,
+    "seconds": 24.6
+  },
+  {
+    "task": "verifyGui",
+    "exit": 0,
+    "passed": [
+      7,
+      7
+    ],
+    "expected": 7,
+    "ok": true,
+    "seconds": 27.7
+  },
+  {
+    "task": "verifyFounding",
+    "exit": 0,
+    "passed": [
+      12,
+      12
+    ],
+    "expected": 12,
+    "ok": true,
+    "seconds": 30.3
+  }
+]

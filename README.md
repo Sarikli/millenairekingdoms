@@ -10,13 +10,18 @@ left untouched, and the original Millénaire JAR is never modified.
 
 | | |
 |---|---|
-| Mod version | 1.1.0 |
+| Mod version | 1.1.1 |
 | Minecraft | 1.21.1 |
 | Loader | NeoForge 21.1.259 |
 | Required dependency | Millénaire 9.0.2 |
 | Java | 21 |
 | Mod ID | `millenairekingdoms` |
 | Languages | English, Turkish |
+
+1.1.1 is a maintenance build: expired raid orders, ruler-transition cleanup and conquest diplomacy are fixed;
+name-based commands and save-compatibility tests are strengthened. No new gameplay system is added.
+A stable tag and GitHub Release have not been published. See the [maintenance report](TEST_RAPORU_1_1_1.md)
+and [changelog](CHANGELOG.md).
 
 ## Features
 
@@ -49,8 +54,7 @@ All chances, distances and intervals can be adjusted per world.
 ## Installation
 
 1. Install NeoForge 21.1.259 for Minecraft 1.21.1.
-2. Put the original **Millénaire 9.0.2** JAR and **`millenairekingdoms-1.1.0.jar`** (from the
-   [Releases](../../releases) page) into your `mods` folder.
+2. Put the original **Millénaire 9.0.2** JAR and **[millenairekingdoms-1.1.1.jar](releases/1.1.1/millenairekingdoms-1.1.1.jar)** (local maintenance build) into your `mods` folder.
 3. Remove any older Millénaire Kingdoms JAR. Two versions cannot be loaded together.
 4. **Back up your world before opening an existing save.** See [Save format](#save-format) below.
 
@@ -98,6 +102,9 @@ The kingdom screen covers everything a player needs. The commands below remain a
 /kingdoms test conquest | status | villages    (testing only, skips military readiness)
 ```
 
+Village targets and operator kingdom targets accept exact names or UUIDs. Quote names containing spaces
+(e.g. `/kingdom raid "Target village" "Source village"`); duplicate village names require a UUID.
+
 ## Save format
 
 Kingdom data is stored per dimension in `data/millenairekingdoms_kingdoms.dat`, currently using save format 6.
@@ -105,6 +112,9 @@ Kingdom data is stored per dimension in `data/millenairekingdoms_kingdoms.dat`, 
 - Worlds from older versions (formats 1 to 5) load without losing data and are upgraded to format 6 on the next save.
 - The upgrade cannot be undone: versions before 1.0.0 cannot open a format 6 file.
 - A damaged file, or one written by a newer version, is never overwritten with empty data.
+- 1.1.1 keeps format 6 and preserves valid pending orders on load. Changing a ruler cancels waiting orders
+  from the old tenure; active raids finish normally. Unresolved applications to kingdoms returning to NPC rule
+  are withdrawn so villages can apply again. Legacy orphan applications are released on the next kingdom day.
 
 ## Building from source
 
@@ -152,10 +162,15 @@ world in a separate JVM to check that the saved data survives.
 Gradle can report `BUILD SUCCESSFUL` even when the test server crashes before loading the mod. Treat a run as passed
 only when the log contains `All N required tests passed`.
 
+1.1.1 verification: **125/125 tests in the write pass and 125/125 in separate-JVM restart passes**.
+Each suite uses its own temporary world; its write/restart pair shares that world. This includes the existing
+113 tests and 12 additional maintenance tests. Logs are in `verification/1.1.1/final/`.
+
 ## Documentation
 
 - [User guide (English)](docs/USER_GUIDE.md)
 - [Kullanım rehberi (Türkçe)](docs/KULLANIM_REHBERI.md)
+- [1.1.1 bakım ve test raporu (Türkçe)](TEST_RAPORU_1_1_1.md)
 - [Test report for 1.1.0](TEST_REPORT_1_1_0.md)
 
 ## License

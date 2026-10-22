@@ -1,0 +1,36 @@
+{
+  "verifyWars": [
+    "All 30 required tests passed",
+    "All 30 required tests passed"
+  ],
+  "verifyConquest": [
+    "All 25 required tests passed",
+    "All 25 required tests passed"
+  ],
+  "verifyStage5": [
+    "All 24 required tests passed",
+    "All 24 required tests passed"
+  ],
+  "verifyCapitals": [
+    "All 5 required tests passed",
+    "All 5 required tests passed"
+  ],
+  "verifyAutonomy": [
+    "All 22 required tests passed",
+    "All 22 required tests passed"
+  ],
+  "verifyGui": [
+    "All 7 required tests passed",
+    "All 7 required tests passed"
+  ],
+  "verifyFounding": [
+    "All 12 required tests passed",
+    "All 12 required tests passed"
+  ],
+  "source_matches_tested_copy": true,
+  "original_millenaire_jar_unchanged": true,
+  "jar_sha256": "cd4395a87675db083bf04d7f53697a935ffec9b1de5117132b1c44f308144346",
+  "jar_bytes": 255791,
+  "production_server_no_test_mod": true,
+  "jar_excludes_tests_fixtures_dependency": true
+}
