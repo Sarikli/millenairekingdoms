@@ -1,0 +1,278 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :createMinecraftArtifacts UP-TO-DATE
+
+> Task :verifyMillenaireJar
+Original Millénaire 9.0.2 SHA-256 verified: 8665fcb513dc17eed08fee4b30dae988f45157f72d332ab795611b3761cbc92f
+
+> Task :compileJava
+> Task :generateModMetadata UP-TO-DATE
+> Task :processResources
+> Task :classes
+> Task :compileGametestJava
+> Task :processGametestResources UP-TO-DATE
+> Task :gametestClasses
+> Task :downloadAssets UP-TO-DATE
+> Task :writeGuiGameTestServerReloadLegacyClasspath
+> Task :prepareGuiGameTestServerReloadRun
+> Task :writeGuiGameTestServerLegacyClasspath UP-TO-DATE
+> Task :prepareGuiGameTestServerRun UP-TO-DATE
+> Task :jarJar NO-SOURCE
+> Task :jar
+> Task :stageGameTestJar
+
+> Task :runGuiGameTestServer
+WARN StatusConsoleListener Advanced terminal features are not available in this environment
+[20:45:20] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserverdev, --gameDir, ., --fml.fmlVersion, 4.0.45, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.259, --fml.neoFormVersion, 20240808.144430]
+[20:45:20] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: JVM identified as Arch Linux OpenJDK 64-Bit Server VM 21.0.12.1+1
+[20:45:20] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.12.1 by Arch Linux; OS Linux arch amd64 version 7.3.0-3-cachyos
+[20:45:20] [main/INFO] [ne.ne.fm.lo.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserverdev
+[20:45:20] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/tmp/kingdoms-maintenance-111/.gradle-user-home/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.16.4+mixin.0.8.7/26d01f0567ab46e9ca0d2ed89d0ecc11aadbd433/sponge-mixin-0.16.4+mixin.0.8.7.jar%2394!/ Service=ModLauncher Env=SERVER
+[20:45:20] [main/INFO] [ne.ne.fm.lo.mo.lo.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[20:45:20] [main/INFO] [ne.ne.fm.lo.mo.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		Millénaire 9.0.2 (millenaire)
+		Millénaire Kingdoms 1.1.0 (millenairekingdoms)
+		Millénaire Kingdoms integration tests (development only) 1.0 (millenairekingdoms_tests)
+		Minecraft 1.21.1 (minecraft)
+		NeoForge 21.1.259 (neoforge)
+[20:45:21] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[20:45:21] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserverdev' with arguments [--gameDir, .]
+[20:45:21] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+[20:45:24] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:45:24] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:45:24] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[20:45:24] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[20:45:24] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:45:24] [modloading-worker-0/INFO] [or.mi.Millenaire/]: Millénaire 9.0.2 — Initialisation
+[20:45:24] [modloading-worker-0/INFO] [ne.ne.ne.co.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.259, for MC 1.21.1
+[20:45:24] [modloading-worker-0/INFO] [or.mi.go.vi.VisitGoalLoader/]: 43 visit goals loaded
+[20:45:24] [modloading-worker-0/INFO] [or.mi.go.ga.GatheringTypeLoader/]: 405 gathering types loaded
+[20:45:24] [modloading-worker-0/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms 1.1.0 initialized (modId=millenairekingdoms).
+[20:45:25] [modloading-sync-worker/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms dependency verified: millenaire 9.0.2.
+[20:45:25] [modloading-worker-0/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms mod loading complete. Kingdom and capital system enabled.
+[20:45:25] [main/INFO] [mojang/YggdrasilAuthenticationService]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[20:45:25] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/tmp/kingdoms-maintenance-111/build/moddev/artifacts/neoforge-21.1.259.jar%23126!/assets/.mcassetsroot' uses unexpected schema
+[20:45:25] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/tmp/kingdoms-maintenance-111/build/moddev/artifacts/neoforge-21.1.259.jar%23126!/data/.mcassetsroot' uses unexpected schema
+[20:45:25] [main/INFO] [ne.ne.ne.ga.GameTestHooks/]: Enabled Gametest Namespaces: [millenairekingdoms_gui_tests]
+[20:45:26] [main/INFO] [minecraft/RecipeManager]: Loaded 1397 recipes
+[20:45:26] [main/INFO] [minecraft/AdvancementTree]: Loaded 1563 advancements
+[20:45:26] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[20:45:26] [worldgen/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 2%
+[20:45:26] [Server thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 83 ms
+[20:45:26] [Server thread/INFO] [minecraft/GameTestServer]: Started game test server
+[20:45:26] [Server thread/INFO] [ne.ne.ne.se.pe.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[20:45:26] [Server thread/INFO] [or.mi.co.ContentDirectoryManager/]: Content directories initialised: standard=/tmp/kingdoms-maintenance-111/run/gametest/millenaire, custom=/tmp/kingdoms-maintenance-111/run/gametest/millenaire-custom
+[20:45:26] [Server thread/INFO] [or.mi.co.NativeContentDeployer/]: Dev environment detected — forcing redeploy of standard content to millenaire (mod 9.0.2, previous 9.0.2)
+[20:45:27] [Server thread/INFO] [or.mi.co.NativeContentDeployer/]: Deployment complete: 3957 files written in 316 ms
+[20:45:27] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: [Millenaire] Loaded tool_categories file 'default.json' from millenaire (jar): 124 item(s) across 11 categories
+[20:45:27] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: [Millenaire] Loaded tool_categories file 'default.json' from standard: 124 item(s) across 11 categories
+[20:45:27] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: 11 tool categories loaded from 2 file(s) (124 items total)
+[20:45:27] [Server thread/INFO] [or.mi.la.ServerTranslationCache/]: [Millenaire] ServerTranslationCache loaded 4856 entries
+[20:45:27] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded default VillagerConfig: 24 growth foods, 15 conception foods
+[20:45:27] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded VillagerConfig overlay 'indiannobeef': 23 growth foods, 15 conception foods
+[20:45:27] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded VillagerConfig overlay 'muslimrules': 21 growth foods, 9 conception foods
+[20:45:27] [Server thread/INFO] [or.mi.co.OverlayBuilder/]: Overlay: standard over millenaire (jar) (3922 files; -Dlog.level.OverlayBuilder=DEBUG for per-file detail)
+[20:45:27] [Server thread/INFO] [or.mi.cu.WallTypeLoader/]: 10 wall types loaded
+[20:45:27] [Server thread/INFO] [or.mi.bu.BlockCostRegistry/]: [Millenaire] Loaded 0 block cost entries (sources=0)
+[20:45:27] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 184 goods for culture millenaire:norman (sources=2, removed=0, overridden=0)
+[20:45:27] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 20 shop profiles for culture norman
+[20:45:27] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Loaded 49 player languages: [ar_sa, cs_cz, da_dk, de_de, en_us, es_es, et_ee, fr_fr, hi_in, hu_hu, it_it, ja_jp, ko_kr, nb_no, nl_nl, pl_pl, pt_br, pt_pt, ru_ru, sl_si, sv_se, th_th, tr_tr, uk_ua, zh_cn, zh_tw, ar, cs, da, de, en, es, et, fr, hi, hu, it, ja, ko, nb, nl, pl, pt, ru, sl, sv, th, tr, uk]
+[20:45:27] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 135 goods for culture millenaire:indian (sources=2, removed=0, overridden=0)
+[20:45:27] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 6 shop profiles for culture indian
+[20:45:27] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 129 goods for culture millenaire:mayan (sources=2, removed=0, overridden=0)
+[20:45:27] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 8 shop profiles for culture mayan
+[20:45:27] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 177 goods for culture millenaire:byzantines (sources=2, removed=0, overridden=0)
+[20:45:27] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 15 shop profiles for culture byzantines
+[20:45:27] [Server thread/WARN] [or.mi.cu.BuildingPlanSetLoader/]: [Millenaire] Building plan japanese/japanesepaddy has category 'core' in JSON but lives under path category 'houses'. JSON field wins; consider moving the file to the matching folder.
+[20:45:27] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 130 goods for culture millenaire:japanese (sources=2, removed=0, overridden=0)
+[20:45:27] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 9 shop profiles for culture japanese
+[20:45:27] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 188 goods for culture millenaire:seljuk (sources=2, removed=0, overridden=0)
+[20:45:27] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 15 shop profiles for culture seljuk
+[20:45:27] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 169 goods for culture millenaire:inuits (sources=2, removed=0, overridden=0)
+[20:45:27] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 8 shop profiles for culture inuits
+[20:45:27] [Server thread/WARN] [or.mi.co.VillagerConfig/]: Unknown villager_config 'japaneseweaponpriority' (no villager_config/japaneseweaponpriority.json in any content layer); using the default config
+[20:45:27] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Millénaire content loaded: 7 cultures, 1811 plans (569 sets), 285 villager types, 126 village types
+[20:45:27] [Server thread/INFO] [or.mi.go.ga.GatheringTypeLoader/]: External gathering types: 0 added, 405 overridden, 0 disabled
+[20:45:27] [Server thread/INFO] [or.mi.go.vi.VisitGoalLoader/]: External visit goals: 0 added, 43 overridden, 0 disabled
+[20:45:27] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:byzantines/playerfortress_a_armyforge: parent building plan millenaire:byzantines/fortress does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:45:27] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/thmosque_a_femaleside: parent building plan millenaire:seljuk/mosque does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:45:27] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/barrackssmall_a_bed0: parent building plan millenaire:seljuk/barrackssmall does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:45:27] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:indian/playerpalace_temple: parent building plan millenaire:indian/palace does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:45:27] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/watchtower_a_soldier0: parent building plan millenaire:seljuk/watchtower does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:45:27] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/watchtower_a_soldier1: parent building plan millenaire:seljuk/watchtower does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:45:27] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:byzantines/playerfortress_a_barracks: parent building plan millenaire:byzantines/fortress does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:45:27] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/hamlettownhallplayer_a_inn: parent building plan millenaire:seljuk/hamlettownhallplayer does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:45:27] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Cross-reference validation: 8 warnings out of 8054 checks
+[20:45:27] [Server thread/INFO] [or.mi.qu.QuestLoader/]: Skipped 48 world quests (special action mechanisms not yet implemented)
+[20:45:27] [Server thread/INFO] [or.mi.qu.QuestLoader/]: Loaded 42 quest definitions, 26 quest languages
+[20:45:28] [Server thread/INFO] [or.mi.co.ReferenceCatalogGenerator/]: Reference catalogs written to millenaire/_reference
+[20:45:28] [Server thread/INFO] [or.mi.la.I18nKeyAuditor/]: [I18nKeyAuditor] All referenced i18n keys are present in en_us.json
+[20:45:28] [Server thread/INFO] [or.mi.vi.VillageSavedData/]: Loading VillageSavedData version 6
+[20:45:28] [Server thread/WARN] [or.mi.vi.VillageRehydrator/]: Plan not found for rehydration: millenaire:byzantines/militaryvillage
+[20:45:28] [Server thread/INFO] [or.mi.vi.VillageRehydrator/]: Skipping waypoint graph rebuild for village VillageId[uuid=4389e01e-f494-4ff9-b14a-608522126148] — some chunks not loaded yet
+KINGDOMS_TESTS: scheduled NPC autonomy and kingdom founding disabled for the shared test world
+[20:45:28] [Server thread/INFO] [minecraft/GameTestServer]: 7 tests are now running at position -7525958, -59, -10153310!
+[20:45:28] [Server thread/INFO] [minecraft/GameTestRunner]: Running test batch 'defaultBatch:0' (7 tests)...
+[20:45:28] [Server thread/INFO] [minecraft/GameTestServer]: [       ]
+[20:45:28] [Server thread/INFO] [co.mi.ec.TreasuryService/]: [Kingdoms] R-14134997 withdrew 1o 1a 5d (1 gold, 1 silver, 5 deniers) from the storage of A6 Treasury capital df4abc41 (1o 2a 5d left).
+[20:45:28] [Server thread/INFO] [co.mi.ec.TreasuryService/]: [Kingdoms] Treasurer withdrew 1a 1d (0 gold, 1 silver, 1 deniers) from the storage of Restart treasury aca567d7 (1o left).
+GUI_TREASURY_RESTART_WRITE: 65 deniers withdrawn, 1 gold left in the chest
+[20:45:28] [Server thread/INFO] [co.mi.ec.TreasuryService/]: [Kingdoms] R-840523306 withdrew 1o (1 gold, 0 silver, 0 deniers) from the storage of A6 Safe treasury d53039cd (0d left).
+[20:45:28] [Server thread/INFO] [co.mi.ec.TreasuryService/]: [Kingdoms] R-840523306 withdrew 40d (0 gold, 0 silver, 40 deniers) from the storage of A6 Safe treasury d53039cd (10d left).
+[20:45:28] [Server thread/INFO] [or.mi.vi.VillageWaypointGraph/]: [Millenaire] Waypoint graph rebuilt: 1 nodes, 0 edges (too few) in 0 ms
+[20:45:28] [Server thread/INFO] [or.mi.vi.VillageWaypointGraph/]: [Millenaire] Waypoint graph rebuilt: 1 nodes, 0 edges (too few) in 0 ms
+[20:45:28] [Server thread/INFO] [minecraft/MinecraftServer]: b737084c-6d75-459d-9ee9-8b53a51e8820 | Named kingdom 4ec7ef10-5987-4ce5-adbb-13e3738ee614 | active=true | capital=b9a6afaf-ae78-49f3-b253-89404df221eb | villages=1 | ruler=none
+[20:45:28] [Server thread/INFO] [minecraft/MinecraftServer]:   b9a6afaf-ae78-49f3-b253-89404df221eb (capital)
+[20:45:28] [Server thread/INFO] [minecraft/MinecraftServer]: Several villages are named Named village; use a village UUID.
+[20:45:28] [Server thread/INFO] [minecraft/MinecraftServer]: Village attached: b4fcf21e-003f-493e-bcac-658cafaecb4c
+[20:45:28] [Server thread/INFO] [minecraft/MinecraftServer]: b4fcf21e-003f-493e-bcac-658cafaecb4c | kingdom=b737084c-6d75-459d-9ee9-8b53a51e8820 (Named kingdom 4ec7ef10-5987-4ce5-adbb-13e3738ee614) | capital=false | revision=1
+[20:45:28] [Server thread/INFO] [co.mi.ec.TreasuryService/]: [Kingdoms] R1936766335 withdrew 1a (0 gold, 1 silver, 0 deniers) from the storage of A6 Guarded treasury abcf81fe (9a left).
+[20:45:28] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++]
+[20:45:28] [Server thread/INFO] [minecraft/GameTestServer]: ========= 7 GAME TESTS COMPLETE IN 601.6 ms ======================
+[20:45:28] [Server thread/INFO] [minecraft/GameTestServer]: All 7 required tests passed :)
+[20:45:28] [Server thread/INFO] [minecraft/GameTestServer]: ====================================================
+[20:45:28] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[20:45:28] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[20:45:28] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[20:45:29] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[20:45:29] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[20:45:29] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[20:45:29] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[20:45:29] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[20:45:29] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[20:45:29] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+[20:45:29] [Server thread/INFO] [minecraft/GameTestServer]: Game test server shutting down
+
+> Task :runGuiGameTestServerReload
+WARN StatusConsoleListener Advanced terminal features are not available in this environment
+[20:45:30] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserverdev, --gameDir, ., --fml.fmlVersion, 4.0.45, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.259, --fml.neoFormVersion, 20240808.144430]
+[20:45:30] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: JVM identified as Arch Linux OpenJDK 64-Bit Server VM 21.0.12.1+1
+[20:45:30] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.12.1 by Arch Linux; OS Linux arch amd64 version 7.3.0-3-cachyos
+[20:45:30] [main/INFO] [ne.ne.fm.lo.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserverdev
+[20:45:30] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/tmp/kingdoms-maintenance-111/.gradle-user-home/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.16.4+mixin.0.8.7/26d01f0567ab46e9ca0d2ed89d0ecc11aadbd433/sponge-mixin-0.16.4+mixin.0.8.7.jar%2394!/ Service=ModLauncher Env=SERVER
+[20:45:30] [main/INFO] [ne.ne.fm.lo.mo.lo.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[20:45:30] [main/INFO] [ne.ne.fm.lo.mo.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		Millénaire 9.0.2 (millenaire)
+		Millénaire Kingdoms 1.1.0 (millenairekingdoms)
+		Millénaire Kingdoms integration tests (development only) 1.0 (millenairekingdoms_tests)
+		Minecraft 1.21.1 (minecraft)
+		NeoForge 21.1.259 (neoforge)
+[20:45:30] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[20:45:30] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserverdev' with arguments [--gameDir, .]
+[20:45:31] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+[20:45:34] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:45:34] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:45:34] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[20:45:34] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[20:45:34] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:45:34] [modloading-worker-0/INFO] [or.mi.Millenaire/]: Millénaire 9.0.2 — Initialisation
+[20:45:34] [modloading-worker-0/INFO] [ne.ne.ne.co.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.259, for MC 1.21.1
+[20:45:34] [modloading-worker-0/INFO] [or.mi.go.vi.VisitGoalLoader/]: 43 visit goals loaded
+[20:45:34] [modloading-worker-0/INFO] [or.mi.go.ga.GatheringTypeLoader/]: 405 gathering types loaded
+[20:45:34] [modloading-worker-0/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms 1.1.0 initialized (modId=millenairekingdoms).
+[20:45:34] [modloading-sync-worker/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms dependency verified: millenaire 9.0.2.
+[20:45:34] [modloading-worker-0/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms mod loading complete. Kingdom and capital system enabled.
+[20:45:34] [main/INFO] [mojang/YggdrasilAuthenticationService]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[20:45:35] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/tmp/kingdoms-maintenance-111/build/moddev/artifacts/neoforge-21.1.259.jar%23126!/assets/.mcassetsroot' uses unexpected schema
+[20:45:35] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/tmp/kingdoms-maintenance-111/build/moddev/artifacts/neoforge-21.1.259.jar%23126!/data/.mcassetsroot' uses unexpected schema
+[20:45:35] [main/INFO] [ne.ne.ne.ga.GameTestHooks/]: Enabled Gametest Namespaces: [millenairekingdoms_gui_tests]
+[20:45:35] [main/INFO] [minecraft/RecipeManager]: Loaded 1397 recipes
+[20:45:35] [main/INFO] [minecraft/AdvancementTree]: Loaded 1563 advancements
+[20:45:36] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[20:45:36] [worldgen/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 2%
+[20:45:36] [Server thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 86 ms
+[20:45:36] [Server thread/INFO] [minecraft/GameTestServer]: Started game test server
+[20:45:36] [Server thread/INFO] [ne.ne.ne.se.pe.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[20:45:36] [Server thread/INFO] [or.mi.co.ContentDirectoryManager/]: Content directories initialised: standard=/tmp/kingdoms-maintenance-111/run/gametest/millenaire, custom=/tmp/kingdoms-maintenance-111/run/gametest/millenaire-custom
+[20:45:36] [Server thread/INFO] [or.mi.co.NativeContentDeployer/]: Dev environment detected — forcing redeploy of standard content to millenaire (mod 9.0.2, previous 9.0.2)
+[20:45:36] [Server thread/INFO] [or.mi.co.NativeContentDeployer/]: Deployment complete: 3957 files written in 300 ms
+[20:45:36] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: [Millenaire] Loaded tool_categories file 'default.json' from millenaire (jar): 124 item(s) across 11 categories
+[20:45:36] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: [Millenaire] Loaded tool_categories file 'default.json' from standard: 124 item(s) across 11 categories
+[20:45:36] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: 11 tool categories loaded from 2 file(s) (124 items total)
+[20:45:36] [Server thread/INFO] [or.mi.la.ServerTranslationCache/]: [Millenaire] ServerTranslationCache loaded 4856 entries
+[20:45:36] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded default VillagerConfig: 24 growth foods, 15 conception foods
+[20:45:36] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded VillagerConfig overlay 'indiannobeef': 23 growth foods, 15 conception foods
+[20:45:36] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded VillagerConfig overlay 'muslimrules': 21 growth foods, 9 conception foods
+[20:45:36] [Server thread/INFO] [or.mi.co.OverlayBuilder/]: Overlay: standard over millenaire (jar) (3922 files; -Dlog.level.OverlayBuilder=DEBUG for per-file detail)
+[20:45:36] [Server thread/INFO] [or.mi.cu.WallTypeLoader/]: 10 wall types loaded
+[20:45:36] [Server thread/INFO] [or.mi.bu.BlockCostRegistry/]: [Millenaire] Loaded 0 block cost entries (sources=0)
+[20:45:37] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 184 goods for culture millenaire:norman (sources=2, removed=0, overridden=0)
+[20:45:37] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 20 shop profiles for culture norman
+[20:45:37] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Loaded 49 player languages: [ar_sa, cs_cz, da_dk, de_de, en_us, es_es, et_ee, fr_fr, hi_in, hu_hu, it_it, ja_jp, ko_kr, nb_no, nl_nl, pl_pl, pt_br, pt_pt, ru_ru, sl_si, sv_se, th_th, tr_tr, uk_ua, zh_cn, zh_tw, ar, cs, da, de, en, es, et, fr, hi, hu, it, ja, ko, nb, nl, pl, pt, ru, sl, sv, th, tr, uk]
+[20:45:37] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 135 goods for culture millenaire:indian (sources=2, removed=0, overridden=0)
+[20:45:37] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 6 shop profiles for culture indian
+[20:45:37] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 129 goods for culture millenaire:mayan (sources=2, removed=0, overridden=0)
+[20:45:37] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 8 shop profiles for culture mayan
+[20:45:37] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 177 goods for culture millenaire:byzantines (sources=2, removed=0, overridden=0)
+[20:45:37] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 15 shop profiles for culture byzantines
+[20:45:37] [Server thread/WARN] [or.mi.cu.BuildingPlanSetLoader/]: [Millenaire] Building plan japanese/japanesepaddy has category 'core' in JSON but lives under path category 'houses'. JSON field wins; consider moving the file to the matching folder.
+[20:45:37] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 130 goods for culture millenaire:japanese (sources=2, removed=0, overridden=0)
+[20:45:37] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 9 shop profiles for culture japanese
+[20:45:37] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 188 goods for culture millenaire:seljuk (sources=2, removed=0, overridden=0)
+[20:45:37] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 15 shop profiles for culture seljuk
+[20:45:37] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 169 goods for culture millenaire:inuits (sources=2, removed=0, overridden=0)
+[20:45:37] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 8 shop profiles for culture inuits
+[20:45:37] [Server thread/WARN] [or.mi.co.VillagerConfig/]: Unknown villager_config 'japaneseweaponpriority' (no villager_config/japaneseweaponpriority.json in any content layer); using the default config
+[20:45:37] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Millénaire content loaded: 7 cultures, 1811 plans (569 sets), 285 villager types, 126 village types
+[20:45:37] [Server thread/INFO] [or.mi.go.ga.GatheringTypeLoader/]: External gathering types: 0 added, 405 overridden, 0 disabled
+[20:45:37] [Server thread/INFO] [or.mi.go.vi.VisitGoalLoader/]: External visit goals: 0 added, 43 overridden, 0 disabled
+[20:45:37] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:byzantines/playerfortress_a_armyforge: parent building plan millenaire:byzantines/fortress does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:45:37] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/thmosque_a_femaleside: parent building plan millenaire:seljuk/mosque does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:45:37] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/barrackssmall_a_bed0: parent building plan millenaire:seljuk/barrackssmall does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:45:37] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:indian/playerpalace_temple: parent building plan millenaire:indian/palace does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:45:37] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/watchtower_a_soldier0: parent building plan millenaire:seljuk/watchtower does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:45:37] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/watchtower_a_soldier1: parent building plan millenaire:seljuk/watchtower does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:45:37] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:byzantines/playerfortress_a_barracks: parent building plan millenaire:byzantines/fortress does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:45:37] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/hamlettownhallplayer_a_inn: parent building plan millenaire:seljuk/hamlettownhallplayer does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:45:37] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Cross-reference validation: 8 warnings out of 8054 checks
+[20:45:37] [Server thread/INFO] [or.mi.qu.QuestLoader/]: Skipped 48 world quests (special action mechanisms not yet implemented)
+[20:45:37] [Server thread/INFO] [or.mi.qu.QuestLoader/]: Loaded 42 quest definitions, 26 quest languages
+[20:45:37] [Server thread/INFO] [or.mi.co.ReferenceCatalogGenerator/]: Reference catalogs written to millenaire/_reference
+[20:45:37] [Server thread/INFO] [or.mi.la.I18nKeyAuditor/]: [I18nKeyAuditor] All referenced i18n keys are present in en_us.json
+[20:45:37] [Server thread/INFO] [or.mi.vi.VillageSavedData/]: Loading VillageSavedData version 6
+[20:45:37] [Server thread/WARN] [or.mi.vi.VillageRehydrator/]: Plan not found for rehydration: millenaire:byzantines/militaryvillage
+[20:45:37] [Server thread/INFO] [or.mi.vi.VillageRehydrator/]: Skipping waypoint graph rebuild for village VillageId[uuid=4389e01e-f494-4ff9-b14a-608522126148] — some chunks not loaded yet
+[20:45:37] [Server thread/WARN] [or.mi.vi.VillageRehydrator/]: Plan not found for rehydration: millenaire:byzantines/militaryvillage
+[20:45:37] [Server thread/INFO] [or.mi.vi.VillageRehydrator/]: Skipping waypoint graph rebuild for village VillageId[uuid=1c8470df-244b-4d01-bb3f-c9735c5db346] — some chunks not loaded yet
+KINGDOMS_TESTS: scheduled NPC autonomy and kingdom founding disabled for the shared test world
+[20:45:37] [Server thread/INFO] [minecraft/GameTestServer]: 7 tests are now running at position -366198, -59, 14273186!
+[20:45:37] [Server thread/INFO] [minecraft/GameTestRunner]: Running test batch 'defaultBatch:0' (7 tests)...
+[20:45:37] [Server thread/INFO] [minecraft/GameTestServer]: [       ]
+[20:45:37] [Server thread/INFO] [co.mi.ec.TreasuryService/]: [Kingdoms] R-14134997 withdrew 1o 1a 5d (1 gold, 1 silver, 5 deniers) from the storage of A6 Treasury capital 983ef79d (1o 2a 5d left).
+GUI_TREASURY_RESTART_READ_PASS: 1 gold left, withdrawn coins neither restored nor duplicated
+[20:45:38] [Server thread/INFO] [co.mi.ec.TreasuryService/]: [Kingdoms] R-840523306 withdrew 1o (1 gold, 0 silver, 0 deniers) from the storage of A6 Safe treasury e2ca0d56 (0d left).
+[20:45:38] [Server thread/INFO] [co.mi.ec.TreasuryService/]: [Kingdoms] R-840523306 withdrew 40d (0 gold, 0 silver, 40 deniers) from the storage of A6 Safe treasury e2ca0d56 (10d left).
+[20:45:38] [Server thread/INFO] [or.mi.vi.VillageWaypointGraph/]: [Millenaire] Waypoint graph rebuilt: 1 nodes, 0 edges (too few) in 0 ms
+[20:45:38] [Server thread/INFO] [or.mi.vi.VillageWaypointGraph/]: [Millenaire] Waypoint graph rebuilt: 1 nodes, 0 edges (too few) in 0 ms
+[20:45:38] [Server thread/INFO] [minecraft/MinecraftServer]: 85e64e34-7bb7-4b52-bacf-cbbb502007e9 | Named kingdom 54b5b46a-9647-4cdc-8444-f1a1daea7acf | active=true | capital=b9b37043-8877-4990-ae8d-773c0d0f3c3b | villages=1 | ruler=none
+[20:45:38] [Server thread/INFO] [minecraft/MinecraftServer]:   b9b37043-8877-4990-ae8d-773c0d0f3c3b (capital)
+[20:45:38] [Server thread/INFO] [minecraft/MinecraftServer]: Several villages are named Named village; use a village UUID.
+[20:45:38] [Server thread/INFO] [minecraft/MinecraftServer]: Village attached: f6be97e5-aae0-4427-9bfc-187b8e532ff9
+[20:45:38] [Server thread/INFO] [minecraft/MinecraftServer]: f6be97e5-aae0-4427-9bfc-187b8e532ff9 | kingdom=85e64e34-7bb7-4b52-bacf-cbbb502007e9 (Named kingdom 54b5b46a-9647-4cdc-8444-f1a1daea7acf) | capital=false | revision=1
+[20:45:38] [Server thread/INFO] [co.mi.ec.TreasuryService/]: [Kingdoms] R1936766335 withdrew 1a (0 gold, 1 silver, 0 deniers) from the storage of A6 Guarded treasury 9c02bde9 (9a left).
+[20:45:38] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++]
+[20:45:38] [Server thread/INFO] [minecraft/GameTestServer]: ========= 7 GAME TESTS COMPLETE IN 649.3 ms ======================
+[20:45:38] [Server thread/INFO] [minecraft/GameTestServer]: All 7 required tests passed :)
+[20:45:38] [Server thread/INFO] [minecraft/GameTestServer]: ====================================================
+[20:45:38] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[20:45:38] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[20:45:38] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[20:45:38] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[20:45:38] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[20:45:38] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[20:45:38] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[20:45:38] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[20:45:38] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[20:45:38] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+[20:45:38] [Server thread/INFO] [minecraft/GameTestServer]: Game test server shutting down
+
+> Task :verifyGui
+
+BUILD SUCCESSFUL in 25s
+16 actionable tasks: 10 executed, 6 up-to-date

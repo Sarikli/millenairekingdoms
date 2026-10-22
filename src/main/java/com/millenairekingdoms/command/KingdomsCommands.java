@@ -27,24 +27,24 @@ public final class KingdomsCommands {
                 .then(Commands.literal("war")
                         .then(Commands.literal("declare").then(kingdomArgument("attackerKingdom")
                                 .then(kingdomArgument("defenderKingdom").executes(c -> guarded(c, () -> {
-                                    var war = data(c).declareWar(villageId(c, "attackerKingdom"), villageId(c, "defenderKingdom"),
+                                    var war = data(c).declareWar(PoliticalArguments.kingdom(c, "attackerKingdom"), PoliticalArguments.kingdom(c, "defenderKingdom"),
                                             c.getSource().getLevel().getGameTime());
                                     reply(c, describeWar(data(c), war));
                                 })))))
                         .then(Commands.literal("info").then(warArgument().executes(c -> guarded(c, () -> {
-                            var war = data(c).war(villageId(c, "war"));
+                            var war = data(c).war(UuidArgument.getUuid(c, "war"));
                             if (war == null) throw new IllegalArgumentException("Unknown war.");
                             reply(c, describeWar(data(c), war));
                         }))))
                         .then(Commands.literal("peace").then(warArgument().executes(c -> guarded(c,
-                                () -> reply(c, describeWar(data(c), data(c).peace(villageId(c, "war"))))))))
+                                () -> reply(c, describeWar(data(c), data(c).peace(UuidArgument.getUuid(c, "war"))))))))
                         .then(Commands.literal("list").executes(c -> guarded(c, () -> {
                             var data = data(c); var wars = data.wars(); reply(c, "Wars in this dimension: " + wars.size());
                             wars.stream().sorted(Comparator.comparing(w -> w.id().toString())).forEach(w -> reply(c, describeWar(data, w)));
                         }))))
                 .then(Commands.literal("relation").then(kingdomArgument("first").then(kingdomArgument("second")
                         .then(Commands.argument("value", IntegerArgumentType.integer(-100, 100)).executes(c -> guarded(c, () -> {
-                            var data = data(c); var a = data.kingdom(villageId(c, "first")); var b = data.kingdom(villageId(c, "second"));
+                            var data = data(c); var a = data.kingdom(PoliticalArguments.kingdom(c, "first")); var b = data.kingdom(PoliticalArguments.kingdom(c, "second"));
                             if (a == null || b == null || a.id().equals(b.id())) throw new IllegalArgumentException("Two different kingdoms are needed.");
                             var ca = com.millenairekingdoms.politics.PoliticsService.capital(c.getSource().getLevel(), a);
                             var cb = com.millenairekingdoms.politics.PoliticsService.capital(c.getSource().getLevel(), b);
@@ -55,7 +55,7 @@ public final class KingdomsCommands {
                         }))))))
                 .then(Commands.literal("autonomy").then(Commands.literal("explain").then(kingdomArgument().executes(c -> guarded(c, () -> {
                     // Operator diagnosis: what an NPC campaign of this kingdom would target now, and why each pair is (not) ready.
-                    var data = data(c); var level = c.getSource().getLevel(); var k = data.kingdom(villageId(c, "kingdom"));
+                    var data = data(c); var level = c.getSource().getLevel(); var k = data.kingdom(PoliticalArguments.kingdom(c, "kingdom"));
                     if (k == null) throw new IllegalArgumentException("Unknown kingdom.");
                     var s = com.millenairekingdoms.autonomy.AutonomyConfig.current();
                     var war = data.activeWar(k.id());
@@ -121,7 +121,7 @@ public final class KingdomsCommands {
                 }))))
                 .then(Commands.literal("ruler")
                         .then(Commands.literal("clear").then(kingdomArgument().executes(c -> guarded(c, () -> {
-                            var removed = data(c).clearRuler(villageId(c, "kingdom"));
+                            var removed = data(c).clearRuler(PoliticalArguments.kingdom(c, "kingdom"));
                             reply(c, removed == null ? "This kingdom has no player ruler." : "Ruler removed: " + removed.player() + " (" + removed.lastKnownName() + ")");
                         })))))
                 .then(Commands.literal("create").then(villageArgument("capital")
@@ -132,11 +132,11 @@ public final class KingdomsCommands {
                         })))))
                 .then(Commands.literal("attach").then(kingdomArgument().then(villageArgument("village").executes(c -> guarded(c, () -> {
                     UUID village = villageId(c, "village"); knownVillage(c.getSource(), village);
-                    data(c).attach(villageId(c, "kingdom"), village); reply(c, "Village attached: " + village);
+                    data(c).attach(PoliticalArguments.kingdom(c, "kingdom"), village); reply(c, "Village attached: " + village);
                 })))))
                 .then(Commands.literal("active").then(kingdomArgument().then(Commands.argument("enabled", BoolArgumentType.bool())
                         .executes(c -> guarded(c, () -> {
-                            data(c).setActive(villageId(c, "kingdom"), BoolArgumentType.getBool(c, "enabled"));
+                            data(c).setActive(PoliticalArguments.kingdom(c, "kingdom"), BoolArgumentType.getBool(c, "enabled"));
                             reply(c, "Kingdom active=" + BoolArgumentType.getBool(c, "enabled"));
                         })))))
                 .then(Commands.literal("village").then(villageArgument("village").executes(c -> guarded(c, () -> {
@@ -151,7 +151,7 @@ public final class KingdomsCommands {
                             .forEach(k -> reply(c, describe(data, k)));
                 })))
                 .then(Commands.literal("info").then(kingdomArgument().executes(c -> guarded(c, () -> {
-                    var data = data(c); var kingdom = data.kingdom(villageId(c, "kingdom"));
+                    var data = data(c); var kingdom = data.kingdom(PoliticalArguments.kingdom(c, "kingdom"));
                     if (kingdom == null) throw new IllegalArgumentException("Unknown kingdom.");
                     reply(c, describe(data, kingdom));
                     data.members(kingdom.id()).stream().sorted().forEach(v -> reply(c, "  " + v + (data.isCapital(v) ? " (capital)" : "")));
@@ -187,11 +187,11 @@ public final class KingdomsCommands {
         ConquestService.reconcile(c.getSource().getLevel());
         return KingdomSavedData.get(c.getSource().getLevel());
     }
-    private static UUID villageId(CommandContext<CommandSourceStack> c, String key) { return UuidArgument.getUuid(c, key); }
+    private static UUID villageId(CommandContext<CommandSourceStack> c, String key) { return PoliticalArguments.village(c, key); }
     private static void reply(CommandContext<CommandSourceStack> c, String text) { c.getSource().sendSuccess(() -> Component.literal(text), false); }
     private static int guarded(CommandContext<CommandSourceStack> c, Runnable action) {
         try { action.run(); return 1; }
-        catch (IllegalArgumentException e) { c.getSource().sendFailure(Component.literal(e.getMessage())); return 0; }
+        catch (IllegalArgumentException e) { c.getSource().sendFailure(com.millenairekingdoms.util.KingdomException.of(e)); return 0; }
     }
     private static Village knownVillage(CommandSourceStack source, UUID id) {
         Village village = VillageSavedData.get(source.getLevel()).getVillageManager().getVillage(new VillageId(id));
@@ -201,17 +201,14 @@ public final class KingdomsCommands {
             throw new IllegalArgumentException("A known village with an existing town hall is required.");
         return village;
     }
-    private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, UUID> villageArgument(String name) {
-        return Commands.argument(name, UuidArgument.uuid()).suggests((context, builder) -> SharedSuggestionProvider.suggest(
-                VillageSavedData.get(context.getSource().getLevel()).getVillageManager().getAllVillages().stream()
-                        .map(v -> v.getId().uuid().toString()), builder));
+    private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, String> villageArgument(String name) {
+        return PoliticalArguments.villageArgument(name);
     }
-    private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, UUID> kingdomArgument() {
+    private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, String> kingdomArgument() {
         return kingdomArgument("kingdom");
     }
-    private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, UUID> kingdomArgument(String name) {
-        return Commands.argument(name, UuidArgument.uuid()).suggests((context, builder) -> SharedSuggestionProvider.suggest(
-                KingdomSavedData.get(context.getSource().getLevel()).kingdoms().stream().map(k -> k.id().toString()), builder));
+    private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, String> kingdomArgument(String name) {
+        return PoliticalArguments.kingdomArgument(name);
     }
     private static int conquest(CommandContext<CommandSourceStack> c) {
         return guarded(c, () -> {
