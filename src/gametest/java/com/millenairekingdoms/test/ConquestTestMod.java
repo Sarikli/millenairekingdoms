@@ -23,6 +23,7 @@ public final class ConquestTestMod {
             event.register(DiplomacyGameTests.class);
             event.register(NaturalCapitalGameTests.class);
             event.register(AutonomyGameTests.class);
+            event.register(MaintenanceGameTests.class);
             event.register(TreasuryGameTests.class);
             event.register(GuiGameTests.class);
             event.register(FoundingGameTests.class);
