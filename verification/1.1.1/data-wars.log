@@ -1,0 +1,314 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :createMinecraftArtifacts UP-TO-DATE
+
+> Task :verifyMillenaireJar
+Original Millénaire 9.0.2 SHA-256 verified: 8665fcb513dc17eed08fee4b30dae988f45157f72d332ab795611b3761cbc92f
+
+> Task :compileJava UP-TO-DATE
+> Task :generateModMetadata UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :compileGametestJava
+> Task :processGametestResources
+> Task :gametestClasses
+> Task :downloadAssets UP-TO-DATE
+> Task :writeWarGameTestServerReloadLegacyClasspath
+> Task :prepareWarGameTestServerReloadRun
+> Task :writeWarGameTestServerLegacyClasspath
+> Task :prepareWarGameTestServerRun
+> Task :jarJar NO-SOURCE
+> Task :jar UP-TO-DATE
+> Task :stageGameTestJar UP-TO-DATE
+
+> Task :runWarGameTestServer
+WARN StatusConsoleListener Advanced terminal features are not available in this environment
+[20:47:38] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserverdev, --gameDir, ., --fml.fmlVersion, 4.0.45, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.259, --fml.neoFormVersion, 20240808.144430]
+[20:47:38] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: JVM identified as Arch Linux OpenJDK 64-Bit Server VM 21.0.12.1+1
+[20:47:38] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.12.1 by Arch Linux; OS Linux arch amd64 version 7.3.0-3-cachyos
+[20:47:38] [main/INFO] [ne.ne.fm.lo.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserverdev
+[20:47:38] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/tmp/kingdoms-maintenance-111/.gradle-user-home/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.16.4+mixin.0.8.7/26d01f0567ab46e9ca0d2ed89d0ecc11aadbd433/sponge-mixin-0.16.4+mixin.0.8.7.jar%2394!/ Service=ModLauncher Env=SERVER
+[20:47:38] [main/INFO] [ne.ne.fm.lo.mo.lo.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[20:47:38] [main/INFO] [ne.ne.fm.lo.mo.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		Millénaire 9.0.2 (millenaire)
+		Millénaire Kingdoms 1.1.0 (millenairekingdoms)
+		Millénaire Kingdoms integration tests (development only) 1.0 (millenairekingdoms_tests)
+		Minecraft 1.21.1 (minecraft)
+		NeoForge 21.1.259 (neoforge)
+[20:47:39] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[20:47:39] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserverdev' with arguments [--gameDir, .]
+[20:47:39] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+[20:47:42] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:47:42] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:47:42] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[20:47:42] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[20:47:42] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:47:42] [modloading-worker-0/INFO] [or.mi.Millenaire/]: Millénaire 9.0.2 — Initialisation
+[20:47:42] [modloading-worker-0/INFO] [ne.ne.ne.co.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.259, for MC 1.21.1
+[20:47:42] [modloading-worker-0/INFO] [or.mi.go.vi.VisitGoalLoader/]: 43 visit goals loaded
+[20:47:42] [modloading-worker-0/INFO] [or.mi.go.ga.GatheringTypeLoader/]: 405 gathering types loaded
+[20:47:42] [modloading-worker-0/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms 1.1.0 initialized (modId=millenairekingdoms).
+[20:47:43] [modloading-sync-worker/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms dependency verified: millenaire 9.0.2.
+[20:47:43] [modloading-worker-0/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms mod loading complete. Kingdom and capital system enabled.
+[20:47:43] [main/INFO] [mojang/YggdrasilAuthenticationService]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[20:47:43] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/tmp/kingdoms-maintenance-111/build/moddev/artifacts/neoforge-21.1.259.jar%23126!/assets/.mcassetsroot' uses unexpected schema
+[20:47:43] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/tmp/kingdoms-maintenance-111/build/moddev/artifacts/neoforge-21.1.259.jar%23126!/data/.mcassetsroot' uses unexpected schema
+[20:47:43] [main/INFO] [ne.ne.ne.ga.GameTestHooks/]: Enabled Gametest Namespaces: [millenairekingdoms_war_tests]
+[20:47:43] [main/INFO] [minecraft/RecipeManager]: Loaded 1397 recipes
+[20:47:43] [main/INFO] [minecraft/AdvancementTree]: Loaded 1563 advancements
+[20:47:44] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[20:47:44] [worldgen/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 2%
+[20:47:44] [Server thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 85 ms
+[20:47:44] [Server thread/INFO] [minecraft/GameTestServer]: Started game test server
+[20:47:44] [Server thread/INFO] [ne.ne.ne.se.pe.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[20:47:44] [Server thread/INFO] [or.mi.co.ContentDirectoryManager/]: Content directories initialised: standard=/tmp/kingdoms-maintenance-111/run/gametest/millenaire, custom=/tmp/kingdoms-maintenance-111/run/gametest/millenaire-custom
+[20:47:44] [Server thread/INFO] [or.mi.co.NativeContentDeployer/]: Dev environment detected — forcing redeploy of standard content to millenaire (mod 9.0.2, previous 9.0.2)
+[20:47:44] [Server thread/INFO] [or.mi.co.NativeContentDeployer/]: Deployment complete: 3957 files written in 305 ms
+[20:47:44] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: [Millenaire] Loaded tool_categories file 'default.json' from millenaire (jar): 124 item(s) across 11 categories
+[20:47:44] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: [Millenaire] Loaded tool_categories file 'default.json' from standard: 124 item(s) across 11 categories
+[20:47:44] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: 11 tool categories loaded from 2 file(s) (124 items total)
+[20:47:44] [Server thread/INFO] [or.mi.la.ServerTranslationCache/]: [Millenaire] ServerTranslationCache loaded 4856 entries
+[20:47:44] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded default VillagerConfig: 24 growth foods, 15 conception foods
+[20:47:44] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded VillagerConfig overlay 'indiannobeef': 23 growth foods, 15 conception foods
+[20:47:44] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded VillagerConfig overlay 'muslimrules': 21 growth foods, 9 conception foods
+[20:47:45] [Server thread/INFO] [or.mi.co.OverlayBuilder/]: Overlay: standard over millenaire (jar) (3922 files; -Dlog.level.OverlayBuilder=DEBUG for per-file detail)
+[20:47:45] [Server thread/INFO] [or.mi.cu.WallTypeLoader/]: 10 wall types loaded
+[20:47:45] [Server thread/INFO] [or.mi.bu.BlockCostRegistry/]: [Millenaire] Loaded 0 block cost entries (sources=0)
+[20:47:45] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 184 goods for culture millenaire:norman (sources=2, removed=0, overridden=0)
+[20:47:45] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 20 shop profiles for culture norman
+[20:47:45] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Loaded 49 player languages: [ar_sa, cs_cz, da_dk, de_de, en_us, es_es, et_ee, fr_fr, hi_in, hu_hu, it_it, ja_jp, ko_kr, nb_no, nl_nl, pl_pl, pt_br, pt_pt, ru_ru, sl_si, sv_se, th_th, tr_tr, uk_ua, zh_cn, zh_tw, ar, cs, da, de, en, es, et, fr, hi, hu, it, ja, ko, nb, nl, pl, pt, ru, sl, sv, th, tr, uk]
+[20:47:45] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 135 goods for culture millenaire:indian (sources=2, removed=0, overridden=0)
+[20:47:45] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 6 shop profiles for culture indian
+[20:47:45] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 129 goods for culture millenaire:mayan (sources=2, removed=0, overridden=0)
+[20:47:45] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 8 shop profiles for culture mayan
+[20:47:45] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 177 goods for culture millenaire:byzantines (sources=2, removed=0, overridden=0)
+[20:47:45] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 15 shop profiles for culture byzantines
+[20:47:45] [Server thread/WARN] [or.mi.cu.BuildingPlanSetLoader/]: [Millenaire] Building plan japanese/japanesepaddy has category 'core' in JSON but lives under path category 'houses'. JSON field wins; consider moving the file to the matching folder.
+[20:47:45] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 130 goods for culture millenaire:japanese (sources=2, removed=0, overridden=0)
+[20:47:45] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 9 shop profiles for culture japanese
+[20:47:45] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 188 goods for culture millenaire:seljuk (sources=2, removed=0, overridden=0)
+[20:47:45] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 15 shop profiles for culture seljuk
+[20:47:45] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 169 goods for culture millenaire:inuits (sources=2, removed=0, overridden=0)
+[20:47:45] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 8 shop profiles for culture inuits
+[20:47:45] [Server thread/WARN] [or.mi.co.VillagerConfig/]: Unknown villager_config 'japaneseweaponpriority' (no villager_config/japaneseweaponpriority.json in any content layer); using the default config
+[20:47:45] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Millénaire content loaded: 7 cultures, 1811 plans (569 sets), 285 villager types, 126 village types
+[20:47:45] [Server thread/INFO] [or.mi.go.ga.GatheringTypeLoader/]: External gathering types: 0 added, 405 overridden, 0 disabled
+[20:47:45] [Server thread/INFO] [or.mi.go.vi.VisitGoalLoader/]: External visit goals: 0 added, 43 overridden, 0 disabled
+[20:47:45] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:byzantines/playerfortress_a_armyforge: parent building plan millenaire:byzantines/fortress does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:47:45] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/thmosque_a_femaleside: parent building plan millenaire:seljuk/mosque does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:47:45] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/barrackssmall_a_bed0: parent building plan millenaire:seljuk/barrackssmall does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:47:45] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:indian/playerpalace_temple: parent building plan millenaire:indian/palace does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:47:45] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/watchtower_a_soldier0: parent building plan millenaire:seljuk/watchtower does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:47:45] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/watchtower_a_soldier1: parent building plan millenaire:seljuk/watchtower does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:47:45] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:byzantines/playerfortress_a_barracks: parent building plan millenaire:byzantines/fortress does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:47:45] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/hamlettownhallplayer_a_inn: parent building plan millenaire:seljuk/hamlettownhallplayer does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:47:45] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Cross-reference validation: 8 warnings out of 8054 checks
+[20:47:45] [Server thread/INFO] [or.mi.qu.QuestLoader/]: Skipped 48 world quests (special action mechanisms not yet implemented)
+[20:47:45] [Server thread/INFO] [or.mi.qu.QuestLoader/]: Loaded 42 quest definitions, 26 quest languages
+[20:47:45] [Server thread/INFO] [or.mi.co.ReferenceCatalogGenerator/]: Reference catalogs written to millenaire/_reference
+[20:47:45] [Server thread/INFO] [or.mi.la.I18nKeyAuditor/]: [I18nKeyAuditor] All referenced i18n keys are present in en_us.json
+[20:47:45] [Server thread/INFO] [or.mi.vi.VillageSavedData/]: Loading VillageSavedData version 6
+[20:47:45] [Server thread/WARN] [or.mi.vi.VillageRehydrator/]: Plan not found for rehydration: millenaire:byzantines/militaryvillage
+[20:47:45] [Server thread/INFO] [or.mi.vi.VillageRehydrator/]: Skipping waypoint graph rebuild for village VillageId[uuid=4389e01e-f494-4ff9-b14a-608522126148] — some chunks not loaded yet
+[20:47:45] [Server thread/WARN] [or.mi.vi.VillageRehydrator/]: Plan not found for rehydration: millenaire:byzantines/militaryvillage
+[20:47:45] [Server thread/INFO] [or.mi.vi.VillageRehydrator/]: Skipping waypoint graph rebuild for village VillageId[uuid=1c8470df-244b-4d01-bb3f-c9735c5db346] — some chunks not loaded yet
+KINGDOMS_TESTS: scheduled NPC autonomy and kingdom founding disabled for the shared test world
+[20:47:45] [Server thread/INFO] [minecraft/GameTestServer]: 30 tests are now running at position 14168681, -59, 2923406!
+[20:47:46] [Server thread/INFO] [minecraft/GameTestRunner]: Running test batch 'defaultBatch:0' (30 tests)...
+[20:47:46] [Server thread/INFO] [minecraft/GameTestServer]: [                              ]
+RULER_RESTART_WRITE: ruler written
+WAR_RESTART_WRITE: ACTIVE and PEACE records; artifact=union:/tmp/kingdoms-maintenance-111/run/gametest/mods/millenairekingdoms.jar%23128!/
+MAINTENANCE_110_WRITE_PASS
+[20:47:46] [Server thread/INFO] [co.mi.po.KingdomDay/]: [Kingdoms] Withdrew 1 unresolved applications to kingdoms now governed by NPCs.
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War 3fc4a15d-e6a6-433c-9007-ff95ad005cc8 | 20a3dbfa-7a5a-4a16-8b65-76c0528812be -> ae5f915d-1597-4d7e-b5d2-200751d5dc1a | status=ACTIVE | startGameTime=37 | initial defender members=0 | capital requires=0 | held=0 | capital open=true | capital 28e3b12d-3e1a-4abe-8123-7f1cb311ae90 progress=0/2 | endReason=
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War 3fc4a15d-e6a6-433c-9007-ff95ad005cc8 | 20a3dbfa-7a5a-4a16-8b65-76c0528812be -> ae5f915d-1597-4d7e-b5d2-200751d5dc1a | status=ACTIVE | startGameTime=37 | initial defender members=0 | capital requires=0 | held=0 | capital open=true | capital 28e3b12d-3e1a-4abe-8123-7f1cb311ae90 progress=0/2 | endReason=
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: Wars in this dimension: 17
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War 1666de74-cf12-4a95-b0a9-743304539adf | eab2c6a4-468a-4777-9b89-80b356edfe82 -> 96ba1023-08aa-4b60-8688-8bb549489860 | status=ACTIVE | startGameTime=85 | initial defender members=1 | capital requires=1 | held=1 | capital open=true | capital d851a874-d82e-4f94-9cff-f08f6fe97dd9 progress=0/2 | endReason=
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War 1b01a19c-3148-462c-a7ea-91f33fd14064 | 511b4d9b-1003-4555-bc2c-b8189f7da9ed -> d2b90c50-73a1-4b8c-ae9f-5dabf404714e | status=CONQUERED | startGameTime=70 | initial defender members=1 | capital requires=1 | held=1 | capital open=false | capital 52476661-3432-41ef-842b-b88fb30ddd1a progress=2/2 | endReason=CAPITAL_CONQUERED
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War 2465a8ac-4441-4629-abc8-c83626e06aa6 | d4686863-4186-4f46-9e98-0c903e7639bb -> cab45c0c-967c-45ea-a4a6-288ce075d98e | status=ACTIVE | startGameTime=87 | initial defender members=1 | capital requires=1 | held=1 | capital open=true | capital 33dc6a42-0385-42d3-bd07-a1da90b8fc97 progress=0/2 | endReason=
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War 25d7410e-0b78-4737-88ef-7a23bad40d11 | 38425fe5-006c-408b-ad11-88290b7e097e -> 1e672501-e188-474c-9615-222617873e1d | status=PEACE | startGameTime=76 | initial defender members=2 | capital requires=2 | held=0 | capital open=false | capital 3da3aad1-432e-48f9-bcb8-9861558976bc progress=0/2 | endReason=OPERATOR_PEACE
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War 308a6792-0c28-4ffa-8905-0214152e1bf2 | 2a8999ca-2e2f-4582-8e3d-f392d61b8418 -> ccd6ef0f-9138-466a-aa80-b85a405d8ccc | status=PEACE | startGameTime=400 | initial defender members=0 | capital requires=0 | held=0 | capital open=false | capital 40100000-0000-4000-8000-000000000002 progress=0/2 | endReason=OPERATOR_PEACE
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War 3d1a6ef9-8ccb-4f69-8f6d-79aee977fe71 | 7ed009f9-3ebb-43b3-9ffe-c1c909939cb7 -> 48475833-f210-4146-b7d9-7ac9d9258d48 | status=CONQUERED | startGameTime=64 | initial defender members=1 | capital requires=1 | held=1 | capital open=false | capital f1f8acee-4b13-4fe1-bd4c-035feea8009a progress=2/2 | endReason=CAPITAL_CONQUERED
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War 3fc4a15d-e6a6-433c-9007-ff95ad005cc8 | 20a3dbfa-7a5a-4a16-8b65-76c0528812be -> ae5f915d-1597-4d7e-b5d2-200751d5dc1a | status=ACTIVE | startGameTime=37 | initial defender members=0 | capital requires=0 | held=0 | capital open=true | capital 28e3b12d-3e1a-4abe-8123-7f1cb311ae90 progress=0/2 | endReason=
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War 6b838e7d-87ba-4a68-bace-04f0260473c7 | 2a8999ca-2e2f-4582-8e3d-f392d61b8418 -> ccd6ef0f-9138-466a-aa80-b85a405d8ccc | status=ACTIVE | startGameTime=401 | initial defender members=0 | capital requires=0 | held=0 | capital open=true | capital 40100000-0000-4000-8000-000000000002 progress=0/2 | endReason=
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War 6c995713-3815-4fab-ab28-9ae935843bfb | c7d280b4-2c6c-4243-946e-46a362b790fb -> 847ed2fb-220d-4ff4-8502-0c645fbdf702 | status=PEACE | startGameTime=22 | initial defender members=0 | capital requires=0 | held=0 | capital open=false | capital b711446a-e966-490b-8f65-bd3971e2f47f progress=0/2 | endReason=RULER_PEACE
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War 78575000-cbdc-4b6a-90c7-1c429c71785a | 8ea40f7c-85c2-4862-8c31-2e5729678c91 -> 0129a664-fd41-49fa-ba6b-e49713f19001 | status=PEACE | startGameTime=1 | initial defender members=0 | capital requires=0 | held=0 | capital open=false | capital 62000000-0000-4000-8000-000000000003 progress=0/2 | endReason=NPC_PEACE
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War 8f0a4e60-e1f8-4c51-bcce-48d19d006086 | a619161a-b958-4c16-ad7d-87f0d4dcc5e4 -> 2aa869ab-d8f6-4831-ba7e-521d936c5129 | status=PEACE | startGameTime=80 | initial defender members=2 | capital requires=2 | held=0 | capital open=false | capital 81422d61-d66a-4f13-aed5-1fd189c4b2f2 progress=0/2 | endReason=OPERATOR_PEACE
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War 9ec8fbbf-a831-4e5c-8a01-c192d9027700 | ad04cb94-9cc6-4450-961f-552b4e2095af -> e541f46e-f5b6-41f0-9856-3cdf7342e631 | status=CONQUERED | startGameTime=69 | initial defender members=1 | capital requires=1 | held=1 | capital open=false | capital 24fa1ba8-8f91-44c6-81df-737c2ca0e4e8 progress=2/2 | endReason=CAPITAL_CONQUERED
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War ab91ab18-6aed-4a85-91fd-15da3db47366 | 554d084e-32bd-450e-925f-bf09b7c88cad -> afdbb9b3-0dc4-42ca-b281-0b46f59b739c | status=ACTIVE | startGameTime=83 | initial defender members=1 | capital requires=1 | held=1 | capital open=true | capital b601cd07-20e4-45c6-9430-2ea5348cce31 progress=0/2 | endReason=
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War e0ec99fc-0ba6-411b-b2e3-4c145b8a6e61 | 347be828-5bd6-49e8-a056-ad6e5d2cbfbf -> 072a748e-a754-46ea-9356-b8c78f8f26e3 | status=PEACE | startGameTime=22 | initial defender members=0 | capital requires=0 | held=0 | capital open=false | capital 85709100-e814-47b3-b591-d3308454ce0e progress=0/2 | endReason=RULER_PEACE
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War e7ea2d66-52fd-45c2-a8a9-a8b093498908 | fe55d553-8d07-43e8-a97f-f861de0eb6cd -> 0235cd06-ae39-4515-bb5f-c8e018ed3b8c | status=PEACE | startGameTime=84 | initial defender members=2 | capital requires=2 | held=0 | capital open=false | capital e9358235-fe00-4b95-9f72-022228f59d0b progress=0/2 | endReason=OPERATOR_PEACE
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War f004ce5a-2faa-4131-8741-721e77502e88 | 905a4aed-3f2a-4782-9fe4-1e7fc612959e -> f29ff861-2aab-4e51-9927-e99106b7ebb3 | status=PEACE | startGameTime=28 | initial defender members=0 | capital requires=0 | held=0 | capital open=false | capital 1460585c-9a0e-4c47-8c92-07cc490442d2 progress=0/2 | endReason=RULER_PEACE
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War f3fab57e-5787-41e3-89a4-a33a5cf564d2 | 4e4a357f-ea16-489d-8d71-edbd3213b928 -> 8ea40f7c-85c2-4862-8c31-2e5729678c91 | status=ACTIVE | startGameTime=2 | initial defender members=1 | capital requires=1 | held=0 | capital open=false | capital 62000000-0000-4000-8000-000000000002 progress=0/2 | endReason=
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: War 3fc4a15d-e6a6-433c-9007-ff95ad005cc8 | 20a3dbfa-7a5a-4a16-8b65-76c0528812be -> ae5f915d-1597-4d7e-b5d2-200751d5dc1a | status=PEACE | startGameTime=37 | initial defender members=0 | capital requires=0 | held=0 | capital open=false | capital 28e3b12d-3e1a-4abe-8123-7f1cb311ae90 progress=0/2 | endReason=OPERATOR_PEACE
+CAPITAL_RESTART_WRITE: collapse and 1/2 capital progress written
+MAINTENANCE_LEDGER_WRITE_PASS
+[20:47:46] [Server thread/INFO] [minecraft/GameTestServer]: [++++++++++++++++++++++++++++++]
+[20:47:46] [Server thread/INFO] [minecraft/GameTestServer]: [++++++++++++++++++++++++++++++]
+[20:47:46] [Server thread/INFO] [minecraft/GameTestServer]: ========= 30 GAME TESTS COMPLETE IN 510.7 ms ======================
+[20:47:46] [Server thread/INFO] [minecraft/GameTestServer]: All 30 required tests passed :)
+[20:47:46] [Server thread/INFO] [minecraft/GameTestServer]: ====================================================
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[20:47:46] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+[20:47:46] [Server thread/INFO] [minecraft/GameTestServer]: Game test server shutting down
+
+> Task :runWarGameTestServerReload
+WARN StatusConsoleListener Advanced terminal features are not available in this environment
+[20:47:47] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserverdev, --gameDir, ., --fml.fmlVersion, 4.0.45, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.259, --fml.neoFormVersion, 20240808.144430]
+[20:47:47] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: JVM identified as Arch Linux OpenJDK 64-Bit Server VM 21.0.12.1+1
+[20:47:47] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.12.1 by Arch Linux; OS Linux arch amd64 version 7.3.0-3-cachyos
+[20:47:47] [main/INFO] [ne.ne.fm.lo.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserverdev
+[20:47:47] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/tmp/kingdoms-maintenance-111/.gradle-user-home/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.16.4+mixin.0.8.7/26d01f0567ab46e9ca0d2ed89d0ecc11aadbd433/sponge-mixin-0.16.4+mixin.0.8.7.jar%2394!/ Service=ModLauncher Env=SERVER
+[20:47:48] [main/INFO] [ne.ne.fm.lo.mo.lo.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[20:47:48] [main/INFO] [ne.ne.fm.lo.mo.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		Millénaire 9.0.2 (millenaire)
+		Millénaire Kingdoms 1.1.0 (millenairekingdoms)
+		Millénaire Kingdoms integration tests (development only) 1.0 (millenairekingdoms_tests)
+		Minecraft 1.21.1 (minecraft)
+		NeoForge 21.1.259 (neoforge)
+[20:47:48] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[20:47:48] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserverdev' with arguments [--gameDir, .]
+[20:47:48] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+[20:47:51] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:47:51] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:47:51] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[20:47:51] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[20:47:51] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:47:51] [modloading-worker-0/INFO] [or.mi.Millenaire/]: Millénaire 9.0.2 — Initialisation
+[20:47:51] [modloading-worker-0/INFO] [ne.ne.ne.co.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.259, for MC 1.21.1
+[20:47:51] [modloading-worker-0/INFO] [or.mi.go.vi.VisitGoalLoader/]: 43 visit goals loaded
+[20:47:51] [modloading-worker-0/INFO] [or.mi.go.ga.GatheringTypeLoader/]: 405 gathering types loaded
+[20:47:51] [modloading-worker-0/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms 1.1.0 initialized (modId=millenairekingdoms).
+[20:47:52] [modloading-sync-worker/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms dependency verified: millenaire 9.0.2.
+[20:47:52] [modloading-worker-0/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms mod loading complete. Kingdom and capital system enabled.
+[20:47:52] [main/INFO] [mojang/YggdrasilAuthenticationService]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[20:47:52] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/tmp/kingdoms-maintenance-111/build/moddev/artifacts/neoforge-21.1.259.jar%23126!/assets/.mcassetsroot' uses unexpected schema
+[20:47:52] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/tmp/kingdoms-maintenance-111/build/moddev/artifacts/neoforge-21.1.259.jar%23126!/data/.mcassetsroot' uses unexpected schema
+[20:47:52] [main/INFO] [ne.ne.ne.ga.GameTestHooks/]: Enabled Gametest Namespaces: [millenairekingdoms_war_tests]
+[20:47:52] [main/INFO] [minecraft/RecipeManager]: Loaded 1397 recipes
+[20:47:53] [main/INFO] [minecraft/AdvancementTree]: Loaded 1563 advancements
+[20:47:53] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[20:47:53] [worldgen/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 2%
+[20:47:53] [Server thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 73 ms
+[20:47:53] [Server thread/INFO] [minecraft/GameTestServer]: Started game test server
+[20:47:53] [Server thread/INFO] [ne.ne.ne.se.pe.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[20:47:53] [Server thread/INFO] [or.mi.co.ContentDirectoryManager/]: Content directories initialised: standard=/tmp/kingdoms-maintenance-111/run/gametest/millenaire, custom=/tmp/kingdoms-maintenance-111/run/gametest/millenaire-custom
+[20:47:53] [Server thread/INFO] [or.mi.co.NativeContentDeployer/]: Dev environment detected — forcing redeploy of standard content to millenaire (mod 9.0.2, previous 9.0.2)
+[20:47:53] [Server thread/INFO] [or.mi.co.NativeContentDeployer/]: Deployment complete: 3957 files written in 299 ms
+[20:47:54] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: [Millenaire] Loaded tool_categories file 'default.json' from millenaire (jar): 124 item(s) across 11 categories
+[20:47:54] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: [Millenaire] Loaded tool_categories file 'default.json' from standard: 124 item(s) across 11 categories
+[20:47:54] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: 11 tool categories loaded from 2 file(s) (124 items total)
+[20:47:54] [Server thread/INFO] [or.mi.la.ServerTranslationCache/]: [Millenaire] ServerTranslationCache loaded 4856 entries
+[20:47:54] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded default VillagerConfig: 24 growth foods, 15 conception foods
+[20:47:54] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded VillagerConfig overlay 'indiannobeef': 23 growth foods, 15 conception foods
+[20:47:54] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded VillagerConfig overlay 'muslimrules': 21 growth foods, 9 conception foods
+[20:47:54] [Server thread/INFO] [or.mi.co.OverlayBuilder/]: Overlay: standard over millenaire (jar) (3922 files; -Dlog.level.OverlayBuilder=DEBUG for per-file detail)
+[20:47:54] [Server thread/INFO] [or.mi.cu.WallTypeLoader/]: 10 wall types loaded
+[20:47:54] [Server thread/INFO] [or.mi.bu.BlockCostRegistry/]: [Millenaire] Loaded 0 block cost entries (sources=0)
+[20:47:54] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 184 goods for culture millenaire:norman (sources=2, removed=0, overridden=0)
+[20:47:54] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 20 shop profiles for culture norman
+[20:47:54] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Loaded 49 player languages: [ar_sa, cs_cz, da_dk, de_de, en_us, es_es, et_ee, fr_fr, hi_in, hu_hu, it_it, ja_jp, ko_kr, nb_no, nl_nl, pl_pl, pt_br, pt_pt, ru_ru, sl_si, sv_se, th_th, tr_tr, uk_ua, zh_cn, zh_tw, ar, cs, da, de, en, es, et, fr, hi, hu, it, ja, ko, nb, nl, pl, pt, ru, sl, sv, th, tr, uk]
+[20:47:54] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 135 goods for culture millenaire:indian (sources=2, removed=0, overridden=0)
+[20:47:54] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 6 shop profiles for culture indian
+[20:47:54] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 129 goods for culture millenaire:mayan (sources=2, removed=0, overridden=0)
+[20:47:54] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 8 shop profiles for culture mayan
+[20:47:54] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 177 goods for culture millenaire:byzantines (sources=2, removed=0, overridden=0)
+[20:47:54] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 15 shop profiles for culture byzantines
+[20:47:54] [Server thread/WARN] [or.mi.cu.BuildingPlanSetLoader/]: [Millenaire] Building plan japanese/japanesepaddy has category 'core' in JSON but lives under path category 'houses'. JSON field wins; consider moving the file to the matching folder.
+[20:47:54] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 130 goods for culture millenaire:japanese (sources=2, removed=0, overridden=0)
+[20:47:54] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 9 shop profiles for culture japanese
+[20:47:54] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 188 goods for culture millenaire:seljuk (sources=2, removed=0, overridden=0)
+[20:47:54] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 15 shop profiles for culture seljuk
+[20:47:54] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 169 goods for culture millenaire:inuits (sources=2, removed=0, overridden=0)
+[20:47:54] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 8 shop profiles for culture inuits
+[20:47:54] [Server thread/WARN] [or.mi.co.VillagerConfig/]: Unknown villager_config 'japaneseweaponpriority' (no villager_config/japaneseweaponpriority.json in any content layer); using the default config
+[20:47:54] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Millénaire content loaded: 7 cultures, 1811 plans (569 sets), 285 villager types, 126 village types
+[20:47:54] [Server thread/INFO] [or.mi.go.ga.GatheringTypeLoader/]: External gathering types: 0 added, 405 overridden, 0 disabled
+[20:47:54] [Server thread/INFO] [or.mi.go.vi.VisitGoalLoader/]: External visit goals: 0 added, 43 overridden, 0 disabled
+[20:47:54] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:byzantines/playerfortress_a_armyforge: parent building plan millenaire:byzantines/fortress does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:47:54] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/thmosque_a_femaleside: parent building plan millenaire:seljuk/mosque does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:47:54] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/barrackssmall_a_bed0: parent building plan millenaire:seljuk/barrackssmall does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:47:54] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:indian/playerpalace_temple: parent building plan millenaire:indian/palace does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:47:54] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/watchtower_a_soldier0: parent building plan millenaire:seljuk/watchtower does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:47:54] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/watchtower_a_soldier1: parent building plan millenaire:seljuk/watchtower does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:47:54] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:byzantines/playerfortress_a_barracks: parent building plan millenaire:byzantines/fortress does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:47:54] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/hamlettownhallplayer_a_inn: parent building plan millenaire:seljuk/hamlettownhallplayer does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:47:54] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Cross-reference validation: 8 warnings out of 8054 checks
+[20:47:54] [Server thread/INFO] [or.mi.qu.QuestLoader/]: Skipped 48 world quests (special action mechanisms not yet implemented)
+[20:47:54] [Server thread/INFO] [or.mi.qu.QuestLoader/]: Loaded 42 quest definitions, 26 quest languages
+[20:47:54] [Server thread/INFO] [or.mi.co.ReferenceCatalogGenerator/]: Reference catalogs written to millenaire/_reference
+[20:47:54] [Server thread/INFO] [or.mi.la.I18nKeyAuditor/]: [I18nKeyAuditor] All referenced i18n keys are present in en_us.json
+[20:47:54] [Server thread/INFO] [or.mi.vi.VillageSavedData/]: Loading VillageSavedData version 6
+[20:47:54] [Server thread/WARN] [or.mi.vi.VillageRehydrator/]: Plan not found for rehydration: millenaire:byzantines/militaryvillage
+[20:47:54] [Server thread/INFO] [or.mi.vi.VillageRehydrator/]: Skipping waypoint graph rebuild for village VillageId[uuid=4389e01e-f494-4ff9-b14a-608522126148] — some chunks not loaded yet
+[20:47:54] [Server thread/WARN] [or.mi.vi.VillageRehydrator/]: Plan not found for rehydration: millenaire:byzantines/militaryvillage
+[20:47:54] [Server thread/INFO] [or.mi.vi.VillageRehydrator/]: Skipping waypoint graph rebuild for village VillageId[uuid=1c8470df-244b-4d01-bb3f-c9735c5db346] — some chunks not loaded yet
+KINGDOMS_TESTS: scheduled NPC autonomy and kingdom founding disabled for the shared test world
+[20:47:54] [Server thread/INFO] [minecraft/GameTestServer]: 30 tests are now running at position -13988062, -59, -1894186!
+[20:47:55] [Server thread/INFO] [minecraft/GameTestRunner]: Running test batch 'defaultBatch:0' (30 tests)...
+[20:47:55] [Server thread/INFO] [minecraft/GameTestServer]: [                              ]
+RULER_RESTART_READ_PASS: ruler retained by UUID after restart
+WAR_RESTART_READ_PASS: ACTIVE war, PEACE history, war 1/2 and independent 1/1 retained; artifact=union:/tmp/kingdoms-maintenance-111/run/gametest/mods/millenairekingdoms.jar%23128!/
+MAINTENANCE_110_RESTART_READ_PASS
+[20:47:55] [Server thread/INFO] [co.mi.po.KingdomDay/]: [Kingdoms] Withdrew 1 unresolved applications to kingdoms now governed by NPCs.
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War d65a57f6-e700-4b18-b102-43dae5870df7 | 8808286a-1172-4de1-b5be-8dffccef95af -> b24c7328-400d-439a-a700-fea522c3f0e3 | status=ACTIVE | startGameTime=28 | initial defender members=0 | capital requires=0 | held=0 | capital open=true | capital 8483ded4-69bc-4e5a-95a9-7a190371de26 progress=0/2 | endReason=
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War d65a57f6-e700-4b18-b102-43dae5870df7 | 8808286a-1172-4de1-b5be-8dffccef95af -> b24c7328-400d-439a-a700-fea522c3f0e3 | status=ACTIVE | startGameTime=28 | initial defender members=0 | capital requires=0 | held=0 | capital open=true | capital 8483ded4-69bc-4e5a-95a9-7a190371de26 progress=0/2 | endReason=
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: Wars in this dimension: 20
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War 1666de74-cf12-4a95-b0a9-743304539adf | eab2c6a4-468a-4777-9b89-80b356edfe82 -> 96ba1023-08aa-4b60-8688-8bb549489860 | status=ACTIVE | startGameTime=85 | initial defender members=1 | capital requires=1 | held=1 | capital open=true | capital d851a874-d82e-4f94-9cff-f08f6fe97dd9 progress=0/2 | endReason=
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War 1b01a19c-3148-462c-a7ea-91f33fd14064 | 511b4d9b-1003-4555-bc2c-b8189f7da9ed -> d2b90c50-73a1-4b8c-ae9f-5dabf404714e | status=CONQUERED | startGameTime=70 | initial defender members=1 | capital requires=1 | held=1 | capital open=false | capital 52476661-3432-41ef-842b-b88fb30ddd1a progress=2/2 | endReason=CAPITAL_CONQUERED
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War 1c55abb4-a889-435c-9ff3-eff31f510a02 | b36afcbc-7987-4ae4-aab9-533bbdc34703 -> 11114552-43a1-4760-ae91-25b170118337 | status=ACTIVE | startGameTime=2 | initial defender members=0 | capital requires=0 | held=0 | capital open=true | capital 40300000-0000-4000-8000-000000000005 progress=1/2 | endReason=
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War 2465a8ac-4441-4629-abc8-c83626e06aa6 | d4686863-4186-4f46-9e98-0c903e7639bb -> cab45c0c-967c-45ea-a4a6-288ce075d98e | status=ACTIVE | startGameTime=87 | initial defender members=1 | capital requires=1 | held=1 | capital open=true | capital 33dc6a42-0385-42d3-bd07-a1da90b8fc97 progress=0/2 | endReason=
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War 25d7410e-0b78-4737-88ef-7a23bad40d11 | 38425fe5-006c-408b-ad11-88290b7e097e -> 1e672501-e188-474c-9615-222617873e1d | status=PEACE | startGameTime=76 | initial defender members=2 | capital requires=2 | held=0 | capital open=false | capital 3da3aad1-432e-48f9-bcb8-9861558976bc progress=0/2 | endReason=OPERATOR_PEACE
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War 308a6792-0c28-4ffa-8905-0214152e1bf2 | 2a8999ca-2e2f-4582-8e3d-f392d61b8418 -> ccd6ef0f-9138-466a-aa80-b85a405d8ccc | status=PEACE | startGameTime=400 | initial defender members=0 | capital requires=0 | held=0 | capital open=false | capital 40100000-0000-4000-8000-000000000002 progress=0/2 | endReason=OPERATOR_PEACE
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War 3d1a6ef9-8ccb-4f69-8f6d-79aee977fe71 | 7ed009f9-3ebb-43b3-9ffe-c1c909939cb7 -> 48475833-f210-4146-b7d9-7ac9d9258d48 | status=CONQUERED | startGameTime=64 | initial defender members=1 | capital requires=1 | held=1 | capital open=false | capital f1f8acee-4b13-4fe1-bd4c-035feea8009a progress=2/2 | endReason=CAPITAL_CONQUERED
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War 3fc4a15d-e6a6-433c-9007-ff95ad005cc8 | 20a3dbfa-7a5a-4a16-8b65-76c0528812be -> ae5f915d-1597-4d7e-b5d2-200751d5dc1a | status=PEACE | startGameTime=37 | initial defender members=0 | capital requires=0 | held=0 | capital open=false | capital 28e3b12d-3e1a-4abe-8123-7f1cb311ae90 progress=0/2 | endReason=OPERATOR_PEACE
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War 6b838e7d-87ba-4a68-bace-04f0260473c7 | 2a8999ca-2e2f-4582-8e3d-f392d61b8418 -> ccd6ef0f-9138-466a-aa80-b85a405d8ccc | status=ACTIVE | startGameTime=401 | initial defender members=0 | capital requires=0 | held=0 | capital open=true | capital 40100000-0000-4000-8000-000000000002 progress=0/2 | endReason=
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War 6c995713-3815-4fab-ab28-9ae935843bfb | c7d280b4-2c6c-4243-946e-46a362b790fb -> 847ed2fb-220d-4ff4-8502-0c645fbdf702 | status=PEACE | startGameTime=22 | initial defender members=0 | capital requires=0 | held=0 | capital open=false | capital b711446a-e966-490b-8f65-bd3971e2f47f progress=0/2 | endReason=RULER_PEACE
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War 74ab0eb9-250d-4240-aa6e-c7d7f6f8b908 | 13e83295-720f-4fd3-be0d-3f0b5a19cf1f -> f8d610f1-7b21-42ea-ad4d-1cd16401398c | status=CONQUERED | startGameTime=1 | initial defender members=1 | capital requires=1 | held=1 | capital open=false | capital 40300000-0000-4000-8000-000000000002 progress=2/2 | endReason=CAPITAL_CONQUERED
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War 78575000-cbdc-4b6a-90c7-1c429c71785a | 8ea40f7c-85c2-4862-8c31-2e5729678c91 -> 0129a664-fd41-49fa-ba6b-e49713f19001 | status=PEACE | startGameTime=1 | initial defender members=0 | capital requires=0 | held=0 | capital open=false | capital 62000000-0000-4000-8000-000000000003 progress=0/2 | endReason=NPC_PEACE
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War 8f0a4e60-e1f8-4c51-bcce-48d19d006086 | a619161a-b958-4c16-ad7d-87f0d4dcc5e4 -> 2aa869ab-d8f6-4831-ba7e-521d936c5129 | status=PEACE | startGameTime=80 | initial defender members=2 | capital requires=2 | held=0 | capital open=false | capital 81422d61-d66a-4f13-aed5-1fd189c4b2f2 progress=0/2 | endReason=OPERATOR_PEACE
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War 9ec8fbbf-a831-4e5c-8a01-c192d9027700 | ad04cb94-9cc6-4450-961f-552b4e2095af -> e541f46e-f5b6-41f0-9856-3cdf7342e631 | status=CONQUERED | startGameTime=69 | initial defender members=1 | capital requires=1 | held=1 | capital open=false | capital 24fa1ba8-8f91-44c6-81df-737c2ca0e4e8 progress=2/2 | endReason=CAPITAL_CONQUERED
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War ab91ab18-6aed-4a85-91fd-15da3db47366 | 554d084e-32bd-450e-925f-bf09b7c88cad -> afdbb9b3-0dc4-42ca-b281-0b46f59b739c | status=ACTIVE | startGameTime=83 | initial defender members=1 | capital requires=1 | held=1 | capital open=true | capital b601cd07-20e4-45c6-9430-2ea5348cce31 progress=0/2 | endReason=
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War d65a57f6-e700-4b18-b102-43dae5870df7 | 8808286a-1172-4de1-b5be-8dffccef95af -> b24c7328-400d-439a-a700-fea522c3f0e3 | status=ACTIVE | startGameTime=28 | initial defender members=0 | capital requires=0 | held=0 | capital open=true | capital 8483ded4-69bc-4e5a-95a9-7a190371de26 progress=0/2 | endReason=
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War e0ec99fc-0ba6-411b-b2e3-4c145b8a6e61 | 347be828-5bd6-49e8-a056-ad6e5d2cbfbf -> 072a748e-a754-46ea-9356-b8c78f8f26e3 | status=PEACE | startGameTime=22 | initial defender members=0 | capital requires=0 | held=0 | capital open=false | capital 85709100-e814-47b3-b591-d3308454ce0e progress=0/2 | endReason=RULER_PEACE
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War e7ea2d66-52fd-45c2-a8a9-a8b093498908 | fe55d553-8d07-43e8-a97f-f861de0eb6cd -> 0235cd06-ae39-4515-bb5f-c8e018ed3b8c | status=PEACE | startGameTime=84 | initial defender members=2 | capital requires=2 | held=0 | capital open=false | capital e9358235-fe00-4b95-9f72-022228f59d0b progress=0/2 | endReason=OPERATOR_PEACE
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War f004ce5a-2faa-4131-8741-721e77502e88 | 905a4aed-3f2a-4782-9fe4-1e7fc612959e -> f29ff861-2aab-4e51-9927-e99106b7ebb3 | status=PEACE | startGameTime=28 | initial defender members=0 | capital requires=0 | held=0 | capital open=false | capital 1460585c-9a0e-4c47-8c92-07cc490442d2 progress=0/2 | endReason=RULER_PEACE
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War f3fab57e-5787-41e3-89a4-a33a5cf564d2 | 4e4a357f-ea16-489d-8d71-edbd3213b928 -> 8ea40f7c-85c2-4862-8c31-2e5729678c91 | status=ACTIVE | startGameTime=2 | initial defender members=1 | capital requires=1 | held=0 | capital open=false | capital 62000000-0000-4000-8000-000000000002 progress=0/2 | endReason=
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: War d65a57f6-e700-4b18-b102-43dae5870df7 | 8808286a-1172-4de1-b5be-8dffccef95af -> b24c7328-400d-439a-a700-fea522c3f0e3 | status=PEACE | startGameTime=28 | initial defender members=0 | capital requires=0 | held=0 | capital open=false | capital 8483ded4-69bc-4e5a-95a9-7a190371de26 progress=0/2 | endReason=OPERATOR_PEACE
+CAPITAL_RESTART_READ_PASS: fallen kingdom, CONQUERED war, 2/2 and 1/2 capital progress retained
+[20:47:55] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++   +++++   +++         ]
+MAINTENANCE_LEDGER_RESTART_READ_PASS
+[20:47:55] [Server thread/INFO] [minecraft/GameTestServer]: [++++++++++++++++++++++++++++++]
+[20:47:55] [Server thread/INFO] [minecraft/GameTestServer]: ========= 30 GAME TESTS COMPLETE IN 481.9 ms ======================
+[20:47:55] [Server thread/INFO] [minecraft/GameTestServer]: All 30 required tests passed :)
+[20:47:55] [Server thread/INFO] [minecraft/GameTestServer]: ====================================================
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[20:47:55] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+[20:47:55] [Server thread/INFO] [minecraft/GameTestServer]: Game test server shutting down
+
+> Task :verifyWars
+
+BUILD SUCCESSFUL in 23s
+16 actionable tasks: 9 executed, 7 up-to-date

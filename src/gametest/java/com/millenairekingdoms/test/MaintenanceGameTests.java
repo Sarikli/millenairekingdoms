@@ -80,4 +80,35 @@ public final class MaintenanceGameTests {
     public static void normalRaidTensionControl(GameTestHelper h) throws Exception {
         AutonomyGameTests.millenaireRaidsBetweenKingdomsCreateTension(h);
     }
+    @GameTest(templateNamespace=REVIEW, template="empty", timeoutTicks=200)
+    public static void endedWarAndDeletedVillageCannotLaunchWaitingOrders(GameTestHelper h) throws Exception {
+        var a=village(h,1,1,"Cancelled source"); var b=village(h,5,5,"Cancelled enemy");var t=village(h,1,5,"Deleted target");
+        try {
+            var l=h.getLevel();var d=KingdomSavedData.get(l);var ka=kingdom(d,a);var kb=kingdom(d,b);raider(a);
+            var war=d.declareWar(ka.id(),kb.id(),l.getGameTime());
+            var order=d.addOrder(ka.id(),id(b),id(a),null,1,1,Long.MAX_VALUE/2);
+            d.peace(war.id());
+            h.assertTrue(RaidOrderService.attempt(l,d,order,ON).status()==RaidOrderService.Status.DROPPED
+                    && !b.isUnderAttack(),"Peace removes the order before it can touch Millenaire");
+            var deleted=d.addOrder(ka.id(),id(t),id(a),null,1,1,Long.MAX_VALUE/2);
+            remove(h,t);RaidOrderService.process(l);
+            h.assertTrue(d.order(deleted.id())==null && a.getRaidTarget()==null,"A deleted target drops its order safely");
+            h.succeed();
+        } finally {remove(h,a,b,t);}
+    }
+
+    @GameTest(templateNamespace=REVIEW, template="empty", timeoutTicks=200)
+    public static void rulerChangeLeavesAlreadyRunningCombatIntact(GameTestHelper h) throws Exception {
+        var a=village(h,1,1,"Continuing source");var t=village(h,5,5,"Continuing target");
+        try {
+            var l=h.getLevel();var d=KingdomSavedData.get(l);var k=kingdom(d,a);raider(a);
+            var raid=ConquestService.start(l,id(a),id(t),null);var ruler=UUID.randomUUID();
+            d.claimRule(k.id(),ruler,"NewRuler",l.getGameTime());d.abdicate(k.id(),ruler);
+            h.assertTrue(d.raid(id(t)).id().equals(raid.id()) && t.isUnderAttack(),"Authority changes retire waiting mandates, not active combat");
+            raidManager("applyLooting",a,t,l);raidManager("endRaid",a,t,l);
+            h.assertTrue(k.id().equals(d.owner(id(t))) && d.lastResult(id(t)).transferred() && d.raid(id(t))==null,
+                    "Existing Millenaire victory, transfer and cleanup still finish normally");h.succeed();
+        } finally {remove(h,a,t);}
+    }
+
 }
