@@ -2,6 +2,8 @@ package com.millenairekingdoms.economy;
 
 import com.millenairekingdoms.economy.RoyalPaymentJournal.Entry;
 import com.millenairekingdoms.economy.RoyalPaymentJournal.State;
+import com.millenairekingdoms.kingdom.KingdomSavedData;
+import com.millenairekingdoms.politics.PoliticsService;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Map;
@@ -50,6 +52,26 @@ public final class RoyalPaymentService {
     public Receipt refundNpc(UUID kingdom,UUID id) { return finish(()->RoyalTreasurySnapshot.forNpc(level,kingdom),null,id,true); }
     public Receipt refundPlayer(ServerPlayer player,UUID id) {
         requireDimension(player); return finish(()->RoyalTreasurySnapshot.forPlayer(player),player.getUUID(),id,true);
+    }
+
+    /** Authorized receipt inspection needs no physical chunk access; it never reconciles or mutates payment. */
+    public Receipt inspectNpc(UUID kingdom,UUID id) {
+        if(!level.getServer().isSameThread()) throw new IllegalStateException("Royal payments require the server thread");
+        if(!KingdomSavedData.get(level).mayDecide(kingdom,null)) throw new IllegalArgumentException("NPC agency no longer governs this kingdom");
+        return inspect(kingdom,null,id);
+    }
+    public Receipt inspectPlayer(ServerPlayer player,UUID id) {
+        requireDimension(player);
+        if(!level.getServer().isSameThread()) throw new IllegalStateException("Royal payments require the server thread");
+        return inspect(PoliticsService.ruledKingdom(player).id(),player.getUUID(),id);
+    }
+    private Receipt inspect(UUID kingdom,UUID actor,UUID id) {
+        var entry=journal.load(id); if(entry==null) return null; var request=Request.read(id,entry.intent());
+        if(!request.dimension.equals(level.dimension().location().toString()) || !request.kingdom.equals(kingdom)
+                || !request.capital.equals(KingdomSavedData.get(level).kingdom(kingdom).capital()) || !Objects.equals(request.actor,actor)) {
+            throw new IllegalArgumentException("Receipt does not belong to this dimension, capital and ruler");
+        }
+        return receipt(request,entry);
     }
 
     private Receipt pay(Supplier<RoyalTreasurySnapshot> source,UUID actor,UUID id,Purpose purpose,UUID reference,long amount) {

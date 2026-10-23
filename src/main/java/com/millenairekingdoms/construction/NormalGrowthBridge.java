@@ -29,6 +29,9 @@ final class NormalGrowthBridge {
         }
         return List.copyOf(result);
     }
+    static boolean conditions(Village village,BuildingPlanSet.LevelDef level) {
+        return (boolean)invoke(Pinned.METHODS.conditions,null,village,level);
+    }
 
     private static Methods resolve() {
         if(!"9.0.3".equals(Millenaire.getModVersion())) throw new IllegalStateException("Royal construction eligibility requires the audited Millenaire 9.0.3 API");

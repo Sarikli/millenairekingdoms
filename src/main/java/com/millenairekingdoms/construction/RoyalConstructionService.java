@@ -1,0 +1,175 @@
+package com.millenairekingdoms.construction;
+
+import com.millenairekingdoms.construction.RoyalConstructionStore.Blocked;
+import com.millenairekingdoms.construction.RoyalConstructionStore.Entry;
+import com.millenairekingdoms.construction.RoyalConstructionStore.Intent;
+import com.millenairekingdoms.construction.RoyalConstructionStore.Stage;
+import com.millenairekingdoms.economy.RoyalPaymentJournal.State;
+import com.millenairekingdoms.economy.RoyalPaymentService;
+import com.millenairekingdoms.economy.RoyalPaymentService.Purpose;
+import com.millenairekingdoms.kingdom.KingdomSavedData;
+import com.millenairekingdoms.politics.PoliticsService;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+import java.util.WeakHashMap;
+import java.util.Map;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.storage.LevelResource;
+import org.millenaire.building.BuildingInstance;
+import org.millenaire.config.MillenaireServerConfig;
+import org.millenaire.culture.ModCultures;
+import org.millenaire.village.Village;
+import org.millenaire.world.BuildingPlacer;
+
+/** Internal paid request/retry/queue acceptance. No GUI/scheduler consumer until cancellation/governance/builders gates pass.
+ * Engine placement/builders/resources remain responsible for construction; this service only fills an empty pending slot. */
+@org.jetbrains.annotations.ApiStatus.Internal
+public final class RoyalConstructionService {
+    private static final Map<MinecraftServer,Set<UUID>> BUSY=new WeakHashMap<>();
+    private final ServerLevel level;
+    private final RoyalConstructionStore orders;
+    private final RoyalPaymentService payments;
+    private final RoyalVillagePersistence persistence;
+
+    public RoyalConstructionService(ServerLevel level) { this(level,new RoyalVillagePersistence()); }
+    RoyalConstructionService(ServerLevel level,RoyalVillagePersistence persistence) {
+        this.level=level; this.persistence=persistence; this.payments=new RoyalPaymentService(level);
+        this.orders=new RoyalConstructionStore(level.getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-construction"));
+    }
+    public Entry requestNpc(UUID kingdom,UUID village,ResourceLocation planSet,UUID id) { return request(null,kingdom,village,planSet,id); }
+    public Entry requestPlayer(ServerPlayer player,UUID village,ResourceLocation planSet,UUID id) {
+        thread(); dimension(player); return request(player,PoliticsService.ruledKingdom(player).id(),village,planSet,id);
+    }
+    public Entry retryNpc(UUID kingdom,UUID id) { return retry(null,kingdom,id); }
+    public Entry retryPlayer(ServerPlayer player,UUID id) {
+        thread(); dimension(player); return retry(player,PoliticsService.ruledKingdom(player).id(),id);
+    }
+
+    private Entry request(ServerPlayer player,UUID kingdom,UUID villageId,ResourceLocation selected,UUID id) {
+        thread(); var catalog=catalog(player,kingdom,villageId);
+        return exclusive(villageId,()->{
+            var old=orders.load(id);
+            if(old!=null) {
+                bind(old,player,kingdom);
+                if(!old.intent().village().equals(villageId) || !old.intent().planSet().equals(selected)) throw new IllegalArgumentException("Order ID is bound to another village or building");
+                return advance(old,player);
+            }
+            if(!catalog.active() || !level.isLoaded(PoliticsService.village(level,villageId).getCenter())) throw new IllegalStateException("Village is unloaded; postpone royal construction");
+            if(catalog.naturalProjectPending()) throw new IllegalStateException("Village already has natural pending work; wait without replacing it");
+            var choice=catalog.options().stream().filter(o->o.planSet().equals(selected)).findFirst().orElseThrow(()->new IllegalArgumentException("Building is not a current normal-growth choice"));
+            template(choice.plan());
+            var data=KingdomSavedData.get(level); var village=PoliticsService.village(level,villageId);
+            var intent=new Intent(id,level.dimension().location().toString(),kingdom,data.kingdom(kingdom).capital(),villageId,
+                    player==null ? null : player.getUUID(),player==null ? 0 : data.ruler(kingdom).sinceGameTime(),village.getVillageTypeId(),
+                    choice.planSet(),choice.plan(),choice.variant(),choice.patronageFee(),Math.max(0,level.getGameTime()),
+                    village.getBuildings().stream().map(b->b.getId().uuid()).collect(Collectors.toSet()));
+            return advance(orders.reserve(intent),player);
+        });
+    }
+    private Entry retry(ServerPlayer player,UUID kingdom,UUID id) {
+        thread(); var entry=orders.load(id); if(entry==null) throw new IllegalArgumentException("Unknown royal order");
+        bind(entry,player,kingdom);
+        return exclusive(entry.intent().village(),()->advance(orders.load(id),player));
+    }
+
+    private Entry advance(Entry entry,ServerPlayer player) {
+        var intent=entry.intent(); bind(entry,player,intent.kingdom());
+        var village=PoliticsService.village(level,intent.village());
+        if(entry.terminal() || entry.stage()==Stage.RECOVERY_REQUIRED || entry.stage()==Stage.CANCELLING) return entry;
+        if(entry.stage()==Stage.REQUESTED) {
+            var current=catalog(player,intent.kingdom(),intent.village());
+            if(!current.active() || !level.isLoaded(village.getCenter())) return blocked(entry,Blocked.UNLOADED);
+            if(current.naturalProjectPending()) return blocked(entry,Blocked.NATURAL_PROJECT);
+            if(!eligible(current,intent)) return blocked(entry,Blocked.MISSING_PLAN);
+            template(intent.plan());
+            var receipt=player==null ? payments.payNpc(intent.kingdom(),intent.id(),Purpose.CONSTRUCTION,intent.id(),intent.fee())
+                    : payments.payPlayer(player,intent.id(),Purpose.CONSTRUCTION,intent.id(),intent.fee());
+            if(receipt.state()!=State.PAID) return orders.change(intent.id(),entry.stage(),Stage.RECOVERY_REQUIRED,Blocked.AMBIGUOUS_ENGINE_STATE,null);
+            entry=orders.change(intent.id(),Stage.REQUESTED,Stage.PAID,Blocked.NONE,null);
+        }
+        if(entry.stage()==Stage.PAID) {
+            var current=catalog(player,intent.kingdom(),intent.village());
+            if(!current.active() || !level.isLoaded(village.getCenter())) return blocked(entry,Blocked.UNLOADED);
+            if(current.naturalProjectPending()) return blocked(entry,Blocked.NATURAL_PROJECT);
+            if(!eligible(current,intent)) return blocked(entry,Blocked.MISSING_PLAN);
+            entry=orders.change(intent.id(),Stage.PAID,Stage.QUEUING,Blocked.NONE,null);
+        }
+        if(entry.stage()==Stage.QUEUING) {
+            var fresh=newBuildings(village,intent);
+            if(fresh.size()>1) return orders.change(intent.id(),entry.stage(),Stage.RECOVERY_REQUIRED,Blocked.AMBIGUOUS_ENGINE_STATE,null);
+            if(!fresh.isEmpty()) {
+                persistence.building(level,intent.village(),fresh.getFirst());
+                entry=orders.change(intent.id(),Stage.QUEUING,Stage.IN_PROGRESS,Blocked.NONE,fresh.getFirst().getId().uuid());
+            } else {
+                var pending=pending(intent);
+                if(village.getPendingProject()==null) {
+                    var current=catalog(player,intent.kingdom(),intent.village());
+                    if(!current.active() || !level.isLoaded(village.getCenter())) return blocked(entry,Blocked.UNLOADED);
+                    if(!eligible(current,intent)) return blocked(entry,Blocked.MISSING_PLAN);
+                    template(intent.plan()); village.setPendingProject(pending); village.setNoProjectsLeftUntil(0);
+                } else if(!pending.equals(village.getPendingProject())) return blocked(entry,Blocked.NATURAL_PROJECT);
+                // Original serializer, asynchronous worker acknowledgement and exact disk read-back before acceptance.
+                persistence.pending(level,intent.village(),pending);
+                entry=orders.change(intent.id(),Stage.QUEUING,Stage.QUEUED,Blocked.NONE,null);
+            }
+        }
+        if(entry.stage()==Stage.QUEUED || entry.stage()==Stage.IN_PROGRESS) {
+            // A queued record follows proven durable acceptance, even if a later engine placement attempt is blocked.
+            var receipt=player==null ? payments.inspectNpc(intent.kingdom(),intent.id()) : payments.inspectPlayer(player,intent.id());
+            if(receipt==null || receipt.amount()!=intent.fee() || receipt.purpose()!=Purpose.CONSTRUCTION || !receipt.reference().equals(intent.id())
+                    || (receipt.state()!=State.PAID && receipt.state()!=State.COMMITTED)) {
+                return orders.change(intent.id(),entry.stage(),Stage.RECOVERY_REQUIRED,Blocked.AMBIGUOUS_ENGINE_STATE,entry.building());
+            }
+            if(receipt.state()==State.PAID) {
+                if(player==null) payments.commitNpc(intent.kingdom(),intent.id()); else payments.commitPlayer(player,intent.id());
+            }
+            // Do not infer completion from metadata in this first service unit. Genuine monitoring is a later gate.
+        }
+        return entry;
+    }
+
+    private boolean eligible(RoyalConstructionCatalog.Catalog catalog,Intent intent) {
+        var set=ModCultures.getBuildingPlanSet(intent.planSet()); var def=set==null ? null : set.getLevel(intent.variant(),0);
+        return catalog.options().stream().anyMatch(o->o.planSet().equals(intent.planSet())) && def!=null && def.planId().equals(intent.plan())
+                && NormalGrowthBridge.conditions(PoliticsService.village(level,intent.village()),def);
+    }
+    private void template(ResourceLocation id) {
+        var plan=ModCultures.getBuildingPlan(id);
+        if(plan==null || MillenaireServerConfig.SERVER.ignoreResourceCost.get()
+                || BuildingPlacer.compilePreviewSteps(level,plan).stream().noneMatch(s->!s.blockState().isAir())) {
+            throw new IllegalStateException("Royal construction needs a real nonempty template and enabled resource costs");
+        }
+    }
+    private RoyalConstructionCatalog.Catalog catalog(ServerPlayer player,UUID kingdom,UUID village) {
+        if(player!=null) dimension(player);
+        var result=player==null ? RoyalConstructionCatalog.forNpc(level,kingdom,village) : RoyalConstructionCatalog.forPlayer(player,village);
+        if(!result.kingdom().equals(kingdom)) throw new IllegalArgumentException("Ruler's kingdom changed"); return result;
+    }
+    private void bind(Entry entry,ServerPlayer player,UUID kingdom) {
+        var intent=entry.intent();
+        if(!intent.dimension().equals(level.dimension().location().toString()) || !intent.kingdom().equals(kingdom)
+                || !java.util.Objects.equals(intent.actor(),player==null ? null : player.getUUID())) throw new IllegalArgumentException("Order belongs to another dimension, kingdom or ruler");
+        catalog(player,kingdom,intent.village()); var data=KingdomSavedData.get(level);
+        if(!data.kingdom(kingdom).capital().equals(intent.capital()) || !PoliticsService.village(level,intent.village()).getVillageTypeId().equals(intent.villageType())
+                || (player!=null && data.ruler(kingdom).sinceGameTime()!=intent.rulerSince())) throw new IllegalArgumentException("Order authority, capital or village type changed");
+    }
+    private static Village.PendingProject pending(Intent intent) { return new Village.PendingProject(intent.planSet(),intent.variant(),0,false,null); }
+    private static java.util.List<BuildingInstance> newBuildings(Village village,Intent intent) {
+        return village.getBuildings().stream().filter(b->!intent.originalBuildings().contains(b.getId().uuid()) && intent.planSet().equals(b.getPlanSetId())
+                && intent.plan().equals(b.getPlanId()) && intent.variant().equals(b.getVariant()) && b.getLevel()==0).toList();
+    }
+    private Entry blocked(Entry entry,Blocked reason) { return orders.change(entry.intent().id(),entry.stage(),entry.stage(),reason,entry.building()); }
+    private <T> T exclusive(UUID village,Supplier<T> action) {
+        Set<UUID> busy=BUSY.computeIfAbsent(level.getServer(),key->new HashSet<>());
+        if(!busy.add(village)) throw new IllegalStateException("Village order is already being processed");
+        try { return action.get(); } finally { busy.remove(village); }
+    }
+    private void dimension(ServerPlayer player) { if(player.serverLevel()!=level) throw new IllegalArgumentException("Ruler moved to another dimension"); }
+    private void thread() { if(!level.getServer().isSameThread()) throw new IllegalStateException("Royal construction requires the server thread"); }
+}

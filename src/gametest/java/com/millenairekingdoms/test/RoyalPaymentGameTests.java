@@ -392,7 +392,7 @@ public final class RoyalPaymentGameTests {
                 .filter(p->p.getPointsByType(SpecialPoint.CHEST).stream().map(s->s.pos().getX()).distinct().count()>1)
                 .sorted(java.util.Comparator.comparing(p->p.id().toString())).findFirst().orElseThrow();
         int minX=plan.getPointsByType(SpecialPoint.CHEST).stream().mapToInt(p->p.pos().getX()).min().orElseThrow();
-        var origin=new BlockPos(10_000+NEXT.incrementAndGet()*128+15-minX,-50,24_000);
+        var origin=new BlockPos(("read".equals(System.getProperty("kingdoms.tests.persistence")) ? 110_000 : 10_000)+NEXT.incrementAndGet()*128+15-minX,-50,24_000);
         var type=ModCultures.getAllVillageTypes().values().stream().filter(t->!t.loneBuilding() && t.culture().equals(plan.culture())).findFirst().orElseThrow();
         var village=new Village(VillageId.random(),type.culture(),type.id(),origin); village.setVillageName("Royal "+name);
         var townhall=new BuildingInstance(BuildingId.random(),plan.id(),origin,Rotation.NONE,BuildingInstance.Status.COMPLETE);
