@@ -1,0 +1,11 @@
+{
+  "suite": "verifyRoyalConstruction",
+  "write": 12,
+  "reload": 12,
+  "fresh_world": "royal-order-store-01",
+  "separate_jvms": true,
+  "normal_build_passed": true,
+  "development_jar_sha256": "80e0c95ffe129f6c3c5a554f3fc4e7382b994147d646effeab2910b47a825391",
+  "catalog_and_order_metadata_only": true,
+  "paid_orders_or_actual_npc_construction_tested": false
+}
