@@ -1,5 +1,10 @@
 # Millénaire Kingdoms
 
+> **1.2.0 development branch — By Royal Decree.** This branch targets Millénaire 9.0.3.
+> The new royal economy, construction, shipment and personality features are not yet implemented.
+> See [progress](docs/1.2.0_PROGRESS.md) and [development setup](docs/1.2.0_DEVELOPMENT.md).
+> Historical 1.1.1 release artifacts and reports remain unchanged.
+
 A medieval kingdom layer for [Millénaire](https://millenaire.org) villages: NPC kingdoms with their own capitals,
 player rulers, diplomacy, war and peace, conquest through **real Millénaire raids**, daily taxes paid into a capital
 treasury, and independent villages that grow into kingdoms of their own. Everything is managed from an in-game
@@ -10,10 +15,10 @@ left untouched, and the original Millénaire JAR is never modified.
 
 | | |
 |---|---|
-| Mod version | 1.1.1 |
+| Development version | 1.2.0-dev.1 |
 | Minecraft | 1.21.1 |
 | Loader | NeoForge 21.1.259 |
-| Required dependency | Millénaire 9.0.2 |
+| Required dependency | Millénaire 9.0.3 |
 | Java | 21 |
 | Mod ID | `millenairekingdoms` |
 | Languages | English, Turkish |
@@ -118,12 +123,14 @@ Kingdom data is stored per dimension in `data/millenairekingdoms_kingdoms.dat`, 
 
 ## Building from source
 
-Millénaire is not included in this repository. Download **Millénaire 9.0.2** yourself and place it in the project root
-as `millenaire-9.0.2.jar`. The build verifies its SHA-256 checksum:
+Millénaire is not included in this repository. Download the pinned original **Millénaire 9.0.3** JAR from the official site with:
 
-```text
-8665fcb513dc17eed08fee4b30dae988f45157f72d332ab795611b3761cbc92f
+```bash
+bash scripts/setup-millenaire.sh
 ```
+
+The script and build verify SHA-256 `5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62`.
+The dependency is stored locally as ignored `millenaire-9.0.3.jar`; never redistribute it with this addon.
 
 Then build with the Gradle wrapper (Java 21 required):
 

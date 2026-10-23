@@ -21,7 +21,8 @@ printf 'This directory is retained after exit; save test data elsewhere before s
 for name in settings.gradle build.gradle gradle.properties gradlew gradlew.bat gradle src; do
     cp -a -- "$project_dir/$name" "$dev_dir/"
 done
-cp -- "$project_dir/millenaire-9.0.2.jar" "$dev_dir/"
+millenaire_version=$(sed -n 's/^millenaire_version=//p' "$project_dir/gradle.properties")
+cp -- "$project_dir/millenaire-${millenaire_version}.jar" "$dev_dir/"
 mkdir -p "$dev_dir/.gradle-user-home"
 for name in caches wrapper; do
     if [[ -d "$project_dir/.gradle-user-home/$name" ]]; then
