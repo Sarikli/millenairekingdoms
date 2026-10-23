@@ -1,0 +1,119 @@
+package com.millenairekingdoms.economy;
+
+import com.millenairekingdoms.kingdom.KingdomSavedData;
+import com.millenairekingdoms.politics.PoliticsService;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.UUID;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.ChestType;
+import org.millenaire.building.BuildingInventory;
+
+/** Authorized read-only physical treasury quote. No chunk loading, coin mutation or paid receipt.
+ * The future coordinator must revalidate immediately before its journaled mutation. */
+public final class RoyalTreasurySnapshot {
+    private record Chest(BlockPos position, ChestBlockEntity entity, BlockState state) {}
+    private final ServerLevel level;
+    private final ServerPlayer player;
+    private final UUID kingdom, capital;
+    private final BuildingInventory storage;
+    private final List<BlockPos> declaredChests;
+    private final List<Chest> chests;
+    private final List<ItemStack> slots;
+
+    public static RoyalTreasurySnapshot forNpc(ServerLevel level, UUID kingdom) {
+        return new RoyalTreasurySnapshot(level,null,kingdom);
+    }
+    public static RoyalTreasurySnapshot forPlayer(ServerPlayer player) {
+        thread(player.serverLevel());
+        return new RoyalTreasurySnapshot(player.serverLevel(),player,PoliticsService.ruledKingdom(player).id());
+    }
+
+    private RoyalTreasurySnapshot(ServerLevel level, ServerPlayer player, UUID kingdom) {
+        thread(level);
+        this.level=level; this.player=player; this.kingdom=kingdom;
+        var current=authority(); this.capital=current.capital();
+        this.storage=EconomyService.storage(level,current);
+        if(storage==null || storage.getChestPositions().isEmpty()) throw new IllegalStateException("Capital town hall storage is unavailable");
+        this.declaredChests=storage.getChestPositions().stream().map(BlockPos::immutable).toList();
+        var resolved=new LinkedHashMap<BlockPos,Chest>();
+        for(BlockPos position:declaredChests) {
+            Chest chest=resolve(position); resolved.putIfAbsent(position,chest);
+            if(chest.state.getValue(ChestBlock.TYPE)!=ChestType.SINGLE) {
+                BlockPos neighbor=position.relative(ChestBlock.getConnectedDirection(chest.state));
+                Chest other=resolve(neighbor);
+                if(other.state.getBlock()!=chest.state.getBlock() || other.state.getValue(ChestBlock.FACING)!=chest.state.getValue(ChestBlock.FACING)
+                        || other.state.getValue(ChestBlock.TYPE)==ChestType.SINGLE
+                        || !neighbor.relative(ChestBlock.getConnectedDirection(other.state)).equals(position)) {
+                    throw new IllegalStateException("Town hall double chest connection changed");
+                }
+                resolved.putIfAbsent(neighbor,other);
+            }
+        }
+        this.chests=List.copyOf(resolved.values());
+        this.slots=readSlots();
+    }
+
+    public UUID kingdom() { return kingdom; }
+    public UUID capital() { return capital; }
+    public List<BlockPos> positions() { return chests.stream().map(Chest::position).toList(); }
+    public List<ItemStack> slots() { return slots.stream().map(ItemStack::copy).toList(); }
+    public long spendableValue() { return RoyalCoinPlan.spendableValue(slots); }
+    public RoyalCoinPlan.Plan planDebit(long amount) { requireUnchanged(); return RoyalCoinPlan.debit(slots,amount); }
+
+    public void requireUnchanged() {
+        thread(level);
+        var current=authority();
+        if(!capital.equals(current.capital()) || EconomyService.storage(level,current)!=storage
+                || !declaredChests.equals(storage.getChestPositions())) throw new IllegalStateException("Capital storage changed; obtain a new quote");
+        for(Chest chest:chests) {
+            if(!level.isLoaded(chest.position) || level.getBlockEntity(chest.position)!=chest.entity
+                    || !level.getBlockState(chest.position).equals(chest.state)) {
+                throw new IllegalStateException("Treasury chest unloaded, replaced or reconnected; obtain a new quote");
+            }
+        }
+        var actual=readSlots();
+        if(actual.size()!=slots.size()) throw new IllegalStateException("Treasury inventory size changed");
+        for(int i=0;i<actual.size();i++) if(!ItemStack.matches(actual.get(i),slots.get(i))) {
+            throw new IllegalStateException("Treasury inventory changed; obtain a new quote");
+        }
+    }
+
+    private KingdomSavedData.Kingdom authority() {
+        if(player!=null && player.serverLevel()!=level) throw new IllegalArgumentException("Ruler moved to another dimension; obtain a new quote");
+        var data=KingdomSavedData.get(level); var current=data.kingdom(kingdom);
+        if(current==null || !data.mayDecide(kingdom,player==null ? null : player.getUUID())) {
+            throw new IllegalArgumentException("This ruler cannot spend for the active kingdom");
+        }
+        if(player!=null && !PoliticsService.ruledKingdom(player).id().equals(kingdom)) {
+            throw new IllegalArgumentException("This player no longer rules the quoted kingdom");
+        }
+        return current;
+    }
+
+    private Chest resolve(BlockPos position) {
+        // Check before getBlockState/getBlockEntity: never turn a quote into a distant chunk-load request.
+        if(!level.isLoaded(position)) throw new IllegalStateException("Treasury chunk is unloaded; postpone the operation");
+        var state=level.getBlockState(position); var entity=level.getBlockEntity(position);
+        if(!(state.getBlock() instanceof ChestBlock) || !(entity instanceof ChestBlockEntity chest)) {
+            throw new IllegalStateException("Town hall chest is missing or unsupported");
+        }
+        return new Chest(position.immutable(),chest,state);
+    }
+
+    private List<ItemStack> readSlots() {
+        var result=new ArrayList<ItemStack>();
+        for(Chest chest:chests) for(int slot=0;slot<chest.entity.getContainerSize();slot++) result.add(chest.entity.getItem(slot).copy());
+        return result;
+    }
+    private static void thread(ServerLevel level) {
+        if(!level.getServer().isSameThread()) throw new IllegalStateException("Treasury access must run on the server thread");
+    }
+}
