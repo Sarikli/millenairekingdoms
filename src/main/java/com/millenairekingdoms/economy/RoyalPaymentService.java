@@ -87,16 +87,24 @@ public final class RoyalPaymentService {
             if((refund && entry.state()==State.REFUNDED) || (!refund && entry.state()==State.COMMITTED)) return receipt(request,entry);
             guard(request);
             if(refund) {
+                // Cancellation after an interrupted debit first reconciles that exact debit, then refunds it.
+                // If interrupted between PAID and REFUND_PREPARED, retry this cancellation; never fulfill the domain action.
+                if(entry.state()==State.PREPARED) {
+                    settle(source,request,entry);
+                    entry=journal.load(id);
+                    if(entry.state()==State.RECOVERY_REQUIRED) return receipt(request,entry);
+                }
                 if(entry.state()==State.REFUNDED) return receipt(request,entry);
                 if(entry.state()==State.REFUND_PREPARED) return settle(source,request,entry);
                 if(entry.state()!=State.PAID) throw new IllegalStateException("Only an unfulfilled PAID payment can be refunded: "+entry.state());
                 var recovery=entry.recovery(); var debit=image(recovery,"debit",request.amount,false);
-                try { debit.requireStorage(level,quote); }
+                var refundQuote=source.get();
+                try { debit.requireStorage(level,refundQuote); }
                 catch(IllegalStateException e) { return quarantine(request,entry,e); }
                 // Refunds add the original amount to CURRENT stock, preserving later legitimate changes.
-                var plan=debit.refundPlan(quote);
-                var image=RoyalTreasuryImage.create(level,quote,plan);
-                persistence.flush(level,quote.positions()); quote.requireUnchanged(); persistence.verify(level,image,false);
+                var plan=debit.refundPlan(refundQuote);
+                var image=RoyalTreasuryImage.create(level,refundQuote,plan);
+                persistence.flush(level,refundQuote.positions()); refundQuote.requireUnchanged(); persistence.verify(level,image,false);
                 recovery.put("refund",image.save(level));
                 entry=journal.transition(id,State.PAID,State.REFUND_PREPARED,recovery);
                 return settle(source,request,entry);

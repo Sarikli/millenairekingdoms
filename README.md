@@ -1,7 +1,7 @@
 # Millénaire Kingdoms
 
 > **1.2.0 development branch — By Royal Decree.** This branch targets Millénaire 9.0.3.
-> The new royal economy, construction, shipment and personality features are not yet implemented.
+> The real-coin payment foundation is implemented and tested. Paid construction, shipments and personality gameplay remain in development.
 > See [progress](docs/1.2.0_PROGRESS.md) and [development setup](docs/1.2.0_DEVELOPMENT.md).
 > Historical 1.1.1 release artifacts and reports remain unchanged.
 
@@ -15,7 +15,7 @@ left untouched, and the original Millénaire JAR is never modified.
 
 | | |
 |---|---|
-| Development version | 1.2.0-dev.1 |
+| Development version | 1.2.0-dev.2 |
 | Minecraft | 1.21.1 |
 | Loader | NeoForge 21.1.259 |
 | Required dependency | Millénaire 9.0.3 |

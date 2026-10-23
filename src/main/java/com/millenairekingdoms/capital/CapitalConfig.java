@@ -1,6 +1,7 @@
 package com.millenairekingdoms.capital;
 
 import com.millenairekingdoms.autonomy.AutonomyConfig;
+import com.millenairekingdoms.economy.RoyalEconomyConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 /** Server config, stored per world in serverconfig/millenairekingdoms-server.toml. */
@@ -22,6 +23,7 @@ public final class CapitalConfig {
         b.pop();
         AutonomyConfig.define(b);
         FoundingConfig.define(b);
+        RoyalEconomyConfig.define(b);
         SPEC = b.build();
     }
 

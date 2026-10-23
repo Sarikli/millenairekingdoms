@@ -267,6 +267,28 @@ public final class RoyalPaymentGameTests {
     }
 
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void cancellationOfPreparedAfterImageReturnsOnlyOriginalPayment(GameTestHelper h) throws Exception {
+        try(var f=fixture(h,"cancel-after")) {
+            f.chest().setItem(0,new ItemStack(ModItems.DENIER.get(),10)); var id=UUID.randomUUID();
+            refused(h,()->f.service(failSecondFlush(true)).payNpc(f.kingdom,id,Purpose.CONSTRUCTION,REFERENCE,1));
+            h.assertTrue(f.service().refundNpc(f.kingdom,id).state()==State.REFUNDED && f.value()==10,"Cancellation reconciles prepared debit and returns exactly its one denier");
+            f.service().refundNpc(f.kingdom,id);
+            h.assertTrue(f.value()==10 && f.service().payNpc(f.kingdom,id,Purpose.CONSTRUCTION,REFERENCE,1).state()==State.REFUNDED,"Cancelled request cannot charge/refund again"); h.succeed();
+        }
+    }
+
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void cancellationOfPreparedBeforeImageDoesNotCreateAFreeRefund(GameTestHelper h) throws Exception {
+        try(var f=fixture(h,"cancel-before")) {
+            f.chest().setItem(0,new ItemStack(ModItems.DENIER.get(),10)); var id=UUID.randomUUID();
+            refused(h,()->f.service(failSecondFlush(false)).payNpc(f.kingdom,id,Purpose.CONSTRUCTION,REFERENCE,1));
+            f.chest().setItem(0,new ItemStack(ModItems.DENIER.get(),10)); // Discard the unsaved debit, as at the tested before-write crash boundary.
+            new RoyalTreasuryPersistence().flush(f.level,List.of(f.position));
+            h.assertTrue(f.service().refundNpc(f.kingdom,id).state()==State.REFUNDED && f.value()==10,"Unpersisted debit cancellation has zero net effect, never credits an unpaid denier"); h.succeed();
+        }
+    }
+
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
     public static void preparedDebitWithIndependentlySavedChunksRecoversAfterJvmRestart(GameTestHelper h) throws Exception {
         restart(h,"partial-debit",false,false);
     }
