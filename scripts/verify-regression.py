@@ -17,7 +17,8 @@ if runner[:1] == ['--']:
     runner = runner[1:]
 runner = runner or ['bash', str(project / 'gradlew')]
 suites = {'verifyWars': 30, 'verifyConquest': 25, 'verifyStage5': 24,
-          'verifyCapitals': 5, 'verifyAutonomy': 22, 'verifyGui': 7, 'verifyFounding': 12}
+          'verifyCapitals': 5, 'verifyAutonomy': 22, 'verifyGui': 7, 'verifyFounding': 12,
+          'verifyRoyalEconomy': 8}
 results = []
 print('Evidence directory:', output, flush=True)
 for suite, expected in suites.items():

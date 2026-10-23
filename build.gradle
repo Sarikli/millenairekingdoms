@@ -185,6 +185,24 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_gui_tests'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        royalEconomyGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_economy_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        royalEconomyGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_economy_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
         configureEach {
             logLevel = org.slf4j.event.Level.INFO
             jvmArguments.addAll '-Xms512m', '-Xmx3G'
@@ -322,4 +340,12 @@ tasks.register('verifyFounding') {
     group = 'verification'
     description = 'Runs only the 1.1.0 kingdom-founding tests on real Millénaire records and villages, then verifies them after a restart.'
     dependsOn tasks.named('runFoundingGameTestServerReload')
+}
+
+// Royal coin/change planning; full durable spending remains a separate service.
+tasks.named('runRoyalEconomyGameTestServerReload') { dependsOn tasks.named('runRoyalEconomyGameTestServer') }
+tasks.register('verifyRoyalEconomy') {
+    group = 'verification'
+    description = 'Verifies royal coin planning and real-chest change across separate JVMs.'
+    dependsOn tasks.named('runRoyalEconomyGameTestServerReload')
 }

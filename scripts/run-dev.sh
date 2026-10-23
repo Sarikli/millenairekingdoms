@@ -4,8 +4,8 @@ set -euo pipefail
 task=${1:-runClient}
 if (($#)); then shift; fi
 case "$task" in
-    runClient|runServer|runServerJar|verifyConquest|verifyWars|verifyStage5|verifyCapitals|verifyAutonomy|verifyGui|verifyFounding) ;;
-    *) printf 'Supported tasks: runClient, runServer, runServerJar, verifyConquest, verifyWars, verifyStage5, verifyCapitals, verifyAutonomy, verifyGui, verifyFounding\n' >&2; exit 2 ;;
+    runClient|runServer|runServerJar|verifyConquest|verifyWars|verifyStage5|verifyCapitals|verifyAutonomy|verifyGui|verifyFounding|verifyRoyalEconomy) ;;
+    *) printf 'Supported tasks: runClient, runServer, runServerJar, verifyConquest, verifyWars, verifyStage5, verifyCapitals, verifyAutonomy, verifyGui, verifyFounding, verifyRoyalEconomy\n' >&2; exit 2 ;;
 esac
 
 project_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)
