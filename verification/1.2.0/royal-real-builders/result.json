@@ -1,0 +1,20 @@
+{
+  "suite": "verifyRoyalConstruction",
+  "write": 48,
+  "reload": 48,
+  "fresh_world": "royal-real-build-03",
+  "separate_jvms": true,
+  "normal_build_passed": true,
+  "development_jar_sha256": "68d9138fc0eb14ec0b7c64dcb86737c682c02a612be0a16603c5b82a9e47daca",
+  "actual_npc_construction_completed": true,
+  "original_plan": "millenaire:norman/lumbermanhut_a_0",
+  "task_cursor_before_restart": 2197,
+  "total_steps": 2447,
+  "task_cursor_after_restart": 2447,
+  "watched_item": "minecraft:spruce_log",
+  "actual_carried_before_restart": 14,
+  "actual_carried_after_completion": 0,
+  "initial_template_block_match": 0.0,
+  "final_template_block_match": 1.0,
+  "gui_or_scheduler_exposed": false
+}

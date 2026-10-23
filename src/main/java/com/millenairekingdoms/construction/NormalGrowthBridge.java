@@ -15,7 +15,7 @@ import org.millenaire.village.VillageGrowthManager;
  * Missing/private signature changes fail closed instead of offering invented construction candidates. */
 final class NormalGrowthBridge {
     record Candidate(BuildingPlanSet set,BuildingPlanSet.LevelDef level,String variant,boolean upgrade) {}
-    private record Methods(Method candidates,Method set,Method level,Method variant,Method upgrade,Method conditions) {}
+    private record Methods(Method candidates,Method set,Method level,Method variant,Method upgrade,Method conditions,Method resources) {}
     private static final class Pinned { static final Methods METHODS=resolve(); }
     private NormalGrowthBridge() {}
 
@@ -32,6 +32,9 @@ final class NormalGrowthBridge {
     static boolean conditions(Village village,BuildingPlanSet.LevelDef level) {
         return (boolean)invoke(Pinned.METHODS.conditions,null,village,level);
     }
+    static boolean resources(ServerLevel level,Village village,BuildingPlanSet.LevelDef definition) {
+        return (boolean)invoke(Pinned.METHODS.resources,null,level,village,definition);
+    }
 
     private static Methods resolve() {
         if(!"9.0.3".equals(Millenaire.getModVersion())) throw new IllegalStateException("Royal construction eligibility requires the audited Millenaire 9.0.3 API");
@@ -39,7 +42,8 @@ final class NormalGrowthBridge {
             Class<?> record=Class.forName("org.millenaire.village.VillageGrowthManager$GrowthCandidate",false,VillageGrowthManager.class.getClassLoader());
             return new Methods(method(VillageGrowthManager.class,"getAllCandidates",ServerLevel.class,Village.class,VillageType.class),
                     method(record,"planSet"),method(record,"levelDef"),method(record,"variant"),method(record,"isUpgrade"),
-                    method(VillageGrowthManager.class,"checkNewBuildingConditions",Village.class,BuildingPlanSet.LevelDef.class));
+                    method(VillageGrowthManager.class,"checkNewBuildingConditions",Village.class,BuildingPlanSet.LevelDef.class),
+                    method(VillageGrowthManager.class,"hasResourcesForProject",ServerLevel.class,Village.class,BuildingPlanSet.LevelDef.class));
         } catch(ReflectiveOperationException e) { throw new IllegalStateException("Audited normal-growth API is unavailable; no royal building can be offered",e); }
     }
     private static Method method(Class<?> owner,String name,Class<?>... parameters) throws NoSuchMethodException {

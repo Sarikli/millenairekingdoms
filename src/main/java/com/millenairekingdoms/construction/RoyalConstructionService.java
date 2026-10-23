@@ -54,6 +54,12 @@ public final class RoyalConstructionService {
     public Entry cancelPlayer(ServerPlayer player,UUID id) {
         thread(); dimension(player); return cancel(player,PoliticsService.ruledKingdom(player).id(),id);
     }
+    /** Internal bounded scheduler/diagnostic operation; does not impersonate an offline actor or initiate spending. */
+    public Entry observe(UUID id) {
+        thread(); var entry=orders.load(id); if(entry==null) throw new IllegalArgumentException("Unknown royal order");
+        if(!entry.intent().dimension().equals(level.dimension().location().toString())) throw new IllegalArgumentException("Order belongs to another dimension");
+        return exclusive(entry.intent().village(),()->new RoyalConstructionMonitor(level,orders,persistence).observe(orders.load(id)));
+    }
 
     /** Resume only a durable governance retirement. Offline actors are not routed through the NPC request path. */
     public Entry settleRetired(UUID id) {
@@ -165,7 +171,7 @@ public final class RoyalConstructionService {
             if(receipt.state()==State.PAID) {
                 if(player==null) payments.commitNpc(intent.kingdom(),intent.id()); else payments.commitPlayer(player,intent.id());
             }
-            // Do not infer completion from metadata in this first service unit. Genuine monitoring is a later gate.
+            entry=new RoyalConstructionMonitor(level,orders,persistence).observe(entry);
         }
         return entry;
     }

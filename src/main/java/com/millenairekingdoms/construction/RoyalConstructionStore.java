@@ -30,7 +30,7 @@ public final class RoyalConstructionStore {
     private static final int FORMAT=2, MAX_ORDERS=10_000;
     private static final long MAX_BYTES=16L*1024*1024;
     public enum Stage { REQUESTED, PAID, QUEUING, QUEUED, IN_PROGRESS, COMPLETED, CANCELLING, CANCELLED, FAILED, RECOVERY_REQUIRED }
-    public enum Blocked { NONE, NATURAL_PROJECT, UNLOADED, MATERIALS, NO_SPACE, AUTHORITY, MEMBERSHIP, MISSING_PLAN, AMBIGUOUS_ENGINE_STATE }
+    public enum Blocked { NONE, NATURAL_PROJECT, UNLOADED, MATERIALS, NO_SPACE, AUTHORITY, MEMBERSHIP, MISSING_PLAN, AMBIGUOUS_ENGINE_STATE, BUILDER_BLOCKED, BUILDING_MISSING }
 
     public record Intent(UUID id,String dimension,UUID kingdom,UUID capital,UUID village,UUID actor,long rulerSince,
                          ResourceLocation villageType,ResourceLocation planSet,ResourceLocation plan,String variant,
