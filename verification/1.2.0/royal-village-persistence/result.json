@@ -1,0 +1,11 @@
+{
+  "suite": "verifyRoyalConstruction",
+  "write": 15,
+  "reload": 15,
+  "fresh_world": "royal-village-barrier-02",
+  "separate_jvms": true,
+  "normal_build_passed": true,
+  "development_jar_sha256": "5adbb9e756389b18dc727ecc1fd0943770d497ba14a9cae9548ec17b3f5fb53e",
+  "original_saveddata_worker_readback_tested": true,
+  "live_paid_order_or_npc_construction_completed": false
+}

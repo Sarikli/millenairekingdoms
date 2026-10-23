@@ -135,9 +135,9 @@ public final class RoyalCatalogGameTests {
         System.out.println("ROYAL_CATALOG_RESTART_WRITE_PASS"); h.succeed();
     }
 
-    private record Fixture(ServerLevel level,Village village,UUID kingdom) implements AutoCloseable {
+    record Fixture(ServerLevel level,Village village,UUID kingdom) implements AutoCloseable {
         RoyalConstructionCatalog.Catalog catalog() { return RoyalConstructionCatalog.forNpc(level,kingdom,village.getId().uuid()); }
-        @Override public void close() { VillageSavedData.get(level).getVillageManager().removeVillage(village.getId()); }
+        @Override public void close() { VillageSavedData.get(level).getVillageManager().removeVillage(village.getId()); VillageSavedData.get(level).setDirty(); }
     }
     private static Fixture fixture(GameTestHelper h,VillageType type) {
         var level=h.getLevel(); var center=new BlockPos(7_000_000+NEXT.incrementAndGet()*512,64,7_000_000);
@@ -154,7 +154,7 @@ public final class RoyalCatalogGameTests {
         var kingdom=KingdomSavedData.get(level).create("Royal catalog "+UUID.randomUUID(),village.getId().uuid());
         return new Fixture(level,village,kingdom.id());
     }
-    private static Fixture eligible(GameTestHelper h) {
+    static Fixture eligible(GameTestHelper h) {
         for(var type:ModCultures.getAllVillageTypes().values().stream().filter(t->!t.loneBuilding() && !t.playerControlled())
                 .sorted(Comparator.comparing(t->t.id().toString())).toList()) {
             var f=fixture(h,type); if(!f.catalog().options().isEmpty()) return f; f.close();
