@@ -369,8 +369,29 @@ public final class KingdomSavedData extends SavedData {
         return current;
     }
     private void publishRulers(Map<UUID, Ruler> rulers) {
+        // A mandate belongs to a tenure, not just a player UUID. Retire waiting orders in the same transaction
+        // as the authority change; even an immediate abdicate/reclaim cannot revive the old mandate.
+        Set<UUID> changed = new HashSet<>(state.rulers.keySet());
+        changed.addAll(rulers.keySet());
+        changed.removeIf(k -> java.util.Objects.equals(state.rulers.get(k), rulers.get(k)));
+        var orders = new HashMap<>(state.ledger.orders);
+        orders.values().removeIf(o -> changed.contains(o.kingdom));
+        var joins = new HashMap<>(state.ledger.joinRequests);
+        // Returning to NPC rule withdraws unresolved applications; villages may apply/join again under current rules.
+        // Taking over from another ruler does not silently accept or discard that kingdom's applications.
+        joins.values().removeIf(r -> changed.contains(r.kingdom) && !rulers.containsKey(r.kingdom));
         publish(new State(state.kingdoms, state.membership, state.revisions, state.progress,
-                state.active, state.receipts, state.last, state.wars, rulers, state.ledger));
+                state.active, state.receipts, state.last, state.wars, rulers, state.ledger.withOrders(orders).withJoins(joins)));
+    }
+
+    /** Repairs unresolved applications left by older versions after abdication. Run on the server's daily step,
+     * never inside the NBT reader: loading an old world preserves its data until the normal lifecycle resumes. */
+    public int releaseUnruledJoinRequests() {
+        var joins = new HashMap<>(state.ledger.joinRequests);
+        joins.values().removeIf(r -> npcGoverned(r.kingdom));
+        int released = state.ledger.joinRequests.size() - joins.size();
+        if (released > 0) publishLedger(state.ledger.withJoins(joins));
+        return released;
     }
 
     /** A player's own village becomes the capital of a new kingdom ruled by that player, in one snapshot.

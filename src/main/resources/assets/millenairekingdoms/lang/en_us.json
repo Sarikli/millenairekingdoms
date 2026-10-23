@@ -184,5 +184,7 @@
   "millenairekingdoms.gui.storage_hidden": "Only the ruler sees the treasury stock.",
   "millenairekingdoms.gui.storage_unloaded": "The capital's storage is not loaded; stand near the capital to see the coins.",
   "millenairekingdoms.gui.culture": "Culture: %s",
-  "millenairekingdoms.gui.target_progress": "Conquest progress: %s/%s"
+  "millenairekingdoms.gui.target_progress": "Conquest progress: %s/%s",
+  "millenairekingdoms.command.unknown_village": "Unknown village: %s",
+  "millenairekingdoms.command.ambiguous_village": "Several villages are named %s; use a village UUID."
 }

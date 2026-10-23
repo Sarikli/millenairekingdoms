@@ -184,5 +184,7 @@
   "millenairekingdoms.gui.storage_hidden": "Hazine stokunu yalnızca hükümdar görür.",
   "millenairekingdoms.gui.storage_unloaded": "Başkentin deposu yüklü değil; sikkeleri görmek için başkente yaklaş.",
   "millenairekingdoms.gui.culture": "Kültür: %s",
-  "millenairekingdoms.gui.target_progress": "Fetih ilerlemesi: %s/%s"
+  "millenairekingdoms.gui.target_progress": "Fetih ilerlemesi: %s/%s",
+  "millenairekingdoms.command.unknown_village": "Bilinmeyen köy: %s",
+  "millenairekingdoms.command.ambiguous_village": "%s adında birden fazla köy var; köy UUID’sini kullanın."
 }

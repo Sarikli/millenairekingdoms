@@ -111,4 +111,43 @@ public final class GuiGameTests {
         } finally { remove(h, r.capital(), member, free); KingdomSavedData.get(h.getLevel()).clearRuler(r.kingdom().id()); }
     }
 
+    @GameTest(templateNamespace = NS, template = "empty", timeoutTicks = 200)
+    public static void commandsResolveQuotedVillageAndKingdomNamesSafely(GameTestHelper h) throws Exception {
+        var capital = AutonomySupport.village(h, 1, 1, "Named capital");
+        var member = AutonomySupport.village(h, 5, 5, "Named village");
+        var duplicate = AutonomySupport.village(h, 1, 5, "Named village");
+        try {
+            var level = h.getLevel(); var d = KingdomSavedData.get(level);
+            var k = d.create("Named kingdom " + UUID.randomUUID(), id(capital));
+            var source = level.getServer().createCommandSourceStack().withLevel(level).withPermission(2);
+            var commands = level.getServer().getCommands().getDispatcher();
+            var quote = (java.util.function.Function<String,String>) com.mojang.brigadier.arguments.StringArgumentType::escapeIfRequired;
+            int result;
+            try { result = commands.execute("kingdoms info " + quote.apply(k.name()), source); }
+            catch (com.mojang.brigadier.exceptions.CommandSyntaxException unsupported) { result = -1; }
+            h.assertTrue(result == 1, "Operator commands must accept a quoted kingdom name as well as UUID");
+            var before = d.save(new net.minecraft.nbt.CompoundTag(),level.registryAccess());
+            h.assertTrue(commands.execute("kingdoms attach " + quote.apply(k.name()) + " \"Named village\"", source) == 0,
+                    "An ambiguous village name is refused instead of choosing a village arbitrarily");
+            h.assertTrue(before.equals(d.save(new net.minecraft.nbt.CompoundTag(),level.registryAccess())), "Ambiguity changes no records");
+            duplicate.setVillageName("Other named village");
+            h.assertTrue(commands.execute("kingdoms attach " + quote.apply(k.name()) + " \"Named village\"", source)==1
+                    && k.id().equals(d.owner(id(member))), "Unique quoted village name attaches the intended village");
+            h.assertTrue(commands.execute("kingdoms village " + id(member), source)==1,"Existing UUID syntax remains valid");
+            var guest=Stage5Support.player(h,"NameGuest",capital);
+            h.assertTrue(Stage5Support.run(guest,"kingdoms info " + quote.apply(k.name()))==-1,"Name resolution grants no operator permission");
+            d.claimRule(k.id(),guest.getUUID(),"NameGuest",level.getGameTime());
+            Stage5Support.reputation(h,capital,guest.getUUID(),40000);
+            d.requestJoin(id(duplicate),k.id(),null,"",level.getGameTime());
+            h.assertTrue(Stage5Support.run(guest,"kingdom refuse \"Other named village\"")==1 && d.joinRequest(id(duplicate))==null,
+                    "Player application commands accept village names with the same ruler checks");
+            raider(capital);
+            h.assertTrue(Stage5Support.run(guest,"kingdom raid \"Other named village\" \"Named capital\"")==1
+                    && d.raid(id(duplicate))!=null,"Named source and target start a real raid through the existing service");
+            AutonomySupport.raidManager("endRaid",capital,duplicate,level);
+            d.clearRuler(k.id());
+            h.succeed();
+        } finally { remove(h,capital,member,duplicate); }
+    }
+
 }

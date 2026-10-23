@@ -1,0 +1,652 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :createMinecraftArtifacts UP-TO-DATE
+
+> Task :verifyMillenaireJar
+Original Millénaire 9.0.2 SHA-256 verified: 8665fcb513dc17eed08fee4b30dae988f45157f72d332ab795611b3761cbc92f
+
+> Task :compileJava UP-TO-DATE
+> Task :generateModMetadata UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :compileGametestJava UP-TO-DATE
+> Task :processGametestResources UP-TO-DATE
+> Task :gametestClasses UP-TO-DATE
+> Task :downloadAssets UP-TO-DATE
+> Task :writeGameTestServerReloadLegacyClasspath UP-TO-DATE
+> Task :prepareGameTestServerReloadRun UP-TO-DATE
+> Task :writeGameTestServerLegacyClasspath UP-TO-DATE
+> Task :prepareGameTestServerRun UP-TO-DATE
+> Task :jarJar NO-SOURCE
+> Task :jar UP-TO-DATE
+> Task :stageGameTestJar UP-TO-DATE
+
+> Task :runGameTestServer
+WARN StatusConsoleListener Advanced terminal features are not available in this environment
+[20:58:33] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserverdev, --gameDir, ., --fml.fmlVersion, 4.0.45, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.259, --fml.neoFormVersion, 20240808.144430]
+[20:58:33] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: JVM identified as Arch Linux OpenJDK 64-Bit Server VM 21.0.12.1+1
+[20:58:33] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.12.1 by Arch Linux; OS Linux arch amd64 version 7.3.0-3-cachyos
+[20:58:33] [main/INFO] [ne.ne.fm.lo.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserverdev
+[20:58:33] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/tmp/kingdoms-maintenance-111/.gradle-user-home/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.16.4+mixin.0.8.7/26d01f0567ab46e9ca0d2ed89d0ecc11aadbd433/sponge-mixin-0.16.4+mixin.0.8.7.jar%2394!/ Service=ModLauncher Env=SERVER
+[20:58:33] [main/INFO] [ne.ne.fm.lo.mo.lo.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[20:58:33] [main/INFO] [ne.ne.fm.lo.mo.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		Millénaire 9.0.2 (millenaire)
+		Millénaire Kingdoms 1.1.1 (millenairekingdoms)
+		Millénaire Kingdoms integration tests (development only) 1.0 (millenairekingdoms_tests)
+		Minecraft 1.21.1 (minecraft)
+		NeoForge 21.1.259 (neoforge)
+[20:58:34] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[20:58:34] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserverdev' with arguments [--gameDir, .]
+[20:58:34] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+[20:58:37] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:58:37] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:58:37] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[20:58:37] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[20:58:37] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:58:37] [modloading-worker-0/INFO] [or.mi.Millenaire/]: Millénaire 9.0.2 — Initialisation
+[20:58:37] [modloading-worker-0/INFO] [ne.ne.ne.co.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.259, for MC 1.21.1
+[20:58:37] [modloading-worker-0/INFO] [or.mi.go.vi.VisitGoalLoader/]: 43 visit goals loaded
+[20:58:37] [modloading-worker-0/INFO] [or.mi.go.ga.GatheringTypeLoader/]: 405 gathering types loaded
+[20:58:37] [modloading-worker-0/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms 1.1.1 initialized (modId=millenairekingdoms).
+[20:58:38] [modloading-sync-worker/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms dependency verified: millenaire 9.0.2.
+[20:58:38] [modloading-worker-0/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms mod loading complete. Kingdom and capital system enabled.
+[20:58:38] [main/INFO] [mojang/YggdrasilAuthenticationService]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[20:58:38] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/tmp/kingdoms-maintenance-111/build/moddev/artifacts/neoforge-21.1.259.jar%23126!/assets/.mcassetsroot' uses unexpected schema
+[20:58:38] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/tmp/kingdoms-maintenance-111/build/moddev/artifacts/neoforge-21.1.259.jar%23126!/data/.mcassetsroot' uses unexpected schema
+[20:58:38] [main/INFO] [ne.ne.ne.ga.GameTestHooks/]: Enabled Gametest Namespaces: [millenairekingdoms_tests]
+[20:58:39] [main/INFO] [minecraft/RecipeManager]: Loaded 1397 recipes
+[20:58:39] [main/INFO] [minecraft/AdvancementTree]: Loaded 1563 advancements
+[20:58:39] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[20:58:39] [worldgen/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 2%
+[20:58:39] [Server thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 117 ms
+[20:58:39] [Server thread/INFO] [minecraft/GameTestServer]: Started game test server
+[20:58:40] [Server thread/INFO] [ne.ne.ne.se.pe.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[20:58:40] [Server thread/INFO] [or.mi.co.ContentDirectoryManager/]: Content directories initialised: standard=/tmp/kingdoms-maintenance-111/run/gametest/millenaire, custom=/tmp/kingdoms-maintenance-111/run/gametest/millenaire-custom
+[20:58:40] [Server thread/INFO] [or.mi.co.NativeContentDeployer/]: Dev environment detected — forcing redeploy of standard content to millenaire (mod 9.0.2, previous 9.0.2)
+[20:58:40] [Server thread/INFO] [or.mi.co.NativeContentDeployer/]: Deployment complete: 3957 files written in 297 ms
+[20:58:40] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: [Millenaire] Loaded tool_categories file 'default.json' from millenaire (jar): 124 item(s) across 11 categories
+[20:58:40] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: [Millenaire] Loaded tool_categories file 'default.json' from standard: 124 item(s) across 11 categories
+[20:58:40] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: 11 tool categories loaded from 2 file(s) (124 items total)
+[20:58:40] [Server thread/INFO] [or.mi.la.ServerTranslationCache/]: [Millenaire] ServerTranslationCache loaded 4856 entries
+[20:58:40] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded default VillagerConfig: 24 growth foods, 15 conception foods
+[20:58:40] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded VillagerConfig overlay 'indiannobeef': 23 growth foods, 15 conception foods
+[20:58:40] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded VillagerConfig overlay 'muslimrules': 21 growth foods, 9 conception foods
+[20:58:40] [Server thread/INFO] [or.mi.co.OverlayBuilder/]: Overlay: standard over millenaire (jar) (3922 files; -Dlog.level.OverlayBuilder=DEBUG for per-file detail)
+[20:58:40] [Server thread/INFO] [or.mi.cu.WallTypeLoader/]: 10 wall types loaded
+[20:58:40] [Server thread/INFO] [or.mi.bu.BlockCostRegistry/]: [Millenaire] Loaded 0 block cost entries (sources=0)
+[20:58:40] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 184 goods for culture millenaire:norman (sources=2, removed=0, overridden=0)
+[20:58:40] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 20 shop profiles for culture norman
+[20:58:40] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Loaded 49 player languages: [ar_sa, cs_cz, da_dk, de_de, en_us, es_es, et_ee, fr_fr, hi_in, hu_hu, it_it, ja_jp, ko_kr, nb_no, nl_nl, pl_pl, pt_br, pt_pt, ru_ru, sl_si, sv_se, th_th, tr_tr, uk_ua, zh_cn, zh_tw, ar, cs, da, de, en, es, et, fr, hi, hu, it, ja, ko, nb, nl, pl, pt, ru, sl, sv, th, tr, uk]
+[20:58:40] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 135 goods for culture millenaire:indian (sources=2, removed=0, overridden=0)
+[20:58:40] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 6 shop profiles for culture indian
+[20:58:40] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 129 goods for culture millenaire:mayan (sources=2, removed=0, overridden=0)
+[20:58:40] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 8 shop profiles for culture mayan
+[20:58:40] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 177 goods for culture millenaire:byzantines (sources=2, removed=0, overridden=0)
+[20:58:40] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 15 shop profiles for culture byzantines
+[20:58:40] [Server thread/WARN] [or.mi.cu.BuildingPlanSetLoader/]: [Millenaire] Building plan japanese/japanesepaddy has category 'core' in JSON but lives under path category 'houses'. JSON field wins; consider moving the file to the matching folder.
+[20:58:40] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 130 goods for culture millenaire:japanese (sources=2, removed=0, overridden=0)
+[20:58:40] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 9 shop profiles for culture japanese
+[20:58:41] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 188 goods for culture millenaire:seljuk (sources=2, removed=0, overridden=0)
+[20:58:41] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 15 shop profiles for culture seljuk
+[20:58:41] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 169 goods for culture millenaire:inuits (sources=2, removed=0, overridden=0)
+[20:58:41] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 8 shop profiles for culture inuits
+[20:58:41] [Server thread/WARN] [or.mi.co.VillagerConfig/]: Unknown villager_config 'japaneseweaponpriority' (no villager_config/japaneseweaponpriority.json in any content layer); using the default config
+[20:58:41] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Millénaire content loaded: 7 cultures, 1811 plans (569 sets), 285 villager types, 126 village types
+[20:58:41] [Server thread/INFO] [or.mi.go.ga.GatheringTypeLoader/]: External gathering types: 0 added, 405 overridden, 0 disabled
+[20:58:41] [Server thread/INFO] [or.mi.go.vi.VisitGoalLoader/]: External visit goals: 0 added, 43 overridden, 0 disabled
+[20:58:41] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:byzantines/playerfortress_a_armyforge: parent building plan millenaire:byzantines/fortress does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:58:41] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/thmosque_a_femaleside: parent building plan millenaire:seljuk/mosque does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:58:41] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/barrackssmall_a_bed0: parent building plan millenaire:seljuk/barrackssmall does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:58:41] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:indian/playerpalace_temple: parent building plan millenaire:indian/palace does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:58:41] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/watchtower_a_soldier0: parent building plan millenaire:seljuk/watchtower does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:58:41] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/watchtower_a_soldier1: parent building plan millenaire:seljuk/watchtower does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:58:41] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:byzantines/playerfortress_a_barracks: parent building plan millenaire:byzantines/fortress does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:58:41] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/hamlettownhallplayer_a_inn: parent building plan millenaire:seljuk/hamlettownhallplayer does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:58:41] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Cross-reference validation: 8 warnings out of 8054 checks
+[20:58:41] [Server thread/INFO] [or.mi.qu.QuestLoader/]: Skipped 48 world quests (special action mechanisms not yet implemented)
+[20:58:41] [Server thread/INFO] [or.mi.qu.QuestLoader/]: Loaded 42 quest definitions, 26 quest languages
+[20:58:41] [Server thread/INFO] [or.mi.co.ReferenceCatalogGenerator/]: Reference catalogs written to millenaire/_reference
+[20:58:41] [Server thread/INFO] [or.mi.la.I18nKeyAuditor/]: [I18nKeyAuditor] All referenced i18n keys are present in en_us.json
+KINGDOMS_TESTS: scheduled NPC autonomy and kingdom founding disabled for the shared test world
+[20:58:41] [Server thread/INFO] [minecraft/GameTestServer]: 25 tests are now running at position 5929814, -59, -11820962!
+[20:58:41] [Server thread/INFO] [minecraft/GameTestRunner]: Running test batch 'defaultBatch:0' (25 tests)...
+[20:58:41] [Server thread/INFO] [minecraft/GameTestServer]: [                         ]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 22.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid c844e482-40d3-4d7c-ae6a-149734651826 started: 85d63385-5477-45a4-9344-9c77c33cee23 -> 371ac9b7-0b54-4310-9a64-acbab1f9e06c at game time 22 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/2 — first victory. Loot prevented. [raid=c844e482-40d3-4d7c-ae6a-149734651826]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 22.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 6dadbd24-d759-47d2-abd9-37eeb1ec169c started: c3fad604-6f48-46b8-b2f3-42b1d9e41591 -> 6256f279-e673-4209-b540-5dce0595cdee at game time 22 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/2 — first victory. Loot prevented. [raid=6dadbd24-d759-47d2-abd9-37eeb1ec169c]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:41] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers c3fad604-6f48-46b8-b2f3-42b1d9e41591 and Defenders 6256f279-e673-4209-b540-5dce0595cdee: 0 -> -10.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 6dadbd24-d759-47d2-abd9-37eeb1ec169c ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 22.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 722ec10c-e8c0-4e4d-9e53-fa9145372f2f started: 6b24a125-f38d-4a00-b523-d5ee54517f10 -> 194be606-9317-4500-89c5-05b50db701f4 at game time 22 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/2 — first victory. Loot prevented. [raid=722ec10c-e8c0-4e4d-9e53-fa9145372f2f]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:41] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers 6b24a125-f38d-4a00-b523-d5ee54517f10 and Defenders 194be606-9317-4500-89c5-05b50db701f4: 0 -> -10.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 722ec10c-e8c0-4e4d-9e53-fa9145372f2f ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 22.
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests UNLOCKED for village Test attacker (1 buildings) — negation wand placed
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid b13ac4d9-b854-4f82-966b-06bbd0f8485f started: 6b24a125-f38d-4a00-b523-d5ee54517f10 -> 194be606-9317-4500-89c5-05b50db701f4 at game time 22 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 2/2 — political allegiance transferred to Attackers 6b24a125-f38d-4a00-b523-d5ee54517f10. Loot prevented. [raid=b13ac4d9-b854-4f82-966b-06bbd0f8485f]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:41] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers 6b24a125-f38d-4a00-b523-d5ee54517f10 and Defenders 194be606-9317-4500-89c5-05b50db701f4: -10 -> -20.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid b13ac4d9-b854-4f82-966b-06bbd0f8485f ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: Villages in minecraft:overworld (3); page 1. IDs are plain UUIDs:
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: 1544104d-3a91-4d71-8097-619ac7f76d86 | Test target | 5929871, -59, -11820961
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: 6345731b-ae41-49a7-b166-4588401e5e0e | Test capital | 5929871, -59, -11820957
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: 9b3486f1-4c11-4faf-acab-20b9afbb01f3 | Test attacker | 5929867, -59, -11820961
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: Kingdoms in minecraft:overworld: 8
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: f7e93fb4-583b-4541-880e-ab4a70278fcd | Attackers 6b24a125-f38d-4a00-b523-d5ee54517f10 | active=true | capital=6b24a125-f38d-4a00-b523-d5ee54517f10 | villages=2 | ruler=none
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: d867a5b3-06af-47f5-81de-11b5db77a0cb | Attackers 85d63385-5477-45a4-9344-9c77c33cee23 | active=true | capital=85d63385-5477-45a4-9344-9c77c33cee23 | villages=1 | ruler=none
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: 5a0b10c2-be66-4af0-a3ef-3a7020bb81b6 | Attackers 9b3486f1-4c11-4faf-acab-20b9afbb01f3 | active=true | capital=9b3486f1-4c11-4faf-acab-20b9afbb01f3 | villages=1 | ruler=none
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: 93e4f6d6-ee64-488a-89f0-445644731210 | Attackers c3fad604-6f48-46b8-b2f3-42b1d9e41591 | active=true | capital=c3fad604-6f48-46b8-b2f3-42b1d9e41591 | villages=1 | ruler=none
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: b763d6c8-83a6-462c-95b2-75129f136480 | Defenders 1544104d-3a91-4d71-8097-619ac7f76d86 | active=true | capital=6345731b-ae41-49a7-b166-4588401e5e0e | villages=2 | ruler=none
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: 10a95294-f483-4843-ac82-94c026dfc6e5 | Defenders 194be606-9317-4500-89c5-05b50db701f4 | active=true | capital=b7625ddf-ff00-48e5-bbf6-015c94e2ab01 | villages=1 | ruler=none
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: a9ad1947-18dd-4c25-a690-76abd183502e | Defenders 371ac9b7-0b54-4310-9a64-acbab1f9e06c | active=true | capital=d4d9c9ba-a3e1-4981-9b01-4095b8d886f0 | villages=2 | ruler=none
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: 1741c661-9e08-43c1-bd81-d1d079ae1572 | Defenders 6256f279-e673-4209-b540-5dce0595cdee | active=true | capital=b703625a-f141-4ea2-9d87-00bde14899dc | villages=2 | ruler=none
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: 5a0b10c2-be66-4af0-a3ef-3a7020bb81b6 | Attackers 9b3486f1-4c11-4faf-acab-20b9afbb01f3 | active=true | capital=9b3486f1-4c11-4faf-acab-20b9afbb01f3 | villages=1 | ruler=none
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]:   9b3486f1-4c11-4faf-acab-20b9afbb01f3 (capital)
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: 1544104d-3a91-4d71-8097-619ac7f76d86 | kingdom=b763d6c8-83a6-462c-95b2-75129f136480 (Defenders 1544104d-3a91-4d71-8097-619ac7f76d86) | capital=false | revision=1
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: Kingdom active=false
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: Kingdom active=true
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: Village already belongs to another kingdom; attachment refused.
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: Conquering another kingdom's village requires an ACTIVE war declared by the attacking kingdom against that kingdom.
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: War 83abc3ec-585f-42dd-8d6d-771a1f19b9bf | 5a0b10c2-be66-4af0-a3ef-3a7020bb81b6 -> b763d6c8-83a6-462c-95b2-75129f136480 | status=ACTIVE | startGameTime=22 | initial defender members=1 | capital requires=1 | held=0 | capital open=false | capital 6345731b-ae41-49a7-b166-4588401e5e0e progress=0/2 | endReason=
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 22.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid e8249a75-62b6-4f31-98e4-d17ad618bcf5 started: 9b3486f1-4c11-4faf-acab-20b9afbb01f3 -> 1544104d-3a91-4d71-8097-619ac7f76d86 at game time 22 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: Conquest raid started: e8249a75-62b6-4f31-98e4-d17ad618bcf5 | attacking kingdom=5a0b10c2-be66-4af0-a3ef-3a7020bb81b6 | war=83abc3ec-585f-42dd-8d6d-771a1f19b9bf | 0/2 before this raid. Operator test: preparation and relation checks skipped; loot disabled for this raid.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/2 — first victory. Loot prevented. [raid=e8249a75-62b6-4f31-98e4-d17ad618bcf5]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:41] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers 9b3486f1-4c11-4faf-acab-20b9afbb01f3 and Defenders 1544104d-3a91-4d71-8097-619ac7f76d86: 0 -> -10.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid e8249a75-62b6-4f31-98e4-d17ad618bcf5 ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: 1544104d-3a91-4d71-8097-619ac7f76d86 | political owner=b763d6c8-83a6-462c-95b2-75129f136480 | capital=false | active=none | last=WON | legacy archived wins=0 (no political credit)
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: campaign kingdom=5a0b10c2-be66-4af0-a3ef-3a7020bb81b6 | revision=1 | war=83abc3ec-585f-42dd-8d6d-771a1f19b9bf | 1/2
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 22.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 3fa9c2bb-4a7d-44fb-9460-569847ed5cac started: 21d44b55-ee10-4dea-b515-a443e5f3ffd5 -> a7e6f18f-4c8d-46c6-a1e0-c9cfd3459f15 at game time 22 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid FAILURE: Test attacker repulsed at Test target.
+[20:58:41] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers 21d44b55-ee10-4dea-b515-a443e5f3ffd5 and Defenders a7e6f18f-4c8d-46c6-a1e0-c9cfd3459f15: 0 -> -10.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid failed at Test target. Progress remains 0/2. [raid=3fa9c2bb-4a7d-44fb-9460-569847ed5cac]
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 3fa9c2bb-4a7d-44fb-9460-569847ed5cac ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers lost | raiders lost 1/1, defenders lost 0/0
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 23.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid a3f1691e-4053-4712-8065-66ae3f58cdba started: e39e010b-2405-4378-b658-244906f09d50 -> 74aa5a43-b45f-44f9-887a-3b99ad0bd035 at game time 23 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/2 — first victory. Loot prevented. [raid=a3f1691e-4053-4712-8065-66ae3f58cdba]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:41] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers e39e010b-2405-4378-b658-244906f09d50 and Defenders 74aa5a43-b45f-44f9-887a-3b99ad0bd035: 0 -> -10.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid a3f1691e-4053-4712-8065-66ae3f58cdba ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 23.
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests UNLOCKED for village Test attacker (1 buildings) — negation wand placed
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 84b4fed2-c436-4369-aac9-848c9bf98804 started: e39e010b-2405-4378-b658-244906f09d50 -> 74aa5a43-b45f-44f9-887a-3b99ad0bd035 at game time 23 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 2/2 — political allegiance transferred to Attackers e39e010b-2405-4378-b658-244906f09d50. Loot prevented. [raid=84b4fed2-c436-4369-aac9-848c9bf98804]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:41] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers e39e010b-2405-4378-b658-244906f09d50 and Defenders 74aa5a43-b45f-44f9-887a-3b99ad0bd035: -10 -> -20.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 84b4fed2-c436-4369-aac9-848c9bf98804 ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test capital at day-time 23.
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests UNLOCKED for village Test attacker (1 buildings) — negation wand placed
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test capital.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 6ad11165-973e-40b8-a2ea-533b9bd290f3 started: e39e010b-2405-4378-b658-244906f09d50 -> b7ba019e-3573-45a5-8089-81ebdf3acb18 at game time 23 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test capital: 1/2 — first victory. Loot prevented. [raid=6ad11165-973e-40b8-a2ea-533b9bd290f3]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test capital (0 goods stolen).
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:41] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test capital strains relations between Attackers e39e010b-2405-4378-b658-244906f09d50 and Defenders 74aa5a43-b45f-44f9-887a-3b99ad0bd035: -20 -> -30.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 6ad11165-973e-40b8-a2ea-533b9bd290f3 ended by BATTLE after 0 game ticks: Test attacker -> Test capital | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test capital at day-time 23.
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests UNLOCKED for village Test attacker (1 buildings) — negation wand placed
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test capital.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 15b99da2-fa5e-4b94-890c-075ca652e10e started: e39e010b-2405-4378-b658-244906f09d50 -> b7ba019e-3573-45a5-8089-81ebdf3acb18 at game time 23 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test capital: 2/2 — capital fell; kingdom Defenders 74aa5a43-b45f-44f9-887a-3b99ad0bd035 collapsed and its remaining villages now belong to Attackers e39e010b-2405-4378-b658-244906f09d50. Loot prevented. [raid=15b99da2-fa5e-4b94-890c-075ca652e10e]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test capital (0 goods stolen).
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 15b99da2-fa5e-4b94-890c-075ca652e10e ended by BATTLE after 0 game ticks: Test attacker -> Test capital | attackers won | raiders lost 0/1, defenders lost 0/0
+KINGDOMS_RESTART_WRITE: war transfer=2/2, war partial=1/2, independent=1/1; read assertion runs in the next JVM
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 28.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 1a80203b-7f18-41b6-ab35-0ffd93293f99 started: f5d1e2d0-a6bd-4d63-abb8-0494fd43ca61 -> 09b307b5-c655-458f-9711-d81f06dd0f2f at game time 28 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/2 — first victory. Loot prevented. [raid=1a80203b-7f18-41b6-ab35-0ffd93293f99]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:41] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers f5d1e2d0-a6bd-4d63-abb8-0494fd43ca61 and Defenders 09b307b5-c655-458f-9711-d81f06dd0f2f: 0 -> -10.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 1a80203b-7f18-41b6-ab35-0ffd93293f99 ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 28.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 57d79522-0294-4f52-a1a4-e3d014350cd8 started: 46b32f2d-6248-4d71-a721-a8eae239f305 -> ea45f8a1-0d42-4359-82cc-39a0d9aef179 at game time 28 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/1 — political allegiance transferred to Attackers 46b32f2d-6248-4d71-a721-a8eae239f305. Loot prevented. [raid=57d79522-0294-4f52-a1a4-e3d014350cd8]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 57d79522-0294-4f52-a1a4-e3d014350cd8 ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: Kingdom created: d63741b4-4d69-4809-bf95-df5559163090 | Command A 061e19e8-9384-4fa5-8893-f4d2cf88d32c | capital=061e19e8-9384-4fa5-8893-f4d2cf88d32c
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: Kingdom created: 4d836b31-2f8b-42bf-b3ba-580a1a462196 | Command B 8b387591-4784-458e-976b-d5df2df4a74a | capital=8b387591-4784-458e-976b-d5df2df4a74a
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: Village attached: aa5b442a-d725-43eb-b645-34184d01bbd8
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: War e923d859-bc19-406e-8ac7-30030121354a | d63741b4-4d69-4809-bf95-df5559163090 -> 4d836b31-2f8b-42bf-b3ba-580a1a462196 | status=ACTIVE | startGameTime=29 | initial defender members=1 | capital requires=1 | held=0 | capital open=false | capital 8b387591-4784-458e-976b-d5df2df4a74a progress=0/2 | endReason=
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: Capital is protected: the attacking kingdom must hold 1 of the 1 villages the defender had when the war began (currently 0).
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 38.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Legacy conquest completed; old target-only progress grants no political ownership. Loot prevented. [raid=7f020532-14ee-42b0-bcbb-db029ce7b895]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 7f020532-14ee-42b0-bcbb-db029ce7b895 ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | unknown (server restarted during the raid)
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 40.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 82375bf5-dd33-464f-88f3-9b52fdbfb6f3 started: ddbd1670-f47a-4f7f-9277-b6d013e3a175 -> f9c81938-5927-4dda-8e2d-79d23a0d1386 at game time 40 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid FAILURE: Test attacker repulsed at Test target.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid failed at Test target. Progress remains 0/1. [raid=82375bf5-dd33-464f-88f3-9b52fdbfb6f3]
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 82375bf5-dd33-464f-88f3-9b52fdbfb6f3 ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers lost | raiders lost 1/1, defenders lost 0/0
+[20:58:41] [Server thread/INFO] [minecraft/GameTestServer]: [++++++++++++++++         ]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 46.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid c05c126a-f9f4-41bb-976e-89a8cabc6bff started: 90367cc5-efef-4d3d-b067-9fb0295a94d5 -> 76390bc6-b145-4fae-957e-00d6cb05dbf6 at game time 46 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/2 — first victory. Loot prevented. [raid=c05c126a-f9f4-41bb-976e-89a8cabc6bff]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:41] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers 90367cc5-efef-4d3d-b067-9fb0295a94d5 and Defenders 76390bc6-b145-4fae-957e-00d6cb05dbf6: 0 -> -10.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid c05c126a-f9f4-41bb-976e-89a8cabc6bff ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 47.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 87f04dbf-7c0d-4c9f-96fa-02f7fbccfac4 started: 48b1c5b1-3769-453d-9bca-08057d7732b4 -> 81056ab4-3179-4108-94d7-a38eff1ffeb9 at game time 47 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Loot: 64 culture-good units transferred from Test target to Test attacker.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (64 goods stolen).
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:41] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers 48b1c5b1-3769-453d-9bca-08057d7732b4 and Defenders 81056ab4-3179-4108-94d7-a38eff1ffeb9: 0 -> -10.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 87f04dbf-7c0d-4c9f-96fa-02f7fbccfac4 no longer matches Millénaire state; marker retired.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test capital at day-time 49.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test capital.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid a42180e5-c50a-4939-b0bb-9f51871ecf10 started: 6b86fb4b-9767-4d8c-8807-6a9dc8c751fc -> 4790e3bc-fe92-43a9-840e-a03dcada1e45 at game time 49 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test capital: 1/2 — first victory. Loot prevented. [raid=a42180e5-c50a-4939-b0bb-9f51871ecf10]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test capital (0 goods stolen).
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:41] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test capital strains relations between Attackers 6b86fb4b-9767-4d8c-8807-6a9dc8c751fc and Defenders 45458c7f-ba09-444d-86ef-d53aef594ef9: 0 -> -10.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid a42180e5-c50a-4939-b0bb-9f51871ecf10 ended by BATTLE after 0 game ticks: Test attacker -> Test capital | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test capital at day-time 49.
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests UNLOCKED for village Test attacker (1 buildings) — negation wand placed
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test capital.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid e77848ff-6f77-4abf-a9e5-66a9ef0016bf started: 6b86fb4b-9767-4d8c-8807-6a9dc8c751fc -> 4790e3bc-fe92-43a9-840e-a03dcada1e45 at game time 49 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test capital: 2/2 — capital fell; kingdom Defenders 45458c7f-ba09-444d-86ef-d53aef594ef9 collapsed and its remaining villages now belong to Attackers 6b86fb4b-9767-4d8c-8807-6a9dc8c751fc. Loot prevented. [raid=e77848ff-6f77-4abf-a9e5-66a9ef0016bf]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test capital (0 goods stolen).
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid e77848ff-6f77-4abf-a9e5-66a9ef0016bf ended by BATTLE after 0 game ticks: Test attacker -> Test capital | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 49.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 5f216c12-2cea-4cbd-a7ed-2b2c4246aba2 started: 4bab889d-6c80-467d-976b-dbd333a4fcb8 -> 45e9857a-0f9a-4a68-b895-e6cf5b1fe42c at game time 49 (1 raiders sent, operator test)
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/2 — first victory. Loot prevented. [raid=5f216c12-2cea-4cbd-a7ed-2b2c4246aba2]
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:41] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers 4bab889d-6c80-467d-976b-dbd333a4fcb8 and Defenders 45e9857a-0f9a-4a68-b895-e6cf5b1fe42c: 0 -> -10.
+[20:58:41] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 5f216c12-2cea-4cbd-a7ed-2b2c4246aba2 ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+KINGDOMS_TEST_ARTIFACT: union:/tmp/kingdoms-maintenance-111/run/gametest/mods/millenairekingdoms.jar%23128!/
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 50.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Loot: 64 culture-good units transferred from Test target to Test attacker.
+[20:58:41] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (64 goods stolen).
+[20:58:41] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:41] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers 201ca627-6840-4a9c-a7c4-1f0e20a31113 and Defenders b7715516-57c1-45f1-be33-f704add48f64: 0 -> -10.
+[20:58:41] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++++++++++++++++]
+[20:58:41] [Server thread/INFO] [minecraft/GameTestServer]: ========= 25 GAME TESTS COMPLETE IN 482.6 ms ======================
+[20:58:41] [Server thread/INFO] [minecraft/GameTestServer]: All 25 required tests passed :)
+[20:58:41] [Server thread/INFO] [minecraft/GameTestServer]: ====================================================
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[20:58:41] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[20:58:42] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[20:58:42] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[20:58:42] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[20:58:42] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[20:58:42] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[20:58:42] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[20:58:42] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+[20:58:42] [Server thread/INFO] [minecraft/GameTestServer]: Game test server shutting down
+
+> Task :runGameTestServerReload
+WARN StatusConsoleListener Advanced terminal features are not available in this environment
+[20:58:43] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserverdev, --gameDir, ., --fml.fmlVersion, 4.0.45, --fml.mcVersion, 1.21.1, --fml.neoForgeVersion, 21.1.259, --fml.neoFormVersion, 20240808.144430]
+[20:58:43] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: JVM identified as Arch Linux OpenJDK 64-Bit Server VM 21.0.12.1+1
+[20:58:43] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 11.0.5+main.901c6ea8 starting: java version 21.0.12.1 by Arch Linux; OS Linux arch amd64 version 7.3.0-3-cachyos
+[20:58:43] [main/INFO] [ne.ne.fm.lo.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserverdev
+[20:58:43] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/tmp/kingdoms-maintenance-111/.gradle-user-home/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.16.4+mixin.0.8.7/26d01f0567ab46e9ca0d2ed89d0ecc11aadbd433/sponge-mixin-0.16.4+mixin.0.8.7.jar%2394!/ Service=ModLauncher Env=SERVER
+[20:58:43] [main/INFO] [ne.ne.fm.lo.mo.lo.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[20:58:43] [main/INFO] [ne.ne.fm.lo.mo.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		Millénaire 9.0.2 (millenaire)
+		Millénaire Kingdoms 1.1.1 (millenairekingdoms)
+		Millénaire Kingdoms integration tests (development only) 1.0 (millenairekingdoms_tests)
+		Minecraft 1.21.1 (minecraft)
+		NeoForge 21.1.259 (neoforge)
+[20:58:44] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[20:58:44] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserverdev' with arguments [--gameDir, .]
+[20:58:44] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+[20:58:47] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:58:47] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:58:47] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[20:58:47] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[20:58:47] [main/WARN] [minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[20:58:47] [modloading-worker-0/INFO] [or.mi.Millenaire/]: Millénaire 9.0.2 — Initialisation
+[20:58:47] [modloading-worker-0/INFO] [ne.ne.ne.co.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.259, for MC 1.21.1
+[20:58:47] [modloading-worker-0/INFO] [or.mi.go.vi.VisitGoalLoader/]: 43 visit goals loaded
+[20:58:47] [modloading-worker-0/INFO] [or.mi.go.ga.GatheringTypeLoader/]: 405 gathering types loaded
+[20:58:47] [modloading-worker-0/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms 1.1.1 initialized (modId=millenairekingdoms).
+[20:58:48] [modloading-sync-worker/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms dependency verified: millenaire 9.0.2.
+[20:58:48] [modloading-worker-0/INFO] [co.mi.MillenaireKingdoms/]: Millénaire Kingdoms mod loading complete. Kingdom and capital system enabled.
+[20:58:48] [main/INFO] [mojang/YggdrasilAuthenticationService]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[20:58:48] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/tmp/kingdoms-maintenance-111/build/moddev/artifacts/neoforge-21.1.259.jar%23126!/assets/.mcassetsroot' uses unexpected schema
+[20:58:48] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/tmp/kingdoms-maintenance-111/build/moddev/artifacts/neoforge-21.1.259.jar%23126!/data/.mcassetsroot' uses unexpected schema
+[20:58:48] [main/INFO] [ne.ne.ne.ga.GameTestHooks/]: Enabled Gametest Namespaces: [millenairekingdoms_tests]
+[20:58:48] [main/INFO] [minecraft/RecipeManager]: Loaded 1397 recipes
+[20:58:49] [main/INFO] [minecraft/AdvancementTree]: Loaded 1563 advancements
+[20:58:49] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[20:58:49] [worldgen/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 2%
+[20:58:49] [Server thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 87 ms
+[20:58:49] [Server thread/INFO] [minecraft/GameTestServer]: Started game test server
+[20:58:49] [Server thread/INFO] [ne.ne.ne.se.pe.PermissionAPI/]: Successfully initialized permission handler neoforge:default_handler
+[20:58:49] [Server thread/INFO] [or.mi.co.ContentDirectoryManager/]: Content directories initialised: standard=/tmp/kingdoms-maintenance-111/run/gametest/millenaire, custom=/tmp/kingdoms-maintenance-111/run/gametest/millenaire-custom
+[20:58:49] [Server thread/INFO] [or.mi.co.NativeContentDeployer/]: Dev environment detected — forcing redeploy of standard content to millenaire (mod 9.0.2, previous 9.0.2)
+[20:58:50] [Server thread/INFO] [or.mi.co.NativeContentDeployer/]: Deployment complete: 3957 files written in 391 ms
+[20:58:50] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: [Millenaire] Loaded tool_categories file 'default.json' from millenaire (jar): 124 item(s) across 11 categories
+[20:58:50] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: [Millenaire] Loaded tool_categories file 'default.json' from standard: 124 item(s) across 11 categories
+[20:58:50] [Server thread/INFO] [or.mi.to.ToolCategoryRegistry/]: 11 tool categories loaded from 2 file(s) (124 items total)
+[20:58:50] [Server thread/INFO] [or.mi.la.ServerTranslationCache/]: [Millenaire] ServerTranslationCache loaded 4856 entries
+[20:58:50] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded default VillagerConfig: 24 growth foods, 15 conception foods
+[20:58:50] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded VillagerConfig overlay 'indiannobeef': 23 growth foods, 15 conception foods
+[20:58:50] [Server thread/INFO] [or.mi.co.VillagerConfig/]: [Millenaire] Loaded VillagerConfig overlay 'muslimrules': 21 growth foods, 9 conception foods
+[20:58:50] [Server thread/INFO] [or.mi.co.OverlayBuilder/]: Overlay: standard over millenaire (jar) (3922 files; -Dlog.level.OverlayBuilder=DEBUG for per-file detail)
+[20:58:50] [Server thread/INFO] [or.mi.cu.WallTypeLoader/]: 10 wall types loaded
+[20:58:50] [Server thread/INFO] [or.mi.bu.BlockCostRegistry/]: [Millenaire] Loaded 0 block cost entries (sources=0)
+[20:58:50] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 184 goods for culture millenaire:norman (sources=2, removed=0, overridden=0)
+[20:58:50] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 20 shop profiles for culture norman
+[20:58:50] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Loaded 49 player languages: [ar_sa, cs_cz, da_dk, de_de, en_us, es_es, et_ee, fr_fr, hi_in, hu_hu, it_it, ja_jp, ko_kr, nb_no, nl_nl, pl_pl, pt_br, pt_pt, ru_ru, sl_si, sv_se, th_th, tr_tr, uk_ua, zh_cn, zh_tw, ar, cs, da, de, en, es, et, fr, hi, hu, it, ja, ko, nb, nl, pl, pt, ru, sl, sv, th, tr, uk]
+[20:58:50] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 135 goods for culture millenaire:indian (sources=2, removed=0, overridden=0)
+[20:58:50] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 6 shop profiles for culture indian
+[20:58:50] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 129 goods for culture millenaire:mayan (sources=2, removed=0, overridden=0)
+[20:58:50] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 8 shop profiles for culture mayan
+[20:58:50] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 177 goods for culture millenaire:byzantines (sources=2, removed=0, overridden=0)
+[20:58:50] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 15 shop profiles for culture byzantines
+[20:58:50] [Server thread/WARN] [or.mi.cu.BuildingPlanSetLoader/]: [Millenaire] Building plan japanese/japanesepaddy has category 'core' in JSON but lives under path category 'houses'. JSON field wins; consider moving the file to the matching folder.
+[20:58:50] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 130 goods for culture millenaire:japanese (sources=2, removed=0, overridden=0)
+[20:58:50] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 9 shop profiles for culture japanese
+[20:58:50] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 188 goods for culture millenaire:seljuk (sources=2, removed=0, overridden=0)
+[20:58:50] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 15 shop profiles for culture seljuk
+[20:58:50] [Server thread/INFO] [or.mi.co.TradeGoodsLoader/]: [Millenaire] Loaded 169 goods for culture millenaire:inuits (sources=2, removed=0, overridden=0)
+[20:58:50] [Server thread/INFO] [or.mi.cu.CultureLoader/]: [Millenaire] Loaded 8 shop profiles for culture inuits
+[20:58:50] [Server thread/WARN] [or.mi.co.VillagerConfig/]: Unknown villager_config 'japaneseweaponpriority' (no villager_config/japaneseweaponpriority.json in any content layer); using the default config
+[20:58:50] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Millénaire content loaded: 7 cultures, 1811 plans (569 sets), 285 villager types, 126 village types
+[20:58:50] [Server thread/INFO] [or.mi.go.ga.GatheringTypeLoader/]: External gathering types: 0 added, 405 overridden, 0 disabled
+[20:58:50] [Server thread/INFO] [or.mi.go.vi.VisitGoalLoader/]: External visit goals: 0 added, 43 overridden, 0 disabled
+[20:58:50] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:byzantines/playerfortress_a_armyforge: parent building plan millenaire:byzantines/fortress does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:58:50] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/thmosque_a_femaleside: parent building plan millenaire:seljuk/mosque does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:58:50] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/barrackssmall_a_bed0: parent building plan millenaire:seljuk/barrackssmall does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:58:50] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:indian/playerpalace_temple: parent building plan millenaire:indian/palace does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:58:50] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/watchtower_a_soldier0: parent building plan millenaire:seljuk/watchtower does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:58:50] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/watchtower_a_soldier1: parent building plan millenaire:seljuk/watchtower does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:58:50] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:byzantines/playerfortress_a_barracks: parent building plan millenaire:byzantines/fortress does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:58:50] [Server thread/WARN] [or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/hamlettownhallplayer_a_inn: parent building plan millenaire:seljuk/hamlettownhallplayer does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings.
+[20:58:50] [Server thread/INFO] [or.mi.cu.CultureLoader/]: Cross-reference validation: 8 warnings out of 8054 checks
+[20:58:50] [Server thread/INFO] [or.mi.qu.QuestLoader/]: Skipped 48 world quests (special action mechanisms not yet implemented)
+[20:58:50] [Server thread/INFO] [or.mi.qu.QuestLoader/]: Loaded 42 quest definitions, 26 quest languages
+[20:58:50] [Server thread/INFO] [or.mi.co.ReferenceCatalogGenerator/]: Reference catalogs written to millenaire/_reference
+[20:58:50] [Server thread/INFO] [or.mi.la.I18nKeyAuditor/]: [I18nKeyAuditor] All referenced i18n keys are present in en_us.json
+[20:58:50] [Server thread/INFO] [or.mi.vi.VillageSavedData/]: Loading VillageSavedData version 6
+KINGDOMS_TESTS: scheduled NPC autonomy and kingdom founding disabled for the shared test world
+[20:58:50] [Server thread/INFO] [minecraft/GameTestServer]: 25 tests are now running at position 767773, -59, -4929581!
+[20:58:51] [Server thread/INFO] [minecraft/GameTestRunner]: Running test batch 'defaultBatch:0' (25 tests)...
+[20:58:51] [Server thread/INFO] [minecraft/GameTestServer]: [                         ]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 22.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 9b685e60-bf9e-4bef-b4b8-a777525c264a started: 6e68300c-b627-4c8a-aab6-4722c6597336 -> 2201edbb-88e3-42ce-a413-f3c4228657e0 at game time 22 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/2 — first victory. Loot prevented. [raid=9b685e60-bf9e-4bef-b4b8-a777525c264a]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 22.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid dabca8e2-fa44-419d-ad8a-16e7a831fae7 started: 34de93ea-2541-4bbc-85a0-0e3c0d3f30ec -> 7c797df8-2978-41db-b1b8-5928415a453f at game time 22 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/2 — first victory. Loot prevented. [raid=dabca8e2-fa44-419d-ad8a-16e7a831fae7]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:51] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers 34de93ea-2541-4bbc-85a0-0e3c0d3f30ec and Defenders 7c797df8-2978-41db-b1b8-5928415a453f: 0 -> -10.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid dabca8e2-fa44-419d-ad8a-16e7a831fae7 ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 22.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 6e6f0f7f-d81d-40f5-b0bd-e4ec3f16f9e9 started: ecaaa7c7-df02-476a-99cc-e6a9a4117942 -> 003379c9-f845-461c-9182-25d546347f16 at game time 22 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/2 — first victory. Loot prevented. [raid=6e6f0f7f-d81d-40f5-b0bd-e4ec3f16f9e9]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:51] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers ecaaa7c7-df02-476a-99cc-e6a9a4117942 and Defenders 003379c9-f845-461c-9182-25d546347f16: 0 -> -10.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 6e6f0f7f-d81d-40f5-b0bd-e4ec3f16f9e9 ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 22.
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests UNLOCKED for village Test attacker (1 buildings) — negation wand placed
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid fd3eaac1-816b-4d17-b7ef-bca058a2e65b started: ecaaa7c7-df02-476a-99cc-e6a9a4117942 -> 003379c9-f845-461c-9182-25d546347f16 at game time 22 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 2/2 — political allegiance transferred to Attackers ecaaa7c7-df02-476a-99cc-e6a9a4117942. Loot prevented. [raid=fd3eaac1-816b-4d17-b7ef-bca058a2e65b]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:51] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers ecaaa7c7-df02-476a-99cc-e6a9a4117942 and Defenders 003379c9-f845-461c-9182-25d546347f16: -10 -> -20.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid fd3eaac1-816b-4d17-b7ef-bca058a2e65b ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: Villages in minecraft:overworld (6); page 1. IDs are plain UUIDs:
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 2201edbb-88e3-42ce-a413-f3c4228657e0 | Test target | 767778, -59, -4929580
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 5a047cca-c989-4181-bcc9-7d313939a2b1 | Test target | 767830, -59, -4929580
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 6e68300c-b627-4c8a-aab6-4722c6597336 | Test attacker | 767774, -59, -4929580
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 982bcbf5-3271-4599-981f-fec080b17142 | Test capital | 767778, -59, -4929576
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: d63fc265-c911-4a99-9a7b-6e4bcff7f5de | Test capital | 767830, -59, -4929576
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: f3e97e11-f0d9-46d2-ac86-adf1b9b3cb99 | Test attacker | 767826, -59, -4929580
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: Kingdoms in minecraft:overworld: 42
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: e0876cb4-16ee-4c56-8802-b018a72f4d92 | Attackers 201ca627-6840-4a9c-a7c4-1f0e20a31113 | active=true | capital=201ca627-6840-4a9c-a7c4-1f0e20a31113 | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 65a39b7c-8919-4945-a70c-c9490c7912fb | Attackers 21d44b55-ee10-4dea-b515-a443e5f3ffd5 | active=true | capital=21d44b55-ee10-4dea-b515-a443e5f3ffd5 | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 5b85e854-8212-47bc-b561-9c4f0542e045 | Attackers 34de93ea-2541-4bbc-85a0-0e3c0d3f30ec | active=true | capital=34de93ea-2541-4bbc-85a0-0e3c0d3f30ec | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: c5787724-a0a2-4027-a1fd-342f6eae37d2 | Attackers 46b32f2d-6248-4d71-a721-a8eae239f305 | active=true | capital=46b32f2d-6248-4d71-a721-a8eae239f305 | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 76f13827-ac56-4f2e-a477-717657c7d5d4 | Attackers 48b1c5b1-3769-453d-9bca-08057d7732b4 | active=true | capital=48b1c5b1-3769-453d-9bca-08057d7732b4 | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: b74e1ad2-a64d-4255-b556-939e376f7499 | Attackers 4bab889d-6c80-467d-976b-dbd333a4fcb8 | active=true | capital=4bab889d-6c80-467d-976b-dbd333a4fcb8 | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: f7e93fb4-583b-4541-880e-ab4a70278fcd | Attackers 6b24a125-f38d-4a00-b523-d5ee54517f10 | active=true | capital=6b24a125-f38d-4a00-b523-d5ee54517f10 | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 813eef88-44bc-4585-8159-4d94037bd25f | Attackers 6b86fb4b-9767-4d8c-8807-6a9dc8c751fc | active=true | capital=6b86fb4b-9767-4d8c-8807-6a9dc8c751fc | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 2ee50b80-8f1c-4a3a-9686-5457b6e86d3b | Attackers 6e68300c-b627-4c8a-aab6-4722c6597336 | active=true | capital=6e68300c-b627-4c8a-aab6-4722c6597336 | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: d867a5b3-06af-47f5-81de-11b5db77a0cb | Attackers 85d63385-5477-45a4-9344-9c77c33cee23 | active=true | capital=85d63385-5477-45a4-9344-9c77c33cee23 | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 1f55aa65-f4c1-4c87-bbf6-0e2e0a01b602 | Attackers 8e968a64-cc3d-409b-9b1c-792ea1f14943 | active=true | capital=8e968a64-cc3d-409b-9b1c-792ea1f14943 | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 8d8f08e8-7f4b-4985-8df7-af3dcd9a81bb | Attackers 90367cc5-efef-4d3d-b067-9fb0295a94d5 | active=true | capital=90367cc5-efef-4d3d-b067-9fb0295a94d5 | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 5a0b10c2-be66-4af0-a3ef-3a7020bb81b6 | Attackers 9b3486f1-4c11-4faf-acab-20b9afbb01f3 | active=true | capital=9b3486f1-4c11-4faf-acab-20b9afbb01f3 | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 93e4f6d6-ee64-488a-89f0-445644731210 | Attackers c3fad604-6f48-46b8-b2f3-42b1d9e41591 | active=true | capital=c3fad604-6f48-46b8-b2f3-42b1d9e41591 | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: ee63f8b6-6f96-492b-b693-bf43faa57171 | Attackers ddbd1670-f47a-4f7f-9277-b6d013e3a175 | active=true | capital=ddbd1670-f47a-4f7f-9277-b6d013e3a175 | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: e7fa3786-58b2-41a8-8edb-dd0ee9cbe552 | Attackers e39e010b-2405-4378-b658-244906f09d50 | active=true | capital=e39e010b-2405-4378-b658-244906f09d50 | villages=3 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: d8b76e27-4686-41c4-8e36-21ab896668e6 | Attackers ecaaa7c7-df02-476a-99cc-e6a9a4117942 | active=true | capital=ecaaa7c7-df02-476a-99cc-e6a9a4117942 | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 0a3af26e-d67f-4f0b-aca2-5a3def0ceafd | Attackers f3e97e11-f0d9-46d2-ac86-adf1b9b3cb99 | active=true | capital=f3e97e11-f0d9-46d2-ac86-adf1b9b3cb99 | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: b09a3b74-d380-49b0-beca-cda227dc363c | Attackers f5d1e2d0-a6bd-4d63-abb8-0494fd43ca61 | active=true | capital=f5d1e2d0-a6bd-4d63-abb8-0494fd43ca61 | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: d63741b4-4d69-4809-bf95-df5559163090 | Command A 061e19e8-9384-4fa5-8893-f4d2cf88d32c | active=true | capital=061e19e8-9384-4fa5-8893-f4d2cf88d32c | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 4d836b31-2f8b-42bf-b3ba-580a1a462196 | Command B 8b387591-4784-458e-976b-d5df2df4a74a | active=true | capital=8b387591-4784-458e-976b-d5df2df4a74a | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 3bb86122-8154-4878-ba01-f2fa27b6b238 | Defenders 003379c9-f845-461c-9182-25d546347f16 | active=true | capital=5f8e14ba-6ed6-4816-9b01-d863ba455977 | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 19e4890f-6990-4f77-95ac-82cdb70e7e26 | Defenders 09b307b5-c655-458f-9711-d81f06dd0f2f | active=true | capital=be637c5e-59df-445e-a06c-c2e296e83fd2 | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: b763d6c8-83a6-462c-95b2-75129f136480 | Defenders 1544104d-3a91-4d71-8097-619ac7f76d86 | active=true | capital=6345731b-ae41-49a7-b166-4588401e5e0e | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 10a95294-f483-4843-ac82-94c026dfc6e5 | Defenders 194be606-9317-4500-89c5-05b50db701f4 | active=true | capital=b7625ddf-ff00-48e5-bbf6-015c94e2ab01 | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 998c34b6-0dc0-4986-8886-3e8755ed100c | Defenders 2201edbb-88e3-42ce-a413-f3c4228657e0 | active=true | capital=982bcbf5-3271-4599-981f-fec080b17142 | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: a9ad1947-18dd-4c25-a690-76abd183502e | Defenders 371ac9b7-0b54-4310-9a64-acbab1f9e06c | active=true | capital=d4d9c9ba-a3e1-4981-9b01-4095b8d886f0 | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 94a6f38b-90fb-432f-8f73-3e4680933817 | Defenders 45458c7f-ba09-444d-86ef-d53aef594ef9 | active=false | capital=4790e3bc-fe92-43a9-840e-a03dcada1e45 | villages=0 | ruler=none | FALLEN in war 7cc5e385-d99d-4ae9-990f-7ee463c87362 (former capital and villages now belong to 813eef88-44bc-4585-8159-4d94037bd25f)
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: f2145077-ecc6-408c-819b-4838430d0dfa | Defenders 45e9857a-0f9a-4a68-b895-e6cf5b1fe42c | active=true | capital=91e83df5-bbaf-489a-94dc-c32964d204a5 | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 1dae4248-3f3f-496f-893e-05206293e4c9 | Defenders 5a047cca-c989-4181-bcc9-7d313939a2b1 | active=true | capital=d63fc265-c911-4a99-9a7b-6e4bcff7f5de | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 1741c661-9e08-43c1-bd81-d1d079ae1572 | Defenders 6256f279-e673-4209-b540-5dce0595cdee | active=true | capital=b703625a-f141-4ea2-9d87-00bde14899dc | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: e3fcab06-312f-4c6f-95bd-26321be8904c | Defenders 74aa5a43-b45f-44f9-887a-3b99ad0bd035 | active=false | capital=b7ba019e-3573-45a5-8089-81ebdf3acb18 | villages=0 | ruler=none | FALLEN in war 81a50ee7-d355-4b81-9eee-3c04e23fa0a7 (former capital and villages now belong to e7fa3786-58b2-41a8-8edb-dd0ee9cbe552)
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 7859c220-fe2e-47dd-a6ab-328d99329496 | Defenders 76390bc6-b145-4fae-957e-00d6cb05dbf6 | active=true | capital=65753bcf-55f5-4aac-8e22-a760385f0f75 | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: b81dbd35-fce4-45f9-b6dd-9ee154d313f0 | Defenders 793308ed-4d54-4233-8bf8-6314df6abd49 | active=true | capital=0ad7c8e8-b0be-4529-b584-a1d6b6087022 | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: ba5e0689-537d-4eac-9c26-1cccb161c5cf | Defenders 7c797df8-2978-41db-b1b8-5928415a453f | active=true | capital=41e02bcb-eee9-4867-980a-3ffeb50512d9 | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 93aebea0-a222-420a-b418-e850823903c8 | Defenders 81056ab4-3179-4108-94d7-a38eff1ffeb9 | active=true | capital=6d35553d-7627-470c-b484-d50aa91e2054 | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 763033b8-414e-4825-894c-4ecadc4ec950 | Defenders a7e6f18f-4c8d-46c6-a1e0-c9cfd3459f15 | active=true | capital=12f12ca3-22a5-4335-9ccb-8b69b0d27877 | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 67849cb5-85bf-46c8-9ef9-3bca21c9dbc8 | Defenders b7715516-57c1-45f1-be33-f704add48f64 | active=true | capital=b8163250-babf-41e5-8b15-019619901db4 | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 4168eb4a-d313-4ad5-b3dc-5902c892c045 | Defenders ea45f8a1-0d42-4359-82cc-39a0d9aef179 | active=true | capital=3ac8a0f9-10fe-4b70-9ce1-3c19932d7e54 | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 22374713-2d88-4085-a6e0-681b830fd6d8 | Defenders f9c81938-5927-4dda-8e2d-79d23a0d1386 | active=true | capital=af85c593-97a2-4dfb-b84a-e924e888b35a | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 7c9181e1-68ff-4823-b261-1033f3e688f7 | Restart attackers | active=true | capital=d9a8fabc-198f-410b-9eaa-a49bd1dfe101 | villages=3 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 099abbc1-ffc1-4e17-a866-dffba7c6162d | Restart defenders | active=true | capital=d9a8fabc-198f-410b-9eaa-a49bd1dfe102 | villages=2 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 0a3af26e-d67f-4f0b-aca2-5a3def0ceafd | Attackers f3e97e11-f0d9-46d2-ac86-adf1b9b3cb99 | active=true | capital=f3e97e11-f0d9-46d2-ac86-adf1b9b3cb99 | villages=1 | ruler=none
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]:   f3e97e11-f0d9-46d2-ac86-adf1b9b3cb99 (capital)
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 5a047cca-c989-4181-bcc9-7d313939a2b1 | kingdom=1dae4248-3f3f-496f-893e-05206293e4c9 (Defenders 5a047cca-c989-4181-bcc9-7d313939a2b1) | capital=false | revision=1
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: Kingdom active=false
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: Kingdom active=true
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: Village already belongs to another kingdom; attachment refused.
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: Conquering another kingdom's village requires an ACTIVE war declared by the attacking kingdom against that kingdom.
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: War 16f73bd8-f60b-4cdb-b704-6c6c9415157d | 0a3af26e-d67f-4f0b-aca2-5a3def0ceafd -> 1dae4248-3f3f-496f-893e-05206293e4c9 | status=ACTIVE | startGameTime=22 | initial defender members=1 | capital requires=1 | held=0 | capital open=false | capital d63fc265-c911-4a99-9a7b-6e4bcff7f5de progress=0/2 | endReason=
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 22.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 6458a965-60d2-47ff-b444-44cf6fe4d2b0 started: f3e97e11-f0d9-46d2-ac86-adf1b9b3cb99 -> 5a047cca-c989-4181-bcc9-7d313939a2b1 at game time 22 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: Conquest raid started: 6458a965-60d2-47ff-b444-44cf6fe4d2b0 | attacking kingdom=0a3af26e-d67f-4f0b-aca2-5a3def0ceafd | war=16f73bd8-f60b-4cdb-b704-6c6c9415157d | 0/2 before this raid. Operator test: preparation and relation checks skipped; loot disabled for this raid.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/2 — first victory. Loot prevented. [raid=6458a965-60d2-47ff-b444-44cf6fe4d2b0]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:51] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers f3e97e11-f0d9-46d2-ac86-adf1b9b3cb99 and Defenders 5a047cca-c989-4181-bcc9-7d313939a2b1: 0 -> -10.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 6458a965-60d2-47ff-b444-44cf6fe4d2b0 ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: 5a047cca-c989-4181-bcc9-7d313939a2b1 | political owner=1dae4248-3f3f-496f-893e-05206293e4c9 | capital=false | active=none | last=WON | legacy archived wins=0 (no political credit)
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: campaign kingdom=0a3af26e-d67f-4f0b-aca2-5a3def0ceafd | revision=1 | war=16f73bd8-f60b-4cdb-b704-6c6c9415157d | 1/2
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 22.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid e3491b7b-fbd2-42c5-a34f-f8380d13ce80 started: 4232b6bc-2c2e-4d7b-87c8-859f5e56e932 -> 9ae11639-8485-4ada-9ec0-4a016f1a8429 at game time 22 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid FAILURE: Test attacker repulsed at Test target.
+[20:58:51] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers 4232b6bc-2c2e-4d7b-87c8-859f5e56e932 and Defenders 9ae11639-8485-4ada-9ec0-4a016f1a8429: 0 -> -10.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid failed at Test target. Progress remains 0/2. [raid=e3491b7b-fbd2-42c5-a34f-f8380d13ce80]
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid e3491b7b-fbd2-42c5-a34f-f8380d13ce80 ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers lost | raiders lost 1/1, defenders lost 0/0
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 22.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid a5665b37-e1a5-4cf6-9e88-b3c73efdaab5 started: 032b6cae-4f95-4887-9b69-bea43fc4aba4 -> 9285dd7e-5318-4d53-ba60-99cf761958bf at game time 22 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/2 — first victory. Loot prevented. [raid=a5665b37-e1a5-4cf6-9e88-b3c73efdaab5]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:51] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers 032b6cae-4f95-4887-9b69-bea43fc4aba4 and Defenders 9285dd7e-5318-4d53-ba60-99cf761958bf: 0 -> -10.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid a5665b37-e1a5-4cf6-9e88-b3c73efdaab5 ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 22.
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests UNLOCKED for village Test attacker (1 buildings) — negation wand placed
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid f1b8ea98-14cf-43ed-8438-89f2f752a262 started: 032b6cae-4f95-4887-9b69-bea43fc4aba4 -> 9285dd7e-5318-4d53-ba60-99cf761958bf at game time 22 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 2/2 — political allegiance transferred to Attackers 032b6cae-4f95-4887-9b69-bea43fc4aba4. Loot prevented. [raid=f1b8ea98-14cf-43ed-8438-89f2f752a262]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:51] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers 032b6cae-4f95-4887-9b69-bea43fc4aba4 and Defenders 9285dd7e-5318-4d53-ba60-99cf761958bf: -10 -> -20.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid f1b8ea98-14cf-43ed-8438-89f2f752a262 ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test capital at day-time 22.
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests UNLOCKED for village Test attacker (1 buildings) — negation wand placed
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test capital.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 7926488b-45af-4c85-be46-bb43b8b2cc7e started: 032b6cae-4f95-4887-9b69-bea43fc4aba4 -> f2459299-5f4e-4f64-a78b-45e4cfc4e832 at game time 22 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test capital: 1/2 — first victory. Loot prevented. [raid=7926488b-45af-4c85-be46-bb43b8b2cc7e]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test capital (0 goods stolen).
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:51] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test capital strains relations between Attackers 032b6cae-4f95-4887-9b69-bea43fc4aba4 and Defenders 9285dd7e-5318-4d53-ba60-99cf761958bf: -20 -> -30.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 7926488b-45af-4c85-be46-bb43b8b2cc7e ended by BATTLE after 0 game ticks: Test attacker -> Test capital | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test capital at day-time 22.
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests UNLOCKED for village Test attacker (1 buildings) — negation wand placed
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test capital.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid f32476c2-ee4b-426d-8a92-1848278ab4ff started: 032b6cae-4f95-4887-9b69-bea43fc4aba4 -> f2459299-5f4e-4f64-a78b-45e4cfc4e832 at game time 22 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test capital: 2/2 — capital fell; kingdom Defenders 9285dd7e-5318-4d53-ba60-99cf761958bf collapsed and its remaining villages now belong to Attackers 032b6cae-4f95-4887-9b69-bea43fc4aba4. Loot prevented. [raid=f32476c2-ee4b-426d-8a92-1848278ab4ff]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test capital (0 goods stolen).
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid f32476c2-ee4b-426d-8a92-1848278ab4ff ended by BATTLE after 0 game ticks: Test attacker -> Test capital | attackers won | raiders lost 0/1, defenders lost 0/0
+KINGDOMS_RESTART_READ_PASS: war transfer=2/2, war partial=1/2, independent=1/1, capital/membership/receipt retained
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 22.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 8453ec5b-2d9d-4256-afeb-61513a7b0779 started: 8bb09f0f-b98a-42c5-be48-39dbf5301605 -> b7dded81-22af-419c-864a-3574197df408 at game time 22 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/2 — first victory. Loot prevented. [raid=8453ec5b-2d9d-4256-afeb-61513a7b0779]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:51] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers 8bb09f0f-b98a-42c5-be48-39dbf5301605 and Defenders b7dded81-22af-419c-864a-3574197df408: 0 -> -10.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 8453ec5b-2d9d-4256-afeb-61513a7b0779 ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:51] [Server thread/INFO] [or.mi.vi.VillageWaypointGraph/]: [Millenaire] Waypoint graph rebuilt: 1 nodes, 0 edges (too few) in 0 ms
+[20:58:51] [Server thread/INFO] [or.mi.vi.VillageWaypointGraph/]: [Millenaire] Waypoint graph rebuilt: 1 nodes, 0 edges (too few) in 0 ms
+[20:58:51] [Server thread/INFO] [or.mi.vi.VillageWaypointGraph/]: [Millenaire] Waypoint graph rebuilt: 1 nodes, 0 edges (too few) in 0 ms
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 23.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 296dafab-883d-4f01-b5f2-74e3e68632ce started: 158e0de9-87d9-4a40-945d-ee0835f9f3cc -> 53896517-99a9-47ff-95cf-b7d2b53c0da1 at game time 23 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/1 — political allegiance transferred to Attackers 158e0de9-87d9-4a40-945d-ee0835f9f3cc. Loot prevented. [raid=296dafab-883d-4f01-b5f2-74e3e68632ce]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 296dafab-883d-4f01-b5f2-74e3e68632ce ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 38.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Legacy conquest completed; old target-only progress grants no political ownership. Loot prevented. [raid=3a575204-7f5f-4f10-b908-e8b6d8ab4210]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 3a575204-7f5f-4f10-b908-e8b6d8ab4210 ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | unknown (server restarted during the raid)
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: Kingdom created: 0293fc57-19cd-48ee-8be5-5da4bfde5a20 | Command A c09c4728-79c0-4e20-865e-8ad3c51707a8 | capital=c09c4728-79c0-4e20-865e-8ad3c51707a8
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: Kingdom created: 44874b24-6dd6-4c39-9fd8-a971def24afc | Command B 9451c41d-70a4-4772-8f5f-4c228f222b20 | capital=9451c41d-70a4-4772-8f5f-4c228f222b20
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: Village attached: 8a3a9307-56d8-4fe2-a1d8-b601b777b0e3
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: War 6890a4dd-cd96-4455-9886-6854efe63942 | 0293fc57-19cd-48ee-8be5-5da4bfde5a20 -> 44874b24-6dd6-4c39-9fd8-a971def24afc | status=ACTIVE | startGameTime=38 | initial defender members=1 | capital requires=1 | held=0 | capital open=false | capital 9451c41d-70a4-4772-8f5f-4c228f222b20 progress=0/2 | endReason=
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: Capital is protected: the attacking kingdom must hold 1 of the 1 villages the defender had when the war began (currently 0).
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 38.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 767941e5-692e-4a8e-9a81-a8c8f8c4d0a6 started: de43cd14-a218-4625-883c-141293596c0b -> 33be016f-f668-4b00-9ee2-090c1a79a3b7 at game time 38 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid FAILURE: Test attacker repulsed at Test target.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid failed at Test target. Progress remains 0/1. [raid=767941e5-692e-4a8e-9a81-a8c8f8c4d0a6]
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 767941e5-692e-4a8e-9a81-a8c8f8c4d0a6 ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers lost | raiders lost 1/1, defenders lost 0/0
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 38.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 51844378-6da1-4b55-8bf5-a48cb59d56a1 started: 17c159dc-cc69-47e2-aca5-3890cd0ed495 -> f0225ad8-5687-431b-a141-81e5ba2e6851 at game time 38 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Loot: 64 culture-good units transferred from Test target to Test attacker.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (64 goods stolen).
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:51] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers 17c159dc-cc69-47e2-aca5-3890cd0ed495 and Defenders f0225ad8-5687-431b-a141-81e5ba2e6851: 0 -> -10.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 51844378-6da1-4b55-8bf5-a48cb59d56a1 no longer matches Millénaire state; marker retired.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test capital at day-time 39.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test capital.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 05804939-582a-48ad-b7e1-ee44bd5a995b started: 055eabab-a3cb-4861-9f64-204cfb8d55d7 -> 378a44d7-e59f-4e09-8856-3beceab6a6d2 at game time 39 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test capital: 1/2 — first victory. Loot prevented. [raid=05804939-582a-48ad-b7e1-ee44bd5a995b]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test capital (0 goods stolen).
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:51] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test capital strains relations between Attackers 055eabab-a3cb-4861-9f64-204cfb8d55d7 and Defenders d1b982a5-8702-4911-8917-b36e1f90d8c4: 0 -> -10.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 05804939-582a-48ad-b7e1-ee44bd5a995b ended by BATTLE after 0 game ticks: Test attacker -> Test capital | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test capital at day-time 39.
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests UNLOCKED for village Test attacker (1 buildings) — negation wand placed
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test capital.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 4318106b-2146-4e41-a742-31b984b09041 started: 055eabab-a3cb-4861-9f64-204cfb8d55d7 -> 378a44d7-e59f-4e09-8856-3beceab6a6d2 at game time 39 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test capital: 2/2 — capital fell; kingdom Defenders d1b982a5-8702-4911-8917-b36e1f90d8c4 collapsed and its remaining villages now belong to Attackers 055eabab-a3cb-4861-9f64-204cfb8d55d7. Loot prevented. [raid=4318106b-2146-4e41-a742-31b984b09041]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test capital (0 goods stolen).
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 4318106b-2146-4e41-a742-31b984b09041 ended by BATTLE after 0 game ticks: Test attacker -> Test capital | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 39.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid fe449e27-4456-431b-bf2a-c8826fb751cb started: a2e9d70f-8f65-4650-b528-3ea5a24f5e2d -> e39aecbd-4f73-40cf-9399-3a384802a721 at game time 39 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/2 — first victory. Loot prevented. [raid=fe449e27-4456-431b-bf2a-c8826fb751cb]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:51] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers a2e9d70f-8f65-4650-b528-3ea5a24f5e2d and Defenders e39aecbd-4f73-40cf-9399-3a384802a721: 0 -> -10.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid fe449e27-4456-431b-bf2a-c8826fb751cb ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+KINGDOMS_TEST_ARTIFACT: union:/tmp/kingdoms-maintenance-111/run/gametest/mods/millenairekingdoms.jar%23128!/
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 40.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Loot: 64 culture-good units transferred from Test target to Test attacker.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (64 goods stolen).
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:51] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers 526cff17-e7c0-42fa-81bc-5f7f371851bd and Defenders 43dac0d7-9a50-4103-ae8f-94658562abc4: 0 -> -10.
+[20:58:51] [Server thread/INFO] [minecraft/GameTestServer]: [++++++++++++++++++++++++ ]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid planned: Test attacker -> Test target at day-time 43.
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid started: Test attacker dispatched 1 raiders to Test target.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest raid 7ee413b8-9257-446c-a63a-db479d2e5f54 started: f42d07c3-e5d3-4993-aaf9-216d1c3be09a -> 4ac98045-711f-4393-917f-5e0f9ba1a75d at game time 43 (1 raiders sent, operator test)
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: Conquest Test target: 1/2 — first victory. Loot prevented. [raid=7ee413b8-9257-446c-a63a-db479d2e5f54]
+[20:58:51] [Server thread/INFO] [or.mi.co.ra.RaidManager/]: [Millenaire] Raid SUCCESS: Test attacker -> Test target (0 goods stolen).
+[20:58:51] [Server thread/INFO] [or.mi.vi.Village/]: [Millenaire] Chests LOCKED for village Test attacker (1 buildings)
+[20:58:51] [Server thread/INFO] [co.mi.po.DiplomacyService/]: Raid of Test attacker on Test target strains relations between Attackers f42d07c3-e5d3-4993-aaf9-216d1c3be09a and Defenders 4ac98045-711f-4393-917f-5e0f9ba1a75d: 0 -> -10.
+[20:58:51] [Server thread/INFO] [co.mi.co.ConquestService/]: [Kingdoms] Conquest raid 7ee413b8-9257-446c-a63a-db479d2e5f54 ended by BATTLE after 0 game ticks: Test attacker -> Test target | attackers won | raiders lost 0/1, defenders lost 0/0
+[20:58:51] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++++++++++++++++]
+[20:58:51] [Server thread/INFO] [minecraft/GameTestServer]: ========= 25 GAME TESTS COMPLETE IN 595.1 ms ======================
+[20:58:51] [Server thread/INFO] [minecraft/GameTestServer]: All 25 required tests passed :)
+[20:58:51] [Server thread/INFO] [minecraft/GameTestServer]: ====================================================
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[20:58:51] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+[20:58:51] [Server thread/INFO] [minecraft/GameTestServer]: Game test server shutting down
+
+> Task :verifyConquest
+
+BUILD SUCCESSFUL in 23s
+16 actionable tasks: 3 executed, 13 up-to-date

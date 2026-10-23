@@ -125,10 +125,12 @@ public final class ConquestService {
      * Runs for every Millénaire raid end: normal raids only add kingdom tension (stage 6.2), conquest raids also close. */
     public static void finish(Village attacker, Village target, ServerLevel level) {
         var data = KingdomSavedData.get(level);
-        try { DiplomacyService.raidIncident(level, data, attacker, target); }
-        catch (RuntimeException e) { LOGGER.error("[Kingdoms] Raid tension could not be applied; the raid itself is unaffected.", e); }
         var raid = data.raid(target.getId().uuid());
-        if (!matches(raid, attacker, target)) return;
+        boolean conquest = matches(raid, attacker, target);
+        // applyLooting may already have transferred the target. Preserve the war's original parties for this incident.
+        try { DiplomacyService.raidIncident(level, data, attacker, target, conquest ? raid.campaign() : null); }
+        catch (RuntimeException e) { LOGGER.error("[Kingdoms] Raid tension could not be applied; the raid itself is unaffected.", e); }
+        if (!conquest) return;
         if (!raid.victoryRecorded()) notify(level, raid, "Conquest raid failed at " + name(target)
                 + (raid.campaign() == null ? "." : ". Progress remains " + data.wins(raid.campaign())
                 + "/" + KingdomSavedData.requiredWins(raid.campaign()) + "."));

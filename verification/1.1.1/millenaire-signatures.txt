@@ -1,0 +1,244 @@
+Compiled from "RaidManager.java"
+public final class org.millenaire.combat.raid.RaidManager {
+  private static final org.slf4j.Logger LOGGER;
+    descriptor: Lorg/slf4j/Logger;
+  private org.millenaire.combat.raid.RaidManager();
+    descriptor: ()V
+
+  public static boolean resolveAttackersWin(int, int, float, float);
+    descriptor: (IIFF)Z
+
+  public static boolean shouldEndRaid(int, int, boolean);
+    descriptor: (IIZ)Z
+
+  public static int maxAcceptableTargetStrength(int);
+    descriptor: (I)I
+
+  static boolean frozenRaidTimedOut(long, long);
+    descriptor: (JJ)Z
+
+  static boolean needsGameTimeBackfill(long, long);
+    descriptor: (JJ)Z
+
+  public static boolean isBanditViableTarget(int, int, boolean, boolean, boolean);
+    descriptor: (IIZZZ)Z
+
+  public static boolean isRegularViableTarget(int, int, int, boolean);
+    descriptor: (IIIZ)Z
+
+  public static void attemptPlanNewRaid(org.millenaire.village.Village, net.minecraft.server.level.ServerLevel);
+    descriptor: (Lorg/millenaire/village/Village;Lnet/minecraft/server/level/ServerLevel;)V
+
+  private static org.millenaire.village.Village selectRaidTarget(org.millenaire.village.Village, net.minecraft.server.level.ServerLevel, boolean);
+    descriptor: (Lorg/millenaire/village/Village;Lnet/minecraft/server/level/ServerLevel;Z)Lorg/millenaire/village/Village;
+
+  public static void planRaid(org.millenaire.village.Village, org.millenaire.village.Village, net.minecraft.server.level.ServerLevel);
+    descriptor: (Lorg/millenaire/village/Village;Lorg/millenaire/village/Village;Lnet/minecraft/server/level/ServerLevel;)V
+
+  public static void tickRaid(org.millenaire.village.Village, net.minecraft.server.level.ServerLevel);
+    descriptor: (Lorg/millenaire/village/Village;Lnet/minecraft/server/level/ServerLevel;)V
+
+  static void startRaid(org.millenaire.village.Village, org.millenaire.village.Village, net.minecraft.server.level.ServerLevel);
+    descriptor: (Lorg/millenaire/village/Village;Lorg/millenaire/village/Village;Lnet/minecraft/server/level/ServerLevel;)V
+
+  public static void startRaidForced(org.millenaire.village.Village, org.millenaire.village.Village, net.minecraft.server.level.ServerLevel);
+    descriptor: (Lorg/millenaire/village/Village;Lorg/millenaire/village/Village;Lnet/minecraft/server/level/ServerLevel;)V
+
+  static boolean shouldAbortDueToImprovedRelations(boolean, java.lang.Integer, boolean);
+    descriptor: (ZLjava/lang/Integer;Z)Z
+
+  private static void startRaidInternal(org.millenaire.village.Village, org.millenaire.village.Village, net.minecraft.server.level.ServerLevel, boolean);
+    descriptor: (Lorg/millenaire/village/Village;Lorg/millenaire/village/Village;Lnet/minecraft/server/level/ServerLevel;Z)V
+
+  static boolean sendVillagerOnRaid(org.millenaire.village.VillagerRecord, org.millenaire.village.Village, org.millenaire.village.Village, net.minecraft.server.level.ServerLevel);
+    descriptor: (Lorg/millenaire/village/VillagerRecord;Lorg/millenaire/village/Village;Lorg/millenaire/village/Village;Lnet/minecraft/server/level/ServerLevel;)Z
+
+  static void materializeRaiders(org.millenaire.village.Village, net.minecraft.server.level.ServerLevel, long);
+    descriptor: (Lorg/millenaire/village/Village;Lnet/minecraft/server/level/ServerLevel;J)V
+
+  private static net.minecraft.core.BlockPos attackerCenterOf(org.millenaire.village.VillageId, org.millenaire.village.Village, net.minecraft.server.level.ServerLevel);
+    descriptor: (Lorg/millenaire/village/VillageId;Lorg/millenaire/village/Village;Lnet/minecraft/server/level/ServerLevel;)Lnet/minecraft/core/BlockPos;
+
+  public static net.minecraft.core.BlockPos resolveDefendingPos(org.millenaire.village.Village);
+    descriptor: (Lorg/millenaire/village/Village;)Lnet/minecraft/core/BlockPos;
+
+  static net.minecraft.core.BlockPos firstPoint(org.millenaire.building.BuildingInstance, java.lang.String...);
+    descriptor: (Lorg/millenaire/building/BuildingInstance;[Ljava/lang/String;)Lnet/minecraft/core/BlockPos;
+
+  static void checkBattleStatus(org.millenaire.village.Village, net.minecraft.server.level.ServerLevel);
+    descriptor: (Lorg/millenaire/village/Village;Lnet/minecraft/server/level/ServerLevel;)V
+
+  static net.minecraft.network.chat.Component raidSuccessMessage(java.lang.String, java.lang.String, int);
+    descriptor: (Ljava/lang/String;Ljava/lang/String;I)Lnet/minecraft/network/chat/Component;
+
+  static net.minecraft.network.chat.Component raidFailureMessage(java.lang.String, java.lang.String);
+    descriptor: (Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/network/chat/Component;
+
+  static void endRaid(org.millenaire.village.Village, org.millenaire.village.Village, net.minecraft.server.level.ServerLevel);
+    descriptor: (Lorg/millenaire/village/Village;Lorg/millenaire/village/Village;Lnet/minecraft/server/level/ServerLevel;)V
+
+  private static void grantRaidAdvancements(org.millenaire.village.Village, org.millenaire.village.Village, boolean, net.minecraft.server.level.ServerLevel);
+    descriptor: (Lorg/millenaire/village/Village;Lorg/millenaire/village/Village;ZLnet/minecraft/server/level/ServerLevel;)V
+
+  private static java.util.Map<net.minecraft.world.item.Item, java.lang.Integer> applyLooting(org.millenaire.village.Village, org.millenaire.village.Village, net.minecraft.server.level.ServerLevel);
+    descriptor: (Lorg/millenaire/village/Village;Lorg/millenaire/village/Village;Lnet/minecraft/server/level/ServerLevel;)Ljava/util/Map;
+
+  static java.lang.String formatLootHistory(java.util.Map<net.minecraft.world.item.Item, java.lang.Integer>);
+    descriptor: (Ljava/util/Map;)Ljava/lang/String;
+
+  private static void cleanupClones(org.millenaire.village.Village, net.minecraft.server.level.ServerLevel);
+    descriptor: (Lorg/millenaire/village/Village;Lnet/minecraft/server/level/ServerLevel;)V
+
+  static boolean shouldCancelTargetOwnRaid(long);
+    descriptor: (J)Z
+
+  static boolean releaseAwayRaidingOriginals(java.util.Collection<org.millenaire.village.VillagerRecord>);
+    descriptor: (Ljava/util/Collection;)Z
+
+  public static void abortRaidForAttacker(org.millenaire.village.Village, net.minecraft.server.level.ServerLevel);
+    descriptor: (Lorg/millenaire/village/Village;Lnet/minecraft/server/level/ServerLevel;)V
+
+  static void migrateRaidStartGameTime(org.millenaire.village.Village, net.minecraft.server.level.ServerLevel);
+    descriptor: (Lorg/millenaire/village/Village;Lnet/minecraft/server/level/ServerLevel;)V
+
+  private static boolean hasRaiderClonesFrom(org.millenaire.village.Village, org.millenaire.village.VillageId);
+    descriptor: (Lorg/millenaire/village/Village;Lorg/millenaire/village/VillageId;)Z
+
+  private static org.millenaire.village.VillageId findAttackerId(org.millenaire.village.Village);
+    descriptor: (Lorg/millenaire/village/Village;)Lorg/millenaire/village/VillageId;
+
+  private static java.lang.String nameOf(org.millenaire.village.Village);
+    descriptor: (Lorg/millenaire/village/Village;)Ljava/lang/String;
+
+  private static void broadcastNear(net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, net.minecraft.network.chat.Component);
+    descriptor: (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/network/chat/Component;)V
+
+  static {};
+    descriptor: ()V
+}
+Compiled from "VillageSpawnQueue.java"
+public class org.millenaire.world.VillageSpawnQueue {
+  private static final org.slf4j.Logger LOGGER;
+    descriptor: Lorg/slf4j/Logger;
+  private static final int MAX_CHEAP_PER_TICK;
+    descriptor: I
+  static final int MAX_LB_CHECKED_PER_TICK;
+    descriptor: I
+  static final int LB_COVERAGE_RADIUS_CHUNKS;
+    descriptor: I
+  private static final int BASE_EXPENSIVE_PER_TICK;
+    descriptor: I
+  private static final int QUEUE_PRESSURE_THRESHOLD;
+    descriptor: I
+  private static final int MAX_EXPENSIVE_PER_TICK;
+    descriptor: I
+  static final long LB_TTL_TICKS;
+    descriptor: J
+  private static final float BIOME_VALIDITY_FLOOR;
+    descriptor: F
+  private static final int BIOME_SAMPLE_RADIUS_CAP;
+    descriptor: I
+  static final long LB_RETRY_BACKOFF_TICKS;
+    descriptor: J
+  private final java.util.Queue<net.minecraft.core.BlockPos> candidates;
+    descriptor: Ljava/util/Queue;
+  private final java.util.Deque<org.millenaire.world.VillageSpawnQueue$LBCandidate> loneBuildingQueue;
+    descriptor: Ljava/util/Deque;
+  private final it.unimi.dsi.fastutil.longs.LongOpenHashSet resolvedChunks;
+    descriptor: Lit/unimi/dsi/fastutil/longs/LongOpenHashSet;
+  private java.util.Map<net.minecraft.tags.TagKey<net.minecraft.world.level.biome.Biome>, java.util.List<org.millenaire.culture.VillageType>> villageBiomeIndex;
+    descriptor: Ljava/util/Map;
+  private java.util.Map<net.minecraft.tags.TagKey<net.minecraft.world.level.biome.Biome>, java.util.List<org.millenaire.culture.VillageType>> lbBiomeIndex;
+    descriptor: Ljava/util/Map;
+  private java.util.List<org.millenaire.culture.VillageType> villagesNoBiomeTags;
+    descriptor: Ljava/util/List;
+  private java.util.List<org.millenaire.culture.VillageType> lbsNoBiomeTags;
+    descriptor: Ljava/util/List;
+  private volatile java.lang.Thread ownerThread;
+    descriptor: Ljava/lang/Thread;
+  private volatile boolean offThreadReported;
+    descriptor: Z
+  public org.millenaire.world.VillageSpawnQueue();
+    descriptor: ()V
+
+  private void checkThread();
+    descriptor: ()V
+
+  public void reset();
+    descriptor: ()V
+
+  java.lang.Thread getOwnerThread();
+    descriptor: ()Ljava/lang/Thread;
+
+  boolean isOffThreadReported();
+    descriptor: ()Z
+
+  public void enqueue(net.minecraft.core.BlockPos);
+    descriptor: (Lnet/minecraft/core/BlockPos;)V
+
+  public void markResolved(net.minecraft.world.level.ChunkPos);
+    descriptor: (Lnet/minecraft/world/level/ChunkPos;)V
+
+  public static boolean couldHostAnyVillage(java.util.Collection<org.millenaire.culture.VillageType>, java.util.function.Predicate<net.minecraft.tags.TagKey<net.minecraft.world.level.biome.Biome>>);
+    descriptor: (Ljava/util/Collection;Ljava/util/function/Predicate;)Z
+
+  public void trySpawnNext(net.minecraft.server.level.ServerLevel);
+    descriptor: (Lnet/minecraft/server/level/ServerLevel;)V
+
+  private void processMainQueue(net.minecraft.server.level.ServerLevel, org.millenaire.village.VillageSavedData, org.millenaire.village.VillageManager, boolean, boolean, boolean, long);
+    descriptor: (Lnet/minecraft/server/level/ServerLevel;Lorg/millenaire/village/VillageSavedData;Lorg/millenaire/village/VillageManager;ZZZJ)V
+
+  private void processLBQueue(net.minecraft.server.level.ServerLevel, org.millenaire.village.VillageSavedData, org.millenaire.village.VillageManager, boolean, long);
+    descriptor: (Lnet/minecraft/server/level/ServerLevel;Lorg/millenaire/village/VillageSavedData;Lorg/millenaire/village/VillageManager;ZJ)V
+
+  static boolean isCoverageComplete(net.minecraft.core.BlockPos, it.unimi.dsi.fastutil.longs.LongOpenHashSet, int);
+    descriptor: (Lnet/minecraft/core/BlockPos;Lit/unimi/dsi/fastutil/longs/LongOpenHashSet;I)Z
+
+  private boolean isCoverageComplete(net.minecraft.core.BlockPos);
+    descriptor: (Lnet/minecraft/core/BlockPos;)Z
+
+  static boolean isExpired(org.millenaire.world.VillageSpawnQueue$LBCandidate, long, long);
+    descriptor: (Lorg/millenaire/world/VillageSpawnQueue$LBCandidate;JJ)Z
+
+  static boolean shouldBackoff(org.millenaire.world.VillageSpawnQueue$LBCandidate, long);
+    descriptor: (Lorg/millenaire/world/VillageSpawnQueue$LBCandidate;J)Z
+
+  static int computeExpensiveBudget(int);
+    descriptor: (I)I
+
+  public void invalidateBiomeIndex();
+    descriptor: ()V
+
+  private void ensureBiomeIndex();
+    descriptor: ()V
+
+  private org.millenaire.world.VillageSpawnQueue$SpawnResult trySpawnVillage(net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos, double, org.millenaire.village.VillageManager, boolean, boolean, boolean);
+    descriptor: (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;DLorg/millenaire/village/VillageManager;ZZZ)Lorg/millenaire/world/VillageSpawnQueue$SpawnResult;
+
+  static int computeMaxCompletion(double, int, int, int);
+    descriptor: (DIII)I
+
+  static int computeCompletionByDistance(double);
+    descriptor: (D)I
+
+  public java.util.Map<java.lang.String, java.lang.Object> getStats();
+    descriptor: ()Ljava/util/Map;
+
+  private static boolean matchesAnyTag(net.minecraft.core.Holder<net.minecraft.world.level.biome.Biome>, java.util.List<net.minecraft.tags.TagKey<net.minecraft.world.level.biome.Biome>>);
+    descriptor: (Lnet/minecraft/core/Holder;Ljava/util/List;)Z
+
+  private static java.util.List lambda$trySpawnVillage$3(java.lang.Integer);
+    descriptor: (Ljava/lang/Integer;)Ljava/util/List;
+
+  private static boolean lambda$trySpawnVillage$2(org.millenaire.culture.VillageType);
+    descriptor: (Lorg/millenaire/culture/VillageType;)Z
+
+  private static net.minecraft.resources.ResourceLocation lambda$trySpawnVillage$1(net.minecraft.resources.ResourceKey);
+    descriptor: (Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/resources/ResourceLocation;
+
+  private static java.util.List lambda$ensureBiomeIndex$0(net.minecraft.tags.TagKey);
+    descriptor: (Lnet/minecraft/tags/TagKey;)Ljava/util/List;
+
+  static {};
+    descriptor: ()V
+}

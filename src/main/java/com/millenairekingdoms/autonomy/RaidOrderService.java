@@ -81,6 +81,9 @@ public final class RaidOrderService {
 
     /** One attempt to turn an order into a real Millénaire raid. */
     public static Attempt attempt(ServerLevel level, KingdomSavedData data, RaidOrder order, Settings s) {
+        // Check before any village lookup or Millénaire mutation. process must not launch an expired order on its last retry.
+        if (!order.equals(data.order(order.id()))) return Attempt.dropped("the order was withdrawn or replaced");
+        if (level.getGameTime() >= order.expiresGameTime()) return Attempt.dropped("the order expired");
         Village target = PoliticsService.village(level, order.target());
         if (target == null) return Attempt.dropped("the target village no longer exists");
         // The order is only as good as the authority that gave it: an NPC order needs the kingdom to be still without a

@@ -15,7 +15,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.arguments.UuidArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -50,10 +49,10 @@ public final class KingdomCommands {
                 .then(Commands.literal("join").then(target().executes(c -> run(c, p -> reply(p,
                         PoliticsService.join(p, StringArgumentType.getString(c, "target")) == PoliticsService.JoinResult.JOINED
                                 ? "The village joined the kingdom." : "Application sent; the kingdom's ruler decides.")))))
-                .then(Commands.literal("accept").then(Commands.argument("village", UuidArgument.uuid()).executes(c -> run(c, p -> reply(p,
-                        ConquestService.name(PoliticsService.accept(p, UuidArgument.getUuid(c, "village"))) + " joined your kingdom.")))))
-                .then(Commands.literal("refuse").then(Commands.argument("village", UuidArgument.uuid()).executes(c -> run(c, p -> {
-                    PoliticsService.refuse(p, UuidArgument.getUuid(c, "village")); reply(p, "Application refused.");
+                .then(Commands.literal("accept").then(PoliticalArguments.villageArgument("village").executes(c -> run(c, p -> reply(p,
+                        ConquestService.name(PoliticsService.accept(p, PoliticalArguments.village(c, "village"))) + " joined your kingdom.")))))
+                .then(Commands.literal("refuse").then(PoliticalArguments.villageArgument("village").executes(c -> run(c, p -> {
+                    PoliticsService.refuse(p, PoliticalArguments.village(c, "village")); reply(p, "Application refused.");
                 }))))
                 .then(Commands.literal("found").then(Commands.argument("name", StringArgumentType.greedyString()).executes(c -> run(c, p -> reply(p,
                         "You founded and rule " + PoliticsService.found(p, StringArgumentType.getString(c, "name")).name() + ".")))))
@@ -62,10 +61,10 @@ public final class KingdomCommands {
                         .then(Commands.literal("cancel").executes(c -> run(c, p -> {
                             RaidOrderService.cancel(p); reply(p, "The waiting conquest raid was called off.");
                         })))
-                        .then(Commands.argument("target", UuidArgument.uuid()).suggests(KingdomCommands::targets)
-                                .executes(c -> run(c, p -> raid(p, UuidArgument.getUuid(c, "target"), null)))
-                                .then(Commands.argument("source", UuidArgument.uuid()).suggests(KingdomCommands::sources)
-                                        .executes(c -> run(c, p -> raid(p, UuidArgument.getUuid(c, "target"), UuidArgument.getUuid(c, "source")))))))
+                        .then(PoliticalArguments.villageArgument("target")
+                                .executes(c -> run(c, p -> raid(p, PoliticalArguments.village(c, "target"), null)))
+                                .then(PoliticalArguments.villageArgument("source")
+                                        .executes(c -> run(c, p -> raid(p, PoliticalArguments.village(c, "target"), PoliticalArguments.village(c, "source")))))))
                 .then(Commands.literal("treasury")
                         .executes(c -> run(c, p -> reply(p, TreasuryService.describe(p))))
                         .then(Commands.literal("withdraw").then(Commands.argument("deniers", IntegerArgumentType.integer(1)).executes(c -> run(c, p -> reply(p,
@@ -94,24 +93,6 @@ public final class KingdomCommands {
     private static String villageName(ServerPlayer p, java.util.UUID id) {
         var v = PoliticsService.village(p.serverLevel(), id); return v == null ? id.toString() : PoliticsService.name(v);
     }
-    private static java.util.concurrent.CompletableFuture<com.mojang.brigadier.suggestion.Suggestions> targets(
-            CommandContext<CommandSourceStack> context, com.mojang.brigadier.suggestion.SuggestionsBuilder builder) {
-        var data = KingdomSavedData.get(context.getSource().getLevel());
-        var player = context.getSource().getPlayer();
-        var kingdom = player == null ? null : data.ruledBy(player.getUUID());
-        return SharedSuggestionProvider.suggest(org.millenaire.village.VillageSavedData.get(context.getSource().getLevel()).getVillageManager()
-                .getAllVillages().stream().map(v -> v.getId().uuid()).filter(id -> kingdom == null || !kingdom.equals(data.owner(id)))
-                .map(java.util.UUID::toString), builder);
-    }
-    private static java.util.concurrent.CompletableFuture<com.mojang.brigadier.suggestion.Suggestions> sources(
-            CommandContext<CommandSourceStack> context, com.mojang.brigadier.suggestion.SuggestionsBuilder builder) {
-        var data = KingdomSavedData.get(context.getSource().getLevel());
-        var player = context.getSource().getPlayer();
-        var kingdom = player == null ? null : data.ruledBy(player.getUUID());
-        return SharedSuggestionProvider.suggest(kingdom == null ? java.util.stream.Stream.empty()
-                : data.members(kingdom).stream().map(java.util.UUID::toString), builder);
-    }
-
     private static RequiredArgumentBuilder<CommandSourceStack, String> target() {
         return Commands.argument("target", StringArgumentType.greedyString()).suggests((context, builder) -> SharedSuggestionProvider.suggest(
                 KingdomSavedData.get(context.getSource().getLevel()).kingdoms().stream().filter(k -> !k.fallen()).map(KingdomSavedData.Kingdom::name), builder));

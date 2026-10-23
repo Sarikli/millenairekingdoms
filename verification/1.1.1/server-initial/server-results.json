@@ -1,0 +1,14 @@
+[
+  {
+    "mode": "write",
+    "ok": true,
+    "exit": 0,
+    "seconds": 18.0
+  },
+  {
+    "mode": "restart",
+    "ok": true,
+    "exit": 0,
+    "seconds": 14.8
+  }
+]

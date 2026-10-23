@@ -101,7 +101,16 @@ public final class DiplomacyService {
 
     /** A Millénaire raid between villages of two different living kingdoms just ended: their capitals' relation worsens. */
     public static boolean raidIncident(ServerLevel level, KingdomSavedData data, Village attacker, Village target) {
+        return raidIncident(level, data, attacker, target, null);
+    }
+
+    /** War conquests retain their pre-transfer sides. Independent and normal raids use current membership;
+     * a fallen kingdom still receives no new political relation, as before. No additional Millénaire raid is triggered. */
+    public static boolean raidIncident(ServerLevel level, KingdomSavedData data, Village attacker, Village target,
+                                       KingdomSavedData.Campaign campaign) {
         UUID ka = data.owner(attacker.getId().uuid()), kb = data.owner(target.getId().uuid());
+        var war = campaign == null || campaign.warId() == null ? null : data.war(campaign.warId());
+        if (war != null) { ka = war.attackerKingdom(); kb = war.defenderKingdom(); }
         if (ka == null || kb == null || ka.equals(kb)) return false;
         Kingdom a = data.kingdom(ka), b = data.kingdom(kb);
         if (a.fallen() || b.fallen()) return false;

@@ -43,6 +43,8 @@ public final class KingdomDay {
                               FoundingConfig.Settings founding, RandomSource random) {
         long previous = data.day();
         if (!EconomyService.runDay(level, data, day)) return false;
+        int released = data.releaseUnruledJoinRequests();
+        if (released > 0) LOGGER.info("[Kingdoms] Withdrew {} unresolved applications to kingdoms now governed by NPCs.", released);
         // Politics never stop the world: an unexpected error is logged and the day (already booked) is not repeated.
         try {
             DiplomacyService.drift(level, data, random);
