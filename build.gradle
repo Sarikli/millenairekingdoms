@@ -203,6 +203,24 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_economy_tests'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        royalConstructionGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_construction_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        royalConstructionGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_construction_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
         configureEach {
             logLevel = org.slf4j.event.Level.INFO
             jvmArguments.addAll '-Xms512m', '-Xmx3G'
@@ -348,4 +366,10 @@ tasks.register('verifyRoyalEconomy') {
     group = 'verification'
     description = 'Verifies royal coin planning and real-chest change across separate JVMs.'
     dependsOn tasks.named('runRoyalEconomyGameTestServerReload')
+}
+tasks.named('runRoyalConstructionGameTestServerReload') { dependsOn tasks.named('runRoyalConstructionGameTestServer') }
+tasks.register('verifyRoyalConstruction') {
+    group = 'verification'
+    description = 'Verify royal construction in a write JVM and a separate reload JVM.'
+    dependsOn tasks.named('runRoyalConstructionGameTestServerReload')
 }

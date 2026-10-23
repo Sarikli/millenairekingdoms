@@ -1,0 +1,11 @@
+{
+  "suite": "verifyRoyalConstruction",
+  "write": 6,
+  "reload": 6,
+  "fresh_world": "royal-catalog-01",
+  "separate_jvms": true,
+  "original_npc_village_types": 37,
+  "offered_choices_across_types": 235,
+  "development_jar_sha256": "838f2b49d62cfb1b7a808c2de6516c7a595ce52b9b9c27687c6cc0ba5e9b1a51",
+  "real_npc_construction_completed": false
+}
