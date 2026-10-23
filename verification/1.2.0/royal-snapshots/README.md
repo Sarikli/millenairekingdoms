@@ -15,3 +15,6 @@ or transaction-to-inventory coordinator exists yet. No world inventory is change
 The journal can persist its own lifecycle but does not establish cross-file atomicity. Dev.2 remains incomplete.
 The prior 125+125 compatibility gate and these focused 22+22 tests were run separately; a full eight-suite rerun at this
 latest commit is not claimed. Existing player-facing gameplay has not been connected to the new primitives.
+
+Final normal offline build also passed (6 seconds). Development JAR SHA-256: `04b73462d12637e46fb14e63d4108404dd504dcfb2690296937108aa19efccca`.
+Compressed build log is adjacent; its ordinary test task is NO-SOURCE and is not counted as GameTest evidence.
