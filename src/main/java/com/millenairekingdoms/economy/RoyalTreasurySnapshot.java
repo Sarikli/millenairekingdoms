@@ -22,6 +22,7 @@ public final class RoyalTreasurySnapshot {
     private final ServerLevel level;
     private final ServerPlayer player;
     private final UUID kingdom, capital;
+    private final UUID recoveryCapital;
     private final BuildingInventory storage;
     private final List<BlockPos> declaredChests;
     private final List<Chest> chests;
@@ -36,8 +37,15 @@ public final class RoyalTreasurySnapshot {
     }
 
     private RoyalTreasurySnapshot(ServerLevel level, ServerPlayer player, UUID kingdom) {
+        this(level,player,kingdom,null);
+    }
+    // Existing-receipt settlement only. Never used by a new payment/debit endpoint.
+    static RoyalTreasurySnapshot forRecovery(ServerLevel level,UUID kingdom,UUID capital) {
+        return new RoyalTreasurySnapshot(level,null,kingdom,java.util.Objects.requireNonNull(capital));
+    }
+    private RoyalTreasurySnapshot(ServerLevel level, ServerPlayer player, UUID kingdom,UUID recoveryCapital) {
         thread(level);
-        this.level=level; this.player=player; this.kingdom=kingdom;
+        this.level=level; this.player=player; this.kingdom=kingdom; this.recoveryCapital=recoveryCapital;
         var current=authority(); this.capital=current.capital();
         this.storage=EconomyService.storage(level,current);
         if(storage==null || storage.getChestPositions().isEmpty()) throw new IllegalStateException("Capital town hall storage is unavailable");
@@ -100,6 +108,12 @@ public final class RoyalTreasurySnapshot {
     private KingdomSavedData.Kingdom authority() {
         if(player!=null && player.serverLevel()!=level) throw new IllegalArgumentException("Ruler moved to another dimension; obtain a new quote");
         var data=KingdomSavedData.get(level); var current=data.kingdom(kingdom);
+        if(recoveryCapital!=null) {
+            if(current==null || !current.active() || current.fallen() || !recoveryCapital.equals(current.capital()) || !kingdom.equals(data.owner(recoveryCapital))) {
+                throw new IllegalStateException("Original capital no longer belongs to the active kingdom; preserve retired receipt for explicit recovery");
+            }
+            return current;
+        }
         if(current==null || !data.mayDecide(kingdom,player==null ? null : player.getUUID())) {
             throw new IllegalArgumentException("This ruler cannot spend for the active kingdom");
         }

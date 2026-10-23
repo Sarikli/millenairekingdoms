@@ -74,6 +74,29 @@ public final class RoyalPaymentService {
         return receipt(request,entry);
     }
 
+    /** Trusted order-recovery endpoint, never a payload action or a source of new spending. The caller must already
+     * have a durable CANCELLING authority-retirement decision. Reconcile only a fully matching original receipt.
+     * Refunds stay in the same still-owned original physical capital, even when the original player is offline.
+     * Accepted patronage commits without touching inventories; no old ruler is impersonated as an NPC. */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public Receipt settleRetiredConstruction(UUID id,UUID kingdom,UUID capital,UUID actor,long amount,boolean refund) {
+        if(!level.getServer().isSameThread()) throw new IllegalStateException("Royal recovery requires the server thread");
+        var entry=journal.load(id); if(entry==null) return null;
+        var request=new Request(id,level.dimension().location().toString(),kingdom,capital,actor,Purpose.CONSTRUCTION,id,amount);
+        if(!entry.intent().equals(request.save())) throw new IllegalArgumentException("Retired order does not match the original construction payment");
+        if(refund) {
+            if(entry.state()==State.REFUNDED) return receipt(request,entry); // Acknowledged terminal replay never needs a new inventory access.
+            if(entry.state()!=State.PREPARED && entry.state()!=State.PAID && entry.state()!=State.REFUND_PREPARED && entry.state()!=State.REFUNDED) return receipt(request,entry);
+            return finish(()->RoyalTreasurySnapshot.forRecovery(level,kingdom,capital),actor,id,true);
+        }
+        return exclusive(capital,()->{
+            var current=journal.load(id);
+            if(current.state()!=State.PAID) return receipt(request,current);
+            guard(request);
+            return receipt(request,journal.transition(id,State.PAID,State.COMMITTED,current.recovery()));
+        });
+    }
+
     private Receipt pay(Supplier<RoyalTreasurySnapshot> source,UUID actor,UUID id,Purpose purpose,UUID reference,long amount) {
         var quote=source.get(); var request=new Request(id,level.dimension().location().toString(),quote.kingdom(),quote.capital(),actor,purpose,reference,amount);
         return exclusive(quote.capital(),()->{

@@ -55,6 +55,25 @@ public final class RoyalConstructionService {
         thread(); dimension(player); return cancel(player,PoliticsService.ruledKingdom(player).id(),id);
     }
 
+    /** Resume only a durable governance retirement. Offline actors are not routed through the NPC request path. */
+    public Entry settleRetired(UUID id) {
+        thread(); var entry=orders.load(id); if(entry==null) throw new IllegalArgumentException("Unknown retired order");
+        if(!entry.intent().dimension().equals(level.dimension().location().toString())) throw new IllegalArgumentException("Retired order belongs to another dimension");
+        return exclusive(entry.intent().village(),()->{
+            var current=orders.load(id);
+            if(current.terminal() || current.stage()==Stage.RECOVERY_REQUIRED) return current;
+            if(current.stage()!=Stage.CANCELLING || current.blocked()!=Blocked.AUTHORITY) throw new IllegalArgumentException("Only a durable authority retirement can use historical settlement");
+            var origin=current.cancellationFrom();
+            boolean refund=origin==Stage.REQUESTED || origin==Stage.PAID;
+            if(!refund && origin!=Stage.QUEUED && origin!=Stage.IN_PROGRESS) return ambiguous(current);
+            var intent=current.intent(); RoyalPaymentService.Receipt receipt;
+            try { receipt=payments.settleRetiredConstruction(id,intent.kingdom(),intent.capital(),intent.actor(),intent.fee(),refund); }
+            catch(IllegalArgumentException conflict) { return ambiguous(current); }
+            if(receipt==null ? origin!=Stage.REQUESTED : receipt.state()!=(refund ? State.REFUNDED : State.COMMITTED)) return ambiguous(current);
+            return orders.change(id,Stage.CANCELLING,Stage.CANCELLED,Blocked.AUTHORITY,current.building());
+        });
+    }
+
     private Entry cancel(ServerPlayer player,UUID kingdom,UUID id) {
         thread(); var entry=orders.load(id); if(entry==null) throw new IllegalArgumentException("Unknown royal order");
         bind(entry,player,kingdom);

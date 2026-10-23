@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtAccounter;
@@ -87,6 +88,21 @@ public final class RoyalConstructionStore {
     }
     public synchronized Entry load(UUID id) { return locked(entries->entries.get(id)); }
     public synchronized List<Entry> entries() { return locked(entries->List.copyOf(entries.values())); }
+
+    /** Retire old mandates durably BEFORE a political authority/membership snapshot becomes visible. No money or engine mutation. */
+    public synchronized int retire(Predicate<Intent> invalid) {
+        return locked(entries->{
+            int count=0;
+            for(var item:entries.entrySet()) {
+                var old=item.getValue();
+                if(old.terminal() || old.stage==Stage.RECOVERY_REQUIRED || !invalid.test(old.intent)) continue;
+                var retired=new Entry(old.intent,Stage.CANCELLING,Blocked.AUTHORITY,old.building,old.cancellationFrom!=null ? old.cancellationFrom : old.stage);
+                if(old.equals(retired)) continue;
+                item.setValue(retired); count++;
+            }
+            if(count>0) write(entries); return count;
+        });
+    }
 
     public synchronized Entry change(UUID id,Stage expected,Stage next,Blocked blocked,UUID building) {
         return locked(entries->{
