@@ -16,8 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import org.millenaire.building.BuildingInventory;
 
-/** Authorized read-only physical treasury quote. No chunk loading, coin mutation or paid receipt.
- * The future coordinator must revalidate immediately before its journaled mutation. */
+/** Authorized physical treasury quote. Public access is read-only; the payment coordinator owns mutations. */
 public final class RoyalTreasurySnapshot {
     private record Chest(BlockPos position, ChestBlockEntity entity, BlockState state) {}
     private final ServerLevel level;
@@ -67,6 +66,18 @@ public final class RoyalTreasurySnapshot {
     public List<ItemStack> slots() { return slots.stream().map(ItemStack::copy).toList(); }
     public long spendableValue() { return RoyalCoinPlan.spendableValue(slots); }
     public RoyalCoinPlan.Plan planDebit(long amount) { requireUnchanged(); return RoyalCoinPlan.debit(slots,amount); }
+
+    // Package-private: never expose an unjournaled mutation to GUI/network callers.
+    void apply(List<ItemStack> after) {
+        requireUnchanged();
+        if(after.size()!=slots.size()) throw new IllegalArgumentException("Invalid treasury slot image");
+        int index=0;
+        for(Chest chest:chests) {
+            for(int slot=0;slot<chest.entity.getContainerSize();slot++) chest.entity.setItem(slot,after.get(index++).copy());
+            chest.entity.setChanged();
+        }
+        storage.invalidateCache();
+    }
 
     public void requireUnchanged() {
         thread(level);

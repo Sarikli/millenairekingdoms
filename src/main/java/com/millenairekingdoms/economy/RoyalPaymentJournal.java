@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
@@ -63,6 +64,23 @@ public final class RoyalPaymentJournal {
     }
 
     public synchronized Entry load(UUID id) { return locked(() -> read(id)); }
+
+    /** Fail closed on any unreadable record, including another capital's record; never lose a reservation. */
+    public synchronized List<Entry> entries() {
+        return locked(() -> {
+            var result=new ArrayList<Entry>();
+            try(var files=Files.list(directory)) {
+                for(Path path:files.filter(p->p.getFileName().toString().endsWith(".dat")).sorted().toList()) {
+                    String name=path.getFileName().toString();
+                    UUID id;
+                    try { id=UUID.fromString(name.substring(0,name.length()-4)); }
+                    catch(IllegalArgumentException e) { throw new IllegalStateException("Unknown royal journal filename; preserve and inspect: "+name,e); }
+                    result.add(read(id));
+                }
+            }
+            return List.copyOf(result);
+        });
+    }
 
     /** Caller supplies the expected prior state. Only exact transition retries are idempotent. */
     public synchronized Entry transition(UUID id, State expected, State next, CompoundTag recovery) {

@@ -16,7 +16,7 @@ public final class RoyalCoinPlan {
     public static final class Plan {
         private final List<ItemStack> before, after;
         private final long beforeValue, afterValue;
-        private Plan(List<ItemStack> before, List<ItemStack> after, long beforeValue, long afterValue) {
+        Plan(List<ItemStack> before, List<ItemStack> after, long beforeValue, long afterValue) {
             this.before = copies(before); this.after = copies(after);
             this.beforeValue = beforeValue; this.afterValue = afterValue;
         }
@@ -35,6 +35,26 @@ public final class RoyalCoinPlan {
     public static Plan credit(List<ItemStack> slots, long amount) {
         if (amount <= 0) throw new IllegalArgumentException("A refund must be positive");
         return plan(slots, amount);
+    }
+
+    /** Payment-only allocation: never move value between separately saved physical containers.
+     * A full container which cannot make exact change is skipped; no partial mutation escapes planning. */
+    static Plan debitSeparate(List<ItemStack> slots,int size,long amount) {
+        if(amount<=0 || size<=0 || slots.size()%size!=0) throw new IllegalArgumentException("Invalid physical treasury payment");
+        long before=spendableValue(slots);
+        if(before<amount) throw new IllegalArgumentException("Not enough physical treasury coins");
+        var after=copies(slots); long remaining=amount;
+        for(int start=0;start<slots.size() && remaining>0;start+=size) {
+            var part=slots.subList(start,start+size); long take=Math.min(remaining,spendableValue(part));
+            if(take==0) continue;
+            Plan plan;
+            try { plan=debit(part,take); }
+            catch(IllegalArgumentException noRoom) { continue; }
+            for(int i=0;i<size;i++) after.set(start+i,plan.after.get(i).copy());
+            remaining-=take;
+        }
+        if(remaining!=0) throw new IllegalArgumentException("No room for exact change within physical treasury chests; nothing was taken");
+        return new Plan(slots,after,before,before-amount);
     }
 
     public static long spendableValue(List<ItemStack> slots) {
