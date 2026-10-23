@@ -41,7 +41,11 @@ public final class RoyalConstructionService {
 
     public RoyalConstructionService(ServerLevel level) { this(level,new RoyalVillagePersistence()); }
     RoyalConstructionService(ServerLevel level,RoyalVillagePersistence persistence) {
-        this.level=level; this.persistence=persistence; this.payments=new RoyalPaymentService(level);
+        this(level,persistence,new RoyalPaymentService(level));
+    }
+    // Real fault probes inject persistence only through package-private constructors, never runtime crash flags.
+    RoyalConstructionService(ServerLevel level,RoyalVillagePersistence persistence,RoyalPaymentService payments) {
+        this.level=level; this.persistence=persistence; this.payments=payments;
         this.orders=new RoyalConstructionStore(level.getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-construction"));
     }
     public Entry requestNpc(UUID kingdom,UUID village,ResourceLocation planSet,UUID id) { return request(null,kingdom,village,planSet,id); }
