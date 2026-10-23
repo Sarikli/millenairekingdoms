@@ -26,7 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 /** Own atomic order intent/index, independent of political format 6 and Millenaire's building save.
  * States describe order coordination, not payment or proof of a finished building. Only the domain service may advance them. */
 public final class RoyalConstructionStore {
-    private static final int FORMAT=1, MAX_ORDERS=10_000;
+    private static final int FORMAT=2, MAX_ORDERS=10_000;
     private static final long MAX_BYTES=16L*1024*1024;
     public enum Stage { REQUESTED, PAID, QUEUING, QUEUED, IN_PROGRESS, COMPLETED, CANCELLING, CANCELLED, FAILED, RECOVERY_REQUIRED }
     public enum Blocked { NONE, NATURAL_PROJECT, UNLOADED, MATERIALS, NO_SPACE, AUTHORITY, MEMBERSHIP, MISSING_PLAN, AMBIGUOUS_ENGINE_STATE }
@@ -44,12 +44,17 @@ public final class RoyalConstructionStore {
             if(originalBuildings.size()>4096) throw new IllegalArgumentException("Too many original building identities");
         }
     }
-    public record Entry(Intent intent,Stage stage,Blocked blocked,UUID building) {
+    public record Entry(Intent intent,Stage stage,Blocked blocked,UUID building,Stage cancellationFrom) {
         public Entry {
             Objects.requireNonNull(intent); Objects.requireNonNull(stage); Objects.requireNonNull(blocked);
             if((stage==Stage.IN_PROGRESS || stage==Stage.COMPLETED) && building==null) throw new IllegalArgumentException("Building identity required for construction progress");
             if(building!=null && intent.originalBuildings.contains(building)) throw new IllegalArgumentException("An existing building cannot fulfill a new royal construction order");
+            if(stage==Stage.CANCELLING && cancellationFrom==null) throw new IllegalArgumentException("Cancellation must retain its origin before any refund");
+            if(cancellationFrom!=null && (stage!=Stage.CANCELLING && stage!=Stage.CANCELLED && stage!=Stage.RECOVERY_REQUIRED
+                    || cancellationFrom==Stage.COMPLETED || cancellationFrom==Stage.CANCELLED || cancellationFrom==Stage.FAILED
+                    || cancellationFrom==Stage.RECOVERY_REQUIRED)) throw new IllegalArgumentException("Invalid cancellation origin");
         }
+        public Entry(Intent intent,Stage stage,Blocked blocked,UUID building) { this(intent,stage,blocked,building,null); }
         public boolean terminal() { return stage==Stage.COMPLETED || stage==Stage.CANCELLED || stage==Stage.FAILED; }
     }
 
@@ -87,7 +92,8 @@ public final class RoyalConstructionStore {
         return locked(entries->{
             Entry old=entries.get(id);
             if(old==null) throw new IllegalArgumentException("Unknown royal construction order");
-            Entry changed=new Entry(old.intent,next,blocked,building);
+            Stage origin=old.cancellationFrom!=null ? old.cancellationFrom : next==Stage.CANCELLING ? old.stage : null;
+            Entry changed=new Entry(old.intent,next,blocked,building,origin);
             if(old.equals(changed)) return old;
             if(old.stage!=expected || !allowed(expected,next) || (old.building!=null && !old.building.equals(building))) {
                 throw new IllegalStateException("Invalid royal order transition: "+old.stage+" -> "+next);
@@ -103,7 +109,7 @@ public final class RoyalConstructionStore {
             case PAID -> to==Stage.QUEUING || to==Stage.CANCELLING || to==Stage.RECOVERY_REQUIRED;
             case QUEUING -> to==Stage.QUEUED || to==Stage.IN_PROGRESS || to==Stage.CANCELLING || to==Stage.RECOVERY_REQUIRED;
             case QUEUED -> to==Stage.IN_PROGRESS || to==Stage.CANCELLING || to==Stage.FAILED || to==Stage.RECOVERY_REQUIRED;
-            case IN_PROGRESS -> to==Stage.COMPLETED || to==Stage.CANCELLED || to==Stage.FAILED || to==Stage.RECOVERY_REQUIRED;
+            case IN_PROGRESS -> to==Stage.COMPLETED || to==Stage.CANCELLING || to==Stage.FAILED || to==Stage.RECOVERY_REQUIRED;
             case CANCELLING -> to==Stage.CANCELLED || to==Stage.RECOVERY_REQUIRED;
             case COMPLETED, CANCELLED, FAILED, RECOVERY_REQUIRED -> false;
         };
@@ -114,18 +120,23 @@ public final class RoyalConstructionStore {
         if(!Files.exists(file)) return result;
         var tag=NbtIo.readCompressed(file,NbtAccounter.create(MAX_BYTES));
         keys(tag,Set.of("format","orders"));
-        if(!tag.contains("format",Tag.TAG_INT) || tag.getInt("format")!=FORMAT || !tag.contains("orders",Tag.TAG_LIST)) throw new IllegalStateException("Unsupported royal order format; original file preserved");
+        if(!tag.contains("format",Tag.TAG_INT) || tag.getInt("format")<1 || tag.getInt("format")>FORMAT || !tag.contains("orders",Tag.TAG_LIST)) throw new IllegalStateException("Unsupported royal order format; original file preserved");
+        int format=tag.getInt("format");
         var list=tag.getList("orders",Tag.TAG_COMPOUND);
         if(list.size()>MAX_ORDERS || list.size()!=((ListTag)tag.get("orders")).size()) {
             throw new IllegalStateException("Invalid royal order index");
         }
         var active=new HashSet<String>();
         for(Tag raw:list) {
-            var item=(CompoundTag)raw; keys(item,Set.of("intent","stage","blocked","building"));
+            var item=(CompoundTag)raw; keys(item,format==1 ? Set.of("intent","stage","blocked","building") : Set.of("intent","stage","blocked","building","cancellationFrom"));
             if(!item.contains("intent",Tag.TAG_COMPOUND) || !item.contains("stage",Tag.TAG_STRING) || !item.contains("blocked",Tag.TAG_STRING)
-                    || (item.contains("building") && !item.hasUUID("building"))) throw new IllegalStateException("Incomplete royal order entry");
-            var entry=new Entry(loadIntent(item.getCompound("intent")),Stage.valueOf(item.getString("stage")),Blocked.valueOf(item.getString("blocked")),
-                    item.hasUUID("building") ? item.getUUID("building") : null);
+                    || (item.contains("building") && !item.hasUUID("building")) || (item.contains("cancellationFrom") && !item.contains("cancellationFrom",Tag.TAG_STRING))) throw new IllegalStateException("Incomplete royal order entry");
+            var stage=Stage.valueOf(item.getString("stage"));
+            // v1 did not retain the origin. An unresolved legacy cancellation is explicitly ambiguous, never assumed refundable.
+            Stage origin=format==1 && (stage==Stage.CANCELLING || stage==Stage.CANCELLED) ? Stage.CANCELLING
+                    : item.contains("cancellationFrom") ? Stage.valueOf(item.getString("cancellationFrom")) : null;
+            var entry=new Entry(loadIntent(item.getCompound("intent")),stage,Blocked.valueOf(item.getString("blocked")),
+                    item.hasUUID("building") ? item.getUUID("building") : null,origin);
             if(result.putIfAbsent(entry.intent.id,entry)!=null) throw new IllegalStateException("Duplicate royal order identity");
             if(!entry.terminal() && !active.add(entry.intent.dimension+"/"+entry.intent.village)) throw new IllegalStateException("Duplicate active royal orders for a village");
         }
@@ -136,6 +147,7 @@ public final class RoyalConstructionStore {
         var tag=new CompoundTag(); tag.putInt("format",FORMAT); var list=new ListTag();
         for(Entry entry:entries.values()) {
             var item=new CompoundTag(); item.put("intent",saveIntent(entry.intent)); item.putString("stage",entry.stage.name()); item.putString("blocked",entry.blocked.name());
+            if(entry.cancellationFrom!=null) item.putString("cancellationFrom",entry.cancellationFrom.name());
             if(entry.building!=null) item.putUUID("building",entry.building); list.add(item);
         }
         tag.put("orders",list);

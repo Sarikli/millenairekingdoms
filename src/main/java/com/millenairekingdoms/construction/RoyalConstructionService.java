@@ -27,7 +27,7 @@ import org.millenaire.culture.ModCultures;
 import org.millenaire.village.Village;
 import org.millenaire.world.BuildingPlacer;
 
-/** Internal paid request/retry/queue acceptance. No GUI/scheduler consumer until cancellation/governance/builders gates pass.
+/** Internal paid request/retry/cancellation. No GUI/scheduler consumer until governance/builders gates pass.
  * Engine placement/builders/resources remain responsible for construction; this service only fills an empty pending slot. */
 @org.jetbrains.annotations.ApiStatus.Internal
 public final class RoyalConstructionService {
@@ -49,6 +49,22 @@ public final class RoyalConstructionService {
     public Entry retryNpc(UUID kingdom,UUID id) { return retry(null,kingdom,id); }
     public Entry retryPlayer(ServerPlayer player,UUID id) {
         thread(); dimension(player); return retry(player,PoliticsService.ruledKingdom(player).id(),id);
+    }
+    public Entry cancelNpc(UUID kingdom,UUID id) { return cancel(null,kingdom,id); }
+    public Entry cancelPlayer(ServerPlayer player,UUID id) {
+        thread(); dimension(player); return cancel(player,PoliticsService.ruledKingdom(player).id(),id);
+    }
+
+    private Entry cancel(ServerPlayer player,UUID kingdom,UUID id) {
+        thread(); var entry=orders.load(id); if(entry==null) throw new IllegalArgumentException("Unknown royal order");
+        bind(entry,player,kingdom);
+        return exclusive(entry.intent().village(),()->{
+            var current=orders.load(id);
+            if(current.terminal() || current.stage()==Stage.RECOVERY_REQUIRED) return current;
+            if(current.stage()!=Stage.CANCELLING) current=orders.change(id,current.stage(),Stage.CANCELLING,Blocked.NONE,current.building());
+            // This durable decision must precede any financial operation, including interrupted PREPARED refunds.
+            return finishCancellation(current,player);
+        });
     }
 
     private Entry request(ServerPlayer player,UUID kingdom,UUID villageId,ResourceLocation selected,UUID id) {
@@ -81,7 +97,8 @@ public final class RoyalConstructionService {
     private Entry advance(Entry entry,ServerPlayer player) {
         var intent=entry.intent(); bind(entry,player,intent.kingdom());
         var village=PoliticsService.village(level,intent.village());
-        if(entry.terminal() || entry.stage()==Stage.RECOVERY_REQUIRED || entry.stage()==Stage.CANCELLING) return entry;
+        if(entry.terminal() || entry.stage()==Stage.RECOVERY_REQUIRED) return entry;
+        if(entry.stage()==Stage.CANCELLING) return finishCancellation(entry,player);
         if(entry.stage()==Stage.REQUESTED) {
             var current=catalog(player,intent.kingdom(),intent.village());
             if(!current.active() || !level.isLoaded(village.getCenter())) return blocked(entry,Blocked.UNLOADED);
@@ -133,6 +150,38 @@ public final class RoyalConstructionService {
         }
         return entry;
     }
+
+    private Entry finishCancellation(Entry entry,ServerPlayer player) {
+        var intent=entry.intent(); var origin=entry.cancellationFrom();
+        // QUEUING can straddle original SavedData publication. Equality with a natural project cannot prove ownership.
+        // Legacy v1 CANCELLING also lost its origin. Preserve both for explicit recovery; never speculate a refund.
+        if(origin==Stage.QUEUING || origin==Stage.CANCELLING) return ambiguous(entry);
+        RoyalPaymentService.Receipt receipt;
+        try { receipt=player==null ? payments.inspectNpc(intent.kingdom(),intent.id()) : payments.inspectPlayer(player,intent.id()); }
+        catch(IllegalArgumentException conflict) { return ambiguous(entry); }
+        if(receipt!=null && !matches(receipt,intent)) return ambiguous(entry);
+        if(origin==Stage.REQUESTED || origin==Stage.PAID) {
+            if(receipt==null) {
+                if(origin!=Stage.REQUESTED) return ambiguous(entry);
+            } else {
+                if(receipt.state()!=State.PREPARED && receipt.state()!=State.PAID && receipt.state()!=State.REFUND_PREPARED && receipt.state()!=State.REFUNDED) return ambiguous(entry);
+                receipt=player==null ? payments.refundNpc(intent.kingdom(),intent.id()) : payments.refundPlayer(player,intent.id());
+                if(receipt.state()!=State.REFUNDED) return ambiguous(entry);
+            }
+        } else if(origin==Stage.QUEUED || origin==Stage.IN_PROGRESS) {
+            if(receipt==null || (receipt.state()!=State.PAID && receipt.state()!=State.COMMITTED)) return ambiguous(entry);
+            if(receipt.state()==State.PAID) {
+                if(player==null) payments.commitNpc(intent.kingdom(),intent.id()); else payments.commitPlayer(player,intent.id());
+            }
+            // Accepted patronage is earned. Stop tracking only: do not clear pending work or touch autonomous builders.
+        } else return ambiguous(entry);
+        return orders.change(intent.id(),Stage.CANCELLING,Stage.CANCELLED,Blocked.NONE,entry.building());
+    }
+
+    private static boolean matches(RoyalPaymentService.Receipt receipt,Intent intent) {
+        return receipt.amount()==intent.fee() && receipt.purpose()==Purpose.CONSTRUCTION && receipt.reference().equals(intent.id());
+    }
+    private Entry ambiguous(Entry entry) { return orders.change(entry.intent().id(),entry.stage(),Stage.RECOVERY_REQUIRED,Blocked.AMBIGUOUS_ENGINE_STATE,entry.building()); }
 
     private boolean eligible(RoyalConstructionCatalog.Catalog catalog,Intent intent) {
         var set=ModCultures.getBuildingPlanSet(intent.planSet()); var def=set==null ? null : set.getLevel(intent.variant(),0);
