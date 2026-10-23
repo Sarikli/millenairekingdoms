@@ -32,6 +32,8 @@ import org.millenaire.world.BuildingPlacer;
 @org.jetbrains.annotations.ApiStatus.Internal
 public final class RoyalConstructionService {
     private static final Map<MinecraftServer,Set<UUID>> BUSY=new WeakHashMap<>();
+    private record Publication(Village village,Village.PendingProject pending) {}
+    private static final Map<MinecraftServer,Map<UUID,Publication>> PUBLICATIONS=new WeakHashMap<>();
     private final ServerLevel level;
     private final RoyalConstructionStore orders;
     private final RoyalPaymentService payments;
@@ -60,6 +62,15 @@ public final class RoyalConstructionService {
         if(!entry.intent().dimension().equals(level.dimension().location().toString())) throw new IllegalArgumentException("Order belongs to another dimension");
         return exclusive(entry.intent().village(),()->new RoyalConstructionMonitor(level,orders,persistence).observe(orders.load(id)));
     }
+    /** Before engine ticks on a new JVM: field equality cannot establish interrupted publication ownership. */
+    public int quarantineInterruptedPublications() {
+        thread(); int count=0;
+        for(var entry:orders.entries()) if(entry.intent().dimension().equals(level.dimension().location().toString()) && entry.stage()==Stage.QUEUING) {
+            ambiguous(entry); count++;
+        }
+        return count;
+    }
+    public static void clearRuntime(MinecraftServer server) { PUBLICATIONS.remove(server); BUSY.remove(server); }
 
     /** Resume only a durable governance retirement. Offline actors are not routed through the NPC request path. */
     public Entry settleRetired(UUID id) {
@@ -135,31 +146,39 @@ public final class RoyalConstructionService {
             if(receipt.state()!=State.PAID) return orders.change(intent.id(),entry.stage(),Stage.RECOVERY_REQUIRED,Blocked.AMBIGUOUS_ENGINE_STATE,null);
             entry=orders.change(intent.id(),Stage.REQUESTED,Stage.PAID,Blocked.NONE,null);
         }
+        boolean freshPublication=false;
         if(entry.stage()==Stage.PAID) {
             var current=catalog(player,intent.kingdom(),intent.village());
             if(!current.active() || !level.isLoaded(village.getCenter())) return blocked(entry,Blocked.UNLOADED);
             if(current.naturalProjectPending()) return blocked(entry,Blocked.NATURAL_PROJECT);
             if(!eligible(current,intent)) return blocked(entry,Blocked.MISSING_PLAN);
             entry=orders.change(intent.id(),Stage.PAID,Stage.QUEUING,Blocked.NONE,null);
+            freshPublication=true;
         }
         if(entry.stage()==Stage.QUEUING) {
+            var publications=PUBLICATIONS.computeIfAbsent(level.getServer(),key->new java.util.HashMap<>());
+            var publication=publications.get(intent.id());
+            if(!freshPublication && (publication==null || publication.village()!=village)) return ambiguous(entry);
             var fresh=newBuildings(village,intent);
-            if(fresh.size()>1) return orders.change(intent.id(),entry.stage(),Stage.RECOVERY_REQUIRED,Blocked.AMBIGUOUS_ENGINE_STATE,null);
+            if(fresh.size()>1) return ambiguous(entry);
             if(!fresh.isEmpty()) {
                 persistence.building(level,intent.village(),fresh.getFirst());
                 entry=orders.change(intent.id(),Stage.QUEUING,Stage.IN_PROGRESS,Blocked.NONE,fresh.getFirst().getId().uuid());
             } else {
                 var pending=pending(intent);
                 if(village.getPendingProject()==null) {
+                    if(!freshPublication) return ambiguous(entry);
                     var current=catalog(player,intent.kingdom(),intent.village());
                     if(!current.active() || !level.isLoaded(village.getCenter())) return blocked(entry,Blocked.UNLOADED);
                     if(!eligible(current,intent)) return blocked(entry,Blocked.MISSING_PLAN);
                     template(intent.plan()); village.setPendingProject(pending); village.setNoProjectsLeftUntil(0);
-                } else if(!pending.equals(village.getPendingProject())) return blocked(entry,Blocked.NATURAL_PROJECT);
+                    publications.put(intent.id(),new Publication(village,pending));
+                } else if(publication==null || publication.pending()!=village.getPendingProject() || !pending.equals(village.getPendingProject())) return ambiguous(entry);
                 // Original serializer, asynchronous worker acknowledgement and exact disk read-back before acceptance.
                 persistence.pending(level,intent.village(),pending);
                 entry=orders.change(intent.id(),Stage.QUEUING,Stage.QUEUED,Blocked.NONE,null);
             }
+            publications.remove(intent.id());
         }
         if(entry.stage()==Stage.QUEUED || entry.stage()==Stage.IN_PROGRESS) {
             // A queued record follows proven durable acceptance, even if a later engine placement attempt is blocked.
@@ -206,7 +225,10 @@ public final class RoyalConstructionService {
     private static boolean matches(RoyalPaymentService.Receipt receipt,Intent intent) {
         return receipt.amount()==intent.fee() && receipt.purpose()==Purpose.CONSTRUCTION && receipt.reference().equals(intent.id());
     }
-    private Entry ambiguous(Entry entry) { return orders.change(entry.intent().id(),entry.stage(),Stage.RECOVERY_REQUIRED,Blocked.AMBIGUOUS_ENGINE_STATE,entry.building()); }
+    private Entry ambiguous(Entry entry) {
+        var publications=PUBLICATIONS.get(level.getServer()); if(publications!=null) publications.remove(entry.intent().id());
+        return orders.change(entry.intent().id(),entry.stage(),Stage.RECOVERY_REQUIRED,Blocked.AMBIGUOUS_ENGINE_STATE,entry.building());
+    }
 
     private boolean eligible(RoyalConstructionCatalog.Catalog catalog,Intent intent) {
         var set=ModCultures.getBuildingPlanSet(intent.planSet()); var def=set==null ? null : set.getLevel(intent.variant(),0);

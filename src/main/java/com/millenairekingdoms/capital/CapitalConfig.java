@@ -24,6 +24,7 @@ public final class CapitalConfig {
         AutonomyConfig.define(b);
         FoundingConfig.define(b);
         RoyalEconomyConfig.define(b);
+        com.millenairekingdoms.construction.RoyalConstructionConfig.define(b);
         SPEC = b.build();
     }
 

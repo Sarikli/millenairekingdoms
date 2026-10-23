@@ -5,6 +5,8 @@ import com.millenairekingdoms.construction.RoyalConstructionStore.Entry;
 import com.millenairekingdoms.construction.RoyalConstructionStore.Intent;
 import com.millenairekingdoms.construction.RoyalConstructionStore.Stage;
 import com.millenairekingdoms.kingdom.KingdomSavedData;
+import com.millenairekingdoms.economy.RoyalPaymentService;
+import com.millenairekingdoms.economy.RoyalPaymentJournal.State;
 import com.millenairekingdoms.politics.PoliticsService;
 import java.util.Objects;
 import net.minecraft.server.level.ServerLevel;
@@ -15,7 +17,7 @@ import org.millenaire.building.BuildingInstance;
 import org.millenaire.culture.ModCultures;
 import org.millenaire.village.Village;
 
-/** Observe original engine records only. Never places blocks, advances tasks, chooses locations, loads chunks or spends.
+/** Observe original engine records. Never places blocks, advances tasks, chooses locations, loads chunks or starts spending.
  * Only acknowledged original building/task metadata can advance a royal order. Offline player authority remains UUID-bound. */
 final class RoyalConstructionMonitor {
     private final ServerLevel level;
@@ -36,6 +38,14 @@ final class RoyalConstructionMonitor {
                 || (intent.actor()!=null && (ruler==null || ruler.sinceGameTime()!=intent.rulerSince() || capital==null
                     || capital.getCombinedReputation(level,intent.actor())<PoliticsService.DECISION_REPUTATION))) {
             return orders.change(intent.id(),entry.stage(),Stage.CANCELLING,Blocked.AUTHORITY,entry.building());
+        }
+        if(entry.stage()==Stage.QUEUED || entry.stage()==Stage.IN_PROGRESS) {
+            var payments=new RoyalPaymentService(level); RoyalPaymentService.Receipt receipt;
+            try { receipt=payments.inspectConstruction(intent.id(),intent.kingdom(),intent.capital(),intent.actor(),intent.fee()); }
+            catch(IllegalArgumentException conflict) { return ambiguous(entry,Blocked.AMBIGUOUS_ENGINE_STATE); }
+            if(receipt==null || receipt.state()!=State.PAID && receipt.state()!=State.COMMITTED) return ambiguous(entry,Blocked.AMBIGUOUS_ENGINE_STATE);
+            // Domain acceptance is already durable. An offline acknowledgment closes this existing debit, never pays again.
+            if(receipt.state()==State.PAID) payments.acknowledgeConstruction(intent.id(),intent.kingdom(),intent.capital(),intent.actor(),intent.fee());
         }
         if(!village.isActive() || !level.isLoaded(village.getCenter())) return blocked(entry,Blocked.UNLOADED);
         var set=ModCultures.getBuildingPlanSet(intent.planSet()); var definition=set==null ? null : set.getLevel(intent.variant(),0);

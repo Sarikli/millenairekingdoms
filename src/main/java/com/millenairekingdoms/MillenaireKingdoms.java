@@ -40,6 +40,9 @@ public final class MillenaireKingdoms {
         NeoForge.EVENT_BUS.addListener(KingdomDay::onLevelTick);
         NeoForge.EVENT_BUS.addListener(RaidOrderService::onLevelTick);
         NeoForge.EVENT_BUS.addListener(KingdomActions::onLogout);
+        NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.construction.RoyalConstructionRuntime::onStarted);
+        NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.construction.RoyalConstructionRuntime::onLevelTick);
+        NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.construction.RoyalConstructionRuntime::onStopped);
         KingdomSavedData.defaultTruceDays = AutonomyConfig::truceDays;
         LOGGER.info("Millénaire Kingdoms {} initialized (modId={}).",
                 modContainer.getModInfo().getVersion(), MOD_ID);

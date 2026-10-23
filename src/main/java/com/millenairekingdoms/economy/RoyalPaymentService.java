@@ -89,11 +89,31 @@ public final class RoyalPaymentService {
             if(entry.state()!=State.PREPARED && entry.state()!=State.PAID && entry.state()!=State.REFUND_PREPARED && entry.state()!=State.REFUNDED) return receipt(request,entry);
             return finish(()->RoyalTreasurySnapshot.forRecovery(level,kingdom,capital),actor,id,true);
         }
+        return acknowledgeConstruction(id,kingdom,capital,actor,amount);
+    }
+
+    /** Internal domain inspection: a caller must load the immutable order and validate its authority/stage separately.
+     * Full original intent binding is checked, including offline player UUID. No inventories or new spending. */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public Receipt inspectConstruction(UUID id,UUID kingdom,UUID capital,UUID actor,long amount) {
+        if(!level.getServer().isSameThread()) throw new IllegalStateException("Royal recovery requires the server thread");
+        var entry=journal.load(id); if(entry==null) return null;
+        var request=new Request(id,level.dimension().location().toString(),kingdom,capital,actor,Purpose.CONSTRUCTION,id,amount);
+        if(!entry.intent().equals(request.save())) throw new IllegalArgumentException("Order does not match the original construction payment");
+        return receipt(request,entry);
+    }
+
+    /** Close only an existing PAID receipt after the domain has acknowledged original queue/building acceptance.
+     * This never creates/reconciles a debit, requires no chunks and does not grant an offline actor NPC agency. */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public Receipt acknowledgeConstruction(UUID id,UUID kingdom,UUID capital,UUID actor,long amount) {
+        var receipt=inspectConstruction(id,kingdom,capital,actor,amount);
+        if(receipt==null) return null;
         return exclusive(capital,()->{
-            var current=journal.load(id);
-            if(current.state()!=State.PAID) return receipt(request,current);
+            var entry=journal.load(id); var request=Request.read(id,entry.intent());
+            if(entry.state()!=State.PAID) return receipt(request,entry);
             guard(request);
-            return receipt(request,journal.transition(id,State.PAID,State.COMMITTED,current.recovery()));
+            return receipt(request,journal.transition(id,State.PAID,State.COMMITTED,entry.recovery()));
         });
     }
 
