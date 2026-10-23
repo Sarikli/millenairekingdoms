@@ -327,7 +327,7 @@ public final class RoyalPaymentGameTests {
         System.out.println("ROYAL_PAYMENT_RESTART_WRITE_PASS "+name); h.succeed();
     }
 
-    private static RoyalPaymentService service(ServerLevel level,Path directory,RoyalTreasuryPersistence persistence) {
+    static RoyalPaymentService service(ServerLevel level,Path directory,RoyalTreasuryPersistence persistence) {
         try {
             var constructor=RoyalPaymentService.class.getDeclaredConstructor(ServerLevel.class,Path.class,RoyalTreasuryPersistence.class);
             constructor.setAccessible(true); return constructor.newInstance(level,directory,persistence);
@@ -344,7 +344,7 @@ public final class RoyalPaymentGameTests {
         };
     }
 
-    private record Fixture(ServerLevel level,Village village,UUID kingdom,BlockPos position,Path directory) implements AutoCloseable {
+    record Fixture(ServerLevel level,Village village,UUID kingdom,BlockPos position,Path directory) implements AutoCloseable {
         ChestBlockEntity chest() { return (ChestBlockEntity)level.getBlockEntity(position); }
         long value() { return RoyalPaymentGameTests.value(chest()); }
         RoyalPaymentJournal journal() { return new RoyalPaymentJournal(directory); }
@@ -364,7 +364,7 @@ public final class RoyalPaymentGameTests {
         return new Fixture(level,village,k.id(),pos,path.toAbsolutePath());
     }
 
-    private static Fixture persistentFixture(GameTestHelper h,String name) {
+    static Fixture persistentFixture(GameTestHelper h,String name) {
         var level=h.getLevel();
         var plan=ModCultures.getAllBuildingPlans().values().stream()
                 .filter(p->p.getPointsByType(SpecialPoint.CHEST).stream().map(s->s.pos().getX()).distinct().count()>1)
