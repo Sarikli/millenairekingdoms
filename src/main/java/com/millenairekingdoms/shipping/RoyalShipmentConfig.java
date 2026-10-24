@@ -18,7 +18,8 @@ public final class RoyalShipmentConfig {
             catch(ArithmeticException overflow){throw new IllegalArgumentException("Shipment duration is too large",overflow);}
         }
     }
-    public static ModConfigSpec.IntValue MINIMUM_REMAINDER,MAXIMUM_QUANTITY,BASE_TRAVEL,TRAVEL_PER128;
+    public static ModConfigSpec.IntValue MINIMUM_REMAINDER,MAXIMUM_QUANTITY,BASE_TRAVEL,TRAVEL_PER128,INTERVAL,MAX_PER_STEP;
+    public static ModConfigSpec.BooleanValue TRACKING;
     private RoyalShipmentConfig() {}
     public static void define(ModConfigSpec.Builder b) {
         b.comment("Additional royal-shipment stock safeguards. Native construction, target and resident needs are always protected.").push("royalShipments");
@@ -27,7 +28,10 @@ public final class RoyalShipmentConfig {
         MAXIMUM_QUANTITY=b.comment("Maximum real items in one future shipment; does not enable shipments by itself.")
                 .defineInRange("maximumQuantity",4096,1,65536);
         BASE_TRAVEL=b.comment("Staging ticks for a new shipment; accepted intents retain their quoted duration.").defineInRange("baseTravelTicks",1200,1,72000);
-        TRAVEL_PER128=b.comment("Extra transit ticks per started128 horizontal blocks; default600 is30 seconds at20TPS.").defineInRange("travelTicksPer128Blocks",600,1,72000);b.pop();
+        TRAVEL_PER128=b.comment("Extra transit ticks per started128 horizontal blocks; default600 is30 seconds at20TPS.").defineInRange("travelTicksPer128Blocks",600,1,72000);
+        TRACKING=b.comment("Track only existing paid/issued shipments; no new NPC shipping policy is enabled by this flag.").define("trackingEnabled",true);
+        INTERVAL=b.comment("Ticks between bounded existing-shipment passes.").defineInRange("trackingIntervalTicks",100,20,24000);
+        MAX_PER_STEP=b.comment("Maximum existing shipments advanced in one pass, one physical/lifecycle boundary per job.").defineInRange("maximumShipmentsPerStep",2,1,16);b.pop();
     }
     public static Transit transit() {
         if(BASE_TRAVEL==null)return Transit.DEFAULTS;

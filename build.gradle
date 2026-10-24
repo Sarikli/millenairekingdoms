@@ -293,6 +293,44 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_tests'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        royalShipmentRuntimeGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_runtime_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        royalShipmentRuntimeGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_runtime_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
+        royalShipmentLiveGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_live_tests'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        royalShipmentLiveGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_live_tests'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
         royalReceiptGameTestServer {
             type = 'gameTestServer'
             sourceSet = sourceSets.gametest
@@ -549,4 +587,18 @@ tasks.register('verifyRoyalShipments') {
     group = 'verification'
     description = 'Verify strict shipment accounting and native physical cargo operations across separate JVMs.'
     dependsOn tasks.named('runRoyalShipmentGameTestServerReload')
+}
+
+tasks.named('runRoyalShipmentRuntimeGameTestServerReload') { dependsOn tasks.named('runRoyalShipmentRuntimeGameTestServer') }
+tasks.register('verifyRoyalShipmentRuntime') {
+    group = 'verification'
+    description = 'Verify bounded or actual automatic paid shipment tracking across separate JVMs.'
+    dependsOn tasks.named('runRoyalShipmentRuntimeGameTestServerReload')
+}
+
+tasks.named('runRoyalShipmentLiveGameTestServerReload') { dependsOn tasks.named('runRoyalShipmentLiveGameTestServer') }
+tasks.register('verifyRoyalShipmentLive') {
+    group = 'verification'
+    description = 'Verify bounded or actual automatic paid shipment tracking across separate JVMs.'
+    dependsOn tasks.named('runRoyalShipmentLiveGameTestServerReload')
 }
