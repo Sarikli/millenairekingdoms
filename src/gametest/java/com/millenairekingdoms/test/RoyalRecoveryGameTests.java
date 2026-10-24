@@ -175,7 +175,11 @@ public final class RoyalRecoveryGameTests {
                 }
             };
             refused(h,()->RoyalPaymentGameTests.service(f.level(),payments(f.level()),failure).payNpc(f.kingdom(),i.id(),Purpose.CONSTRUCTION,i.id(),i.fee()));
+            h.assertTrue(paid(f,i).state()==RoyalPaymentJournal.State.PREPARED && f.value()==64,"Cut leaves an unacknowledged journal and an actual applied native debit proof");
             if(ambiguous) {
+                // Genuine ambiguous evidence requires losing the same-container proof. A matching proof deliberately
+                // permits legitimate later native inventory activity; the old image-only fixture is obsolete.
+                f.chest().getPersistentData().remove("millenairekingdoms:royal_operations");
                 f.chest().setItem(0,new ItemStack(ModItems.DENIER.get(),63));
                 new RoyalPaymentService(f.level()).payNpc(f.kingdom(),i.id(),Purpose.CONSTRUCTION,i.id(),i.fee());
             }
@@ -186,6 +190,22 @@ public final class RoyalRecoveryGameTests {
                     && f.value()==(ambiguous ? 63 : 64),"Neither PREPARED nor RECOVERY_REQUIRED is proof of durable patronage; all physical evidence remains unchanged");
         }
         h.succeed();
+    }
+
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void matchingNativeReceiptReconcilesLaterActivityBeforeOperatorForfeitWithoutInventingCoins(GameTestHelper h)throws Exception{
+        try(var f=fixture(h,"recovery-receipted-native-activity")){
+            var i=intent(f);orders(f.level()).reserve(i);
+            var cut=new RoyalTreasuryPersistence(){int flushes;@Override public void flush(ServerLevel level,List<BlockPos> positions){if(++flushes==2)throw new IllegalStateException("Cut applied debit before journal acknowledgement");super.flush(level,positions);}};
+            refused(h,()->RoyalPaymentGameTests.service(f.level(),payments(f.level()),cut).payNpc(f.kingdom(),i.id(),Purpose.CONSTRUCTION,i.id(),i.fee()));
+            var inventory=f.village().getTownhall().getInventory();
+            h.assertTrue(inventory.remove(f.level(),ModItems.DENIER_ARGENT.get(),1)==1 && inventory.add(f.level(),ModItems.DENIER.get(),63)==63,"Declared native inventory activity spends the remaining64 and supplies63 after the already applied debit");
+            var receipt=new RoyalPaymentService(f.level()).payNpc(f.kingdom(),i.id(),Purpose.CONSTRUCTION,i.id(),i.fee());
+            h.assertTrue(receipt.state()==RoyalPaymentJournal.State.PAID && f.value()==63,"Matching bound proof preserves later native63 exactly, without recharging, restoring64 or false ambiguity");
+            orders(f.level()).change(i.id(),Stage.REQUESTED,Stage.RECOVERY_REQUIRED,Blocked.AMBIGUOUS_ENGINE_STATE,null);var service=new RoyalRecoveryService(f.level());var decision=UUID.randomUUID();
+            service.authorize(op(f.level()),decision,i.id(),Mode.FORFEIT_FEE,null,"Exact native proof reconciled; retain paid patronage and current inventory");service.resume(op(f.level()),decision);
+            h.assertTrue(f.value()==63 && paid(f,i).state()==RoyalPaymentJournal.State.COMMITTED && orders(f.level()).load(i.id()).stage()==Stage.CANCELLED,"Audited forfeit commits only the original paid fee and never credits guessed coins");h.succeed();
+        }
     }
 
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)

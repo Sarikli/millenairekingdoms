@@ -18,7 +18,13 @@ if runner[:1] == ['--']:
 runner = runner or ['bash', str(project / 'gradlew')]
 suites = {'verifyWars': 30, 'verifyConquest': 25, 'verifyStage5': 24,
           'verifyCapitals': 5, 'verifyAutonomy': 22, 'verifyGui': 7, 'verifyFounding': 12,
-          'verifyRoyalEconomy': 46, 'verifyRoyalConstruction': 53, 'verifyRoyalRecovery': 15, 'verifyRoyalSites': 10, 'verifyRoyalLive': 1, 'verifyRoyalGui': 14, 'verifyRoyalGoods': 20, 'verifyRoyalReceipts': 12, 'verifyRoyalShipments': 49, 'verifyRoyalShipmentRuntime': 1, 'verifyRoyalShipmentLive': 1, 'verifyRoyalShipmentGui': 17, 'verifyPersonalities': 9, 'verifyRoyalPolicy': 7, 'verifyRoyalNpcBudget': 13, 'verifyRoyalNpcEconomy': 12, 'verifyRoyalNpcRuntime': 3, 'verifyRoyalNpcLive': 1, 'verifyRoyalNpcBuilders': 1, 'verifyRoyalIntegration': 9}
+          'verifyRoyalEconomy': 46, 'verifyRoyalConstruction': 53, 'verifyRoyalRecovery': 16, 'verifyRoyalSites': 10, 'verifyRoyalLive': 1, 'verifyRoyalGui': 14, 'verifyRoyalGoods': 20, 'verifyRoyalReceipts': 12, 'verifyRoyalShipments': 49, 'verifyRoyalShipmentRuntime': 1, 'verifyRoyalShipmentLive': 1, 'verifyRoyalShipmentGui': 17, 'verifyPersonalities': 9, 'verifyRoyalPolicy': 7, 'verifyRoyalNpcBudget': 13, 'verifyRoyalNpcEconomy': 12, 'verifyRoyalNpcRuntime': 3, 'verifyRoyalNpcLive': 1, 'verifyRoyalNpcBuilders': 1, 'verifyRoyalIntegration': 9}
+if runner[:1] == ['--resume-from']:
+    if len(runner)<2 or runner[1] not in suites:
+        raise SystemExit('--resume-from requires a known suite name')
+    first=list(suites).index(runner[1]);suites=dict(list(suites.items())[first:]);runner=runner[2:]
+    if runner[:1]==['--']:runner=runner[1:]
+    runner=runner or ['bash',str(project/'gradlew')]
 results = []
 print('Evidence directory:', output, flush=True)
 for suite, expected in suites.items():
@@ -37,6 +43,6 @@ for suite, expected in suites.items():
     (output / 'results.json').write_text(json.dumps(results, indent=2))
     print(json.dumps(results[-1]), flush=True)
     if not counts:
-        print('No tests completed; diagnose server startup before running more suites.', flush=True)
+        print('No all-required-tests success line; inspect the suite startup/test failure before continuing.', flush=True)
         break
 raise SystemExit(0 if all(result['passed'] for result in results) else 1)
