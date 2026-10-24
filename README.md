@@ -3,7 +3,7 @@
 > **1.2.0 development branch — By Royal Decree.** This branch targets Millénaire 9.0.3.
 > The release candidate includes real-coin payments, native construction, protected shipments and capital personalities; review and manual client checks remain open.
 > See [progress](docs/1.2.0_PROGRESS.md) and [development setup](docs/1.2.0_DEVELOPMENT.md).
-> [RC.3 JAR/checksum: Construction and Shipping inside Rulership](releases/1.2.0-rc.3/) · [open stock investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md).
+> [RC.4 JAR/checksum: narrative EN/TR personality names](releases/1.2.0-rc.4/) · [open stock investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md).
 > [Preserved RC.1 technical report](docs/1.2.0_RELEASE_REPORT.md).
 > Historical 1.1.1 release artifacts and reports remain unchanged.
 
@@ -17,7 +17,7 @@ left untouched, and the original Millénaire JAR is never modified.
 
 | | |
 |---|---|
-| Development version | 1.2.0-rc.3 |
+| Development version | 1.2.0-rc.4 |
 | Minecraft | 1.21.1 |
 | Loader | NeoForge 21.1.259 |
 | Required dependency | Millénaire 9.0.3 |
@@ -58,7 +58,7 @@ and [changelog](CHANGELOG.md).
 
 - **Royal commissions.** Pay real capital coins for one culturally eligible autonomous-village construction request. The original village chooses the site and its own builders use real materials; saved progress and explicit cancellation/recovery preserve natural projects.
 - **Royal shipments.** Pay normal logistics costs to transfer protected actual surplus between member villages over server-tick travel time. Full/unloaded destinations retain held cargo; normal Millénaire trade stays unrestricted.
-- **Capital personalities.** Exact native capital types determine Military, Agricultural, Religious, Artisan or General preferences. Bounded NPC decisions use the same paid services, actual needs/reserves and persistent cooldowns. War increases military preference for every type; player rule excludes new NPC economics.
+- **Capital personalities.** Exact native capital types give Warlike, Peaceful, Traditionalist, Industrious or Pragmatic personalities. Bounded NPC decisions use the same paid services, actual needs/reserves and persistent cooldowns. War increases military preference for every type; player rule excludes new NPC economics.
 
 All chances, distances and intervals can be adjusted per world. See the bilingual [1.2.0 player/operator guide](docs/1.2.0_USER_GUIDE.md), [save/downgrade policy](docs/1.2.0_SAVE_COMPATIBILITY.md), and [separate unverified graphical/online checks](docs/1.2.0_MANUAL_TESTS.md).
 

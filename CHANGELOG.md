@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0-rc.4 — 2026-10-24 (narrative personality names)
+
+- Name the kingdom's temperament in English and Turkish: Military → Warlike/Savaşçı, Religious → Traditionalist/Gelenekçi, Agricultural → Peaceful/Barışçıl, Artisan → Industrious/Üretken, Palace/General → Pragmatic/Pragmatik.
+- Keep the existing capital-origin identities, policy weights and persisted data. The five displayed names in each language and version metadata are the only changed production payloads; all200 Java classes match RC.3. English/Turkish retain314 matching keys and equivalent indexed/implicit format arguments. Build passed; no new or repeated GameTest result is claimed for this text change.
+- Rulership navigation and stock diagnostics remain available. Graphical label fit and authenticated login remain separate manual checks; the user's1047/0 stock report remains open.
+
 ## 1.2.0-rc.3 — 2026-10-24 (rulership navigation)
 
 - Reduce the top navigation to five main tabs. Open Construction and Shipping with two buttons inside Rulership; the Rulership tab or Esc returns from either page. Reopening starts at the parent page.
