@@ -293,6 +293,24 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_tests'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        personalityGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_personality_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        personalityGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_personality_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
         royalShipmentGuiGameTestServer {
             type = 'gameTestServer'
             sourceSet = sourceSets.gametest
@@ -626,4 +644,11 @@ tasks.register('verifyRoyalShipmentGui') {
     group = 'verification'
     description = 'Verify real player shipment offers/actions in a write and separate-JVM reopen.'
     dependsOn tasks.named('runRoyalShipmentGuiGameTestServerReload')
+}
+
+tasks.named('runPersonalityGameTestServerReload') { dependsOn tasks.named('runPersonalityGameTestServer') }
+tasks.register('verifyPersonalities') {
+    group = 'verification'
+    description = 'Verify original capital type classification and separate-JVM identity persistence.'
+    dependsOn tasks.named('runPersonalityGameTestServerReload')
 }

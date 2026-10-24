@@ -237,6 +237,8 @@ public final class KingdomScreen extends Screen {
         int x = x0(), y = y0(), half = contentWidth() / 2;
         y = line(x, y, t("capital", k.getString("capital")), half);
         y = line(x, y, t("culture", k.getString("culture")), half);
+        if(k.contains("personality"))y=line(x,y,t("personality",t("personality."+k.getString("personality"))),half);
+        if(k.getBoolean("personalityFallback"))y=line(x,y,t("personality_fallback"),half,MUTED);
         y = line(x, y, t("coordinates", k.getInt("x"), k.getInt("y"), k.getInt("z")), half);
         String ruler = k.getString("ruler");
         y = line(x, y, ruler.isEmpty() ? t("ruler_none") : t("ruler", ruler), half);

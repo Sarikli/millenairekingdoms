@@ -155,6 +155,7 @@ public final class KingdomsCommands {
                     var data = data(c); var kingdom = data.kingdom(PoliticalArguments.kingdom(c, "kingdom"));
                     if (kingdom == null) throw new IllegalArgumentException("Unknown kingdom.");
                     reply(c, describe(data, kingdom));
+                    reply(c, com.millenairekingdoms.personality.KingdomPersonality.describe(com.millenairekingdoms.personality.KingdomPersonality.forCapital(c.getSource().getLevel(),kingdom)));
                     data.members(kingdom.id()).stream().sorted().forEach(v -> reply(c, "  " + v + (data.isCapital(v) ? " (capital)" : "")));
                 }))))
                 .then(Commands.literal("test")

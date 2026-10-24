@@ -128,6 +128,8 @@ public final class KingdomScreens {
         }
         var ruler = data.ruler(k.id());
         e.putString("ruler", ruler == null ? "" : ruler.lastKnownName());
+        var personality=com.millenairekingdoms.personality.KingdomPersonality.forCapital(level,k);
+        e.putString("personality",personality.category().name());e.putBoolean("personalityFallback",!personality.specialized());
         ListTag members = new ListTag();
         data.members(k.id()).stream().map(id -> PoliticsService.village(level, id)).filter(v -> v != null)
                 .sorted(Comparator.comparing(v -> !v.getId().uuid().equals(k.capital()))).forEach(v -> {
