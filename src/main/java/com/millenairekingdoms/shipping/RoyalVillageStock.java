@@ -35,6 +35,9 @@ public final class RoyalVillageStock {
                                int target,int residents,int retained,int available) {}
     private record Chest(BlockPos position,ChestBlockEntity entity,BlockState state) {}
     private final ServerLevel level;
+    private final RoyalShipmentStore.Intent issued;
+    private final RoyalShipmentStore.Endpoint endpoint;
+    private final boolean returning;
     private final ServerPlayer player;
     private final UUID kingdom,villageId,capital,localOwner;
     private final long tenure;
@@ -51,8 +54,27 @@ public final class RoyalVillageStock {
         if(!player.serverLevel().getServer().isSameThread())throw new IllegalStateException("Village stock access requires the server thread");
         return new RoyalVillageStock(player.serverLevel(),player,PoliticsService.ruledKingdom(player).id(),village);
     }
+    /** Existing paid mandate only: an offline actor keeps UUID/tenure/reputation checks, never NPC impersonation. */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public static RoyalVillageStock forIssued(ServerLevel level,RoyalShipmentStore.Intent intent,RoyalShipmentStore.Endpoint endpoint) {
+        return issued(level,intent,endpoint,false);
+    }
+    /** Previously acquired cargo return only; no removal/new spending. Original active kingdom membership and exact
+     * original physical village identity remain required, even after its ruler changes. */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public static RoyalVillageStock forReturn(ServerLevel level,RoyalShipmentStore.Intent intent) {
+        return issued(level,intent,intent.source(),true);
+    }
+    private static RoyalVillageStock issued(ServerLevel level,RoyalShipmentStore.Intent intent,RoyalShipmentStore.Endpoint endpoint,boolean returning) {
+        if(!intent.dimension().equals(level.dimension().location().toString()) || !endpoint.equals(intent.source()) && !endpoint.equals(intent.destination()))
+            throw new IllegalArgumentException("Issued stock endpoint does not belong to this original shipment/dimension");
+        return new RoyalVillageStock(level,null,intent.kingdom(),endpoint.village(),intent,endpoint,returning);
+    }
     private RoyalVillageStock(ServerLevel level,ServerPlayer player,UUID kingdom,UUID villageId) {
-        this.level=level;this.player=player;this.kingdom=kingdom;this.villageId=villageId;
+        this(level,player,kingdom,villageId,null,null,false);
+    }
+    private RoyalVillageStock(ServerLevel level,ServerPlayer player,UUID kingdom,UUID villageId,RoyalShipmentStore.Intent issued,RoyalShipmentStore.Endpoint endpoint,boolean returning) {
+        this.level=level;this.player=player;this.kingdom=kingdom;this.villageId=villageId;this.issued=issued;this.endpoint=endpoint;this.returning=returning;
         var k=authorize();capital=k.capital();tenure=player==null ? 0 : KingdomSavedData.get(level).ruler(kingdom).sinceGameTime();
         village=PoliticsService.village(level,villageId);villageType=village.getVillageTypeId();localOwner=village.getOwnerUUID();
         townhall=village.getTownhall();inventory=townhall==null ? null : townhall.getInventory();
@@ -75,6 +97,7 @@ public final class RoyalVillageStock {
     }
 
     public UUID kingdom(){return kingdom;}
+    public RoyalShipmentStore.Endpoint endpoint(){requireUnchanged();return new RoyalShipmentStore.Endpoint(villageId,villageType,townhall.getId().uuid(),village.getCenter(),localOwner);}
     public UUID village(){return villageId;}
     public List<BlockPos> positions(){return chests.stream().map(Chest::position).toList();}
     public List<ItemStack> slots(){return slots.stream().map(ItemStack::copy).toList();}
@@ -132,11 +155,23 @@ public final class RoyalVillageStock {
         if(!level.getServer().isSameThread())throw new IllegalStateException("Village stock access requires the server thread");
         if(player!=null && player.serverLevel()!=level)throw new IllegalArgumentException("Quoted ruler changed dimension");
         var data=KingdomSavedData.get(level);var k=data.kingdom(kingdom);
-        if(k==null || !data.mayDecide(kingdom,player==null ? null : player.getUUID()) || !kingdom.equals(data.owner(villageId))
-                || player!=null && !PoliticsService.ruledKingdom(player).id().equals(kingdom))throw new IllegalArgumentException("Stock requires the current ruler and a member of their active kingdom");
+        if(issued==null) {
+            if(k==null || !data.mayDecide(kingdom,player==null ? null : player.getUUID()) || !kingdom.equals(data.owner(villageId))
+                    || player!=null && !PoliticsService.ruledKingdom(player).id().equals(kingdom))throw new IllegalArgumentException("Stock requires the current ruler and a member of their active kingdom");
+        } else {
+            if(k==null || !k.active() || k.fallen() || !kingdom.equals(data.owner(villageId)))throw new IllegalArgumentException("Original shipment village no longer belongs to its active kingdom");
+            if(!returning) {
+                var ruler=data.ruler(kingdom);
+                if(!issued.capital().equals(k.capital()) || !data.mayDecide(kingdom,issued.actor())
+                        || (issued.actor()==null ? ruler!=null : ruler==null || !issued.actor().equals(ruler.player()) || issued.rulerSince()!=ruler.sinceGameTime()
+                        || PoliticsService.reputation(level,k,issued.actor())<PoliticsService.DECISION_REPUTATION))throw new IllegalArgumentException("Original shipment agency/tenure/reputation no longer permits a new physical delta");
+            }
+        }
         var v=PoliticsService.village(level,villageId);var type=v==null ? null : ModCultures.getVillageType(v.getVillageTypeId());
         if(type==null || type.loneBuilding())throw new IllegalArgumentException("Recognized original village storage is required");
-        if(player==null && (type.playerControlled() || v.getOwnerUUID()!=null))throw new IllegalArgumentException("NPC stock decisions cannot use player-controlled village storage");
+        if(issued!=null && (!endpoint.type().equals(v.getVillageTypeId()) || !Objects.equals(endpoint.localOwner(),v.getOwnerUUID())
+                || !endpoint.center().equals(v.getCenter()) || v.getTownhall()==null || !endpoint.townhall().equals(v.getTownhall().getId().uuid())))throw new IllegalArgumentException("Original shipment village/type/townhall/local-owner identity changed");
+        if(player==null && (issued==null || issued.actor()==null && !returning) && (type.playerControlled() || v.getOwnerUUID()!=null))throw new IllegalArgumentException("NPC stock decisions cannot use player-controlled village storage");
         if(!v.isActive() || !level.isLoaded(v.getCenter()))throw new IllegalStateException("Village is unavailable; never force its chunks for stock");return k;
     }
     private void guardAuxiliary() {

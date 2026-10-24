@@ -117,6 +117,38 @@ public final class RoyalPaymentService {
         });
     }
 
+    /** Trusted shipment ledger inspection, including an offline original actor. Never creates/reconciles spending. */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public Receipt inspectShipment(UUID id,UUID kingdom,UUID capital,UUID actor,long amount) {
+        if(!level.getServer().isSameThread())throw new IllegalStateException("Shipment receipt inspection requires the server thread");
+        var entry=journal.load(id);if(entry==null)return null;
+        var request=new Request(id,level.dimension().location().toString(),kingdom,capital,actor,Purpose.SHIPMENT_FEE,id,amount);
+        if(!entry.intent().equals(request.save()))throw new IllegalArgumentException("Shipment does not match its original transport fee intent");
+        return receipt(request,entry);
+    }
+
+    /** Commit only an existing matching PAID fee after durable dispatch. No chunks, new payment or offline NPC agency. */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public Receipt acknowledgeShipment(UUID id,UUID kingdom,UUID capital,UUID actor,long amount) {
+        var inspected=inspectShipment(id,kingdom,capital,actor,amount);if(inspected==null)return null;
+        return exclusive(capital,()->{
+            var entry=journal.load(id);var request=Request.read(id,entry.intent());
+            if(entry.state()!=State.PAID)return receipt(request,entry);
+            guard(request);return receipt(request,journal.transition(id,State.PAID,State.COMMITTED,entry.recovery()));
+        });
+    }
+
+    /** Caller has persisted cancellation before settlement. Only the original existing fee can settle: no new charge,
+     * purpose substitution or refund redirect. Original capital/storage eligibility still gates actual refunds. */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public Receipt settleRetiredShipment(UUID id,UUID kingdom,UUID capital,UUID actor,long amount,boolean refund) {
+        var inspected=inspectShipment(id,kingdom,capital,actor,amount);if(inspected==null)return null;
+        if(!refund)return acknowledgeShipment(id,kingdom,capital,actor,amount);
+        if(inspected.state()==State.REFUNDED)return inspected;
+        if(inspected.state()!=State.PREPARED && inspected.state()!=State.PAID && inspected.state()!=State.REFUND_PREPARED)return inspected;
+        return finish(()->RoyalTreasurySnapshot.forRecovery(level,kingdom,capital),actor,id,true);
+    }
+
     private Receipt pay(Supplier<RoyalTreasurySnapshot> source,UUID actor,UUID id,Purpose purpose,UUID reference,long amount) {
         var quote=source.get(); var request=new Request(id,level.dimension().location().toString(),quote.kingdom(),quote.capital(),actor,purpose,reference,amount);
         return exclusive(quote.capital(),()->{
