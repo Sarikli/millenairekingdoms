@@ -3,6 +3,7 @@ package com.millenairekingdoms.economy;
 import java.util.LinkedHashMap;
 import java.util.List;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
@@ -39,7 +40,15 @@ public class RoyalTreasuryPersistence {
     }
 
     void verify(ServerLevel level, RoyalTreasuryImage image, boolean after) {
-        var chunks=new LinkedHashMap<ChunkPos,CompoundTag>();
+        verify(level,image,after,null);
+    }
+
+    void verifyApplied(ServerLevel level,RoyalTreasuryImage image,List<ItemStack> expected) {
+        verify(level,image,true,expected);
+    }
+
+    private void verify(ServerLevel level,RoyalTreasuryImage image,boolean after,List<ItemStack> expected) {
+        var chunks=new LinkedHashMap<ChunkPos,CompoundTag>(); int offset=0;
         for(var chest:image.chests()) {
             var pos=chest.position(); var chunkPos=new ChunkPos(pos);
             CompoundTag chunk=chunks.computeIfAbsent(chunkPos,key->level.getChunkSource().chunkMap.read(key).join()
@@ -55,9 +64,10 @@ public class RoyalTreasuryPersistence {
             BlockState state=savedState(chunk,pos);
             if(!chest.state().equals(NbtUtils.writeBlockState(state)) || found==null
                     || !(BlockEntity.loadStatic(pos,state,found,level.registryAccess()) instanceof ChestBlockEntity saved)
-                    || !chest.matches(saved,after)) {
+                    || !(expected==null ? chest.matches(saved,after) : image.matchesApplied(chest,saved,expected.subList(offset,offset+27)))) {
                 throw new IllegalStateException("Treasury disk read-back differs from intended "+(after ? "after" : "before")+" image: "+pos);
             }
+            offset+=27;
         }
     }
 

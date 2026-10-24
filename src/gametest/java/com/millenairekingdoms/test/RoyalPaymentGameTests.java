@@ -155,9 +155,10 @@ public final class RoyalPaymentGameTests {
         try(var f=fixture(h,"third-image")) {
             f.chest().setItem(0,new ItemStack(ModItems.DENIER.get(),10)); var id=UUID.randomUUID();
             refused(h,()->f.service(failSecondFlush(false)).payNpc(f.kingdom,id,Purpose.CONSTRUCTION,REFERENCE,1));
+            f.chest().getPersistentData().remove("millenairekingdoms:royal_operations"); // Deliberate unreceipted corruption; receipted native edits are tested separately.
             f.chest().setItem(0,new ItemStack(ModItems.DENIER.get(),8));
             h.assertTrue(f.service().payNpc(f.kingdom,id,Purpose.CONSTRUCTION,REFERENCE,1).state()==State.RECOVERY_REQUIRED && f.value()==8,"Third image is preserved without minting or silently deleting coins");
-            h.assertTrue(f.journal().load(id).recovery().getString("diagnosis").contains("both recorded"),"Quarantine includes physical diagnosis");
+            h.assertTrue(f.journal().load(id).recovery().getString("diagnosis").contains("Unreceipted"),"Quarantine includes physical diagnosis");
             refused(h,()->f.service().payNpc(f.kingdom,UUID.randomUUID(),Purpose.CONSTRUCTION,REFERENCE,1)); h.succeed();
         }
     }
@@ -259,7 +260,8 @@ public final class RoyalPaymentGameTests {
         try(var f=fixture(h,"before-image")) {
             f.chest().setItem(0,new ItemStack(ModItems.DENIER.get(),10)); var id=UUID.randomUUID();
             refused(h,()->f.service(failSecondFlush(false)).payNpc(f.kingdom,id,Purpose.CONSTRUCTION,REFERENCE,1));
-            // Model the process losing unsaved memory. This exact before image is what the initial barrier saved.
+            // Model losing the entire unsaved block-entity image, including its new operation proof.
+            f.chest().getPersistentData().remove("millenairekingdoms:royal_operations");
             f.chest().setItem(0,new ItemStack(ModItems.DENIER.get(),10));
             new RoyalTreasuryPersistence().flush(f.level,List.of(f.position));
             h.assertTrue(f.service().payNpc(f.kingdom,id,Purpose.CONSTRUCTION,REFERENCE,1).state()==State.PAID && f.value()==9,"Before-image recovery actually removes coins before issuing PAID"); h.succeed();
@@ -282,7 +284,8 @@ public final class RoyalPaymentGameTests {
         try(var f=fixture(h,"cancel-before")) {
             f.chest().setItem(0,new ItemStack(ModItems.DENIER.get(),10)); var id=UUID.randomUUID();
             refused(h,()->f.service(failSecondFlush(false)).payNpc(f.kingdom,id,Purpose.CONSTRUCTION,REFERENCE,1));
-            f.chest().setItem(0,new ItemStack(ModItems.DENIER.get(),10)); // Discard the unsaved debit, as at the tested before-write crash boundary.
+            f.chest().getPersistentData().remove("millenairekingdoms:royal_operations"); // Discard whole unsaved BE proof and items, as at an actual before-write cut.
+            f.chest().setItem(0,new ItemStack(ModItems.DENIER.get(),10));
             new RoyalTreasuryPersistence().flush(f.level,List.of(f.position));
             h.assertTrue(f.service().refundNpc(f.kingdom,id).state()==State.REFUNDED && f.value()==10,"Unpersisted debit cancellation has zero net effect, never credits an unpaid denier"); h.succeed();
         }
@@ -337,6 +340,7 @@ public final class RoyalPaymentGameTests {
             if(!saveAfter) {
                 // Model a process losing one chunk's write: one physical half is before, the other is after.
                 // Persist this independent ordering and reopen it in the next JVM; never claim it is a SIGKILL test.
+                other.getPersistentData().remove("millenairekingdoms:royal_operations"); // The independently unsaved chunk loses both Items and proof.
                 other.setItem(0,new ItemStack(ModItems.DENIER_ARGENT.get())); other.setChanged();
                 other.setItem(1,new ItemStack(ModItems.DENIER.get(),32));
                 new RoyalTreasuryPersistence().flush(level,List.of(second));

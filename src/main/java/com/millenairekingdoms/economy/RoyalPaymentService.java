@@ -130,7 +130,7 @@ public final class RoyalPaymentService {
             guard(request);
             quote.requireUnchanged();
             var plan=RoyalCoinPlan.debitSeparate(quote.slots(),27,amount);
-            var image=RoyalTreasuryImage.create(level,quote,plan);
+            var image=RoyalTreasuryImage.create(level,quote,plan,request.id,request.save(),false);
             // Identities and complete original contents must exist on disk before any financial intent or mutation.
             persistence.flush(level,quote.positions()); quote.requireUnchanged(); persistence.verify(level,image,false);
             var recovery=new CompoundTag(); recovery.put("debit",image.save(level));
@@ -162,13 +162,13 @@ public final class RoyalPaymentService {
                 if(entry.state()==State.REFUNDED) return receipt(request,entry);
                 if(entry.state()==State.REFUND_PREPARED) return settle(source,request,entry);
                 if(entry.state()!=State.PAID) throw new IllegalStateException("Only an unfulfilled PAID payment can be refunded: "+entry.state());
-                var recovery=entry.recovery(); var debit=image(recovery,"debit",request.amount,false);
+                var recovery=entry.recovery(); var debit=image(recovery,"debit",request,false);
                 var refundQuote=source.get();
                 try { debit.requireStorage(level,refundQuote); }
                 catch(IllegalStateException e) { return quarantine(request,entry,e); }
                 // Refunds add the original amount to CURRENT stock, preserving later legitimate changes.
                 var plan=debit.refundPlan(refundQuote);
-                var image=RoyalTreasuryImage.create(level,refundQuote,plan);
+                var image=RoyalTreasuryImage.create(level,refundQuote,plan,request.id,request.save(),true);
                 persistence.flush(level,refundQuote.positions()); refundQuote.requireUnchanged(); persistence.verify(level,image,false);
                 recovery.put("refund",image.save(level));
                 entry=journal.transition(id,State.PAID,State.REFUND_PREPARED,recovery);
@@ -184,7 +184,7 @@ public final class RoyalPaymentService {
     private Receipt settle(Supplier<RoyalTreasurySnapshot> source,Request request,Entry entry) {
         if(entry.state()!=State.PREPARED && entry.state()!=State.REFUND_PREPARED) return receipt(request,entry);
         boolean refund=entry.state()==State.REFUND_PREPARED;
-        var image=image(entry.recovery(),refund ? "refund" : "debit",request.amount,refund);
+        var image=image(entry.recovery(),refund ? "refund" : "debit",request,refund);
         var quote=source.get();
         if(!request.capital.equals(quote.capital())) throw new IllegalStateException("Capital changed; retain payment for explicit recovery");
         java.util.List<net.minecraft.world.item.ItemStack> after;
@@ -192,19 +192,29 @@ public final class RoyalPaymentService {
         catch(IllegalStateException e) { return quarantine(request,entry,e); }
         // Revalidation inside apply precedes the first slot write. The server thread does not yield during mutation.
         quote.apply(after);
+        // No server-thread yield or native save occurs between the slot writes and these same-BE proofs.
+        image.record(level);
         persistence.flush(level,quote.positions());
-        var current=source.get(); image.requireAfter(level,current);
+        var current=source.get(); image.requireAfter(level,current,after);
         // This must follow acknowledged chunk writes AND a flush, not a queued/pending in-memory IOWorker read.
-        persistence.verify(level,image,true);
-        return receipt(request,journal.transition(request.id,entry.state(),refund ? State.REFUNDED : State.PAID,entry.recovery()));
+        persistence.verifyApplied(level,image,after);
+        var acknowledged=journal.transition(request.id,entry.state(),refund ? State.REFUNDED : State.PAID,entry.recovery());
+        // A cleanup failure cannot undo an acknowledged financial result. Its proof remains safe to retain on disk.
+        try {
+            image.requireStorage(level,current); image.cleanup(level); persistence.flush(level,current.positions());
+        } catch(RuntimeException failure) {
+            com.mojang.logging.LogUtils.getLogger().warn("Acknowledged royal payment {} retained physical receipt cleanup: {}",request.id,failure.toString());
+        }
+        return receipt(request,acknowledged);
     }
 
-    private RoyalTreasuryImage image(CompoundTag recovery,String key,long amount,boolean refund) {
+    private RoyalTreasuryImage image(CompoundTag recovery,String key,Request request,boolean refund) {
         if(!recovery.contains(key,Tag.TAG_COMPOUND)) throw new IllegalStateException("Missing treasury recovery image; preserve journal");
         var image=RoyalTreasuryImage.read(level,recovery.getCompound(key));
+        image.requireBinding(request.id,request.save(),refund);
         image.requireDirection(refund);
         long delta=Math.subtractExact(image.value(true),image.value(false));
-        if(delta!=(refund ? amount : -amount)) throw new IllegalStateException("Treasury image value does not match payment; preserve journal");
+        if(delta!=(refund ? request.amount : -request.amount)) throw new IllegalStateException("Treasury image value does not match payment; preserve journal");
         return image;
     }
 
