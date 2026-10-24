@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0-rc.3 — 2026-10-24 (rulership navigation)
+
+- Reduce the top navigation to five main tabs. Open Construction and Shipping with two buttons inside Rulership; the Rulership tab or Esc returns from either page. Reopening starts at the parent page.
+- Keep the royal forms intact, make rulership information scrollable, and retain the fixed claim/abdication controls and existing confirmation/authority checks. Add the English/Turkish return hint; retain RC.2 stock diagnostics.
+- Gradle build passed. The focused existing GUI suite logged **All 7 required tests passed** in both write and separate-JVM reopen; the actual RC.3 production JAR also completed ordinary startup/save/stop/reopen without a test mod. Server/view/payment/cargo/domain payloads are byte-identical to RC.2. No unrelated successful suite was repeated.
+- Graphical layout and online authentication remain unverified. The user's1047/0 shipment-stock report remains open; this UI change does not alter stock protection.
+
 ## 1.2.0-rc.2 — 2026-10-24 (stock diagnostic follow-up)
 
 - Show actual and kept shipment stock, plus a product-hover breakdown of native target, construction, residents, configured minimum and Millénaire protection. Insufficient-stock messages show requested/sendable/kept amounts in English and Turkish.

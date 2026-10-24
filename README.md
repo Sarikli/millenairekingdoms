@@ -1,9 +1,9 @@
 # Millénaire Kingdoms
 
 > **1.2.0 development branch — By Royal Decree.** This branch targets Millénaire 9.0.3.
-> The real-coin payment foundation is implemented and tested. Paid construction, shipments and personality gameplay remain in development.
+> The release candidate includes real-coin payments, native construction, protected shipments and capital personalities; review and manual client checks remain open.
 > See [progress](docs/1.2.0_PROGRESS.md) and [development setup](docs/1.2.0_DEVELOPMENT.md).
-> [RC.2 stock-diagnostic JAR/checksum](releases/1.2.0-rc.2/) · [open stock investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md).
+> [RC.3 JAR/checksum: Construction and Shipping inside Rulership](releases/1.2.0-rc.3/) · [open stock investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md).
 > [Preserved RC.1 technical report](docs/1.2.0_RELEASE_REPORT.md).
 > Historical 1.1.1 release artifacts and reports remain unchanged.
 
@@ -17,7 +17,7 @@ left untouched, and the original Millénaire JAR is never modified.
 
 | | |
 |---|---|
-| Development version | 1.2.0-rc.2 |
+| Development version | 1.2.0-rc.3 |
 | Minecraft | 1.21.1 |
 | Loader | NeoForge 21.1.259 |
 | Required dependency | Millénaire 9.0.3 |
@@ -33,7 +33,7 @@ and [changelog](CHANGELOG.md).
 ## Features
 
 - **Kingdom screen.** Press **K** (rebindable under Controls → Key Binds → Millénaire Kingdoms) or run `/kingdom`.
-  Seven tabs: My Kingdom, Military, Diplomacy, Treasury, Rulership, Construction and Shipping. Greyed-out buttons explain why they are disabled,
+  Five main tabs: My Kingdom, Military, Diplomacy, Treasury and Rulership. Open Construction and Shipping using the two buttons inside Rulership; click Rulership or press Esc to return. Greyed-out buttons explain why they are disabled,
   and every action is checked again on the server.
 - **Player rulership.** Claim an unruled kingdom at its capital with a combined Millénaire reputation of 32768 or more.
   Political decisions need 8192. A kingdom has at most one ruler, and a player rules at most one kingdom.

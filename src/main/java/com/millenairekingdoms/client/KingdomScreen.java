@@ -27,6 +27,7 @@ public final class KingdomScreen extends Screen {
     // Millénaire's parchment palette (PanelRenderHelper).
     static final int TITLE = 0xFF2A1A00, TEXT = 0xFF333333, MUTED = 0xFF6E5B3E, GOOD = 0xFF2B6A1E, BAD = 0xFF8A1C1C, LINE = 0xFFAA8866;
     enum Tab { KINGDOM, MILITARY, DIPLOMACY, ECONOMY, RULERSHIP, CONSTRUCTION, SHIPMENTS }
+    private static final List<Tab> MAIN_TABS = List.of(Tab.KINGDOM,Tab.MILITARY,Tab.DIPLOMACY,Tab.ECONOMY,Tab.RULERSHIP);
     private static Tab lastTab = Tab.KINGDOM;
 
     private CompoundTag view;
@@ -79,11 +80,13 @@ public final class KingdomScreen extends Screen {
         texts.clear(); lists.clear(); amountBox = null; nameBox = null; shipmentQuantityBox=null;
         panelWidth = Math.min(420, width - 16); panelHeight = Math.min(250, height - 16);
         left = (width - panelWidth) / 2; top = (height - panelHeight) / 2;
-        int tabWidth = (panelWidth - 24) / Tab.values().length;
-        for (Tab t : Tab.values()) {
-            Button b = Button.builder(Component.translatable("millenairekingdoms.gui.tab." + t.name().toLowerCase(java.util.Locale.ROOT)), x -> { tab = t; lastTab = t; confirmAbdicate = false; confirmConstructionCancel=false;confirmShipmentCancel=false; rebuildWidgets(); })
-                    .bounds(left + 12 + t.ordinal() * tabWidth, top + 22, tabWidth - 2, 16).build();
+        int tabWidth = (panelWidth - 24) / MAIN_TABS.size();
+        for (int index=0;index<MAIN_TABS.size();index++) {
+            Tab t=MAIN_TABS.get(index);
+            Button b = Button.builder(Component.translatable("millenairekingdoms.gui.tab." + t.name().toLowerCase(java.util.Locale.ROOT)), x -> navigate(t))
+                    .bounds(left + 12 + index * tabWidth, top + 22, tabWidth - 2, 16).build();
             b.active = t != tab;
+            if(t==Tab.RULERSHIP && isRoyalPage(tab))b.setTooltip(Tooltip.create(t("rulership_back")));
             addRenderableWidget(b);
         }
         addRenderableWidget(Button.builder(Component.translatable("millenairekingdoms.gui.refresh"), x -> send(KingdomActionPayload.of("REFRESH")))
@@ -104,6 +107,15 @@ public final class KingdomScreen extends Screen {
     private int y0() { return top + 44; }
     private int contentWidth() { return panelWidth - 28; }
     private int bottom() { return top + panelHeight - 28; }
+    private static boolean isRoyalPage(Tab page){return page==Tab.CONSTRUCTION || page==Tab.SHIPMENTS;}
+    private void navigate(Tab page){
+        tab=page;lastTab=isRoyalPage(page) ? Tab.RULERSHIP : page;
+        confirmAbdicate=false;confirmConstructionCancel=false;confirmShipmentCancel=false;rebuildWidgets();
+    }
+    @Override public void onClose(){
+        if(isRoyalPage(tab))navigate(Tab.RULERSHIP);
+        else super.onClose();
+    }
 
     private void constructionTab() {
         int x=x0(),y=y0(),w=contentWidth(),half=w*11/20;
@@ -530,22 +542,28 @@ public final class KingdomScreen extends Screen {
         CompoundTag k = view.getCompound("kingdom");
         CompoundTag rights = view.getCompound("rights");
         int x = x0(), y = y0(), w = contentWidth();
+        int half=(w-4)/2;boolean rulerHere=view.getBoolean("isRuler");
+        button(x,y,half,t("tab.construction"),b->navigate(Tab.CONSTRUCTION),rulerHere,t("construction.reason.RULER_ONLY"));
+        button(x+half+4,y,half,t("tab.shipments"),b->navigate(Tab.SHIPMENTS),rulerHere,t("shipment.reason.RULER_ONLY"));
+        var information=list(x,y+21,w,bottom()-24-(y+21));
         String ruler = k.getString("ruler");
-        y = line(x, y, ruler.isEmpty() ? t("ruler_none") : t("ruler", ruler), w);
-        y = line(x, y, t("reputation", k.getString("capital"), rights.getInt("reputation")), w, TITLE);
-        y = line(x, y, t("needs_claim", rights.getInt("claimNeeds")), w);
-        y = line(x, y, t("needs_decision", rights.getInt("decisionNeeds")), w);
-        y = line(x, y, t("needs_request", rights.getInt("requestNeeds")), w);
-        y += 4;
-        y = reason(x, y, rights, "claim", t("claim_possible"), w);
-        if (view.getBoolean("isRuler")) y = reason(x, y, rights, "decide", t("decisions_possible"), w);
-        y = reason(x, y, rights, "request", t("request_possible"), w);
+        information.addWrapped(font,ruler.isEmpty() ? t("ruler_none") : t("ruler",ruler),TEXT);
+        information.addWrapped(font,t("reputation",k.getString("capital"),rights.getInt("reputation")),TITLE);
+        information.addWrapped(font,t("needs_claim",rights.getInt("claimNeeds")),TEXT);
+        information.addWrapped(font,t("needs_decision",rights.getInt("decisionNeeds")),TEXT);
+        information.addWrapped(font,t("needs_request",rights.getInt("requestNeeds")),TEXT);
+        rulershipRight(information,rights,"claim",t("claim_possible"));
+        if(rulerHere)rulershipRight(information,rights,"decide",t("decisions_possible"));
+        rulershipRight(information,rights,"request",t("request_possible"));
         int by = bottom() - 18;
-        button(x, by, 150, t("claim"), b -> send(KingdomActionPayload.of("CLAIM")), rights.contains("claimOk"), denied(rights, "claim"));
-        if (view.getBoolean("isRuler"))
-            button(x + 154, by, 150, t(confirmAbdicate ? "abdicate_confirm" : "abdicate"), b -> {
+        button(x, by, half, t("claim"), b -> send(KingdomActionPayload.of("CLAIM")), rights.contains("claimOk"), denied(rights, "claim"));
+        if (rulerHere)
+            button(x + half+4, by, half, t(confirmAbdicate ? "abdicate_confirm" : "abdicate"), b -> {
                 if (confirmAbdicate) { confirmAbdicate = false; send(KingdomActionPayload.of("ABDICATE")); } else { confirmAbdicate = true; rebuildWidgets(); }
             }, true, t("abdicate_hint"));
+    }
+    private void rulershipRight(RowList information,CompoundTag rights,String key,Component allowed){
+        boolean ok=rights.contains(key+"Ok");information.addWrapped(font,ok ? allowed : denied(rights,key),ok ? GOOD : BAD);
     }
 
     // ---------------------------------------------------------------- pieces
@@ -619,6 +637,7 @@ public final class KingdomScreen extends Screen {
         super.render(g, mouseX, mouseY, partialTick);
         CompoundTag k = view.getCompound("kingdom");
         Component heading = view.contains("focus") ? Component.literal(k.getString("name")) : title;
+        if(view.contains("focus") && isRoyalPage(tab))heading=t("tab.rulership").append(" · ").append(t("tab."+tab.name().toLowerCase(java.util.Locale.ROOT)));
         g.drawString(font, font.plainSubstrByWidth(heading.getString(), panelWidth - 24), left + 12, top + 9, TITLE, false);
         g.fill(left + 12, top + 40, left + panelWidth - 12, top + 41, LINE);
         for (Text text : texts) g.drawString(font, font.plainSubstrByWidth(text.text.getString(), text.width), text.x, text.y, text.color, false);
@@ -652,6 +671,13 @@ public final class KingdomScreen extends Screen {
         int scroll;
         RowList(int x, int y, int w, int h) { this.x = x; this.y = y; this.w = w; this.h = h; }
         void add(Component text, int color, boolean selected, Runnable click) { rows.add(new Row(text, color, selected, click)); }
+        void addWrapped(Font font,Component text,int color){
+            if(text==null)return;
+            for(var part:font.split(text,Math.max(1,w-10))){
+                var plain=new StringBuilder();part.accept((index,style,codePoint)->{plain.appendCodePoint(codePoint);return true;});
+                add(Component.literal(plain.toString()),color,false,null);
+            }
+        }
         int visible() { return h / rowHeight; }
         void render(GuiGraphics g, Font font, int mouseX, int mouseY) {
             g.fill(x, y, x + w, y + h, 0x18000000);

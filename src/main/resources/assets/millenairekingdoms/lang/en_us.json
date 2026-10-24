@@ -311,5 +311,6 @@
   "millenairekingdoms.gui.personality.GENERAL": "Palace / General",
   "millenairekingdoms.gui.shipment.stock_summary": "Stock: %s · Kept: %s",
   "millenairekingdoms.gui.shipment.stock_details": "Village stock target: %s\nActive/planned construction: %s\nResidents’ needs: %s\nMinimum stock: %s\nMillénaire protection: %s\nThe kept total uses the larger of target + construction + residents, Millénaire protection, and the minimum.",
-  "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Requested: %s; sendable: %s; kept: %s. Hover over the product for the stock breakdown."
+  "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Requested: %s; sendable: %s; kept: %s. Hover over the product for the stock breakdown.",
+  "millenairekingdoms.gui.rulership_back": "Back to rulership"
 }
