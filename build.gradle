@@ -275,6 +275,24 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_goods_tests'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        royalReceiptGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_receipt_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        royalReceiptGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_receipt_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
         royalGuiGameTestServer {
             type = 'gameTestServer'
             sourceSet = sourceSets.gametest
@@ -499,4 +517,11 @@ tasks.register('verifyRoyalGoods') {
     group = 'verification'
     description = 'Verify conserving real-stack plans and saved physical chest images in separate JVMs.'
     dependsOn tasks.named('runRoyalGoodsGameTestServerReload')
+}
+
+tasks.named('runRoyalReceiptGameTestServerReload') { dependsOn tasks.named('runRoyalReceiptGameTestServer') }
+tasks.register('verifyRoyalReceipts') {
+    group = 'verification'
+    description = 'Verify physical operation receipt recovery under real inventory interference.'
+    dependsOn tasks.named('runRoyalReceiptGameTestServerReload')
 }
