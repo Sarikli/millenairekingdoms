@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run every suite sequentially and require explicit success in both JVMs."""
+"""Run paired suites sequentially; require explicit success in both JVMs. Four-JVM simulation is separate."""
 import datetime
 import json
 from pathlib import Path
