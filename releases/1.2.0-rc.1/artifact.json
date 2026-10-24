@@ -17,5 +17,6 @@
   "java": "21",
   "network_protocol": 3,
   "dependency_embedded": false,
-  "gametest_classes_embedded": false
+  "gametest_classes_embedded": false,
+  "release_commit": "d77f08a477ea35518c1bbaca01ad9025ba00473e"
 }
