@@ -98,15 +98,18 @@ public final class RoyalNpcEconomyService {
         var shipments=shipmentHistory().stream().filter(e->e.intent().dimension().equals(level.dimension().location().toString()) && e.intent().kingdom().equals(k.id()) && !e.terminal()).toList();
         var construction=constructionHistory().stream().filter(e->e.intent().dimension().equals(level.dimension().location().toString()) && e.intent().kingdom().equals(k.id()) && !e.terminal()).toList();
         var proposals=new ArrayList<Proposal>();var diagnostics=new java.util.LinkedHashMap<String,Integer>();String reason="No justified legal, resourced investment or safely supplied native shortage";
-        if(shipments.isEmpty())proposals.addAll(shortages(data,k,members,stocks,history,construction,day,funds,profile.category(),limits,cadence,diagnostics));
-        else reason="Existing shipment/liability must settle before another NPC shipment";
+        if(shippingEnabled() && shipments.isEmpty())proposals.addAll(shortages(data,k,members,stocks,history,construction,day,funds,profile.category(),limits,cadence,diagnostics));
+        else if(shippingEnabled())reason="Existing shipment/liability must settle before another NPC shipment";
         // Genuine existing native shortages take priority over optional new commissions. No player/natural queue mutation.
         if(!proposals.isEmpty()){treasury.requireUnchanged();return new Preview(proposals,funds,"Native pending resource shortage");}
+        if(!constructionEnabled())return new Preview(List.of(),funds,"Automatic construction tracker is paused; "+reason);
         if(!construction.isEmpty())return new Preview(List.of(),funds,bounded("Existing royal construction/liability remains tracked; no second major project; "+diagnostics));
         if(recent(history,Kind.CONSTRUCTION,day,cadence.projectDays(),null))return new Preview(List.of(),funds,"Persistent kingdom project cooldown");
         for(var member:members){
             var village=PoliticsService.village(level,member);if(!usable(village)){note(diagnostics,"unavailable/local-player village");continue;}
-            if(village.getPendingProject()!=null || village.getBuildings().stream().anyMatch(BuildingInstance::isBeingBuilt)){note(diagnostics,"existing native project/task");continue;}
+            // Original9.0.3 canStartNewConstruction explicitly excludes wall segments from normal-building slots.
+            // Preserve every ordinary task; an independently scheduled native wall must not disable royal economics.
+            if(village.getPendingProject()!=null || village.getBuildings().stream().anyMatch(b->b.isBeingBuilt() && !b.isWallSegment())){note(diagnostics,"existing native project/task");continue;}
             if(!builder(village)){note(diagnostics,"no available loaded original builder");continue;}
             if(recent(history,Kind.CONSTRUCTION,day,cadence.villageDays(),member)){note(diagnostics,"village project cooldown");continue;}
             RoyalVillageStock stock;try{stock=stock(stocks,k.id(),member);}catch(IllegalArgumentException|IllegalStateException missing){note(diagnostics,"native storage unavailable");continue;}
