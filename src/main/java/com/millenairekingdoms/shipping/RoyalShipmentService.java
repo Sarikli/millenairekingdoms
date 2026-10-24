@@ -161,7 +161,13 @@ public final class RoyalShipmentService {
     private Entry credit(Entry entry,Role role){
         if(role==Role.DELIVER){var paid=receipt(entry);if(paid==null || paid.state()!=State.COMMITTED)return orders.quarantine(entry.intent().id(),"New delivery lacks the actual committed transport fee");}
         var intent=entry.intent();var endpoint=role==Role.RETURN ? intent.source() : intent.destination();
-        var destination=stock(intent,endpoint,role==Role.RETURN);var product=new ItemStack(item(intent.product()));var slots=destination.slots();var positions=destination.positions();
+        RoyalVillageStock destination;
+        try{destination=stock(intent,endpoint,role==Role.RETURN);}
+        catch(IllegalArgumentException changed){
+            if(role==Role.RETURN)throw new Deferred(Blocked.MEMBERSHIP,"Original source identity/ownership no longer permits return; cargo remains held");
+            throw changed;
+        }
+        var product=new ItemStack(item(intent.product()));var slots=destination.slots();var positions=destination.positions();
         for(int half=0;half<positions.size();half++){
             int capacity=0;for(int slot=0;slot<27;slot++){var stack=slots.get(half*27+slot);
                 if(stack.isEmpty())capacity+=Math.min(64,product.getMaxStackSize());else if(ItemStack.isSameItemSameComponents(stack,product))capacity+=Math.min(64,stack.getMaxStackSize())-stack.getCount();

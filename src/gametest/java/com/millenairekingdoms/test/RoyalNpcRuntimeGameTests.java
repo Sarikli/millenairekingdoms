@@ -20,6 +20,7 @@ public final class RoyalNpcRuntimeGameTests {
     private static final String NS="millenairekingdoms_royal_npc_runtime_tests";
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
     public static void boundedFairStepChargesOnlyOneThenTwoCurrentNpcNeedsAndNeverDecidesForAPlayer(GameTestHelper h){
+        boolean tracking=com.millenairekingdoms.shipping.RoyalShipmentConfig.TRACKING.get();com.millenairekingdoms.shipping.RoyalShipmentConfig.TRACKING.set(true);
         var realms=new ArrayList<RoyalShipmentSupport.Realm>();
         try{
             for(int n=0;n<4;n++){var r=RoyalShipmentSupport.realm(h,"npc-runtime-"+n);RoyalNpcEconomyGameTests.shortage(h,r);realms.add(r);}realms.get(3).ruler();
@@ -28,7 +29,7 @@ public final class RoyalNpcRuntimeGameTests {
             var more=RoyalNpcRuntime.step(h.getLevel(),2);h.assertTrue(more.attempts()==0 && realms.subList(0,3).stream().allMatch(r->r.coins()==247),"Persisted day cooldowns prevent repeated spending while the cursor continues fairly");
             var before=new RoyalNpcDecisionStore(RoyalNpcDecisionStore.directory(h.getLevel())).entries();RoyalNpcRuntime.onStarted(new ServerStartedEvent(h.getLevel().getServer()));
             h.assertTrue(before.equals(new RoyalNpcDecisionStore(RoyalNpcDecisionStore.directory(h.getLevel())).entries()) && realms.subList(0,3).stream().allMatch(r->r.coins()==247),"Startup validates only and never replays/advances/spends an existing proposal");h.succeed();
-        }finally{for(var r:realms)r.close();RoyalNpcRuntime.onStopped(new ServerStoppedEvent(h.getLevel().getServer()));}
+        }finally{com.millenairekingdoms.shipping.RoyalShipmentConfig.TRACKING.set(tracking);for(var r:realms)r.close();RoyalNpcRuntime.onStopped(new ServerStoppedEvent(h.getLevel().getServer()));}
     }
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
     public static void unknownStartupHistoryStaysByteIdenticalAndCannotBeTurnedIntoNewNpcAttempts(GameTestHelper h) throws Exception {
@@ -43,6 +44,7 @@ public final class RoyalNpcRuntimeGameTests {
     }
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
     public static void realEconomicExplainAndHistoryAreReadonlyOp2Commands(GameTestHelper h) throws Exception {
+        boolean tracking=com.millenairekingdoms.shipping.RoyalShipmentConfig.TRACKING.get();com.millenairekingdoms.shipping.RoyalShipmentConfig.TRACKING.set(true);
         try(var r=RoyalShipmentSupport.realm(h,"npc-op-diagnostics")){
             var setup=RoyalNpcEconomyGameTests.shortage(h,r);var player=new Stage5Support.TestPlayer(h.getLevel(),"NPC economics operator");var dispatcher=h.getLevel().getServer().getCommands().getDispatcher();
             boolean refused=false;try{dispatcher.execute("kingdoms economy explain "+r.kingdom(),player.createCommandSourceStack().withPermission(0));}catch(com.mojang.brigadier.exceptions.CommandSyntaxException expected){refused=true;}
@@ -54,6 +56,7 @@ public final class RoyalNpcRuntimeGameTests {
                     && r.coins()==256 && r.target().getPendingProject()==setup.pending() && before.equals(org.millenaire.village.VillageSavedData.get(h.getLevel()).save(new CompoundTag(),h.getLevel().registryAccess())),"Actual OP2 commands show real need/fee/config without advancing a project or spending");
             h.assertTrue(new RoyalNpcDecisionStore(RoyalNpcDecisionStore.directory(h.getLevel())).entries().stream().noneMatch(d->d.kingdom().equals(r.kingdom())),"Readonly explanation never creates a decision/approval");h.succeed();
         }
+        finally{com.millenairekingdoms.shipping.RoyalShipmentConfig.TRACKING.set(tracking);}
     }
     private RoyalNpcRuntimeGameTests(){}
 }

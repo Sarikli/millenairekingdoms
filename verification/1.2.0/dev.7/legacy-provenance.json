@@ -1,0 +1,10 @@
+{
+  "source": "retained own original build/libs/millenairekingdoms-1.1.1.jar",
+  "embedded_version": "1.1.1",
+  "source_jar_sha256": "7ecdc176cee847d78398bb8f8095941df1c54a2698cabe752dab099bbd62dbe4",
+  "fixture": "src/gametest/resources/review-1.1.1-kingdoms.dat",
+  "fixture_sha256": "97d8f71e6f6bb6c921e73d47dc9692d46a18d584b12f9a6fd089d1efe6f9e595",
+  "generator": "LegacySaveExport.java",
+  "format": 6,
+  "scope": "Representative political/economic SavedData produced by the original1.1.1 serializer, not a complete original9.0.2 physical world."
+}

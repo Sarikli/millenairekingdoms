@@ -315,6 +315,24 @@ neoForge {
             systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
             systemProperty 'kingdoms.tests.liveConstruction', 'true'
         }
+        royalIntegrationGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_integration_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        royalIntegrationGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_integration_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
         royalNpcRuntimeGameTestServer {
             type = 'gameTestServer'
             sourceSet = sourceSets.gametest
@@ -809,4 +827,11 @@ tasks.register('verifyRoyalNpcBuilders') {
     group = 'verification'
     description = 'Verify automatic paid NPC economic selection and genuine original physical builders across JVMs.'
     dependsOn tasks.named('runRoyalNpcBuilderGameTestServerReload')
+}
+
+tasks.named('runRoyalIntegrationGameTestServerReload') { dependsOn tasks.named('runRoyalIntegrationGameTestServer') }
+tasks.register('verifyRoyalIntegration') {
+    group = 'verification'
+    description = 'Verify independent economic features, real tax budgets, governance and legacy saves across JVMs.'
+    dependsOn tasks.named('runRoyalIntegrationGameTestServerReload')
 }

@@ -44,18 +44,18 @@ public final class RoyalNpcEconomyGameTests {
     private static final ResourceLocation BUILD=ResourceLocation.parse("millenaire:build");
     private static RoyalNpcEconomyService service(RoyalShipmentSupport.Realm r){return new RoyalNpcEconomyService(r.level());}
     private static RoyalNpcDecisionStore decisions(RoyalShipmentSupport.Realm r){return new RoyalNpcDecisionStore(RoyalNpcDecisionStore.directory(r.level()));}
-    private static void money(RoyalShipmentSupport.Realm r,int silver){r.chest(r.capital()).clearContent();r.chest(r.capital()).setItem(0,new ItemStack(ModItems.DENIER_ARGENT.get(),silver));r.capital().getTownhall().getInventory().invalidateCache();}
+    static void money(RoyalShipmentSupport.Realm r,int silver){r.chest(r.capital()).clearContent();r.chest(r.capital()).setItem(0,new ItemStack(ModItems.DENIER_ARGENT.get(),silver));r.capital().getTownhall().getInventory().invalidateCache();}
     private static void clear(RoyalShipmentSupport.Realm r,Village v){for(var pos:v.getTownhall().getInventory().getChestPositions())((net.minecraft.world.level.block.entity.ChestBlockEntity)r.level().getBlockEntity(pos)).clearContent();v.getTownhall().getInventory().invalidateCache();}
     private static void add(GameTestHelper h,RoyalShipmentSupport.Realm r,Village v,Item item,int quantity){int added=v.getTownhall().getInventory().add(r.level(),item,quantity);h.assertTrue(added==quantity,"Known fixture materials enter actual native storage in full: "+item+" "+quantity+"/"+added);v.getTownhall().getInventory().invalidateCache();}
     static int count(RoyalShipmentSupport.Realm r,Village v,Item item){v.getTownhall().getInventory().invalidateCache();return v.getTownhall().getInventory().getCount(r.level(),item);}
-    private static RoyalConstructionCatalog.Option option(RoyalShipmentSupport.Realm r,Village v){return RoyalConstructionCatalog.forNpc(r.level(),r.kingdom(),v.getId().uuid()).options().stream()
+    static RoyalConstructionCatalog.Option option(RoyalShipmentSupport.Realm r,Village v){return RoyalConstructionCatalog.forNpc(r.level(),r.kingdom(),v.getId().uuid()).options().stream()
             .filter(o->RoyalInvestmentPolicy.role(o.planSet())!=RoyalInvestmentPolicy.Role.UNCLASSIFIED && !o.requiredMaterials().isEmpty())
             .sorted(java.util.Comparator.comparingInt(o->o.requiredMaterials().size())).findFirst().orElseThrow();}
-    private static void materials(GameTestHelper h,RoyalShipmentSupport.Realm r,Village v,Map<ResourceLocation,Integer> required,ResourceLocation except){
+    static void materials(GameTestHelper h,RoyalShipmentSupport.Realm r,Village v,Map<ResourceLocation,Integer> required,ResourceLocation except){
         clear(r,v);for(var entry:required.entrySet())if(!entry.getKey().equals(except) && !AnywoodHelper.isAnywood(entry.getKey()) && entry.getValue()>0)add(h,r,v,BuiltInRegistries.ITEM.getOptional(entry.getKey()).orElseThrow(),entry.getValue());
         if(required.getOrDefault(AnywoodHelper.ANYWOOD_LOG,0)>0 && !AnywoodHelper.ANYWOOD_LOG.equals(except))add(h,r,v,Items.CHERRY_LOG,required.get(AnywoodHelper.ANYWOOD_LOG));
     }
-    private static MillVillager builder(GameTestHelper h,RoyalShipmentSupport.Realm r){
+    static MillVillager builder(GameTestHelper h,RoyalShipmentSupport.Realm r){
         var type=ModCultures.getAllVillagerTypes().values().stream().filter(t->t.culture().equals(r.source().getCultureId()) && !t.isChild() && t.goals().contains(BUILD)).sorted(java.util.Comparator.comparing(t->t.id().toString())).findFirst().orElseThrow();
         var entity=VillagerSpawnFactory.spawnInVillage(r.level(),r.source(),type.id(),r.source().getCenter().above(),r.source().getTownhall().getId());
         h.assertTrue(entity!=null && entity.isAlive() && r.level().getEntity(entity.getUUID())==entity && r.source().getVillagerRecords().containsKey(entity.getUUID()),"Actual original factory creates and registers a genuine loaded builder fixture; no fake record/NPC");return entity;

@@ -2,6 +2,7 @@ package com.millenairekingdoms.autonomy;
 
 import com.millenairekingdoms.autonomy.RoyalInvestmentPolicy.Role;
 import com.millenairekingdoms.construction.RoyalConstructionCatalog;
+import com.millenairekingdoms.construction.RoyalConstructionConfig;
 import com.millenairekingdoms.construction.RoyalConstructionService;
 import com.millenairekingdoms.construction.RoyalConstructionStore;
 import com.millenairekingdoms.economy.EconomyService;
@@ -13,6 +14,7 @@ import com.millenairekingdoms.kingdom.KingdomSavedData;
 import com.millenairekingdoms.personality.KingdomPersonality;
 import com.millenairekingdoms.politics.PoliticsService;
 import com.millenairekingdoms.shipping.RoyalShipmentService;
+import com.millenairekingdoms.shipping.RoyalShipmentConfig;
 import com.millenairekingdoms.shipping.RoyalShipmentStore;
 import com.millenairekingdoms.shipping.RoyalVillageStock;
 import com.mojang.logging.LogUtils;
@@ -49,10 +51,17 @@ public final class RoyalNpcEconomyService {
     public record Result(UUID attempt,Kind kind,Outcome outcome,String reason) {}
     private final ServerLevel level;
     private final RoyalNpcDecisionStore decisions;
-    public RoyalNpcEconomyService(ServerLevel level){this.level=level;this.decisions=new RoyalNpcDecisionStore(RoyalNpcDecisionStore.directory(level));}
+    private final boolean automatic;
+    public RoyalNpcEconomyService(ServerLevel level){this(level,false);}
+    private RoyalNpcEconomyService(ServerLevel level,boolean automatic){this.level=level;this.automatic=automatic;this.decisions=new RoyalNpcDecisionStore(RoyalNpcDecisionStore.directory(level));}
+    /** Automatic discovery requires a live dependent tracker; explicit internal service users own their domain steps. */
+    public static RoyalNpcEconomyService automatic(ServerLevel level){return new RoyalNpcEconomyService(level,true);}
+    private boolean constructionEnabled(){return !automatic || RoyalConstructionConfig.TRACKING.get();}
+    private boolean shippingEnabled(){return !automatic || RoyalShipmentConfig.TRACKING.get();}
 
     public Preview inspect(UUID kingdom,long day){
         thread();var data=KingdomSavedData.get(level);var k=data.kingdom(kingdom);var limits=RoyalNpcConfig.budgets();
+        if(!constructionEnabled() && !shippingEnabled())return none("Both automatic economic domain trackers are paused");
         if(!limits.enabled())return none("New NPC economic decisions are disabled");
         if(k==null || !k.active() || k.fallen() || !data.npcGoverned(kingdom))return none("Current active NPC government is required; player kingdoms are excluded");
         var history=history(kingdom);long due=history.stream().mapToLong(Decision::nextDay).max().orElse(0);
@@ -62,6 +71,7 @@ public final class RoyalNpcEconomyService {
     public Result evaluate(UUID kingdom,long day,RandomSource random){
         thread();if(day<0)throw new IllegalArgumentException("Invalid NPC decision day");
         var data=KingdomSavedData.get(level);var k=data.kingdom(kingdom);var limits=RoyalNpcConfig.budgets();
+        if(!constructionEnabled() && !shippingEnabled())return new Result(null,Kind.NONE,Outcome.SKIPPED,"Both automatic economic domain trackers are paused");
         if(!limits.enabled() || k==null || !k.active() || k.fallen() || !data.npcGoverned(kingdom))return new Result(null,Kind.NONE,Outcome.SKIPPED,"New decisions disabled or not an active NPC kingdom");
         var history=history(kingdom);if(history.stream().anyMatch(d->d.nextDay()>day))return new Result(null,Kind.NONE,Outcome.SKIPPED,"Persistent economic cooldown");
         var cadence=RoyalNpcConfig.cadence();var preview=discover(data,k,day,history,limits,cadence);var chosen=choose(preview.candidates(),random);

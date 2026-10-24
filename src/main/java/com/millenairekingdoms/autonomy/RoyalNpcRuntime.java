@@ -59,7 +59,7 @@ public final class RoyalNpcRuntime {
         var due=new HashMap<UUID,Long>();var path=RoyalNpcDecisionStore.directory(level);
         if(Files.exists(path.resolve("decisions.dat")))for(var d:new RoyalNpcDecisionStore(path).entries())if(d.dimension().equals(dimension))due.merge(d.kingdom(),d.nextDay(),Math::max);
         int start=0;if(session.cursor!=null){while(start<kingdoms.size() && kingdoms.get(start).id().compareTo(session.cursor)<=0)start++;start%=kingdoms.size();}
-        int inspected=Math.min(limit,kingdoms.size()),attempts=0;var service=new RoyalNpcEconomyService(level);
+        int inspected=Math.min(limit,kingdoms.size()),attempts=0;var service=RoyalNpcEconomyService.automatic(level);
         for(int offset=0;offset<inspected;offset++){
             var kingdom=kingdoms.get((start+offset)%kingdoms.size());var id=kingdom.id();session.cursor=id;if(day<due.getOrDefault(id,0L))continue;
             try{var result=service.evaluate(id,day,level.getRandom());if(result.attempt()!=null)attempts++;session.errors.remove(id);}
