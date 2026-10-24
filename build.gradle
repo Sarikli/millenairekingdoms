@@ -293,6 +293,24 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_tests'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        royalShipmentGuiGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_gui_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        royalShipmentGuiGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_gui_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
         royalShipmentRuntimeGameTestServer {
             type = 'gameTestServer'
             sourceSet = sourceSets.gametest
@@ -601,4 +619,11 @@ tasks.register('verifyRoyalShipmentLive') {
     group = 'verification'
     description = 'Verify bounded or actual automatic paid shipment tracking across separate JVMs.'
     dependsOn tasks.named('runRoyalShipmentLiveGameTestServerReload')
+}
+
+tasks.named('runRoyalShipmentGuiGameTestServerReload') { dependsOn tasks.named('runRoyalShipmentGuiGameTestServer') }
+tasks.register('verifyRoyalShipmentGui') {
+    group = 'verification'
+    description = 'Verify real player shipment offers/actions in a write and separate-JVM reopen.'
+    dependsOn tasks.named('runRoyalShipmentGuiGameTestServerReload')
 }

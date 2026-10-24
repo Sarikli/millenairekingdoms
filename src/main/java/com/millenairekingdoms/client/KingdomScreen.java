@@ -26,7 +26,7 @@ public final class KingdomScreen extends Screen {
     private static final ResourceLocation PARCHMENT = ResourceLocation.fromNamespaceAndPath("millenaire", "textures/gui/village_chief.png");
     // Millénaire's parchment palette (PanelRenderHelper).
     static final int TITLE = 0xFF2A1A00, TEXT = 0xFF333333, MUTED = 0xFF6E5B3E, GOOD = 0xFF2B6A1E, BAD = 0xFF8A1C1C, LINE = 0xFFAA8866;
-    enum Tab { KINGDOM, MILITARY, DIPLOMACY, ECONOMY, RULERSHIP, CONSTRUCTION }
+    enum Tab { KINGDOM, MILITARY, DIPLOMACY, ECONOMY, RULERSHIP, CONSTRUCTION, SHIPMENTS }
     private static Tab lastTab = Tab.KINGDOM;
 
     private CompoundTag view;
@@ -36,10 +36,13 @@ public final class KingdomScreen extends Screen {
     private boolean confirmAbdicate;
     private boolean confirmConstructionCancel;
     private String selectedConstructionPlan;
+    private String shipmentQuantity="";
+    private UUID selectedShipmentOrder;
+    private boolean confirmShipmentCancel;
     private int left, top, panelWidth, panelHeight;
     private final List<Text> texts = new ArrayList<>();
     private final List<RowList> lists = new ArrayList<>();
-    private EditBox amountBox, nameBox;
+    private EditBox amountBox, nameBox, shipmentQuantityBox;
     /** Scroll positions survive the rebuild after each click or snapshot. */
     private final java.util.Map<String, Integer> scrolls = new java.util.HashMap<>();
     private Tab listTab = tab;
@@ -54,6 +57,10 @@ public final class KingdomScreen extends Screen {
     void update(CompoundTag next) {
         if (amountBox != null) amount = amountBox.getValue();
         if (nameBox != null) kingdomName = nameBox.getValue();
+        if (shipmentQuantityBox != null) shipmentQuantity=shipmentQuantityBox.getValue();
+        var oldShipping=view.getCompound("shipments");var newShipping=next.getCompound("shipments");
+        if(oldShipping.getInt("quantity")!=newShipping.getInt("quantity"))shipmentQuantity=Integer.toString(newShipping.getInt("quantity"));
+        if(!oldShipping.hasUUID("source") || !newShipping.hasUUID("source") || !oldShipping.getUUID("source").equals(newShipping.getUUID("source"))){selectedShipmentOrder=null;confirmShipmentCancel=false;}
         var previous=view.getCompound("construction");var current=next.getCompound("construction");
         if(!previous.hasUUID("village") || !current.hasUUID("village") || !previous.getUUID("village").equals(current.getUUID("village"))) {
             selectedConstructionPlan=null;confirmConstructionCancel=false;
@@ -69,12 +76,12 @@ public final class KingdomScreen extends Screen {
     @Override protected void init() {
         for (int i = 0; i < lists.size(); i++) scrolls.put(listTab + ":" + i, lists.get(i).scroll);
         listTab = tab;
-        texts.clear(); lists.clear(); amountBox = null; nameBox = null;
+        texts.clear(); lists.clear(); amountBox = null; nameBox = null; shipmentQuantityBox=null;
         panelWidth = Math.min(420, width - 16); panelHeight = Math.min(250, height - 16);
         left = (width - panelWidth) / 2; top = (height - panelHeight) / 2;
         int tabWidth = (panelWidth - 24) / Tab.values().length;
         for (Tab t : Tab.values()) {
-            Button b = Button.builder(Component.translatable("millenairekingdoms.gui.tab." + t.name().toLowerCase(java.util.Locale.ROOT)), x -> { tab = t; lastTab = t; confirmAbdicate = false; confirmConstructionCancel=false; rebuildWidgets(); })
+            Button b = Button.builder(Component.translatable("millenairekingdoms.gui.tab." + t.name().toLowerCase(java.util.Locale.ROOT)), x -> { tab = t; lastTab = t; confirmAbdicate = false; confirmConstructionCancel=false;confirmShipmentCancel=false; rebuildWidgets(); })
                     .bounds(left + 12 + t.ordinal() * tabWidth, top + 22, tabWidth - 2, 16).build();
             b.active = t != tab;
             addRenderableWidget(b);
@@ -89,6 +96,7 @@ public final class KingdomScreen extends Screen {
             case ECONOMY -> economyTab();
             case RULERSHIP -> rulershipTab();
             case CONSTRUCTION -> constructionTab();
+            case SHIPMENTS -> shipmentTab();
         }
     }
 
@@ -147,6 +155,73 @@ public final class KingdomScreen extends Screen {
     }
     private static Component constructionReason(String reason) {
         return t("construction.reason."+(reason.isEmpty() ? "NO_ELIGIBLE_PLAN" : reason));
+    }
+
+    private void shipmentTab(){
+        int x=x0(),y=y0(),w=contentWidth(),lw=w/2-3,rx=x+w/2+3,rw=w/2-3;
+        var s=view.getCompound("shipments");var villages=s.getList("villages",Tag.TAG_COMPOUND);
+        if(!s.hasUUID("source") || !s.hasUUID("target") || villages.size()<2){wrapped(x,y,shipmentReason(s.getString("reason")),w,BAD,5);return;}
+        shipmentVillage(x,y,w,s,villages,true);shipmentVillage(x,y+20,w,s,villages,false);y+=42;
+        var products=s.getList("products",Tag.TAG_COMPOUND);int productIndex=0;
+        for(int n=0;n<products.size();n++)if(products.getCompound(n).getString("id").equals(s.getString("product")))productIndex=n;
+        if(!products.isEmpty()){
+            String next=products.getCompound((productIndex+1)%products.size()).getString("id");
+            shipmentButton(x,y,lw,shipmentItem(s.getString("product")),b->send(new KingdomActionPayload("SHIPMENT_PRODUCT",Optional.empty(),Optional.empty(),0,next)),products.size()>1,null);
+        }else text(x,y,t("shipment.no_goods"),MUTED,lw);
+        int sy=y+20;
+        if(shipmentQuantity.isEmpty())shipmentQuantity=Integer.toString(s.getInt("quantity"));
+        shipmentQuantityBox=new EditBox(font,x,sy,Math.max(30,lw-85),16,t("shipment.quantity"));shipmentQuantityBox.setMaxLength(6);
+        shipmentQuantityBox.setFilter(value->value.matches("[0-9]*"));shipmentQuantityBox.setValue(shipmentQuantity);addRenderableWidget(shipmentQuantityBox);
+        shipmentButton(x+lw-81,sy,81,t("shipment.set_quantity"),b->{
+            String value=shipmentQuantityBox.getValue();long quantity=value.isEmpty() ? 0 : Long.parseLong(value);
+            send(new KingdomActionPayload("SHIPMENT_QUANTITY",Optional.empty(),Optional.empty(),quantity,""));
+        },true,t("shipment.quantity_hint",s.getInt("maximumQuantity")));
+        sy+=20;
+        if(s.contains("physical")){
+            sy=line(x,sy,t("shipment.physical",s.getInt("physical")),lw);
+            sy=line(x,sy,t("shipment.available",s.getInt("available")),lw);
+        }
+        if(s.hasUUID("offer")){
+            sy=line(x,sy,t("shipment.price",coins(s.getLong("fee"))),lw);
+            sy=line(x,sy,t("shipment.time",seconds(s.getLong("travelTicks"))),lw);
+            var purchase=Button.builder(t("shipment.order"),b->send(KingdomActionPayload.of("SHIPMENT_ORDER",s.getUUID("offer")))).bounds(x,sy+2,lw,16).build();
+            purchase.active=s.getBoolean("canOrder") && shipmentQuantity.equals(Integer.toString(s.getInt("quantity")));
+            purchase.setTooltip(Tooltip.create(s.getBoolean("canOrder") ? t("shipment.apply_quantity") : shipmentReason(s.getString("reason"))));addRenderableWidget(purchase);
+            shipmentQuantityBox.setResponder(value->{shipmentQuantity=value;purchase.active=s.getBoolean("canOrder") && value.equals(Integer.toString(s.getInt("quantity")));});sy+=22;
+        }
+        if(s.contains("reason"))wrapped(x,sy,shipmentReason(s.getString("reason")),lw,BAD,Math.max(1,(bottom()-sy)/11));
+        var orders=s.getList("orders",Tag.TAG_COMPOUND);
+        if(orders.isEmpty()){wrapped(rx,y,t(s.getBoolean("stateKnown") ? "shipment.no_order" : "shipment.order_unknown"),rw,MUTED,4);return;}
+        int index=0;for(int n=0;n<orders.size();n++)if(orders.getCompound(n).getUUID("id").equals(selectedShipmentOrder))index=n;
+        var order=orders.getCompound(index);selectedShipmentOrder=order.getUUID("id");var next=orders.getCompound((index+1)%orders.size());
+        shipmentButton(rx,y,rw,t("shipment.to",order.getString("destination")),b->{selectedShipmentOrder=next.getUUID("id");confirmShipmentCancel=false;rebuildWidgets();},orders.size()>1,shipmentItem(order.getString("product")));int ry=y+20;
+        ry=line(rx,ry,t("shipment.stage."+order.getString("stage")),rw,TITLE);
+        if(!order.getString("blocked").equals("NONE"))ry=wrapped(rx,ry,t("shipment.blocked."+order.getString("blocked")),rw,BAD,2);
+        ry=line(rx,ry,t("shipment.delivered",order.getInt("delivered"),order.getInt("quantity")),rw);
+        ry=line(rx,ry,t("shipment.held_returned",order.getInt("held"),order.getInt("returned")),rw);
+        if(order.getString("stage").equals("IN_TRANSIT"))ry=line(rx,ry,t("shipment.remaining",seconds(order.getLong("remainingTicks"))),rw);
+        shipmentButton(rx,ry+2,rw,t(confirmShipmentCancel ? "shipment.confirm_cancel" : "shipment.cancel"),b->{
+            if(confirmShipmentCancel){confirmShipmentCancel=false;send(KingdomActionPayload.of("SHIPMENT_CANCEL",order.getUUID("id")));}
+            else{confirmShipmentCancel=true;rebuildWidgets();}
+        },order.getBoolean("canCancel"),t(order.getBoolean("refundable") ? "shipment.refund_note" : "shipment.earned_fee_note"));ry+=21;
+        if(order.getBoolean("canResume"))shipmentButton(rx,ry,rw,t("shipment.resume"),b->send(KingdomActionPayload.of("SHIPMENT_RESUME",order.getUUID("id"))),true,t("shipment.resume_note"));
+    }
+    private void shipmentVillage(int x,int y,int width,CompoundTag s,ListTag villages,boolean source){
+        String key=source ? "source" : "target";UUID current=s.getUUID(key),other=s.getUUID(source ? "target" : "source");
+        int index=0;for(int n=0;n<villages.size();n++)if(villages.getCompound(n).getUUID("id").equals(current))index=n;
+        var village=villages.getCompound(index);CompoundTag next=village;
+        for(int offset=1;offset<villages.size();offset++){var candidate=villages.getCompound((index+offset)%villages.size());if(source || !candidate.getUUID("id").equals(other)){next=candidate;break;}}
+        UUID nextId=next.getUUID("id");Component label=t("shipment."+key,village.getString("name"));
+        if(!village.getBoolean("loaded"))label=Component.empty().append(label).append(" · ").append(t("shipment.unavailable"));
+        shipmentButton(x,y,width,label,b->send(KingdomActionPayload.of(source ? "SHIPMENT_SOURCE" : "SHIPMENT_TARGET",nextId)),!nextId.equals(current),Component.empty().append(label).append("\n").append(t(source ? "shipment.source_note" : "shipment.target_note")));
+    }
+    private static Component shipmentReason(String reason){return t("shipment.reason."+(reason.isEmpty() ? "SERVICE_UNAVAILABLE" : reason));}
+    private static Component shipmentItem(String id){var item=net.minecraft.core.registries.BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse(id));return item.<Component>map(i->Component.translatable(i.getDescriptionId())).orElseGet(()->Component.literal(id));}
+    private static long seconds(long ticks){return ticks/20+(ticks%20==0 ? 0 : 1);}
+
+    private void shipmentButton(int x,int y,int width,Component label,Consumer<Button> press,boolean active,Component hint){
+        var button=Button.builder(label,press::accept).bounds(x,y,width,16).build();button.active=active;
+        if(hint!=null)button.setTooltip(Tooltip.create(hint));addRenderableWidget(button);
     }
 
     // ---------------------------------------------------------------- tabs

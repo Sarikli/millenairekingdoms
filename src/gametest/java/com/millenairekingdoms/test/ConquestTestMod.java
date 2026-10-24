@@ -61,6 +61,7 @@ public final class ConquestTestMod {
             event.register(RoyalShipmentCrashGameTests.class);
             event.register(RoyalShipmentRuntimeGameTests.class);
             event.register(RoyalShipmentLiveGameTests.class);
+            event.register(RoyalShipmentGuiGameTests.class);
         });
         NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOW, false, net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class, event -> {
             if(event.getLevel() instanceof net.minecraft.server.level.ServerLevel level && Boolean.getBoolean("kingdoms.tests.liveShipments"))RoyalShipmentLiveGameTests.fixtureTick(level);

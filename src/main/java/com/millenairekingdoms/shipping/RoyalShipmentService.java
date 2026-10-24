@@ -50,6 +50,8 @@ public final class RoyalShipmentService {
     public static Path directory(ServerLevel level){return level.getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-shipments");}
     public Quote quoteNpc(UUID kingdom,UUID from,UUID to,ResourceLocation product,int quantity){thread();return quote(null,kingdom,from,to,product,quantity);}
     public Quote quotePlayer(ServerPlayer player,UUID from,UUID to,ResourceLocation product,int quantity){thread();dimension(player);return quote(player,PoliticsService.ruledKingdom(player).id(),from,to,product,quantity);}
+    /** Read-only price/time preview also reports insufficient surplus; actual requests still require the full quantity. */
+    public Quote previewPlayer(ServerPlayer player,UUID from,UUID to,ResourceLocation product,int quantity){thread();dimension(player);return quote(player,PoliticsService.ruledKingdom(player).id(),from,to,product,quantity,false);}
     public Entry requestNpc(UUID kingdom,UUID from,UUID to,ResourceLocation product,int quantity,UUID id){return request(null,kingdom,from,to,product,quantity,id,null,null);}
     public Entry requestPlayer(ServerPlayer player,UUID from,UUID to,ResourceLocation product,int quantity,UUID id){thread();dimension(player);return request(player,PoliticsService.ruledKingdom(player).id(),from,to,product,quantity,id,null,null);}
     public Entry requestQuotedPlayer(ServerPlayer player,UUID from,UUID to,ResourceLocation product,int quantity,UUID id,long fee,long travelTicks){thread();dimension(player);return request(player,PoliticsService.ruledKingdom(player).id(),from,to,product,quantity,id,fee,travelTicks);}
@@ -61,9 +63,12 @@ public final class RoyalShipmentService {
     public Entry observe(UUID id){thread();return exclusive(id,()->advance(id,null));}
 
     private Quote quote(ServerPlayer player,UUID kingdom,UUID from,UUID to,ResourceLocation product,int quantity){
+        return quote(player,kingdom,from,to,product,quantity,true);
+    }
+    private Quote quote(ServerPlayer player,UUID kingdom,UUID from,UUID to,ResourceLocation product,int quantity,boolean requireStock){
         if(from.equals(to) || quantity<1 || quantity>RoyalShipmentConfig.current().maximumQuantity())throw new IllegalArgumentException("Choose distinct member villages and a supported positive quantity");
         var stock=player==null ? RoyalVillageStock.forNpc(level,kingdom,from) : RoyalVillageStock.forPlayer(player,from);
-        var item=item(product);var available=stock.availability(item);if(available.available()<quantity)throw new Deferred(Blocked.STOCK,"Source has only "+available.available()+" safely transferable units");
+        var item=item(product);var available=stock.availability(item);if(requireStock && available.available()<quantity)throw new Deferred(Blocked.STOCK,"Source has only "+available.available()+" safely transferable units");
         // Target identity is saved metadata. It need not be loaded/active until a physical delivery is attempted.
         var target=endpoint(kingdom,to,player==null);var source=stock.endpoint();var data=KingdomSavedData.get(level);var k=data.kingdom(kingdom);
         long distance=(long)Math.ceil(Math.hypot((double)source.center().getX()-target.center().getX(),(double)source.center().getZ()-target.center().getZ()));

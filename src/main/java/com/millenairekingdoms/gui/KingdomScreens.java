@@ -81,6 +81,7 @@ public final class KingdomScreens {
         if (war != null) view.put("war", war(level, data, war, focus));
         view.put("rights", rights(player, data, focus, isRuler));
         view.put("construction",RoyalConstructionView.build(player,focus.id()));
+        view.put("shipments",RoyalShipmentView.build(player,focus.id()));
         if (isRuler) {
             view.put("targets", targets(player, level, data, focus));
             view.put("sources", sources(level, data, focus));
