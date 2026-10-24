@@ -125,6 +125,11 @@ public final class TreasuryService {
         Kingdom kingdom = check(player);
         KingdomException.check(amount > 0 && amount <= Integer.MAX_VALUE, "millenairekingdoms.treasury.amount", "Choose an amount of at least one denier.");
         BuildingInventory storage = storage(level, kingdom);
+        try { RoyalEconomicReservations.requireWithdrawalAvailable(level,RoyalTreasurySnapshot.forPlayer(player).positions()); }
+        catch(IllegalStateException unavailable) {
+            LOGGER.warn("Royal withdrawal postponed to preserve native container evidence: {}",unavailable.getMessage());
+            throw new KingdomException("millenairekingdoms.treasury.pending_operation", "Town hall storage has an unresolved economic operation or is unavailable; settle it before withdrawing.");
+        }
         Coins stock = stored(level, kingdom);
         KingdomException.check(stock.value() >= amount, "millenairekingdoms.treasury.not_enough",
                 "The storage holds only %s.", EconomyService.format(stock.value()));

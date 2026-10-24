@@ -241,5 +241,6 @@
   "millenairekingdoms.gui.construction.blocked.BUILDER_BLOCKED": "Köyün inşaatçısı bekleniyor",
   "millenairekingdoms.gui.construction.blocked.BUILDING_MISSING": "Özgün inşaat için operatör incelemesi gerekli",
   "millenairekingdoms.gui.construction.blocked.OPERATOR_FORFEIT": "Takip kapatıldı; ödenmiş destek tutuldu",
-  "millenairekingdoms.gui.construction.order_unknown": "Sipariş durumu okunamıyor."
+  "millenairekingdoms.gui.construction.order_unknown": "Sipariş durumu okunamıyor.",
+  "millenairekingdoms.treasury.pending_operation": "Köy konağı deposunda sonuçlanmamış bir ekonomik işlem var veya depoya erişilemiyor; para çekmeden önce işlemi sonuçlandırın."
 }

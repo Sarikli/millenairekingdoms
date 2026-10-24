@@ -241,5 +241,6 @@
   "millenairekingdoms.gui.construction.blocked.BUILDER_BLOCKED": "Waiting for the village's builder",
   "millenairekingdoms.gui.construction.blocked.BUILDING_MISSING": "Original construction needs operator review",
   "millenairekingdoms.gui.construction.blocked.OPERATOR_FORFEIT": "Tracking closed; paid patronage retained",
-  "millenairekingdoms.gui.construction.order_unknown": "Order status is unavailable."
+  "millenairekingdoms.gui.construction.order_unknown": "Order status is unavailable.",
+  "millenairekingdoms.treasury.pending_operation": "Town hall storage has an unresolved economic operation or is unavailable; settle it before withdrawing."
 }

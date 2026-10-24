@@ -129,6 +129,7 @@ public final class RoyalPaymentService {
             }
             guard(request);
             quote.requireUnchanged();
+            RoyalEconomicReservations.requireTreasuryAvailable(level,quote.positions());
             var plan=RoyalCoinPlan.debitSeparate(quote.slots(),27,amount);
             var image=RoyalTreasuryImage.create(level,quote,plan,request.id,request.save(),false);
             // Identities and complete original contents must exist on disk before any financial intent or mutation.
@@ -167,6 +168,7 @@ public final class RoyalPaymentService {
                 try { debit.requireStorage(level,refundQuote); }
                 catch(IllegalStateException e) { return quarantine(request,entry,e); }
                 // Refunds add the original amount to CURRENT stock, preserving later legitimate changes.
+                RoyalEconomicReservations.requireTreasuryAvailable(level,refundQuote.positions());
                 var plan=debit.refundPlan(refundQuote);
                 var image=RoyalTreasuryImage.create(level,refundQuote,plan,request.id,request.save(),true);
                 persistence.flush(level,refundQuote.positions()); refundQuote.requireUnchanged(); persistence.verify(level,image,false);
@@ -191,6 +193,10 @@ public final class RoyalPaymentService {
         try { after=image.reconcile(level,quote); }
         catch(IllegalStateException e) { return quarantine(request,entry,e); }
         // Revalidation inside apply precedes the first slot write. The server thread does not yield during mutation.
+        var before=quote.slots();boolean changes=false;
+        for(int slot=0;slot<before.size();slot++)if(!net.minecraft.world.item.ItemStack.matches(before.get(slot),after.get(slot))){changes=true;break;}
+        // Already applied proof reconciliation has no new delta and may release a prior financial reservation.
+        if(changes)RoyalEconomicReservations.requireTreasuryAvailable(level,quote.positions());
         quote.apply(after);
         // No server-thread yield or native save occurs between the slot writes and these same-BE proofs.
         image.record(level);

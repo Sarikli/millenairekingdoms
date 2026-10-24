@@ -156,11 +156,11 @@ public final class RoyalCargoGameTests {
         var recipient=role==Role.COLLECT ? f.from : withdraw(f,op.position());var tag=new CompoundTag();tag.putString("directory",f.directory.toString());tag.putUUID("id",f.id);tag.putUUID("operation",op.id());tag.putLong("from",f.from.asLong());tag.putLong("to",f.to.asLong());tag.putLong("recipient",recipient.asLong());NbtIo.writeCompressed(tag,marker);
         VillageSavedData.get(level).setDirty();KingdomSavedData.get(level).setDirty();h.succeed();
     }
-    private record Fixture(RoyalPaymentGameTests.Fixture nativeFixture,RoyalShipmentStore store,UUID id,BlockPos from,BlockPos to,Path directory)implements AutoCloseable{
+    record Fixture(RoyalPaymentGameTests.Fixture nativeFixture,RoyalShipmentStore store,UUID id,BlockPos from,BlockPos to,Path directory)implements AutoCloseable{
         ServerLevel level(){return nativeFixture.level();}ChestBlockEntity source(){return (ChestBlockEntity)level().getBlockEntity(from);}ChestBlockEntity destination(){return (ChestBlockEntity)level().getBlockEntity(to);}
         int sourceCount(){return count(level(),from);}int destinationCount(){return count(level(),to);}Entry entry(){return store.load(id);}@Override public void close(){nativeFixture.close();}
     }
-    private static Fixture fixture(GameTestHelper h,String name){
+    static Fixture fixture(GameTestHelper h,String name){
         var nativeFixture=RoyalPaymentGameTests.persistentFixture(h,name);var from=nativeFixture.position();var to=nativeFixture.village().getTownhall().getInventory().getChestPositions().getLast();
         fund(nativeFixture.chest(),96);((ChestBlockEntity)h.getLevel().getBlockEntity(to)).setItem(0,new ItemStack(Items.SPRUCE_LOG,4));
         var source=new Endpoint(nativeFixture.village().getId().uuid(),nativeFixture.village().getVillageTypeId(),nativeFixture.village().getTownhall().getId().uuid(),nativeFixture.village().getCenter(),null);
@@ -168,8 +168,8 @@ public final class RoyalCargoGameTests {
         var directory=h.getLevel().getServer().getWorldPath(LevelResource.ROOT).resolve("physical-cargo-tests").resolve(UUID.randomUUID().toString());var store=new RoyalShipmentStore(directory);store.reserve(intent);store.collecting(id);return new Fixture(nativeFixture,store,id,from,to,directory);
     }
     private static void fund(ChestBlockEntity chest,int amount){chest.setItem(0,new ItemStack(Items.SPRUCE_LOG,Math.min(64,amount)));if(amount>64)chest.setItem(1,new ItemStack(Items.SPRUCE_LOG,amount-64));}
-    private static Operation plan(Fixture f,Role role,BlockPos position,int amount){return RoyalCargoContainers.plan(f.level(),f.entry().intent(),role,position,amount,new RoyalTreasuryPersistence());}
-    private static Entry settle(Fixture f,Operation op,RoyalTreasuryPersistence persistence){return RoyalCargoContainers.settle(f.level(),f.store,f.id,op.id(),persistence,()->{});}
+    static Operation plan(Fixture f,Role role,BlockPos position,int amount){return RoyalCargoContainers.plan(f.level(),f.entry().intent(),role,position,amount,new RoyalTreasuryPersistence());}
+    static Entry settle(Fixture f,Operation op,RoyalTreasuryPersistence persistence){return RoyalCargoContainers.settle(f.level(),f.store,f.id,op.id(),persistence,()->{});}
     private static void collect(Fixture f){var op=plan(f,Role.COLLECT,f.from,40);f.store.prepare(f.id,op);settle(f,op,new RoyalTreasuryPersistence());}
     private static void ready(Fixture f){f.store.dispatch(f.id,200);f.store.awaitDelivery(f.id,1200);}
     private static void flush(Fixture f,BlockPos position){new RoyalTreasuryPersistence().flush(f.level(),List.of(position));}

@@ -31,7 +31,7 @@ public final class RoyalCargoContainers {
 
     /** Creates identities and acknowledges the untouched native BEFORE image. No goods are moved. */
     public static Operation plan(ServerLevel level,Intent intent,Role role,BlockPos position,int quantity,RoyalTreasuryPersistence persistence) {
-        thread(level);var chest=live(level,position);var product=product(intent);var before=slots(chest);RoyalGoodsPlan.Plan plan;
+        thread(level);RoyalEconomicReservations.requireCargoAvailable(level,position);var chest=live(level,position);var product=product(intent);var before=slots(chest);RoyalGoodsPlan.Plan plan;
         if(role==Role.COLLECT)plan=RoyalGoodsPlan.remove(before,product,quantity);
         else {
             if(quantity<1 || quantity>intent.quantity())throw new IllegalArgumentException("Invalid per-container cargo allocation");
@@ -61,11 +61,13 @@ public final class RoyalCargoContainers {
             return store.cancelOperation(shipment,operation.id());
         }
         if(evidence==Evidence.BEFORE){
+            RoyalEconomicReservations.requireCargoAvailable(level,operation.position());
             revalidate.run();
             // Native save events/revalidation may retire authority. Never publish a new delta from a stale mandate.
             var current=store.load(shipment);if(current.stage()==Stage.RECOVERY_REQUIRED)return current;
             if(current.cancellationRequested() && operation.role()!=Role.RETURN)return settle(level,store,shipment,operationId,persistence,revalidate);
             if(!find(current,operationId).equals(operation))throw new IllegalStateException("Cargo operation changed before native mutation");
+            RoyalEconomicReservations.requireCargoAvailable(level,operation.position());
             requireBefore(level,intent,operation);
         }
         var chest=live(level,operation.position());var expected=evidence==Evidence.APPLIED ? slots(chest) : validate(level,intent,operation).after;
