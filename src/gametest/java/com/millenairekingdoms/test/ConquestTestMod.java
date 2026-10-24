@@ -49,6 +49,7 @@ public final class ConquestTestMod {
             event.register(RoyalSiteGameTests.class);
             event.register(RoyalLiveRuntimeGameTests.class);
             event.register(RoyalConstructionGuiGameTests.class);
+            event.register(RoyalGoodsGameTests.class);
         });
         // Tests share one world: the scheduled NPC politics and founding must not decide for other tests' villages. The
         // stage-6.2 and 1.1.0 tests call the same code directly, with explicit settings.

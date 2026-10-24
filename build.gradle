@@ -257,6 +257,24 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_site_tests'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        royalGoodsGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_goods_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        royalGoodsGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_goods_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
         royalGuiGameTestServer {
             type = 'gameTestServer'
             sourceSet = sourceSets.gametest
@@ -474,4 +492,11 @@ tasks.register('verifyRoyalGui') {
     group = 'verification'
     description = 'Verify server-owned construction offers and player actions across JVMs.'
     dependsOn tasks.named('runRoyalGuiGameTestServerReload')
+}
+
+tasks.named('runRoyalGoodsGameTestServerReload') { dependsOn tasks.named('runRoyalGoodsGameTestServer') }
+tasks.register('verifyRoyalGoods') {
+    group = 'verification'
+    description = 'Verify conserving real-stack plans and saved physical chest images in separate JVMs.'
+    dependsOn tasks.named('runRoyalGoodsGameTestServerReload')
 }
