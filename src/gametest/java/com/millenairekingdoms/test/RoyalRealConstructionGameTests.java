@@ -70,6 +70,7 @@ public final class RoyalRealConstructionGameTests {
         final GameTestHelper h;
         final ServerLevel level;
         final boolean read;
+        final boolean automatic;
         final RoyalConstructionService service;
         final Path marker;
         final boolean daylight;
@@ -88,7 +89,10 @@ public final class RoyalRealConstructionGameTests {
             this(h,"read".equals(System.getProperty("kingdoms.tests.persistence")),new RoyalConstructionService(h.getLevel()));
         }
         Probe(GameTestHelper h,boolean read,RoyalConstructionService service) {
-            this.h=h; level=h.getLevel(); this.read=read; this.service=service;
+            this(h,read,service,false);
+        }
+        Probe(GameTestHelper h,boolean read,RoyalConstructionService service,boolean automatic) {
+            this.h=h; level=h.getLevel(); this.read=read; this.service=service; this.automatic=automatic;
             marker=level.getServer().getWorldPath(LevelResource.ROOT).resolve("royal-real-building.dat");
             daylight=level.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT);
             level.getGameRules().getRule(GameRules.RULE_DAYLIGHT).set(false,level.getServer()); level.setDayTime(6000);
@@ -149,12 +153,13 @@ public final class RoyalRealConstructionGameTests {
                     if(AnywoodHelper.isAnywood(resource.getKey())) inventory.removeByTag(level,AnywoodHelper.LOGS_TAG,Integer.MAX_VALUE,Set.of());
                     else { var item=ItemHelper.resolve(resource.getKey()); h.assertTrue(item!=null,"Real resource item resolves: "+resource.getKey()); inventory.remove(level,item,inventory.getCount(level,item)); }
                 }
-                h.assertTrue(service.observe(id).blocked()==Blocked.MATERIALS,"With actual required stock absent, the engine-backed monitor reports MATERIALS");
+                if(!automatic) h.assertTrue(observed().blocked()==Blocked.MATERIALS,"With actual required stock absent, the engine-backed monitor reports MATERIALS");
                 started=ticks; phase=3; return;
             }
             if(phase==3) {
-                if(ticks-started<60) return;
-                h.assertTrue(service.observe(id).stage()==Stage.QUEUED && village.getPendingProject()!=null,"Material starvation preserves ordinary pending work without fake construction");
+                if(ticks-started<(automatic ? 220 : 60)) return;
+                h.assertTrue(observed().stage()==Stage.QUEUED && village.getPendingProject()!=null,"Material starvation preserves ordinary pending work without fake construction");
+                if(automatic) h.assertTrue(observed().blocked()==Blocked.MATERIALS,"Actual scheduled tracking must observe missing materials without a direct service/step call");
                 var inventory=village.getTownhall().getInventory();
                 for(var resource:materials.entrySet()) {
                     var item=AnywoodHelper.isAnywood(resource.getKey()) ? Items.OAK_LOG : ItemHelper.resolve(resource.getKey());
@@ -162,13 +167,13 @@ public final class RoyalRealConstructionGameTests {
                     if(watched==null && resource.getValue()>0) { watched=item; needed=resource.getValue(); }
                 }
                 inventory.invalidateCache(); stock=inventory.getCount(level,watched);
-                h.assertTrue(service.observe(id).blocked()==Blocked.NONE,"Real material deposit unblocks the existing paid order without another fee");
+                if(!automatic) h.assertTrue(observed().blocked()==Blocked.NONE,"Real material deposit unblocks the existing paid order without another fee");
                 System.out.println("ROYAL_REAL_BUILD_STOCK order="+id+" materials="+materials+" residents="+village.getVillagerUuids().size());
                 phase=4; return;
             }
             if(phase==4) {
                 if(ticks%20!=0) return;
-                Entry order=service.observe(id);
+                Entry order=observed();
                 if(order.stage()==Stage.IN_PROGRESS || order.stage()==Stage.COMPLETED) {
                     if(building==null) {
                         building=village.getBuilding(new BuildingId(order.building())); expected=expected(building); initialMatch=match();
@@ -233,6 +238,8 @@ public final class RoyalRealConstructionGameTests {
                     +" residents="+(village==null ? 0 : village.getVillagerUuids().stream().filter(u->level.getEntity(u)!=null).count());
         }
         RoyalConstructionStore store() { return new RoyalConstructionStore(level.getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-construction")); }
+        // Automatic mode never calls observe/step after the initial paid request; only real event handlers may progress it.
+        Entry observed() { return automatic ? store().load(id) : service.observe(id); }
         void force(boolean add) { var c=new ChunkPos(anchor); for(int x=-8;x<=8;x++) for(int z=-8;z<=8;z++) level.setChunkForced(c.x+x,c.z+z,add); }
         void close() {
             if(closed) return; closed=true;

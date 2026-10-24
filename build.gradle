@@ -257,6 +257,26 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_site_tests'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        royalLiveGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_live_tests'
+            systemProperty 'kingdoms.tests.liveConstruction', 'true'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        royalLiveGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_live_tests'
+            systemProperty 'kingdoms.tests.liveConstruction', 'true'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
         configureEach {
             logLevel = org.slf4j.event.Level.INFO
             jvmArguments.addAll '-Xms512m', '-Xmx3G'
@@ -422,4 +442,11 @@ tasks.register('verifyRoyalSites') {
     group = 'verification'
     description = 'Verify real placement rejection and safe paid site retry across JVMs.'
     dependsOn tasks.named('runRoyalSitesGameTestServerReload')
+}
+
+tasks.named('runRoyalLiveGameTestServerReload') { dependsOn tasks.named('runRoyalLiveGameTestServer') }
+tasks.register('verifyRoyalLive') {
+    group = 'verification'
+    description = 'Verify genuine NPC construction through actual periodic server events in separate JVMs.'
+    dependsOn tasks.named('runRoyalLiveGameTestServerReload')
 }

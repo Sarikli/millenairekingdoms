@@ -47,14 +47,17 @@ public final class ConquestTestMod {
             event.register(RoyalBuildingCrashGameTests.class);
             event.register(RoyalRecoveryGameTests.class);
             event.register(RoyalSiteGameTests.class);
+            event.register(RoyalLiveRuntimeGameTests.class);
         });
         // Tests share one world: the scheduled NPC politics and founding must not decide for other tests' villages. The
         // stage-6.2 and 1.1.0 tests call the same code directly, with explicit settings.
         NeoForge.EVENT_BUS.addListener((ServerStartedEvent event) -> {
             AutonomyConfig.ENABLED.set(false);
             FoundingConfig.ENABLED.set(false);
-            com.millenairekingdoms.construction.RoyalConstructionConfig.TRACKING.set(false);
+            boolean liveConstruction=Boolean.getBoolean("kingdoms.tests.liveConstruction");
+            com.millenairekingdoms.construction.RoyalConstructionConfig.TRACKING.set(liveConstruction);
             System.out.println("KINGDOMS_TESTS: scheduled NPC autonomy and kingdom founding disabled for the shared test world");
+            System.out.println("KINGDOMS_TESTS: scheduled existing construction tracking="+liveConstruction);
         });
     }
 }
