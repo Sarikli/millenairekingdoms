@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare, abruptly halt, then recover real payments in four isolated worlds/12 JVMs.
+"""Prepare, abruptly halt, then recover real payments in isolated worlds/three JVMs per boundary.
 
 Only preparation/recovery runs may pass. The middle run MUST halt(70), with no
 GameTest success line or graceful shutdown. Never point this at a player's world.
@@ -18,7 +18,7 @@ import uuid
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--boundary', choices=['before', 'partial', 'after', 'refund'], action='append')
+    parser.add_argument('--boundary', choices=['before', 'partial', 'after', 'refund', 'slots-before-proof', 'debit-activity', 'refund-activity'], action='append')
     parser.add_argument('command', nargs=argparse.REMAINDER, help='Gradle command after --')
     args = parser.parse_args()
     command = args.command
@@ -31,7 +31,7 @@ def main():
     output.mkdir(parents=True, exist_ok=False)
     summary = {'run': run, 'kind': 'abrupt-jvm-payment-recovery', 'cases': [], 'complete': False}
     print(f'EVIDENCE {output}', flush=True)
-    for boundary in args.boundary or ['before', 'partial', 'after', 'refund']:
+    for boundary in args.boundary or ['before', 'partial', 'after', 'refund', 'slots-before-proof', 'debit-activity', 'refund-activity']:
         case = {'boundary': boundary, 'world_run': run + '-' + boundary, 'stages': []}
         summary['cases'].append(case)
         for stage in ['prepare', 'interrupt', 'recover']:

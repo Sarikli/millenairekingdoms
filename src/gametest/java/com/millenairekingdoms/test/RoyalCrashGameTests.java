@@ -22,6 +22,8 @@ import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.storage.LevelResource;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import org.millenaire.item.ModItems;
+import org.millenaire.building.BuildingInventory;
+import net.minecraft.world.level.block.Blocks;
 import org.millenaire.village.VillageId;
 import org.millenaire.village.VillageSavedData;
 
@@ -53,20 +55,41 @@ public final class RoyalCrashGameTests {
         var level=h.getLevel(); var tag=read(level); var boundary=boundary();
         h.assertTrue(boundary.equals(tag.getString("boundary")),"Crash mode must match the prepared world");
         var kingdom=tag.getUUID("kingdom"); var id=tag.getUUID("id"); var path=Path.of(tag.getString("directory")); loadFixture(level,kingdom);
+        var armed=new boolean[1];
+        if(boundary.equals("slots-before-proof")) {
+            var pos=BlockPos.of(tag.getLong("first"));var original=(ChestBlockEntity)level.getBlockEntity(pos);
+            // Test-only native chest hook: halt after an actual slot write, before the coordinator can stamp its proof.
+            var probe=new ChestBlockEntity(pos,original.getBlockState()) {
+                @Override public void setItem(int slot,ItemStack stack) {
+                    super.setItem(slot,stack);
+                    if(armed[0]) halt(boundary,new RoyalPaymentJournal(path).load(id).state());
+                }
+            };
+            for(int slot=0;slot<original.getContainerSize();slot++)probe.setItem(slot,original.getItem(slot).copy());
+            probe.getPersistentData().merge(original.getPersistentData().copy());level.setBlockEntity(probe);
+        }
         var persistence=new RoyalTreasuryPersistence() {
             int count;
             @Override public void flush(ServerLevel l,List<BlockPos> positions) {
-                if(++count!=2) { super.flush(l,positions); return; }
+                if(++count!=2) { super.flush(l,positions); if(count==1)armed[0]=true; return; }
                 if(boundary.equals("partial")) super.flush(l,List.of(BlockPos.of(tag.getLong("first"))));
                 else if(!boundary.equals("before")) super.flush(l,positions);
-                var state=new RoyalPaymentJournal(path).load(id).state();
-                if(state!=(boundary.equals("refund") ? State.REFUND_PREPARED : State.PREPARED)) throw new IllegalStateException("Unexpected pre-crash state: "+state);
-                System.out.println("ROYAL_CRASH_BOUNDARY_REACHED "+boundary+" state="+state+" halt=70"); System.out.flush();
-                // No shutdown hooks, Minecraft stop, save-all, finally blocks or Gradle success are executed.
-                Runtime.getRuntime().halt(70);
+                if(boundary.equals("debit-activity")) {
+                    for(var pos:positions) {
+                        if(new BuildingInventory(List.of(pos)).add(l,ModItems.DENIER.get(),32)!=32)throw new IllegalStateException("Native deposit failed");
+                    }
+                    super.flush(l,positions);
+                } else if(boundary.equals("refund-activity")) {
+                    var village=VillageSavedData.get(l).getVillageManager().getVillage(new VillageId(KingdomSavedData.get(l).kingdom(kingdom).capital()));
+                    if(village.getTownhall().getInventory().remove(l,ModItems.DENIER.get(),64)!=64)throw new IllegalStateException("Native withdrawal failed");
+                    var recipient=BlockPos.of(tag.getLong("first")).offset(0,0,64);l.getChunkAt(recipient);l.setBlock(recipient,Blocks.CHEST.defaultBlockState(),2);
+                    ((ChestBlockEntity)l.getBlockEntity(recipient)).setItem(0,new ItemStack(ModItems.DENIER.get(),64));
+                    super.flush(l,positions);super.flush(l,List.of(recipient));
+                }
+                halt(boundary,new RoyalPaymentJournal(path).load(id).state());
             }
         };
-        if(boundary.equals("refund")) {
+        if(boundary.startsWith("refund")) {
             RoyalPaymentGameTests.service(level,path,new RoyalTreasuryPersistence()).payNpc(kingdom,id,Purpose.CONSTRUCTION,REFERENCE,64);
             RoyalPaymentGameTests.service(level,path,persistence).refundNpc(kingdom,id);
         } else {
@@ -81,20 +104,32 @@ public final class RoyalCrashGameTests {
         h.assertTrue(mode.equals(tag.getString("boundary")),"Recovery mode must match its isolated world");
         var kingdom=tag.getUUID("kingdom"); var id=tag.getUUID("id"); var path=Path.of(tag.getString("directory")); loadFixture(level,kingdom);
         var state=new RoyalPaymentJournal(path).load(id).state();
-        h.assertTrue(state==(mode.equals("refund") ? State.REFUND_PREPARED : State.PREPARED),"Abruptly terminated JVM did not publish a terminal payment flag");
+        h.assertTrue(state==(mode.startsWith("refund") ? State.REFUND_PREPARED : State.PREPARED),"Abruptly terminated JVM did not publish a terminal payment flag");
         long actual=RoyalTreasurySnapshot.forNpc(level,kingdom).spendableValue();
-        long expected=switch(mode) { case "before","refund" -> 128; case "partial" -> 96; default -> 64; };
+        long expected=switch(mode) { case "before","slots-before-proof","debit-activity","refund" -> 128; case "partial" -> 96; default -> 64; };
         h.assertTrue(actual==expected,"Disk inventory before recovery must expose the exact interruption boundary: "+actual+" expected "+expected);
-        var service=RoyalPaymentGameTests.service(level,path,new RoyalTreasuryPersistence()); boolean refund=mode.equals("refund");
+        var service=RoyalPaymentGameTests.service(level,path,new RoyalTreasuryPersistence()); boolean refund=mode.startsWith("refund");
         var result=refund ? service.refundNpc(kingdom,id) : service.payNpc(kingdom,id,Purpose.CONSTRUCTION,REFERENCE,64);
         h.assertTrue(result.state()==(refund ? State.REFUNDED : State.PAID),"Recovery issues a terminal receipt only after its real persistence barrier");
-        long finalValue=refund ? 128 : 64;
+        long finalValue=mode.equals("debit-activity") ? 128 : mode.equals("refund-activity") ? 64 : refund ? 128 : 64;
         h.assertTrue(RoyalTreasurySnapshot.forNpc(level,kingdom).spendableValue()==finalValue,"Post-crash recovery conserves the original expense/refund");
         if(refund) service.refundNpc(kingdom,id); else service.payNpc(kingdom,id,Purpose.CONSTRUCTION,REFERENCE,64);
         h.assertTrue(RoyalTreasurySnapshot.forNpc(level,kingdom).spendableValue()==finalValue,"Post-crash request replay cannot charge or refund again");
+        if(mode.equals("refund-activity")) {
+            var recipient=BlockPos.of(tag.getLong("first")).offset(0,0,64);level.getChunkAt(recipient);
+            var chest=(ChestBlockEntity)level.getBlockEntity(recipient);
+            h.assertTrue(chest!=null && chest.getItem(0).is(ModItems.DENIER.get()) && chest.getItem(0).getCount()==64
+                    && finalValue+64==128,"Actual recipient and treasury retain128 total after native withdrawal and abrupt refund replay");
+        }
         System.out.println("ROYAL_CRASH_RECOVERED "+mode+" diskBefore="+actual+" final="+finalValue); h.succeed();
     }
 
+    private static void halt(String boundary,State state) {
+        if(state!=(boundary.startsWith("refund") ? State.REFUND_PREPARED : State.PREPARED))throw new IllegalStateException("Unexpected pre-crash state: "+state);
+        System.out.println("ROYAL_CRASH_BOUNDARY_REACHED "+boundary+" state="+state+" halt=70");System.out.flush();
+        // No shutdown/save hooks, finally blocks or successful GameTest run.
+        Runtime.getRuntime().halt(70);
+    }
     private static void loadFixture(ServerLevel level,UUID kingdom) {
         var k=KingdomSavedData.get(level).kingdom(kingdom);
         if(k==null) throw new IllegalStateException("Original political data missing after process replacement");
@@ -106,7 +141,7 @@ public final class RoyalCrashGameTests {
     }
     private static String boundary() {
         String value=System.getProperty("kingdoms.tests.crashBoundary","");
-        if(!List.of("before","partial","after","refund").contains(value)) throw new IllegalStateException("Set an explicit isolated payment crash boundary");
+        if(!List.of("before","partial","after","refund","slots-before-proof","debit-activity","refund-activity").contains(value)) throw new IllegalStateException("Set an explicit isolated payment crash boundary");
         return value;
     }
     private static Path marker(ServerLevel level) { return level.getServer().getWorldPath(LevelResource.ROOT).resolve("royal-crash-fixture.dat"); }

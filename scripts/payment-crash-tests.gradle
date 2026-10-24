@@ -7,7 +7,7 @@ gradle.projectsEvaluated {
     if (System.getProperty('kingdoms.testSuite') != 'verifyRoyalPaymentCrash' || !(run ==~ /payment-crash-[A-Za-z0-9-]+/)) {
         throw new GradleException('Crash probes require their dedicated isolated world/run ID')
     }
-    if (!(stage in ['prepare', 'interrupt', 'recover']) || !(boundary in ['before', 'partial', 'after', 'refund'])) {
+    if (!(stage in ['prepare', 'interrupt', 'recover']) || !(boundary in ['before', 'partial', 'after', 'refund', 'slots-before-proof', 'debit-activity', 'refund-activity'])) {
         throw new GradleException('Explicit payment crash stage and boundary are required')
     }
     p.neoForge.runs.configureEach { spec ->
