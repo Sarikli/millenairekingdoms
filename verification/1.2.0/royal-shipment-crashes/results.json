@@ -1,0 +1,116 @@
+{
+  "run": "shipment-crash-20261024T100417-dde867ee",
+  "kind": "abrupt-jvm-paid-shipment-domain-recovery",
+  "cases": [
+    {
+      "boundary": "paid-before-domain",
+      "world_run": "shipment-crash-20261024T100417-dde867ee-paid-before-domain",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "paid-before-domain-prepare.log",
+          "uncompressed_log_sha256": "e2c5c888f49ea459994845690ce67411a7a995f5f8472d4a31f02f14b156b3c8"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "paid-before-domain-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "03acd3a4c0159ad233d92215e40756f2de4a03329c7d1b62452e80cbacb0cd4c"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "paid-before-domain-recover.log",
+          "uncompressed_log_sha256": "20263e3272709d8f3537c76a09689d60de15cc2b56f92d9fe670e0fea34c6ec6"
+        }
+      ]
+    },
+    {
+      "boundary": "dispatch-before-commit",
+      "world_run": "shipment-crash-20261024T100417-dde867ee-dispatch-before-commit",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "dispatch-before-commit-prepare.log",
+          "uncompressed_log_sha256": "64ec5657c2ab3c911e375b41c156ee9b5a267bc3af19094fefd9275d4e18ee16"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "dispatch-before-commit-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "f78fc48d07edfd0a44af680418b81d03dba571aa9ba543ecbe5484868690f47e"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "dispatch-before-commit-recover.log",
+          "uncompressed_log_sha256": "3149af6ba5969c5dc5fe9b89c88e38edf975fb301225dba156150d7febf66959"
+        }
+      ]
+    },
+    {
+      "boundary": "refund-before-terminal",
+      "world_run": "shipment-crash-20261024T100417-dde867ee-refund-before-terminal",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "refund-before-terminal-prepare.log",
+          "uncompressed_log_sha256": "7937521e1148171407198fe7762b17c0dcb2edb0fb3c6caac714277f8710b269"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "refund-before-terminal-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "a505d4ebe2c1885c01397399ca083f142ac9b0869d0fac5b7fc37da616ff69fd"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "refund-before-terminal-recover.log",
+          "uncompressed_log_sha256": "aa62b4772809edc620faa06dda5858d218a52585fb43f6cb1d0af03eb79f0622"
+        }
+      ]
+    }
+  ],
+  "complete": true,
+  "production_source_commit": "7f94519",
+  "normal_required_pass_lines": 6,
+  "expected_halt70_failures": 3,
+  "scope": "actual real fee plus real member/stock/time/cancellation domain files; not periodic scheduler/UI proof"
+}
