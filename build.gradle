@@ -293,6 +293,24 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_tests'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        royalNpcBudgetGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_npc_budget_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        royalNpcBudgetGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_npc_budget_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
         royalPolicyGameTestServer {
             type = 'gameTestServer'
             sourceSet = sourceSets.gametest
@@ -676,4 +694,11 @@ tasks.register('verifyRoyalPolicy') {
     group = 'verification'
     description = 'Verify native investment functions, real war contexts and personality-weighted existing autonomy draws.'
     dependsOn tasks.named('runRoyalPolicyGameTestServerReload')
+}
+
+tasks.named('runRoyalNpcBudgetGameTestServerReload') { dependsOn tasks.named('runRoyalNpcBudgetGameTestServer') }
+tasks.register('verifyRoyalNpcBudget') {
+    group = 'verification'
+    description = 'Verify strict NPC attempt cooldowns and actual delayed first-fee budgets across JVMs.'
+    dependsOn tasks.named('runRoyalNpcBudgetGameTestServerReload')
 }

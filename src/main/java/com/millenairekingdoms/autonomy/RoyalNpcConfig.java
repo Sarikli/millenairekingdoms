@@ -18,6 +18,12 @@ public final class RoyalNpcConfig {
     }
     public static ModConfigSpec.IntValue ORDINARY,PREFERRED,WAR_MILITARY,BORDER_MILITARY;
     public static ModConfigSpec.DoubleValue MILITARY_AGGRESSION,AGRICULTURAL_AGGRESSION,RELIGIOUS_AGGRESSION,ARTISAN_AGGRESSION;
+    public record BudgetLimits(boolean enabled,long reserve,int sharePermille){
+        public static final BudgetLimits DEFAULTS=new BudgetLimits(true,128,250);
+        public BudgetLimits{if(reserve<0 || sharePermille<1 || sharePermille>1000)throw new IllegalArgumentException("Invalid NPC spending limits");}
+    }
+    public static ModConfigSpec.BooleanValue ECONOMIC_ENABLED;
+    public static ModConfigSpec.IntValue TREASURY_RESERVE,FEE_SHARE;
     private RoyalNpcConfig(){}
     public static void define(ModConfigSpec.Builder b){
         b.comment("Relative NPC preferences. Legal native choices, current NPC authority, real funds, needs, reserves and cooldowns remain separate gates.").push("royalNpcPolicy");
@@ -28,11 +34,19 @@ public final class RoyalNpcConfig {
         MILITARY_AGGRESSION=b.comment("Multiplier on existing eligible NPC declaration/campaign chances;1.5 is a modest relative increase, never bypassing readiness/truce/cooldown/capital rules.").defineInRange("militaryAggressionFactor",1.5,0.01,3.0);
         AGRICULTURAL_AGGRESSION=b.defineInRange("agriculturalAggressionFactor",0.85,0.01,3.0);
         RELIGIOUS_AGGRESSION=b.defineInRange("religiousAggressionFactor",1.0,0.01,3.0);
-        ARTISAN_AGGRESSION=b.defineInRange("artisanAggressionFactor",0.9,0.01,3.0);b.pop();
+        ARTISAN_AGGRESSION=b.defineInRange("artisanAggressionFactor",0.9,0.01,3.0);
+        ECONOMIC_ENABLED=b.comment("Allow new NPC economic decisions and their first fee; existing paid domain recovery remains active.").define("economicDecisionsEnabled",true);
+        TREASURY_RESERVE=b.comment("Minimum actual deniers retained after a policy-owned first fee. Default128 protects two silver coins; owed taxes do not count.").defineInRange("treasuryReserveDeniers",128,0,1_000_000_000);
+        FEE_SHARE=b.comment("Maximum first fee as permille of current actual treasury. Default250 caps one major fee at a quarter; native material costs remain independent.").defineInRange("maximumFeeSharePermille",250,1,1000);b.pop();
     }
     public static Weights weights(){
         if(ORDINARY==null)return Weights.DEFAULTS;
         try{return new Weights(ORDINARY.get(),PREFERRED.get(),WAR_MILITARY.get(),BORDER_MILITARY.get(),MILITARY_AGGRESSION.get(),AGRICULTURAL_AGGRESSION.get(),RELIGIOUS_AGGRESSION.get(),ARTISAN_AGGRESSION.get());}
         catch(IllegalStateException unloaded){return Weights.DEFAULTS;}
+    }
+    public static BudgetLimits budgets(){
+        if(ECONOMIC_ENABLED==null)return BudgetLimits.DEFAULTS;
+        try{return new BudgetLimits(ECONOMIC_ENABLED.get(),TREASURY_RESERVE.get(),FEE_SHARE.get());}
+        catch(IllegalStateException unloaded){return BudgetLimits.DEFAULTS;}
     }
 }

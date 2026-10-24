@@ -160,6 +160,7 @@ public final class RoyalPaymentService {
                 return settle(source,request,entry);
             }
             guard(request);
+            if(actor==null)RoyalNpcBudget.requireNewSpend(level,quote,id,purpose,reference,amount);
             quote.requireUnchanged();
             RoyalEconomicReservations.requireTreasuryAvailable(level,quote.positions());
             var plan=RoyalCoinPlan.debitSeparate(quote.slots(),27,amount);
