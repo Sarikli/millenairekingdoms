@@ -657,6 +657,13 @@ public final class KingdomSavedData extends SavedData {
                         || !java.util.Objects.equals(state.rulers.get(intent.kingdom()), ruler)
                         || (ruler == null ? intent.actor() != null : !ruler.player.equals(intent.actor()) || ruler.sinceGameTime != intent.rulerSince());
             });
+            com.millenairekingdoms.shipping.RoyalShipmentGovernance.beforePoliticalChange(royalRuntimeLevel, intent -> {
+                Kingdom kingdom=next.kingdoms.get(intent.kingdom());Ruler ruler=next.rulers.get(intent.kingdom());
+                return kingdom==null || !kingdom.active || kingdom.fallen() || !kingdom.capital.equals(intent.capital())
+                        || !intent.kingdom().equals(next.membership.get(intent.source().village())) || !intent.kingdom().equals(next.membership.get(intent.destination().village()))
+                        || !java.util.Objects.equals(state.rulers.get(intent.kingdom()),ruler)
+                        || (ruler==null ? intent.actor()!=null : !ruler.player.equals(intent.actor()) || ruler.sinceGameTime!=intent.rulerSince());
+            });
         }
         state = next; setDirty();
     }

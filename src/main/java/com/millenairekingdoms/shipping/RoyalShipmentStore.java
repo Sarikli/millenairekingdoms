@@ -74,7 +74,7 @@ public final class RoyalShipmentStore {
             if(planned>intent.quantity || allocated>collected)throw new IllegalArgumentException("Shipment allocates cargo that was never acknowledged collected");
             if(stage==Stage.PREPARING && (!operations.isEmpty() || due!=-1) || stage==Stage.COLLECTING && due!=-1)
                 throw new IllegalArgumentException("Invalid pre-dispatch shipment accounting");
-            if(cancellationRequested && stage!=Stage.RETURNING && stage!=Stage.CANCELLED && stage!=Stage.RECOVERY_REQUIRED
+            if(cancellationRequested && stage!=Stage.PREPARING && stage!=Stage.RETURNING && stage!=Stage.CANCELLED && stage!=Stage.RECOVERY_REQUIRED
                     || !cancellationRequested && (stage==Stage.RETURNING || stage==Stage.CANCELLED))throw new IllegalArgumentException("Invalid durable shipment cancellation provenance");
             boolean dispatched=stage==Stage.IN_TRANSIT || stage==Stage.AWAITING_DELIVERY || stage==Stage.DELIVERED;
             if(dispatched && (due<0 || collected!=intent.quantity || planned!=collected))throw new IllegalArgumentException("Transit requires complete acknowledged collection and due time");
@@ -109,7 +109,7 @@ public final class RoyalShipmentStore {
     public synchronized Entry load(UUID id){return locked(entries->entries.get(id));}
     public synchronized List<Entry> entries(){return locked(entries->List.copyOf(entries.values()));}
     public synchronized Entry collecting(UUID id){return update(id,old->{
-        if(old.stage==Stage.COLLECTING)return old;require(old.stage==Stage.PREPARING,"Only a prepared, actually paid shipment may collect cargo");
+        if(old.stage==Stage.COLLECTING)return old;require(old.stage==Stage.PREPARING && !old.cancellationRequested,"Only a live prepared, actually paid shipment may collect cargo");
         return changed(old,Stage.COLLECTING,Blocked.NONE,"",old.due,old.operations);
     });}
     public synchronized Entry prepare(UUID id,Operation operation){return locked(entries->{
@@ -156,19 +156,21 @@ public final class RoyalShipmentStore {
     /** Cancellation is persisted before resolving pending mutations/refunds. Pending credits stay reserved. */
     public synchronized Entry returning(UUID id){return update(id,old->{
         if(old.stage==Stage.RETURNING || old.terminal())return old;require(old.stage!=Stage.RECOVERY_REQUIRED,"Quarantined cargo cannot be reset by cancellation");
-        return changed(old,Stage.RETURNING,Blocked.NONE,"",old.due,old.operations);
+        // Keep PREPARING until its possibly in-flight fee is reconciled. Same-tick retirement/reclaim cannot
+        // make the order terminal before an acknowledgement-lost fee appears, or permit a fresh collection.
+        return new Entry(old.intent,old.stage==Stage.PREPARING ? Stage.PREPARING : Stage.RETURNING,Blocked.NONE,"",old.due,true,old.operations);
     });}
     /** Persist old mandate retirement before political publication, including same-tick abdicate/reclaim. */
     public synchronized int retire(java.util.function.Predicate<Intent> invalid){return locked(entries->{
         int count=0;for(var item:entries.entrySet()){
             var old=item.getValue();if(old.terminal() || old.cancellationRequested || !invalid.test(old.intent))continue;
-            var next=new Entry(old.intent,old.stage==Stage.RECOVERY_REQUIRED ? old.stage : Stage.RETURNING,Blocked.AUTHORITY,
+            var next=new Entry(old.intent,old.stage==Stage.RECOVERY_REQUIRED || old.stage==Stage.PREPARING ? old.stage : Stage.RETURNING,Blocked.AUTHORITY,
                     "Original shipment mandate retired",old.due,true,old.operations);item.setValue(next);count++;
         }if(count>0){validate(entries);write(entries);}return count;
     });}
     public synchronized Entry finish(UUID id){return update(id,old->{
-        if(old.terminal())return old;require(old.stage==Stage.RETURNING || old.stage==Stage.AWAITING_DELIVERY,"Only resolved returns or delivered shipments may finish");
-        return changed(old,old.stage==Stage.RETURNING ? Stage.CANCELLED : Stage.DELIVERED,Blocked.NONE,"",old.due,old.operations);
+        if(old.terminal())return old;require(old.stage==Stage.RETURNING || old.stage==Stage.AWAITING_DELIVERY || old.stage==Stage.PREPARING && old.cancellationRequested,"Only resolved cancellations or deliveries may finish");
+        return changed(old,old.stage==Stage.AWAITING_DELIVERY ? Stage.DELIVERED : Stage.CANCELLED,Blocked.NONE,"",old.due,old.operations);
     });}
     public synchronized Entry block(UUID id,Blocked blocked,String diagnosis){return update(id,old->{
         require(!old.terminal() && old.stage!=Stage.RECOVERY_REQUIRED,"Cannot rewrite terminal or quarantined shipment");return changed(old,old.stage,blocked,diagnosis,old.due,old.operations);

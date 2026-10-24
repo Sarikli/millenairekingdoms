@@ -49,8 +49,8 @@ public final class RoyalReservationGameTests {
     }
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
     public static void pendingMoneyBlocksCargoPlanningAndPlayerWithdrawalUntilRealReconciliation(GameTestHelper h)throws Exception{
-        try(var f=root(h,"reserve-money")){
-            var ruler=ruler(f);f.source().setItem(6,new ItemStack(ModItems.DENIER.get(),10));var id=UUID.randomUUID();
+        try(var fixture=rootPlayer(h,"reserve-money")){
+            var f=fixture.realm();var ruler=fixture.player();f.source().setItem(6,new ItemStack(ModItems.DENIER.get(),10));var id=UUID.randomUUID();
             var persistence=new RoyalTreasuryPersistence(){int count;@Override public void flush(ServerLevel level,List<BlockPos> p){super.flush(level,p);if(++count==2)throw new IllegalStateException("Lost payment ack after real native debit/proof save");}};
             refused(h,()->RoyalPaymentGameTests.service(f.level(),moneyDirectory(f),persistence).payPlayer(ruler,id,RoyalPaymentService.Purpose.ADMINISTRATIVE,id,1));
             h.assertTrue(journal(f).load(id).state()==RoyalPaymentJournal.State.PREPARED && coins(f)==9,"Real saved debit remains unresolved before acknowledgement");
@@ -63,8 +63,8 @@ public final class RoyalReservationGameTests {
     }
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
     public static void rulerWithdrawalRespectsPendingCargoInActualCapitalStorage(GameTestHelper h)throws Exception{
-        try(var f=root(h,"reserve-withdraw")){
-            var ruler=ruler(f);f.source().setItem(6,new ItemStack(ModItems.DENIER.get(),10));var op=RoyalCargoGameTests.plan(f,Role.COLLECT,f.from(),40);f.store().prepare(f.id(),op);
+        try(var fixture=rootPlayer(h,"reserve-withdraw")){
+            var f=fixture.realm();var ruler=fixture.player();f.source().setItem(6,new ItemStack(ModItems.DENIER.get(),10));var op=RoyalCargoGameTests.plan(f,Role.COLLECT,f.from(),40);f.store().prepare(f.id(),op);
             refused(h,()->TreasuryService.withdraw(ruler,1));h.assertTrue(coins(f)==10 && ruler.getInventory().countItem(ModItems.DENIER.get())==0,"Current authorized nearby ruler cannot mutate a pending cargo before image");
             f.store().returning(f.id());RoyalCargoGameTests.settle(f,op,new RoyalTreasuryPersistence());f.store().finish(f.id());
             h.assertTrue(TreasuryService.withdraw(ruler,1)==1 && coins(f)==9 && ruler.getInventory().countItem(ModItems.DENIER.get())==1 && f.sourceCount()==96,"Resolving unapplied cargo permits the original real-coin withdrawal without touching goods");h.succeed();
@@ -72,14 +72,21 @@ public final class RoyalReservationGameTests {
     }
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
     public static void futureShipmentIndexPreventsFinancialMutationsAndPreservesBytes(GameTestHelper h)throws Exception{
-        try(var f=root(h,"reserve-future")){
-            var ruler=ruler(f);f.source().setItem(6,new ItemStack(ModItems.DENIER.get(),10));var file=f.directory().resolve("shipments.dat");var original=Files.readAllBytes(file);var tag=NbtIo.readCompressed(file,NbtAccounter.unlimitedHeap());tag.putInt("format",999);NbtIo.writeCompressed(tag,file);var future=Files.readAllBytes(file);var id=UUID.randomUUID();
+        try(var fixture=rootPlayer(h,"reserve-future")){
+            var f=fixture.realm();var ruler=fixture.player();f.source().setItem(6,new ItemStack(ModItems.DENIER.get(),10));var file=f.directory().resolve("shipments.dat");var original=Files.readAllBytes(file);var tag=NbtIo.readCompressed(file,NbtAccounter.unlimitedHeap());tag.putInt("format",999);NbtIo.writeCompressed(tag,file);var future=Files.readAllBytes(file);var id=UUID.randomUUID();
             try{
                 refused(h,()->new RoyalPaymentService(f.level()).payPlayer(ruler,id,RoyalPaymentService.Purpose.ADMINISTRATIVE,id,1));refused(h,()->TreasuryService.withdraw(ruler,1));
                 h.assertTrue(coins(f)==10 && journal(f).load(id)==null && java.util.Arrays.equals(future,Files.readAllBytes(file)),"Unknown shipment reservations preserve native coins and future file without bypassing safety");
             }finally{Files.write(file,original);}
             h.assertTrue(f.store().load(f.id())!=null,"Only the deliberately changed test copy is restored after the preservation check");h.succeed();
         }
+    }
+    private record PlayerFixture(Fixture realm,FakePlayer player)implements AutoCloseable{public void close(){realm.close();}}
+    private static PlayerFixture rootPlayer(GameTestHelper h,String name){
+        var f=RoyalCargoGameTests.fixture(h,name);var player=ruler(f);var i=f.entry().intent();
+        var intent=new Intent(i.id(),i.dimension(),i.kingdom(),i.capital(),player.getUUID(),1,i.source(),i.destination(),i.product(),i.quantity(),i.fee(),i.issued(),i.travelTicks());
+        var directory=f.level().getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-shipments");var store=new RoyalShipmentStore(directory);store.reserve(intent);store.collecting(f.id());
+        return new PlayerFixture(new Fixture(f.nativeFixture(),store,f.id(),f.from(),f.to(),directory),player);
     }
     private static Fixture root(GameTestHelper h,String name){
         var f=RoyalCargoGameTests.fixture(h,name);var directory=f.level().getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-shipments");var store=new RoyalShipmentStore(directory);store.reserve(f.entry().intent());store.collecting(f.id());return new Fixture(f.nativeFixture(),store,f.id(),f.from(),f.to(),directory);
