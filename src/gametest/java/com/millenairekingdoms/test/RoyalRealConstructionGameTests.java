@@ -75,6 +75,7 @@ public final class RoyalRealConstructionGameTests {
         final Path marker;
         final boolean daylight;
         BlockPos anchor=new BlockPos(220_000,-60,260_000);
+        String kingdomName="Real royal builders";
         Village village;
         UUID kingdom,id,builder;
         BuildingInstance building;
@@ -125,7 +126,7 @@ public final class RoyalRealConstructionGameTests {
                     var failure=VillageSpawner.spawnVillage(level,surface,type,0);
                     h.assertTrue(failure==null,"Original baseline village spawn: "+(failure==null ? "ok" : failure.getString()));
                     village=manager.getAllVillages().stream().filter(v->!before.contains(v.getId())).findFirst().orElseThrow();
-                    village.setNoProjectsLeftUntil(Long.MAX_VALUE); kingdom=KingdomSavedData.get(level).create("Real royal builders",village.getId().uuid()).id();
+                    village.setNoProjectsLeftUntil(Long.MAX_VALUE); kingdom=KingdomSavedData.get(level).create(kingdomName,village.getId().uuid()).id();
                 }
                 village.setForceActive(true); village.setActive(true); level.getServer().tickRateManager().requestGameToSprint(120_000);
                 phase=2; started=ticks; return;

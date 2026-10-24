@@ -25,6 +25,7 @@ public final class CapitalConfig {
         FoundingConfig.define(b);
         RoyalEconomyConfig.define(b);
         com.millenairekingdoms.construction.RoyalConstructionConfig.define(b);
+        com.millenairekingdoms.shipping.RoyalShipmentConfig.define(b);
         SPEC = b.build();
     }
 
