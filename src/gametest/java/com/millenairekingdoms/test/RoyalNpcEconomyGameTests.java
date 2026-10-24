@@ -95,7 +95,7 @@ public final class RoyalNpcEconomyGameTests {
         try(var r=RoyalShipmentSupport.realm(h,"npc-no-builder")){
             money(r,16);var o=option(r,r.source());materials(h,r,r.source(),o.requiredMaterials(),null);var preview=service(r).inspect(r.kingdom(),10);var result=service(r).evaluate(r.kingdom(),10,RandomSource.create(1));
             h.assertTrue(preview.candidates().isEmpty() && preview.reason().contains("builder") && result.kind()==Kind.NONE && result.outcome()==Outcome.SKIPPED && r.coins()==1024 && r.source().getPendingProject()==null,"Actual rich/material-ready but builderless villages retain all coins and get an explanatory persisted non-action");
-            h.assertTrue(decisions(r).load(result.attempt()).nextDay()==13 && service(r).evaluate(r.kingdom(),10,RandomSource.create(1)).attempt()==null,"Failed/non-action attempts cannot form an immediate repeated decision loop");h.succeed();
+            h.assertTrue(decisions(r).load(result.attempt()).nextDay()==11 && service(r).evaluate(r.kingdom(),10,RandomSource.create(1)).attempt()==null,"Failed/non-action attempts cannot form an immediate repeated decision loop");h.succeed();
         }
     }
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)

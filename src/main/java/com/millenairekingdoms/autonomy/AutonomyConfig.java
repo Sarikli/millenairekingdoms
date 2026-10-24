@@ -18,7 +18,7 @@ public final class AutonomyConfig {
     /** One immutable view of the settings, so a decision never mixes two config states and tests can pass their own. */
     public record Settings(boolean autonomy, boolean joining, boolean campaigns, WarFrequency frequency, int decisionDays,
                            int warThreshold, int raidCooldownDays, int truceDays) {
-        public static final Settings DEFAULTS = new Settings(true, true, true, WarFrequency.BALANCED, 3, -70, 3, 10);
+        public static final Settings DEFAULTS = new Settings(true, true, true, WarFrequency.BALANCED, 1, -70, 1, 5);
         public Settings with(boolean autonomy, boolean joining, boolean campaigns) {
             return new Settings(autonomy, joining, campaigns, frequency, decisionDays, warThreshold, raidCooldownDays, truceDays);
         }
@@ -43,13 +43,13 @@ public final class AutonomyConfig {
         FREQUENCY = b.comment("How often NPC kingdoms go to war: RARE, BALANCED or FREQUENT.")
                 .defineEnum("warFrequency", WarFrequency.BALANCED);
         DECISION_DAYS = b.comment("Minecraft days between two political evaluations.")
-                .defineInRange("decisionIntervalDays", 3, 1, 30);
+                .defineInRange("decisionIntervalDays", 1, 1, 30);
         WAR_THRESHOLD = b.comment("Relation between two capitals at or below which an NPC kingdom may declare war (Millénaire scale -100..100).")
                 .defineInRange("warRelationThreshold", -70, -100, 0);
         RAID_COOLDOWN_DAYS = b.comment("Minecraft days after a conquest raid on a village before the next one may start.")
-                .defineInRange("raidCooldownDays", 3, 0, 60);
+                .defineInRange("raidCooldownDays", 1, 0, 60);
         TRUCE_DAYS = b.comment("Minecraft days after a peace during which the two kingdoms cannot declare war on each other.")
-                .defineInRange("truceDays", 10, 0, 100);
+                .defineInRange("truceDays", 5, 0, 100);
         CAMPAIGNS = b.comment("Let NPC kingdoms send real Millénaire conquest raids on their own.")
                 .define("automaticCampaigns", true);
         b.pop();

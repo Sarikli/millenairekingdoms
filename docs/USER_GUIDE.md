@@ -72,10 +72,10 @@ disabled. Players who do not rule may look at everything but cannot decide.
   - the sending village's type must be one Millénaire lets raid;
   - it needs at least one living raider at home, not hired, with positive strength;
   - the target's defending strength must be below twice the sender's raiding strength (Millénaire's own target rule);
-  - **3 days** must have passed since the last conquest raid on that target;
+  - **1 day** must have passed since the last conquest raid on that target;
   - a kingdom has at most one waiting order or running conquest raid, and a target is raided by one raid at a time.
 - **Unloaded villages:** a raid starts only while the target village is loaded (a player nearby). Otherwise the order
-  waits and is called off after two days. The addon never fakes battles for unloaded villages or keeps chunks loaded.
+  waits and is called off after one day. The addon never fakes battles for unloaded villages or keeps chunks loaded.
 
 ## 5. Treasury and income
 
@@ -93,7 +93,7 @@ disabled. Players who do not rule may look at everything but cannot decide.
 
 ## 6. NPC kingdoms: diplomacy, war and peace
 
-Kingdoms without a ruler decide for themselves, by default **every 3 Minecraft days**, from persistent data
+Kingdoms without a ruler decide for themselves, by default **every Minecraft day**, from persistent data
 (Millénaire relations and villager records), so unloaded villages take part in politics. NPC logic never declares war,
 makes peace, accepts villages or sends raids for a kingdom that has a player ruler.
 
@@ -109,10 +109,10 @@ makes peace, accepts villages or sends raids for a kingdom that has a player rul
   - A peace treaty improves it once by 20.
 - **Campaigns:** an NPC attacker at war sends soldiers from its strongest ready village (the nearest among equals) against the defender's villages (the
   capital once it is open); an NPC kingdom at peace may attack an unowned independent village that its capital is hostile
-  to. An NPC order prepares for a quarter day, then starts as a real Millénaire raid under the readiness rules above.
-- **Peace:** after at least **12 days** of war an NPC attacker may make peace because of no military progress (6 days),
-  no ready army, a few villages taken, recovered relations, or a long war (36 days). With a ruled attacker the NPC
-  defender only offers peace. Every peace starts a **10-day truce** (for players and NPCs; operator commands excepted).
+  to. An NPC order prepares for an eighth of a day, then starts as a real Millénaire raid under the readiness rules above.
+- **Peace:** after at least **6 days** of war an NPC attacker may make peace because of no military progress (3 days),
+  no ready army, a few villages taken, recovered relations, or a long war (18 days). With a ruled attacker the NPC
+  defender only offers peace. Every peace starts a **5-day truce** (for players and NPCs; operator commands excepted).
   Conquered villages keep their new allegiance.
 
 ## 6a. Kingdoms founded by development (1.1.0)
@@ -121,7 +121,7 @@ An ordinary NPC village spawns normally and grows through Millénaire's own cons
 **completed level 3** (Millénaire's 0-based building level; the first construction is level 0) the village may found
 its own kingdom.
 
-- **When:** **every 7 Minecraft days**, one roll for each village that is eligible on that day. Nothing is rolled
+- **When:** **every 3 Minecraft days**, one roll for each village that is eligible on that day. Nothing is rolled
   daily or per tick. A restart never repeats a period, setting the clock back adds no attempt, and a large jump such as
   `/time add` counts as one evaluation.
 - **Chance:** 5% at level 3, +5 points for each further completed level, at most 100%. Examples: level 4 10%, 5 15%,
@@ -134,7 +134,7 @@ its own kingdom.
   join a kingdom skips that period. Villages of another kingdom never declare independence.
 - **Completed town hall:** a town hall still upgrading (Millénaire status UPGRADING) does not count; the village waits
   for the next period.
-- **Distance:** at least **1,500 blocks** from every living capital. A kingdom founded earlier in the same evaluation
+- **Distance:** at least **1,000 blocks** from every living capital. A kingdom founded earlier in the same evaluation
   counts for the next villages.
 - **What changes:** only the political record. The village becomes the capital and only member of a new NPC kingdom
   named "Kingdom of <village>", active and without a ruler. Buildings, construction projects, villagers, the village
@@ -143,7 +143,7 @@ its own kingdom.
 - **Afterwards:** the new kingdom takes part in the existing NPC politics (accepting villages, war, conquest through real
   raids, peace and truces, daily income), shows in the kingdom screen, and a player with enough reputation can claim
   its rule.
-- **Natural capitals:** the 2% natural-capital system of world generation is unchanged. Natural capitals are already
+- **Natural capitals:** the natural-capital system of world generation uses 10% by default. Natural capitals are already
   capitals, so they never found a second kingdom.
 - **Joining and founding on the same day:** NPC decisions (village joining) run first, founding second. A village that
   joined a kingdom that day cannot found; a newly founded capital is never a joining candidate.
@@ -155,22 +155,22 @@ its own kingdom.
 | Section / key | Default | Meaning |
 |---|---|---|
 | `naturalCapitals.enabled` | `true` | New natural villages may rarely become NPC capitals |
-| `naturalCapitals.chancePercent` | `2.0` | Chance per eligible new natural village (%) |
-| `naturalCapitals.minCapitalDistance` | `1500` | Minimum distance between capitals (blocks) |
+| `naturalCapitals.chancePercent` | `10.0` | Chance per eligible new natural village (%) |
+| `naturalCapitals.minCapitalDistance` | `1000` | Minimum distance between capitals (blocks) |
 | `npcAutonomy.enabled` | `true` | NPC kingdoms decide for themselves |
 | `npcAutonomy.diplomaticJoining` | `true` | Independent villages join on their own |
 | `npcAutonomy.warFrequency` | `BALANCED` | `RARE`, `BALANCED`, `FREQUENT` |
-| `npcAutonomy.decisionIntervalDays` | `3` | Days between political evaluations |
+| `npcAutonomy.decisionIntervalDays` | `1` | Days between political evaluations |
 | `npcAutonomy.warRelationThreshold` | `-70` | Capitals' relation at or below which an NPC may declare war |
-| `npcAutonomy.raidCooldownDays` | `3` | Days between two conquest raids on the same village |
-| `npcAutonomy.truceDays` | `10` | Truce days after a peace |
+| `npcAutonomy.raidCooldownDays` | `1` | Days between two conquest raids on the same village |
+| `npcAutonomy.truceDays` | `5` | Truce days after a peace |
 | `npcAutonomy.automaticCampaigns` | `true` | NPC kingdoms send their own conquest raids |
 | `dynamicFounding.enabled` | `true` | Developed independent villages may found their own kingdom |
 | `dynamicFounding.minimumTownhallLevel` | `3` | Lowest completed town hall level (0-based) that may found |
-| `dynamicFounding.checkIntervalDays` | `7` | Minecraft days between two founding evaluations |
+| `dynamicFounding.checkIntervalDays` | `3` | Minecraft days between two founding evaluations |
 | `dynamicFounding.baseChancePercent` | `5.0` | Chance at the minimum level (%) |
 | `dynamicFounding.chanceIncreasePerLevel` | `5.0` | Points added per further completed level (capped at 100%) |
-| `dynamicFounding.minCapitalDistance` | `1500` | Minimum distance between the founder and every living capital (blocks) |
+| `dynamicFounding.minCapitalDistance` | `1000` | Minimum distance between the founder and every living capital (blocks) |
 
 Chance formula: `clamp(baseChancePercent + (level − minimumTownhallLevel) × chanceIncreasePerLevel, 0, 100)`; 0% below
 the minimum level.

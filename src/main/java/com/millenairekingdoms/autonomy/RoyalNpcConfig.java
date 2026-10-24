@@ -25,7 +25,7 @@ public final class RoyalNpcConfig {
     public static ModConfigSpec.BooleanValue ECONOMIC_ENABLED;
     public static ModConfigSpec.IntValue TREASURY_RESERVE,FEE_SHARE;
     public record Cadence(int attemptDays,int projectDays,int villageDays,int routeDays,int maximumVillages,int maximumCargo,int maximumDistance,int intervalTicks,int maximumKingdoms){
-        public static final Cadence DEFAULTS=new Cadence(3,6,12,6,8,64,2048,1200,2);
+        public static final Cadence DEFAULTS=new Cadence(1,3,6,3,8,64,2048,600,2);
         public Cadence{if(attemptDays<1 || projectDays<attemptDays || villageDays<projectDays || routeDays<1 || maximumVillages<1 || maximumVillages>32
                 || maximumCargo<1 || maximumCargo>4096 || maximumDistance<1 || intervalTicks<20 || maximumKingdoms<1 || maximumKingdoms>16)throw new IllegalArgumentException("Invalid bounded NPC decision cadence");}
     }
@@ -44,14 +44,14 @@ public final class RoyalNpcConfig {
         ECONOMIC_ENABLED=b.comment("Allow new NPC economic decisions and their first fee; existing paid domain recovery remains active.").define("economicDecisionsEnabled",true);
         TREASURY_RESERVE=b.comment("Minimum actual deniers retained after a policy-owned first fee. Default128 protects two silver coins; owed taxes do not count.").defineInRange("treasuryReserveDeniers",128,0,1_000_000_000);
         FEE_SHARE=b.comment("Maximum first fee as permille of current actual treasury. Default250 caps one major fee at a quarter; native material costs remain independent.").defineInRange("maximumFeeSharePermille",250,1,1000);
-        ATTEMPT_DAYS=b.comment("Minimum days between persisted economic attempts, including unavailable/failed decisions.").defineInRange("attemptIntervalDays",3,1,120);
-        PROJECT_DAYS=b.comment("Minimum days between new royal project attempts per kingdom; must be at least attemptIntervalDays.").defineInRange("projectCooldownDays",6,1,240);
-        VILLAGE_DAYS=b.comment("Minimum days between royal project attempts in the same village; must be at least projectCooldownDays.").defineInRange("villageProjectCooldownDays",12,1,480);
-        ROUTE_DAYS=b.comment("Minimum days between shipments in either direction on a village pair; artisan capitals use half, at least1.").defineInRange("routeCooldownDays",6,1,120);
+        ATTEMPT_DAYS=b.comment("Minimum days between persisted economic attempts, including unavailable/failed decisions.").defineInRange("attemptIntervalDays",1,1,120);
+        PROJECT_DAYS=b.comment("Minimum days between new royal project attempts per kingdom; must be at least attemptIntervalDays.").defineInRange("projectCooldownDays",3,1,240);
+        VILLAGE_DAYS=b.comment("Minimum days between royal project attempts in the same village; must be at least projectCooldownDays.").defineInRange("villageProjectCooldownDays",6,1,480);
+        ROUTE_DAYS=b.comment("Minimum days between shipments in either direction on a village pair; artisan capitals use half, at least1.").defineInRange("routeCooldownDays",3,1,120);
         MAX_VILLAGES=b.comment("Maximum member metadata/stock candidates per decision; rotating window, artisan capitals inspect up to twice this, capped32.").defineInRange("maximumVillagesPerDecision",8,1,32);
         MAX_CARGO=b.comment("Maximum real goods in an NPC shortage shipment; shared stock/reserve/transport rules still apply.").defineInRange("maximumCargoPerDecision",64,1,4096);
         MAX_DISTANCE=b.comment("Maximum horizontal route considered for an NPC shortage shipment; distant chunks are never forced.").defineInRange("maximumShipmentDistance",2048,1,100_000);
-        INTERVAL_TICKS=b.comment("Ticks between bounded NPC economic checks. Persistent day cooldowns limit actual decisions.").defineInRange("checkIntervalTicks",1200,20,24000);
+        INTERVAL_TICKS=b.comment("Ticks between bounded NPC economic checks. Persistent day cooldowns limit actual decisions.").defineInRange("checkIntervalTicks",600,20,24000);
         MAX_KINGDOMS=b.comment("Maximum kingdoms inspected per pass, round robin.").defineInRange("maximumKingdomsPerCheck",2,1,16);b.pop();
     }
     public static Weights weights(){

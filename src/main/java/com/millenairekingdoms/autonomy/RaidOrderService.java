@@ -31,8 +31,8 @@ import org.slf4j.Logger;
  * same snapshot that records the started raid, so a restart can never launch it twice. No chunk is ever force-loaded. */
 public final class RaidOrderService {
     private static final Logger LOGGER = LogUtils.getLogger();
-    /** An NPC kingdom's preparation before its raid may leave (a quarter day), and every order's lifetime (two days). */
-    public static final long NPC_PREPARATION = 6000L, ORDER_LIFETIME = 48000L, CHECK_INTERVAL = 100L;
+    /** An NPC kingdom's preparation before its raid may leave (an eighth day), and every order's lifetime (one day). */
+    public static final long NPC_PREPARATION = 3000L, ORDER_LIFETIME = 24000L, CHECK_INTERVAL = 50L;
     public enum Status { STARTED, WAITING, DROPPED }
     public record Attempt(Status status, String reason, KingdomSavedData.Raid raid) {
         static Attempt waiting(String reason) { return new Attempt(Status.WAITING, reason, null); }
@@ -61,7 +61,7 @@ public final class RaidOrderService {
             Attempt attempt;
             try { attempt = attempt(level, data, order, s); }
             catch (RuntimeException e) {
-                // Never let one order stop the world tick; it is dropped instead of being retried every 100 ticks.
+                // Never let one order stop the world tick; it is dropped instead of being retried every 50 ticks.
                 LOGGER.error("[Kingdoms] Conquest order {} failed unexpectedly; it is dropped.", order.id(), e);
                 attempt = Attempt.dropped("an unexpected error (see the server log)");
             }

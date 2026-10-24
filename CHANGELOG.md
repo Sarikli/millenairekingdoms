@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0-rc.5 — 2026-10-24 (natural capitals and decision timing)
+
+- Set new natural-capital chance to10% and both natural/development-founded capital spacing defaults to1000 blocks. Joining/shared political evaluations now default to1 day. Halve other decision waits with rounding down: founding7→3, raid cooldown3→1, truce10→5, peace age12→6/idle6→3/long-war36→18 days.
+- Halve NPC raid preparation6000→3000 ticks, order lifetime48000→24000 and queued-order checks100→50. NPC economic checks1200→600 ticks and attempt/project/village/route waits3/6/12/6→1/3/6/3 days. Retain all other probabilities, relation/level/reputation thresholds, personality weights, real payments/stock protections and actual cargo travel.
+- Existing active TOML values and already persisted due dates/truces/order lifetimes are retained. A [partial gameplay settings list](releases/1.2.0-rc.5/serverconfig-changes.toml) supports updating existing installations without replacing unrelated configuration. Full [timing table and compatibility details](docs/1.2.0_RC5_TIMINGS.md).
+
+- Focused paired GameTests logged exact All5/22/12/12/1/1 in each write/separate-JVM reopen, plus normal build and actual production-JAR save/stop/reopen. Generated normal config changed exactly the12 preset keys. An obsolete3-day assertion failed once, was corrected only in the fixture and passed in a fresh world; failure retained. [Exact evidence/scope](verification/1.2.0/rc.5-timings/README.md). Graphics/online remain unverified; unrelated successful suites were not repeated.
+
 ## 1.2.0-rc.4 — 2026-10-24 (narrative personality names)
 
 - Name the kingdom's temperament in English and Turkish: Military → Warlike/Savaşçı, Religious → Traditionalist/Gelenekçi, Agricultural → Peaceful/Barışçıl, Artisan → Industrious/Üretken, Palace/General → Pragmatic/Pragmatik.

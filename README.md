@@ -3,7 +3,7 @@
 > **1.2.0 development branch — By Royal Decree.** This branch targets Millénaire 9.0.3.
 > The release candidate includes real-coin payments, native construction, protected shipments and capital personalities; review and manual client checks remain open.
 > See [progress](docs/1.2.0_PROGRESS.md) and [development setup](docs/1.2.0_DEVELOPMENT.md).
-> [RC.4 JAR/checksum: narrative EN/TR personality names](releases/1.2.0-rc.4/) · [open stock investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md).
+> [RC.5 JAR/checksum: natural capitals and faster decision timing](releases/1.2.0-rc.5/) · [open stock investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md).
 > [Preserved RC.1 technical report](docs/1.2.0_RELEASE_REPORT.md).
 > Historical 1.1.1 release artifacts and reports remain unchanged.
 
@@ -17,7 +17,7 @@ left untouched, and the original Millénaire JAR is never modified.
 
 | | |
 |---|---|
-| Development version | 1.2.0-rc.4 |
+| Development version | 1.2.0-rc.5 |
 | Minecraft | 1.21.1 |
 | Loader | NeoForge 21.1.259 |
 | Required dependency | Millénaire 9.0.3 |
@@ -40,27 +40,27 @@ and [changelog](CHANGELOG.md).
 - **Conquest.** Villages change hands only through real Millénaire raids, without looting. An independent village falls
   after one victory and a rival kingdom's village after two victories during an active war. A capital can be attacked
   once the attacker holds 60% of the villages the defender had when the war began; two victories there end that kingdom.
-- **Raid orders.** Rulers pick the target and the village that sends the soldiers. Military readiness, a three-day
+- **Raid orders.** Rulers pick the target and the village that sends the soldiers. Military readiness, a one-day
   cooldown per target and one running raid at a time apply. NPC kingdoms use the same rules.
-- **NPC kingdoms decide for themselves.** Every three days a kingdom without a player ruler weighs accepting villages,
-  declaring war on a hostile neighbour (relation −70 or worse), sending conquest raids and making peace (after day 12,
-  followed by a ten-day truce). A kingdom with a player ruler is never driven by this automation.
+- **NPC kingdoms decide for themselves.** Every day a kingdom without a player ruler weighs accepting villages,
+  declaring war on a hostile neighbour (relation −70 or worse), sending conquest raids and making peace (after day 6,
+  followed by a five-day truce). A kingdom with a player ruler is never driven by this automation.
 - **Diplomacy.** Kingdom relations follow Millénaire's relation between the two capitals. Border villages and raids
   create tension, peace treaties improve relations, and independent villages may join a kingdom on their own once their
   relation with its capital reaches +50.
 - **Income and treasury.** Each member village produces its town hall level × 4 deniers per day. Real coins go into the
   capital town hall's storage, and the ruler can withdraw them from the kingdom screen while at the capital.
-- **Natural capitals.** About 2% of newly generated natural villages, at least 1,500 blocks from any living capital,
+- **Natural capitals.** About 10% of newly generated natural villages, at least 1,000 blocks from any living capital,
   start as NPC capitals with a fully upgraded town hall.
 - **Kingdoms founded by development.** An independent NPC village that completes town hall level 3 through
-  Millénaire's normal construction gets a chance to found its own kingdom every seven in-game days. The chance starts
+  Millénaire's normal construction gets a chance to found its own kingdom every three in-game days. The chance starts
   at 5% and rises by 5 points per further completed level, up to 100%. The village itself is not changed in any way.
 
 - **Royal commissions.** Pay real capital coins for one culturally eligible autonomous-village construction request. The original village chooses the site and its own builders use real materials; saved progress and explicit cancellation/recovery preserve natural projects.
 - **Royal shipments.** Pay normal logistics costs to transfer protected actual surplus between member villages over server-tick travel time. Full/unloaded destinations retain held cargo; normal Millénaire trade stays unrestricted.
 - **Capital personalities.** Exact native capital types give Warlike, Peaceful, Traditionalist, Industrious or Pragmatic personalities. Bounded NPC decisions use the same paid services, actual needs/reserves and persistent cooldowns. War increases military preference for every type; player rule excludes new NPC economics.
 
-All chances, distances and intervals can be adjusted per world. See the bilingual [1.2.0 player/operator guide](docs/1.2.0_USER_GUIDE.md), [save/downgrade policy](docs/1.2.0_SAVE_COMPATIBILITY.md), and [separate unverified graphical/online checks](docs/1.2.0_MANUAL_TESTS.md).
+[RC.5 balance changes and existing-world settings](docs/1.2.0_RC5_TIMINGS.md) describe the new defaults. Existing per-world configuration values remain in effect until edited. Configurable chances, distances and intervals can be adjusted per world. See the bilingual [1.2.0 player/operator guide](docs/1.2.0_USER_GUIDE.md), [save/downgrade policy](docs/1.2.0_SAVE_COMPATIBILITY.md), and [separate unverified graphical/online checks](docs/1.2.0_MANUAL_TESTS.md).
 
 ## Installation
 

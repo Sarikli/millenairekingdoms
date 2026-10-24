@@ -24,7 +24,7 @@ import org.millenaire.village.Village;
 import org.millenaire.village.VillageSavedData;
 import org.slf4j.Logger;
 
-/** Stage 6.2: the political decisions of NPC-governed kingdoms, taken once per decision interval (3 days by default)
+/** Stage 6.2: the political decisions of NPC-governed kingdoms, taken once per decision interval (1 day by default)
  * from KingdomDay, never per tick. Everything is read from persistent data (Millénaire relations and villager records,
  * kingdom data), so unloaded villages take part in politics; nothing here fights or simulates a battle. Raid orders it
  * creates start only as real Millénaire raids (RaidOrderService). A kingdom with a player ruler is never decided for:
@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 public final class AutonomyService {
     private static final Logger LOGGER = LogUtils.getLogger();
     /** Wars are not ended by NPC decision before this many days; after IDLE_DAYS without a victory they may be. */
-    public static final int PEACE_AFTER_DAYS = 12, IDLE_DAYS = 6, LONG_WAR_DAYS = 36;
+    public static final int PEACE_AFTER_DAYS = 6, IDLE_DAYS = 3, LONG_WAR_DAYS = 18;
     /** Base chance per evaluation that an independent village with good relations joins (or applies to) a kingdom. */
     public static final double JOIN_CHANCE = 0.10;
     private static final String TAG = "[Kingdoms] ";

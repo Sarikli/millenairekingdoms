@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 
 /** 1.1.0: an independent NPC village that developed through Millénaire's own construction may found its own NPC kingdom.
  *
- * <p>Evaluated from KingdomDay once per founding period (checkIntervalDays, 7 by default): when a booked kingdom day starts
+ * <p>Evaluated from KingdomDay once per founding period (checkIntervalDays, 3 by default): when a booked kingdom day starts
  * a new period, every village eligible at that moment gets one chance roll. The period follows from the persisted ledger
  * day, which KingdomDay books before anything else, so a restart never repeats a period, a clock set back runs nothing
  * until the booked day is passed again, and a large time skip counts as one period (no catch-up rolls).

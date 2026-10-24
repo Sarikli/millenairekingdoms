@@ -1,0 +1,22 @@
+# Partial gameplay changes: update these keys in the active millenairekingdoms-server.toml (config/ or world/serverconfig/).
+# Merge into existing sections; keep all other keys. Do not replace the whole file with this partial list.
+
+[naturalCapitals]
+chancePercent = 10.0
+minCapitalDistance = 1000
+
+[npcAutonomy]
+decisionIntervalDays = 1
+raidCooldownDays = 1
+truceDays = 5
+
+[dynamicFounding]
+checkIntervalDays = 3
+minCapitalDistance = 1000
+
+[royalNpcPolicy]
+attemptIntervalDays = 1
+projectCooldownDays = 3
+villageProjectCooldownDays = 6
+routeCooldownDays = 3
+checkIntervalTicks = 600

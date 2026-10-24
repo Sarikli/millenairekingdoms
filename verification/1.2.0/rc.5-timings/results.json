@@ -1,0 +1,318 @@
+{
+  "artifact": {
+    "version": "1.2.0-rc.5",
+    "bytes": 614471,
+    "sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+    "prior_rc4_sha256": "20cdc368d0ee2f61083c4512ca43223cb3f519d838462b6ee7f330394eca758b",
+    "changed_payloads": [
+      "META-INF/MANIFEST.MF",
+      "META-INF/neoforge.mods.toml",
+      "com/millenairekingdoms/autonomy/AutonomyConfig$Settings.class",
+      "com/millenairekingdoms/autonomy/AutonomyConfig.class",
+      "com/millenairekingdoms/autonomy/AutonomyService.class",
+      "com/millenairekingdoms/autonomy/RaidOrderService.class",
+      "com/millenairekingdoms/autonomy/RoyalNpcConfig$Cadence.class",
+      "com/millenairekingdoms/autonomy/RoyalNpcConfig.class",
+      "com/millenairekingdoms/capital/CapitalConfig.class",
+      "com/millenairekingdoms/capital/FoundingConfig$Settings.class",
+      "com/millenairekingdoms/capital/FoundingConfig.class"
+    ],
+    "identical_production_class_files": 191,
+    "all_resources_unchanged": true,
+    "category_mapping_personality_weights_stock_payment_cargo_ui_payloads_unchanged": true,
+    "scope": "Natural chance10%, both capital spacings1000; shared politics1 day; other decision waits halved/rounded down. Other chances, relation/level/reputation thresholds, fees, real reserves and cargo travel unchanged.",
+    "protocol": 3,
+    "source_base_commit": "3c88ce183181da66a8334cb352e93c370dae926a",
+    "source_commit_lookup": "git log -1 --format=%H -- releases/1.2.0-rc.5/millenairekingdoms-1.2.0-rc.5.jar",
+    "generated_config_changes": {
+      "naturalCapitals.chancePercent": {
+        "old": 2.0,
+        "new": 10.0
+      },
+      "naturalCapitals.minCapitalDistance": {
+        "old": 1500,
+        "new": 1000
+      },
+      "npcAutonomy.decisionIntervalDays": {
+        "old": 3,
+        "new": 1
+      },
+      "npcAutonomy.raidCooldownDays": {
+        "old": 3,
+        "new": 1
+      },
+      "npcAutonomy.truceDays": {
+        "old": 10,
+        "new": 5
+      },
+      "royalNpcPolicy.attemptIntervalDays": {
+        "old": 3,
+        "new": 1
+      },
+      "royalNpcPolicy.projectCooldownDays": {
+        "old": 6,
+        "new": 3
+      },
+      "royalNpcPolicy.villageProjectCooldownDays": {
+        "old": 12,
+        "new": 6
+      },
+      "royalNpcPolicy.routeCooldownDays": {
+        "old": 6,
+        "new": 3
+      },
+      "royalNpcPolicy.checkIntervalTicks": {
+        "old": 1200,
+        "new": 600
+      },
+      "dynamicFounding.checkIntervalDays": {
+        "old": 7,
+        "new": 3
+      },
+      "dynamicFounding.minCapitalDistance": {
+        "old": 1500,
+        "new": 1000
+      }
+    },
+    "other_config_values_unchanged": true,
+    "graphics": "Unverified; unchanged client UI/labels, no graphical session.",
+    "online_authentication": "Unverified; unchanged localhost/offline-mode fixture."
+  },
+  "completed_paired_suites": 6,
+  "successful_jvms": 12,
+  "required_tests_per_overall_pass": 53,
+  "runs": [
+    {
+      "suite": "verifyCapitals",
+      "phase": "write",
+      "success": true,
+      "exit_code": 0,
+      "required_pass_counts": [
+        5
+      ],
+      "expected_required": 5,
+      "jar_sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+      "raw_log_sha256": "9dce00ceec79b313ab9c45a36eec0d4fe662e35858e8bc4d52efd6c733470fa0",
+      "elapsed_seconds": 134.27,
+      "world": "run/regression/royal-rc5-defaults-02/verifyCapitals",
+      "log": "royal-rc5-verifyCapitals-write.log"
+    },
+    {
+      "suite": "verifyCapitals",
+      "phase": "reopen",
+      "success": true,
+      "exit_code": 0,
+      "required_pass_counts": [
+        5
+      ],
+      "expected_required": 5,
+      "jar_sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+      "raw_log_sha256": "112d1a2f527f6512db841120730d0cd5f1499ba083b50c525c3f2f2a83199e4f",
+      "elapsed_seconds": 29.91,
+      "world": "run/regression/royal-rc5-defaults-02/verifyCapitals",
+      "log": "royal-rc5-verifyCapitals-reopen.log"
+    },
+    {
+      "suite": "verifyAutonomy",
+      "phase": "write",
+      "success": false,
+      "exit_code": 1,
+      "required_pass_counts": [],
+      "expected_required": 22,
+      "jar_sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+      "raw_log_sha256": "01727775cf6d143a278138f484b2fa2dbe586f22db63be0720d988c4a084e70f",
+      "elapsed_seconds": 24.08,
+      "world": "run/regression/royal-rc5-defaults-02/verifyAutonomy",
+      "log": "royal-rc5-verifyAutonomy-write.log"
+    },
+    {
+      "suite": "verifyAutonomy",
+      "phase": "write",
+      "success": true,
+      "exit_code": 0,
+      "required_pass_counts": [
+        22
+      ],
+      "expected_required": 22,
+      "jar_sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+      "raw_log_sha256": "2532e402d9a93d8839fbc6c091c8ed7474494165ad16b7d1ad7c66fd21724624",
+      "elapsed_seconds": 28.88,
+      "world": "run/regression/royal-rc5-defaults-03/verifyAutonomy",
+      "log": "royal-rc5-royal-rc5-defaults-03-verifyAutonomy-write.log"
+    },
+    {
+      "suite": "verifyAutonomy",
+      "phase": "reopen",
+      "success": true,
+      "exit_code": 0,
+      "required_pass_counts": [
+        22
+      ],
+      "expected_required": 22,
+      "jar_sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+      "raw_log_sha256": "7a1427dbb5248882d6fb7a9806415f98072331fa363af058f9f48f54539f6140",
+      "elapsed_seconds": 28.19,
+      "world": "run/regression/royal-rc5-defaults-03/verifyAutonomy",
+      "log": "royal-rc5-royal-rc5-defaults-03-verifyAutonomy-reopen.log"
+    },
+    {
+      "suite": "verifyFounding",
+      "phase": "write",
+      "success": true,
+      "exit_code": 0,
+      "required_pass_counts": [
+        12
+      ],
+      "expected_required": 12,
+      "jar_sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+      "raw_log_sha256": "bc9b8bfc7d90e910f807ce669c70299b8c87aa8a6ec4095b2eac26820b5ae39b",
+      "elapsed_seconds": 36.87,
+      "world": "run/regression/royal-rc5-defaults-03/verifyFounding",
+      "log": "royal-rc5-royal-rc5-defaults-03-verifyFounding-write.log"
+    },
+    {
+      "suite": "verifyFounding",
+      "phase": "reopen",
+      "success": true,
+      "exit_code": 0,
+      "required_pass_counts": [
+        12
+      ],
+      "expected_required": 12,
+      "jar_sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+      "raw_log_sha256": "c57ea9f911ecf26e6d529113815c5bd18027d5257cbdc0596a530ab6cd0f8f74",
+      "elapsed_seconds": 27.1,
+      "world": "run/regression/royal-rc5-defaults-03/verifyFounding",
+      "log": "royal-rc5-royal-rc5-defaults-03-verifyFounding-reopen.log"
+    },
+    {
+      "suite": "verifyRoyalNpcEconomy",
+      "phase": "write",
+      "success": true,
+      "exit_code": 0,
+      "required_pass_counts": [
+        12
+      ],
+      "expected_required": 12,
+      "jar_sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+      "raw_log_sha256": "2470db7f68b9e8f1c6851be5a4ba83228819f12707784e1719caccb5dfd51f66",
+      "elapsed_seconds": 58.8,
+      "world": "run/regression/royal-rc5-defaults-03/verifyRoyalNpcEconomy",
+      "log": "royal-rc5-royal-rc5-defaults-03-verifyRoyalNpcEconomy-write.log"
+    },
+    {
+      "suite": "verifyRoyalNpcEconomy",
+      "phase": "reopen",
+      "success": true,
+      "exit_code": 0,
+      "required_pass_counts": [
+        12
+      ],
+      "expected_required": 12,
+      "jar_sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+      "raw_log_sha256": "c20163ae97108a9baae0a2027f71cb11e83bffad4cb68bce856174b11c760550",
+      "elapsed_seconds": 55.39,
+      "world": "run/regression/royal-rc5-defaults-03/verifyRoyalNpcEconomy",
+      "log": "royal-rc5-royal-rc5-defaults-03-verifyRoyalNpcEconomy-reopen.log"
+    },
+    {
+      "suite": "verifyRoyalNpcLive",
+      "phase": "write",
+      "success": true,
+      "exit_code": 0,
+      "required_pass_counts": [
+        1
+      ],
+      "expected_required": 1,
+      "jar_sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+      "raw_log_sha256": "4416bd6fc6133fc8751e51e03e50c79c4818de2ce1b87244a5510a2d393bcef4",
+      "elapsed_seconds": 29.34,
+      "world": "run/regression/royal-rc5-defaults-03/verifyRoyalNpcLive",
+      "log": "royal-rc5-royal-rc5-defaults-03-verifyRoyalNpcLive-write.log"
+    },
+    {
+      "suite": "verifyRoyalNpcLive",
+      "phase": "reopen",
+      "success": true,
+      "exit_code": 0,
+      "required_pass_counts": [
+        1
+      ],
+      "expected_required": 1,
+      "jar_sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+      "raw_log_sha256": "0c6ddf33b9ef7cfd1045539ab82a3d6ee404172eae20461de532e938f3104d9f",
+      "elapsed_seconds": 28.57,
+      "world": "run/regression/royal-rc5-defaults-03/verifyRoyalNpcLive",
+      "log": "royal-rc5-royal-rc5-defaults-03-verifyRoyalNpcLive-reopen.log"
+    },
+    {
+      "suite": "verifyRoyalNpcBuilders",
+      "phase": "write",
+      "success": true,
+      "exit_code": 0,
+      "required_pass_counts": [
+        1
+      ],
+      "expected_required": 1,
+      "jar_sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+      "raw_log_sha256": "e225c32b68bba92d997afaa3c320f843751d9a05454580491510b512e1139cf9",
+      "elapsed_seconds": 129.65,
+      "world": "run/regression/royal-rc5-defaults-03/verifyRoyalNpcBuilders",
+      "log": "royal-rc5-royal-rc5-defaults-03-verifyRoyalNpcBuilders-write.log"
+    },
+    {
+      "suite": "verifyRoyalNpcBuilders",
+      "phase": "reopen",
+      "success": true,
+      "exit_code": 0,
+      "required_pass_counts": [
+        1
+      ],
+      "expected_required": 1,
+      "jar_sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+      "raw_log_sha256": "916671b14ac220b73ce540b8bcca7a198994d1109a178122e6cb19a86fdb7ba6",
+      "elapsed_seconds": 72.49,
+      "world": "run/regression/royal-rc5-defaults-03/verifyRoyalNpcBuilders",
+      "log": "royal-rc5-royal-rc5-defaults-03-verifyRoyalNpcBuilders-reopen.log"
+    }
+  ],
+  "normal_servers": [
+    {
+      "phase": "write",
+      "exit_code": 0,
+      "ready": true,
+      "saved": true,
+      "stopped": true,
+      "build_successful": true,
+      "rc_initialized": true,
+      "dependency_verified": true,
+      "test_mod_loaded": false,
+      "staged_jar_sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+      "log_sha256": "820ccf8c42a85fcd377f24255a099d8b1332bc7971f9885ab86c163d27ce5594",
+      "authentication": "Unverified: unchanged existing smoke fixture is offline-mode on127.0.0.1:25579."
+    },
+    {
+      "phase": "reopen",
+      "exit_code": 0,
+      "ready": true,
+      "saved": true,
+      "stopped": true,
+      "build_successful": true,
+      "rc_initialized": true,
+      "dependency_verified": true,
+      "test_mod_loaded": false,
+      "staged_jar_sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+      "log_sha256": "888075eeb4670f857e4ce95fd0e1625d8f4c0dfbce0fe9f607051e38560f22f3",
+      "authentication": "Unverified: unchanged existing smoke fixture is offline-mode on127.0.0.1:25579."
+    }
+  ],
+  "interrupted_initial_attempt": {
+    "status": "Interrupted controller/Gradle launch while expanding raid preparation/lifetime scope; no reopen, not part of final paired outcomes. Its native log contains an All5 line, retained but not counted as a completed pair.",
+    "world": "run/regression/royal-rc5-defaults-01/verifyCapitals",
+    "native_log_sha256": "dc9289e0e49fa26eda104bdd2231a9854bf5e6251188bad8259f1a686bf09096",
+    "staged_interim_jar_sha256": "8f17a4c9530eee9db7a39dd439d0141cbf221e48d570e8f42d8a15905dfb0c9a",
+    "required_pass_counts_in_native_log": [
+      5
+    ]
+  }
+}

@@ -28,8 +28,8 @@ public final class RoyalNpcLiveGameTests {
     static void fixtureTick(ServerLevel level){for(var r:FIXTURES.getOrDefault(level,List.of()))r.activate(true);}
     @GameTest(templateNamespace="millenairekingdoms_royal_npc_live_tests",template="empty",timeoutTicks=20000)
     public static void defaultAutomaticNpcNeedsAndShippingEventsSurviveSeparateJvmWithoutDirectPolicyCalls(GameTestHelper h) throws Exception {
-        h.assertTrue(AutonomyConfig.current().autonomy() && RoyalNpcConfig.budgets().enabled() && RoyalNpcConfig.cadence().intervalTicks()==1200 && RoyalNpcConfig.cadence().maximumKingdoms()==2
-                && RoyalShipmentConfig.TRACKING.get() && RoyalShipmentConfig.INTERVAL.get()==100 && RoyalShipmentConfig.MAX_PER_STEP.get()==2,"Actual automatic event defaults1200/2 NPC,100/2 shipping are enabled");
+        h.assertTrue(AutonomyConfig.current().autonomy() && RoyalNpcConfig.budgets().enabled() && RoyalNpcConfig.cadence().intervalTicks()==600 && RoyalNpcConfig.cadence().maximumKingdoms()==2
+                && RoyalShipmentConfig.TRACKING.get() && RoyalShipmentConfig.INTERVAL.get()==100 && RoyalShipmentConfig.MAX_PER_STEP.get()==2,"Actual automatic event defaults600/2 NPC,100/2 shipping are enabled");
         var level=h.getLevel();var marker=level.getServer().getWorldPath(LevelResource.ROOT).resolve("automatic-npc-economy.dat");RoyalShipmentSupport.Realm realm;
         if(RoyalShipmentSupport.read()){
             var tag=NbtIo.readCompressed(marker,NbtAccounter.create(1024*1024));realm=RoyalShipmentSupport.restore(h,tag,true);var entry=realm.store().load(tag.getUUID("order"));

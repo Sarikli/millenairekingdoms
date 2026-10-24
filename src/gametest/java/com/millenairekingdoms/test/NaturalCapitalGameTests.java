@@ -78,10 +78,10 @@ public final class NaturalCapitalGameTests {
         double chance = CapitalConfig.CHANCE_PERCENT.get(); int distance = CapitalConfig.MIN_DISTANCE.get();
         List<Village> made = new ArrayList<>();
         try {
-            h.assertTrue(CapitalConfig.CHANCE_PERCENT.getDefault() == 2.0 && CapitalConfig.MIN_DISTANCE.getDefault() == 1500
-                    && CapitalConfig.ENABLED.getDefault(), "Defaults: enabled, 2%, 1500 blocks");
-            h.assertTrue(NaturalCapitals.chosen(2.0, 0.0) && NaturalCapitals.chosen(2.0, 0.0199) && !NaturalCapitals.chosen(2.0, 0.02)
-                    && !NaturalCapitals.chosen(2.0, 0.5), "2%: samples below 0.02 only");
+            h.assertTrue(CapitalConfig.CHANCE_PERCENT.getDefault() == 10.0 && CapitalConfig.MIN_DISTANCE.getDefault() == 1000
+                    && CapitalConfig.ENABLED.getDefault(), "Defaults: enabled, 10%, 1000 blocks");
+            h.assertTrue(NaturalCapitals.chosen(10.0, 0.0) && NaturalCapitals.chosen(10.0, 0.0999) && !NaturalCapitals.chosen(10.0, 0.1)
+                    && !NaturalCapitals.chosen(10.0, 0.5), "10%: samples below 0.1 only");
             h.assertTrue(!NaturalCapitals.chosen(0.0, 0.0) && NaturalCapitals.chosen(100.0, 0.999999), "0% never, 100% always");
             // 3. The probability is read from the NeoForge config.
             CapitalConfig.CHANCE_PERCENT.set(50.0);
@@ -93,16 +93,16 @@ public final class NaturalCapitalGameTests {
             BlockPos origin = new BlockPos(500_000, 70, 500_000);
             Village capital = synthetic(level, origin, eligibleType(), made);
             var d = new KingdomSavedData(); var k = d.create("Rule capital", capital.getId().uuid());
-            h.assertTrue(!NaturalCapitals.farFromCapitals(level, d, origin.offset(1499, 0, 0), 1500)
-                    && NaturalCapitals.farFromCapitals(level, d, origin.offset(1500, 0, 0), 1500)
-                    && NaturalCapitals.farFromCapitals(level, d, origin.offset(900, 0, 1200), 1500)
-                    && !NaturalCapitals.farFromCapitals(level, d, origin.offset(900, 0, 1199), 1500), "Horizontal distance, 1500 inclusive");
+            h.assertTrue(!NaturalCapitals.farFromCapitals(level, d, origin.offset(999, 0, 0), 1000)
+                    && NaturalCapitals.farFromCapitals(level, d, origin.offset(1000, 0, 0), 1000)
+                    && NaturalCapitals.farFromCapitals(level, d, origin.offset(600, 0, 800), 1000)
+                    && !NaturalCapitals.farFromCapitals(level, d, origin.offset(600, 0, 799), 1000), "Horizontal distance, 1000 inclusive");
             h.assertTrue(NaturalCapitals.farFromCapitals(level, d, origin.offset(1000, 0, 0), 900), "A configured distance is used as given");
             d.setActive(k.id(), false);
-            h.assertTrue(!NaturalCapitals.farFromCapitals(level, d, origin.offset(1000, 0, 0), 1500), "An inactive but living kingdom still has a capital");
+            h.assertTrue(!NaturalCapitals.farFromCapitals(level, d, origin.offset(999, 0, 0), 1000), "An inactive but living kingdom still has a capital");
 
             // Rule order on real Millénaire village records (no structures needed before the space check).
-            Village near = synthetic(level, origin.offset(1000, 0, 0), eligibleType(), made);
+            Village near = synthetic(level, origin.offset(999, 0, 0), eligibleType(), made);
             CapitalConfig.CHANCE_PERCENT.set(100.0);
             h.assertTrue(NaturalCapitals.consider(level, d, near, 0.5).outcome() == Outcome.TOO_CLOSE, "Too close to a capital");
             CapitalConfig.CHANCE_PERCENT.set(2.0);
@@ -262,11 +262,11 @@ public final class NaturalCapitalGameTests {
 
     private record Candidate(String key, int dx, int dz, double chance, boolean capital) {}
     /** Relative to world spawn, all inside Millénaire's 2000-block "no initial completion" zone: a normal natural village
-     * keeps its level-0 town hall, so "unchanged" is visible. A-C: 2000 apart (both capitals), B: 1000-1414 from them
+     * keeps its level-0 town hall, so "unchanged" is visible. A-C: 2000 apart (both capitals), B: 600 from A
      * (too close), D: 1600 from A but chance 0 in the config. */
     private static final List<Candidate> CANDIDATES = List.of(
             new Candidate("A", 1000, 0, 100.0, true),
-            new Candidate("B", 1000, 1000, 100.0, false),
+            new Candidate("B", 1000, 600, 100.0, false),
             new Candidate("C", -1000, 0, 100.0, true),
             new Candidate("D", 1000, -1600, 0.0, false));
 
