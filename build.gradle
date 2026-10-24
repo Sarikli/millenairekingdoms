@@ -547,6 +547,6 @@ tasks.register('verifyRoyalReceipts') {
 tasks.named('runRoyalShipmentGameTestServerReload') { dependsOn tasks.named('runRoyalShipmentGameTestServer') }
 tasks.register('verifyRoyalShipments') {
     group = 'verification'
-    description = 'Verify strict shipment ledger accounting and separate-JVM persistence; physical transfer is a separate gate.'
+    description = 'Verify strict shipment accounting and native physical cargo operations across separate JVMs.'
     dependsOn tasks.named('runRoyalShipmentGameTestServerReload')
 }

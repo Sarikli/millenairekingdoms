@@ -71,7 +71,7 @@ public class RoyalTreasuryPersistence {
         }
     }
 
-    private static BlockState savedState(CompoundTag chunk,BlockPos position) {
+    static BlockState savedState(CompoundTag chunk,BlockPos position) {
         for(Tag raw:chunk.getList("sections",Tag.TAG_COMPOUND)) {
             var section=(CompoundTag)raw;
             if(section.getByte("Y")==Math.floorDiv(position.getY(),16) && section.contains("block_states",Tag.TAG_COMPOUND)) {

@@ -135,7 +135,7 @@ final class RoyalTreasuryImage {
         }
     }
 
-    private static UUID identity(ChestBlockEntity chest,boolean create) {
+    static UUID identity(ChestBlockEntity chest,boolean create) {
         CompoundTag data=chest.getPersistentData();
         if(!data.contains(IDENTITY)) {
             if(!create) return null;
