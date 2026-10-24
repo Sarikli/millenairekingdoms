@@ -308,5 +308,8 @@
   "millenairekingdoms.gui.personality.AGRICULTURAL": "Tarımsal",
   "millenairekingdoms.gui.personality.RELIGIOUS": "Dinî",
   "millenairekingdoms.gui.personality.ARTISAN": "Zanaat / Üretim",
-  "millenairekingdoms.gui.personality.GENERAL": "Saray / Dengeli"
+  "millenairekingdoms.gui.personality.GENERAL": "Saray / Dengeli",
+  "millenairekingdoms.gui.shipment.stock_summary": "Stok: %s · Korunan: %s",
+  "millenairekingdoms.gui.shipment.stock_details": "Köy stok hedefi: %s\nDevam eden/bekleyen inşaat: %s\nKöylü ihtiyaçları: %s\nMinimum stok: %s\nMillénaire koruması: %s\nKorunan toplam; hedef + inşaat + köylü, Millénaire koruması ve minimum arasındaki en büyük değerdir.",
+  "millenairekingdoms.gui.shipment.insufficient_stock_detail": "İstenen: %s; gönderilebilir: %s; korunan: %s. Stok ayrıntısı için ürünün üzerine gelin."
 }

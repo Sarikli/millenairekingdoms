@@ -100,6 +100,8 @@ public final class RoyalShipmentView {
             if(state.product==null){state.offer=null;out.putString("reason","NO_GOODS");return out;}
             out.putString("product",state.product.toString());var availability=stock.availability(BuiltInRegistries.ITEM.get(state.product));
             out.putInt("physical",availability.physical());out.putInt("available",availability.available());out.putInt("retained",availability.retained());
+            var reserve=new CompoundTag();reserve.putInt("target",availability.target());reserve.putInt("construction",availability.construction());reserve.putInt("residents",availability.residents());
+            reserve.putInt("minimum",RoyalShipmentConfig.current().minimumRemainder());reserve.putInt("nativeProtected",availability.nativeCount()-availability.nativeExport());out.put("reserve",reserve);
             var quote=new RoyalShipmentService(level).previewPlayer(player,state.source,state.target,state.product,state.quantity);long now=level.getGameTime();
             if(state.offer==null || expired(state.offer,now) || !sameTerms(state.offer.quote,quote) || history.stream().anyMatch(e->e.intent().id().equals(state.offer.id)))
                 state.offer=new Offer(UUID.randomUUID(),quote,now);

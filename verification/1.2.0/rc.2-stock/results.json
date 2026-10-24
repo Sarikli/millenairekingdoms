@@ -1,0 +1,77 @@
+{
+  "artifact": {
+    "version": "1.2.0-rc.2",
+    "bytes": 612926,
+    "sha256": "1628fc37c790065056b15ab94bae38b2f88c09fe3f70e90e89cd4147b8fe9cf7",
+    "prior_rc1_sha256": "17db082c52f7c6708ab3a4aaa143dbd2568d7f69244d2ecdfdb92fd7dbbff40f",
+    "changed_payloads": [
+      "META-INF/MANIFEST.MF",
+      "com/millenairekingdoms/client/KingdomScreen$RowList$Row.class",
+      "com/millenairekingdoms/client/KingdomScreen$RowList.class",
+      "com/millenairekingdoms/client/KingdomScreen.class",
+      "com/millenairekingdoms/gui/RoyalShipmentView.class",
+      "META-INF/neoforge.mods.toml",
+      "assets/millenairekingdoms/lang/en_us.json",
+      "assets/millenairekingdoms/lang/tr_tr.json"
+    ],
+    "stock_payment_cargo_domain_classes_unchanged": true,
+    "protocol": 3,
+    "case_status": "User world reports1047 physical/0 sendable; not reproduced in controlled no-project Norman religious source. Controlled1047 protects1024 and allows23, including actual collection/reopen/return/refund. RC2 adds readonly reservation breakdown, does not claim user-world root cause is fixed."
+  },
+  "runs": [
+    {
+      "run": "royal-norman-cobble-01",
+      "required_pass_counts": [
+        18,
+        18
+      ],
+      "sha256": "d930f9df973e92420270f8ffa9a4e7ca25f95b4176873aadcce99f19e81edd25"
+    },
+    {
+      "run": "royal-rc2-stock-diagnostics-02",
+      "required_pass_counts": [
+        18,
+        18
+      ],
+      "sha256": "9a7a992eab6df61b301242bd30fb68890f50a46d03be1b7592705aec3354a070"
+    },
+    {
+      "run": "royal-rc2-existing-gui-01",
+      "required_pass_counts": [
+        7,
+        7
+      ],
+      "sha256": "06495a063877764e858edc60ed274dac3919c3223ed58ee436028653192170bf"
+    }
+  ],
+  "normal_servers": [
+    {
+      "phase": "write",
+      "exit_code": 0,
+      "ready": true,
+      "saved": true,
+      "stopped": true,
+      "build_successful": true,
+      "rc_initialized": true,
+      "dependency_verified": true,
+      "test_mod_loaded": false,
+      "staged_jar_sha256": "1628fc37c790065056b15ab94bae38b2f88c09fe3f70e90e89cd4147b8fe9cf7",
+      "log_sha256": "b07e577ed735f93777e383d3f3939c0dddb26d4e0e07c81dc2ebf2a9b07396d5",
+      "authentication": "Unverified: unchanged existing smoke fixture is offline-mode on127.0.0.1:25579."
+    },
+    {
+      "phase": "reopen",
+      "exit_code": 0,
+      "ready": true,
+      "saved": true,
+      "stopped": true,
+      "build_successful": true,
+      "rc_initialized": true,
+      "dependency_verified": true,
+      "test_mod_loaded": false,
+      "staged_jar_sha256": "1628fc37c790065056b15ab94bae38b2f88c09fe3f70e90e89cd4147b8fe9cf7",
+      "log_sha256": "82d35e7202be1b9a15a2db900954a99ecb226d8fcd15ad89e6e663ddf8aa09a6",
+      "authentication": "Unverified: unchanged existing smoke fixture is offline-mode on127.0.0.1:25579."
+    }
+  ]
+}

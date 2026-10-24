@@ -79,6 +79,7 @@ public final class RoyalShipmentGuiGameTests {
             var nativeBefore=VillageSavedData.get(h.getLevel()).save(new CompoundTag(),h.getLevel().registryAccess()).copy();
             var frame=f.frame();h.assertTrue(frame.getInt("physical")==96 && frame.getInt("available")==80 && frame.getInt("retained")==16
                     && frame.getLong("fee")==9 && frame.getLong("travelTicks")==3600 && frame.getLong("spendable")==128 && frame.getBoolean("canOrder"),"Preview uses real native stock/reserves, route512, quantity40 and treasury128");
+            var reserve=frame.getCompound("reserve");h.assertTrue(reserve.getInt("minimum")==16 && reserve.getInt("target")==0 && reserve.getInt("construction")==0 && reserve.getInt("residents")==0 && reserve.getInt("nativeProtected")==0,"Readonly stock breakdown explains the actual16 minimum separately from native/project/household needs");
             h.assertTrue(frame.getUUID("offer").equals(offer(f)) && f.realm.store().load(frame.getUUID("offer"))==null
                     && nativeBefore.equals(VillageSavedData.get(h.getLevel()).save(new CompoundTag(),h.getLevel().registryAccess()))
                     && f.realm.goods(f.realm.source())==96 && f.realm.goods(f.realm.target())==4 && f.realm.coins()==128,"Repeated preview neither reserves nor moves goods/coins/native work");h.succeed();
@@ -225,6 +226,7 @@ public final class RoyalShipmentGuiGameTests {
             for(var stage:Stage.values())h.assertTrue(json.has("millenairekingdoms.gui.shipment.stage."+stage.name()),"Every stage translated: "+language+" "+stage);
             for(var blocked:RoyalShipmentStore.Blocked.values())h.assertTrue(json.has("millenairekingdoms.gui.shipment.blocked."+blocked.name()),"Every blocked reason translated: "+language+" "+blocked);
             h.assertTrue(json.has("millenairekingdoms.gui.shipment.stage.CANCELLING") && json.has("millenairekingdoms.gui.shipment.earned_fee_note") && json.has("millenairekingdoms.gui.msg.shipment_offer_expired"),"Cancellation and offer policies are explicit in both languages");
+            for(var key:List.of("stock_summary","stock_details","insufficient_stock_detail"))h.assertTrue(json.has("millenairekingdoms.gui.shipment."+key),"Actual reservation figures are explained in both languages: "+key);
         }h.succeed();
     }
     @GameTest(templateNamespace=NS,template="empty",batch="shipping_gui_restart",timeoutTicks=1200)
@@ -244,6 +246,43 @@ public final class RoyalShipmentGuiGameTests {
         f.realm.capital().setActive(false);f.realm.source().setActive(false);f.realm.target().setActive(false);VillageSavedData.get(level).setDirty();
         h.assertTrue(f.realm.store().load(id).collected()==40 && f.realm.payments().load(id).state()==State.PAID,"Write fixture saved actual collected40 and real fee9");
         System.out.println("ROYAL_SHIPMENT_GUI_RESTART_WRITE_PASS source=56 target=4 held=40 capital=119");h.succeed();
+    }
+    @GameTest(templateNamespace=NS,template="empty",batch="shipping_norman_stock",timeoutTicks=1200)
+    public static void normanReligious1047CobblestoneAllows23DespiteDefault40AndSurvivesCollectedRestart(GameTestHelper h)throws Exception{
+        var level=h.getLevel();var manager=VillageSavedData.get(level).getVillageManager();var marker=level.getServer().getWorldPath(LevelResource.ROOT).resolve("royal-norman-cobble.dat");
+        RoyalShipmentSupport.Realm realm;ServerPlayer player;org.millenaire.village.Village source;
+        if(RoyalShipmentSupport.read()){
+            var tag=NbtIo.readCompressed(marker,NbtAccounter.unlimitedHeap());realm=RoyalShipmentSupport.restore(h,tag,true);player=new FakePlayer(level,new GameProfile(tag.getUUID("player"),"Norman cobble reopen"));source=manager.getVillage(new org.millenaire.village.VillageId(tag.getUUID("norman")));
+            h.assertTrue(source!=null && source.getTownhall()!=null,"Saved original Norman religious source rehydrates without repair");RoyalShipmentSupport.activateVillage(level,source);var id=tag.getUUID("order");
+            h.assertTrue(realm.store().load(id).escrow()==23 && source.getTownhall().getInventory().getCount(level,Items.COBBLESTONE)==1024,"Separate JVM retains23 real collected stones and1024 protected physical stones");
+            realm.service().cancelPlayer(player,id);for(int n=0;n<8 && !realm.store().load(id).terminal();n++)realm.service().observe(id);
+            h.assertTrue(realm.store().load(id).stage()==Stage.CANCELLED && realm.store().load(id).escrow()==0 && realm.coins()==128,"Predispatch return/refund preserves every original coin/stone across JVMs");
+        }else{
+            var fixture=fixture(h,"Norman cobble source");realm=fixture.realm;player=fixture.player;
+            var type=org.millenaire.culture.ModCultures.getVillageType(ResourceLocation.parse("millenaire:norman/ecclesiastique"));var slot=type.layout().stream().filter(s->s.role().equals("centre")).findFirst().orElseThrow();var set=org.millenaire.culture.ModCultures.getBuildingPlanSet(slot.plan());var variant=set.variants().keySet().stream().sorted().findFirst().orElseThrow();var def=set.getLevel(variant,0);var origin=realm.source().getCenter().offset(0,0,1024);
+            source=new org.millenaire.village.Village(org.millenaire.village.VillageId.random(),type.culture(),type.id(),origin);source.setVillageName("Existing Norman religious storage");
+            var hall=new BuildingInstance(org.millenaire.building.BuildingId.random(),def.planId(),origin,net.minecraft.world.level.block.Rotation.NONE,BuildingInstance.Status.COMPLETE,set.id(),variant,0);hall.resolveSpecialPoints(org.millenaire.culture.ModCultures.getBuildingPlan(def.planId()));hall.initInventory();source.addBuilding(hall);
+            for(var position:hall.getInventory().getChestPositions()){level.getChunkAt(position);level.setBlock(position,net.minecraft.world.level.block.Blocks.CHEST.defaultBlockState(),2);}manager.addVillage(source);RoyalShipmentSupport.activateVillage(level,source);KingdomSavedData.get(level).attach(realm.kingdom(),source.getId().uuid());
+            h.assertTrue(hall.getInventory().add(level,Items.COBBLESTONE,1047)==1047,"Declared1047 ordinary cobblestones enter genuine original Norman townhall storage");
+        }
+        RoyalShipmentView.forget(player.getUUID());RoyalShipmentView.selectVillage(player,source.getId().uuid(),true);RoyalShipmentView.selectVillage(player,realm.to(),false);RoyalShipmentView.selectProduct(player,ResourceLocation.parse("minecraft:cobblestone"));
+        var stock=com.millenairekingdoms.shipping.RoyalVillageStock.forPlayer(player,source.getId().uuid()).availability(Items.COBBLESTONE);var frame=RoyalShipmentView.build(player,realm.kingdom());
+        System.out.println("ROYAL_NORMAN_COBBLE_"+(RoyalShipmentSupport.read()?"REOPEN":"WRITE")+" stock="+stock+" quantity="+frame.getInt("quantity")+" canOrder="+frame.getBoolean("canOrder")+" reason="+frame.getString("reason"));
+        h.assertTrue(stock.physical()==1047 && stock.target()==1024 && stock.construction()==0 && stock.residents()==0 && stock.retained()==1024 && stock.available()==23,"No-job Norman source protects exactly1024, never all1047 merely because the world reopened");
+        h.assertTrue(frame.getInt("quantity")==40 && frame.getInt("available")==23 && !frame.getBoolean("canOrder") && frame.getString("reason").equals("INSUFFICIENT_STOCK"),"Default40 exceeds the genuine23 surplus but must not be presented as zero transferable stock");
+        var reserve=frame.getCompound("reserve");h.assertTrue(reserve.getInt("target")==1024 && reserve.getInt("construction")==0 && reserve.getInt("residents")==0 && reserve.getInt("minimum")==16 && reserve.getInt("nativeProtected")==1024,"Norman diagnostic snapshot exposes every genuine contributor after loading the old native records");
+        int minimum=com.millenairekingdoms.shipping.RoyalShipmentConfig.MINIMUM_REMAINDER.get();
+        try{
+            com.millenairekingdoms.shipping.RoyalShipmentConfig.MINIMUM_REMAINDER.set(2048);RoyalShipmentView.quantity(player,1);var protectedAll=RoyalShipmentView.build(player,realm.kingdom());
+            h.assertTrue(protectedAll.getInt("physical")==1047 && protectedAll.getInt("available")==0 && protectedAll.getInt("retained")==2048 && !protectedAll.getBoolean("canOrder") && protectedAll.getCompound("reserve").getInt("minimum")==2048 && protectedAll.getCompound("reserve").getInt("construction")==0,"A genuine zero without construction remains enforced and its configured cause is explicit; no false promised1 item or weakened reserve");
+        }finally{com.millenairekingdoms.shipping.RoyalShipmentConfig.MINIMUM_REMAINDER.set(minimum);}
+        RoyalShipmentView.quantity(player,1);h.assertTrue(RoyalShipmentView.build(player,realm.kingdom()).getBoolean("canOrder"),"Applying one stone is genuinely eligible despite the disabled default40 offer");
+        if(!RoyalShipmentSupport.read()){
+            RoyalShipmentView.quantity(player,23);frame=RoyalShipmentView.build(player,realm.kingdom());h.assertTrue(frame.getBoolean("canOrder"),"Full23 surplus is authorized with the same untouched1024 reserve");var id=frame.getUUID("offer");RoyalShipmentView.order(player,id);realm.service().observe(id);
+            h.assertTrue(realm.store().load(id).escrow()==23 && source.getTownhall().getInventory().getCount(level,Items.COBBLESTONE)==1024,"The actual accepted player shipment collects23, never touches the protected1024");
+            var tag=realm.marker();tag.putUUID("norman",source.getId().uuid());tag.putUUID("player",player.getUUID());tag.putUUID("order",id);NbtIo.writeCompressed(tag,marker);realm.save();for(var v:List.of(realm.capital(),realm.source(),realm.target(),source))v.setActive(false);VillageSavedData.get(level).setDirty();
+        }else{RoyalShipmentView.forget(player.getUUID());realm.close();manager.removeVillage(source.getId());}
+        h.succeed();
     }
     private RoyalShipmentGuiGameTests(){}
 }

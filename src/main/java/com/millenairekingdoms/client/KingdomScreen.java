@@ -166,7 +166,7 @@ public final class KingdomScreen extends Screen {
         for(int n=0;n<products.size();n++)if(products.getCompound(n).getString("id").equals(s.getString("product")))productIndex=n;
         if(!products.isEmpty()){
             String next=products.getCompound((productIndex+1)%products.size()).getString("id");
-            shipmentButton(x,y,lw,shipmentItem(s.getString("product")),b->send(new KingdomActionPayload("SHIPMENT_PRODUCT",Optional.empty(),Optional.empty(),0,next)),products.size()>1,null);
+            shipmentButton(x,y,lw,shipmentItem(s.getString("product")),b->send(new KingdomActionPayload("SHIPMENT_PRODUCT",Optional.empty(),Optional.empty(),0,next)),products.size()>1,shipmentStockDetails(s));
         }else text(x,y,t("shipment.no_goods"),MUTED,lw);
         int sy=y+20;
         if(shipmentQuantity.isEmpty())shipmentQuantity=Integer.toString(s.getInt("quantity"));
@@ -178,7 +178,7 @@ public final class KingdomScreen extends Screen {
         },true,t("shipment.quantity_hint",s.getInt("maximumQuantity")));
         sy+=20;
         if(s.contains("physical")){
-            sy=line(x,sy,t("shipment.physical",s.getInt("physical")),lw);
+            sy=line(x,sy,t("shipment.stock_summary",s.getInt("physical"),s.getInt("retained")),lw);
             sy=line(x,sy,t("shipment.available",s.getInt("available")),lw);
         }
         if(s.hasUUID("offer")){
@@ -186,10 +186,10 @@ public final class KingdomScreen extends Screen {
             sy=line(x,sy,t("shipment.time",seconds(s.getLong("travelTicks"))),lw);
             var purchase=Button.builder(t("shipment.order"),b->send(KingdomActionPayload.of("SHIPMENT_ORDER",s.getUUID("offer")))).bounds(x,sy+2,lw,16).build();
             purchase.active=s.getBoolean("canOrder") && shipmentQuantity.equals(Integer.toString(s.getInt("quantity")));
-            purchase.setTooltip(Tooltip.create(s.getBoolean("canOrder") ? t("shipment.apply_quantity") : shipmentReason(s.getString("reason"))));addRenderableWidget(purchase);
+            purchase.setTooltip(Tooltip.create(s.getBoolean("canOrder") ? t("shipment.apply_quantity") : shipmentReason(s)));addRenderableWidget(purchase);
             shipmentQuantityBox.setResponder(value->{shipmentQuantity=value;purchase.active=s.getBoolean("canOrder") && value.equals(Integer.toString(s.getInt("quantity")));});sy+=22;
         }
-        if(s.contains("reason"))wrapped(x,sy,shipmentReason(s.getString("reason")),lw,BAD,Math.max(1,(bottom()-sy)/11));
+        if(s.contains("reason"))wrapped(x,sy,shipmentReason(s),lw,BAD,Math.max(1,(bottom()-sy)/11));
         var orders=s.getList("orders",Tag.TAG_COMPOUND);
         if(orders.isEmpty()){wrapped(rx,y,t(s.getBoolean("stateKnown") ? "shipment.no_order" : "shipment.order_unknown"),rw,MUTED,4);return;}
         int index=0;for(int n=0;n<orders.size();n++)if(orders.getCompound(n).getUUID("id").equals(selectedShipmentOrder))index=n;
@@ -216,6 +216,16 @@ public final class KingdomScreen extends Screen {
         shipmentButton(x,y,width,label,b->send(KingdomActionPayload.of(source ? "SHIPMENT_SOURCE" : "SHIPMENT_TARGET",nextId)),!nextId.equals(current),Component.empty().append(label).append("\n").append(t(source ? "shipment.source_note" : "shipment.target_note")));
     }
     private static Component shipmentReason(String reason){return t("shipment.reason."+(reason.isEmpty() ? "SERVICE_UNAVAILABLE" : reason));}
+    private static Component shipmentReason(CompoundTag state){
+        return state.getString("reason").equals("INSUFFICIENT_STOCK")
+                ? t("shipment.insufficient_stock_detail",state.getInt("quantity"),state.getInt("available"),state.getInt("retained")) : shipmentReason(state.getString("reason"));
+    }
+    private static Component shipmentStockDetails(CompoundTag state){
+        if(!state.contains("physical"))return null;
+        var summary=t("shipment.stock_summary",state.getInt("physical"),state.getInt("retained"));
+        if(!state.contains("reserve",Tag.TAG_COMPOUND))return summary;
+        var reserve=state.getCompound("reserve");return summary.append("\n").append(t("shipment.stock_details",reserve.getInt("target"),reserve.getInt("construction"),reserve.getInt("residents"),reserve.getInt("minimum"),reserve.getInt("nativeProtected")));
+    }
     private static Component shipmentItem(String id){var item=net.minecraft.core.registries.BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse(id));return item.<Component>map(i->Component.translatable(i.getDescriptionId())).orElseGet(()->Component.literal(id));}
     private static long seconds(long ticks){return ticks/20+(ticks%20==0 ? 0 : 1);}
 

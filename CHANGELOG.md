@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0-rc.2 — 2026-10-24 (stock diagnostic follow-up)
+
+- Show actual and kept shipment stock, plus a product-hover breakdown of native target, construction, residents, configured minimum and Millénaire protection. Insufficient-stock messages show requested/sendable/kept amounts in English and Turkish.
+- Add a genuine original Norman religious storage regression:1047 cobblestone protects1024 and permits23; actual collected23/remaining1024 survive separate JVM, then cancellation returns all goods/one fee exactly. A controlled2048 minimum explains a genuine zero with no construction; it is not assumed to be the user's configuration.
+- Focused shipment GUI passed18+18, existing GUI7+7/build; actual RC2 normal production-JAR startup/save/stop/reopen passed. Stock/payment/cargo/domain bytecode is unchanged; no reserve is bypassed or world format changed.
+- **The reported user's1047/0 root cause remains open.** This follow-up exposes the values needed to diagnose the actual world; the controlled test does not reproduce its zero. Graphical tooltip layout and online authentication remain unverified. See [investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md).
+
+
 ## 1.2.0-rc.1 — 2026-10-24 (release candidate)
 
 - Target the verified original Millénaire 9.0.3 with Minecraft 1.21.1, NeoForge 21.1.259 and Java 21; keep the dependency separate.
