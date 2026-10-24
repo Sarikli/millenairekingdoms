@@ -1,0 +1,79 @@
+{
+  "version": "1.2.0-rc.5",
+  "bytes": 614471,
+  "sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+  "prior_rc4_sha256": "20cdc368d0ee2f61083c4512ca43223cb3f519d838462b6ee7f330394eca758b",
+  "changed_payloads": [
+    "META-INF/MANIFEST.MF",
+    "META-INF/neoforge.mods.toml",
+    "com/millenairekingdoms/autonomy/AutonomyConfig$Settings.class",
+    "com/millenairekingdoms/autonomy/AutonomyConfig.class",
+    "com/millenairekingdoms/autonomy/AutonomyService.class",
+    "com/millenairekingdoms/autonomy/RaidOrderService.class",
+    "com/millenairekingdoms/autonomy/RoyalNpcConfig$Cadence.class",
+    "com/millenairekingdoms/autonomy/RoyalNpcConfig.class",
+    "com/millenairekingdoms/capital/CapitalConfig.class",
+    "com/millenairekingdoms/capital/FoundingConfig$Settings.class",
+    "com/millenairekingdoms/capital/FoundingConfig.class"
+  ],
+  "identical_production_class_files": 191,
+  "all_resources_unchanged": true,
+  "category_mapping_personality_weights_stock_payment_cargo_ui_payloads_unchanged": true,
+  "scope": "Natural chance10%, both capital spacings1000; shared politics1 day; other decision waits halved/rounded down. Other chances, relation/level/reputation thresholds, fees, real reserves and cargo travel unchanged.",
+  "protocol": 3,
+  "source_base_commit": "3c88ce183181da66a8334cb352e93c370dae926a",
+  "source_commit_lookup": "git log -1 --format=%H -- releases/1.2.0-rc.5/millenairekingdoms-1.2.0-rc.5.jar",
+  "generated_config_changes": {
+    "naturalCapitals.chancePercent": {
+      "old": 2.0,
+      "new": 10.0
+    },
+    "naturalCapitals.minCapitalDistance": {
+      "old": 1500,
+      "new": 1000
+    },
+    "npcAutonomy.decisionIntervalDays": {
+      "old": 3,
+      "new": 1
+    },
+    "npcAutonomy.raidCooldownDays": {
+      "old": 3,
+      "new": 1
+    },
+    "npcAutonomy.truceDays": {
+      "old": 10,
+      "new": 5
+    },
+    "royalNpcPolicy.attemptIntervalDays": {
+      "old": 3,
+      "new": 1
+    },
+    "royalNpcPolicy.projectCooldownDays": {
+      "old": 6,
+      "new": 3
+    },
+    "royalNpcPolicy.villageProjectCooldownDays": {
+      "old": 12,
+      "new": 6
+    },
+    "royalNpcPolicy.routeCooldownDays": {
+      "old": 6,
+      "new": 3
+    },
+    "royalNpcPolicy.checkIntervalTicks": {
+      "old": 1200,
+      "new": 600
+    },
+    "dynamicFounding.checkIntervalDays": {
+      "old": 7,
+      "new": 3
+    },
+    "dynamicFounding.minCapitalDistance": {
+      "old": 1500,
+      "new": 1000
+    }
+  },
+  "other_config_values_unchanged": true,
+  "graphics": "Unverified; unchanged client UI/labels, no graphical session.",
+  "online_authentication": "Unverified; unchanged localhost/offline-mode fixture."
+}

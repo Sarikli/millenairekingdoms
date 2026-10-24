@@ -24,6 +24,8 @@ public final class KingdomsCommands {
 
     public static void register(RegisterCommandsEvent event) {
         event.getDispatcher().register(Commands.literal("kingdoms").requires(source -> source.hasPermission(2))
+                .then(RoyalRecoveryCommands.tree())
+                .then(RoyalNpcCommands.tree())
                 .then(Commands.literal("war")
                         .then(Commands.literal("declare").then(kingdomArgument("attackerKingdom")
                                 .then(kingdomArgument("defenderKingdom").executes(c -> guarded(c, () -> {
@@ -60,6 +62,7 @@ public final class KingdomsCommands {
                     var s = com.millenairekingdoms.autonomy.AutonomyConfig.current();
                     var war = data.activeWar(k.id());
                     boolean attacking = war != null && war.attackerKingdom().equals(k.id());
+                    reply(c, com.millenairekingdoms.autonomy.RoyalInvestmentPolicy.describe(com.millenairekingdoms.autonomy.RoyalInvestmentPolicy.context(level,data,k,k.capital())));
                     var targets = attacking ? com.millenairekingdoms.autonomy.AutonomyService.warTargets(data, war)
                             : com.millenairekingdoms.autonomy.AutonomyService.hostileIndependents(level, data, k, s);
                     reply(c, k.name() + " | npc=" + data.npcGoverned(k.id()) + " | " + (war == null ? "at peace" : attacking ? "attacking" : "defending")
@@ -154,6 +157,7 @@ public final class KingdomsCommands {
                     var data = data(c); var kingdom = data.kingdom(PoliticalArguments.kingdom(c, "kingdom"));
                     if (kingdom == null) throw new IllegalArgumentException("Unknown kingdom.");
                     reply(c, describe(data, kingdom));
+                    reply(c, com.millenairekingdoms.personality.KingdomPersonality.describe(com.millenairekingdoms.personality.KingdomPersonality.forCapital(c.getSource().getLevel(),kingdom)));
                     data.members(kingdom.id()).stream().sorted().forEach(v -> reply(c, "  " + v + (data.isCapital(v) ? " (capital)" : "")));
                 }))))
                 .then(Commands.literal("test")

@@ -1,0 +1,43 @@
+{
+  "version": "1.2.0-dev.6",
+  "jar_sha256": "eacc1b2625a30936cc46001500cbcf3de7cf08a313a21c4bef0e3da5a166e417",
+  "runs": [
+    {
+      "run": "royal-dev6-builders-final-03",
+      "log": "physical-final-pair.log.gz",
+      "required_pass_counts": [
+        1,
+        1
+      ],
+      "build_successful": true,
+      "sha256": "0ca6fad2d2dc35e21ea1b53d1d4ba1b82b09d7dcb24c110b4fa46e9511c151b8"
+    },
+    {
+      "run": "royal-dev6-final-coordinator-01",
+      "log": "coordinator-12-pair.log.gz",
+      "required_pass_counts": [
+        12,
+        12
+      ],
+      "build_successful": true,
+      "sha256": "7b7f20e8ff02cccc67dbbee15c8b9358658289ad8b9b35d6facd3f415449291d"
+    },
+    {
+      "run": "royal-npc-builders-02",
+      "log": "physical-intermediate-pair.log.gz",
+      "required_pass_counts": [
+        1,
+        1
+      ],
+      "build_successful": true,
+      "sha256": "4c08ce8f4d6d56a4d0536bf509af0832cca939eb24382cfaf4d5c0c7f03a906e"
+    },
+    {
+      "run": "royal-npc-builders-01",
+      "log": "physical-before-wall-fix-failure.log.gz",
+      "required_pass_counts": [],
+      "build_successful": false,
+      "sha256": "dd263ec8cfa5a7e09c50131ef7240d36be092fef5361b310e4e78be7f1db9d1c"
+    }
+  ]
+}

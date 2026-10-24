@@ -1,0 +1,9 @@
+# 1.2.0-rc.5 — natural capitals and decision timing
+
+Natural capitals now default to10% and1000 blocks between capitals (natural or development-founded). Joining/shared political decisions default to1 day. Other decision waits are halved and rounded down, including founding, raids/truces/peace, queued raid orders and NPC economics. Other chances, relation/level/reputation thresholds, personality weights, actual funds/reserves and cargo travel remain unchanged. [Full timing table / Türkçe açıklama](../../docs/1.2.0_RC5_TIMINGS.md).
+
+**Existing installations retain their active TOML values.** Merge the12 keys in [serverconfig-changes.toml](serverconfig-changes.toml) into the existing sections of the active millenairekingdoms-server.toml (config/ or world/serverconfig/). This is a partial list, not a replacement file. Already saved due dates, economic cooldowns, truces and order lifetimes remain intact. The actual user's world is unavailable and has not been edited.
+
+Own addon only; matching client/server builds use original Millénaire9.0.3 / Minecraft1.21.1 / NeoForge21.1.259 / Java21. Original dependency/test classes are separate. Previous candidates are preserved. Protocol3/save schemas unchanged; RC.3 navigation and RC.4 EN/TR temperament names remain available. SHA256SUMS pins the actual tested artifact.
+
+[Exact verification](../../verification/1.2.0/rc.5-timings/README.md): build; six focused packages, each write success gated before separate-JVM same-world reopen, expected All5/22/12/12/1/1 per phase; actual production-JAR normal save/stop/reopen. One obsolete test assertion failed then was corrected without changing production code; failure retained. An interrupted earlier candidate is excluded from completed pairs. Graphical/online checks remain unverified; the separate user's1047/0 stock report is still open.

@@ -1,0 +1,135 @@
+{
+  "complete": true,
+  "worlds": 4,
+  "jvms": 12,
+  "passing_preparation_jvms": 4,
+  "passing_recovery_jvms": 4,
+  "expected_abrupt_halts": 4,
+  "expected_halt_exit_code": 70,
+  "cases": [
+    {
+      "boundary": "before",
+      "world_run": "payment-crash-20261023T183026-5f0e0b43-before",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "before-prepare.log"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "before-interrupt.log"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "before-recover.log"
+        }
+      ]
+    },
+    {
+      "boundary": "partial",
+      "world_run": "payment-crash-20261023T183151-b131296b-partial",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "partial-prepare.log"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "partial-interrupt.log"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "partial-recover.log"
+        }
+      ]
+    },
+    {
+      "boundary": "after",
+      "world_run": "payment-crash-20261023T183151-b131296b-after",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "after-prepare.log"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "after-interrupt.log"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "after-recover.log"
+        }
+      ]
+    },
+    {
+      "boundary": "refund",
+      "world_run": "payment-crash-20261023T183151-b131296b-refund",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "refund-prepare.log"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "refund-interrupt.log"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "refund-recover.log"
+        }
+      ]
+    }
+  ]
+}

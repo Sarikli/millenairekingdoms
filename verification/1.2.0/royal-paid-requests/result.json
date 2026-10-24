@@ -1,0 +1,12 @@
+{
+  "suite": "verifyRoyalConstruction",
+  "write": 19,
+  "reload": 19,
+  "fresh_world": "royal-paid-request-02",
+  "separate_jvms": true,
+  "normal_build_passed": true,
+  "development_jar_sha256": "82a03089fc25db12e37dcae62dbad0d0f4d0cce3155eb1ca9ae9b980f47399e5",
+  "real_payment_and_original_pending_queue_tested": true,
+  "actual_npc_construction_completed": false,
+  "gui_or_scheduler_exposed": false
+}

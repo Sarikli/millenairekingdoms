@@ -1,0 +1,16 @@
+{
+  "run": "building-crash-20261023T214925-8ba47807",
+  "kind": "actual-resident-physical-building-abrupt-save",
+  "stages": [
+    {
+      "stage": "guard",
+      "exit_code": 0,
+      "required_test_pass_lines": [
+        "1"
+      ],
+      "verified": true,
+      "log": "guard.log"
+    }
+  ],
+  "complete": true
+}

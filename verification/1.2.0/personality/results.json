@@ -1,0 +1,45 @@
+{
+  "mod_version": "1.2.0-dev.5",
+  "mapping_revision": 1,
+  "native_types": 126,
+  "mapped_npc_types": 37,
+  "excluded_controlled": 10,
+  "excluded_lone": 79,
+  "categories": {
+    "MILITARY": 7,
+    "AGRICULTURAL": 10,
+    "RELIGIOUS": 7,
+    "ARTISAN": 7,
+    "GENERAL": 6
+  },
+  "political_format": 6,
+  "cases": [
+    {
+      "run": "royal-personality-01",
+      "required_pass_counts": [],
+      "normal_build_successful": false,
+      "raw_sha256": "df8e4a13b87952b30eeee2c96ea326b0cb55428080540f46f1c98b5f1025b16e"
+    },
+    {
+      "run": "royal-personality-02",
+      "required_pass_counts": [
+        8,
+        8
+      ],
+      "normal_build_successful": true,
+      "raw_sha256": "313fcda2a2e948e418bda30d942e4dcfe2cab53fdb953427edc66d793cb468bb"
+    },
+    {
+      "run": "royal-personality-final-03",
+      "required_pass_counts": [
+        9,
+        9
+      ],
+      "normal_build_successful": true,
+      "raw_sha256": "44babc70c365906505f491afdbddaf2eca5914f3eca70dfea9bfd32118d0b4e3"
+    }
+  ],
+  "production_jar_sha256": "9a7d3eed2d2b3e289e00662e19b49dd0645e2855b4c85e903d81862d4d2a9baf",
+  "graphics": "UNVERIFIED",
+  "online_authenticated_login": "UNVERIFIED"
+}

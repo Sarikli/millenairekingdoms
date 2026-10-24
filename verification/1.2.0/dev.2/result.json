@@ -1,0 +1,14 @@
+{
+  "version": "1.2.0-dev.2",
+  "suite": "verifyRoyalEconomy",
+  "write": 46,
+  "reload": 46,
+  "fresh_world": "royal-dev2-final",
+  "separate_jvms": true,
+  "normal_build_passed": true,
+  "development_jar_sha256": "557149d0a8498ed8f1dfa722a3cb8fd56f2582f9b02236460a76f26c3d0e365f",
+  "millenaire": "9.0.3",
+  "dependency_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "actual_abrupt_process_evidence": "../payment-crashes/",
+  "paid_gameplay_consumer_exposed": false
+}

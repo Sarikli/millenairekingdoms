@@ -1,0 +1,24 @@
+{
+  "version": "1.2.0-rc.3",
+  "bytes": 614486,
+  "sha256": "260e38d393e1d445cb30f4375d078c09eef5c09fb18f5d687e4452da98035c31",
+  "prior_rc2_sha256": "1628fc37c790065056b15ab94bae38b2f88c09fe3f70e90e89cd4147b8fe9cf7",
+  "source_base_commit": "d03b70884bca1ae8a99597f18a2754bc7ebe35f4",
+  "source_commit_lookup": "git log -1 --format=%H -- releases/1.2.0-rc.3/millenairekingdoms-1.2.0-rc.3.jar",
+  "changed_payloads": [
+    "META-INF/MANIFEST.MF",
+    "META-INF/neoforge.mods.toml",
+    "assets/millenairekingdoms/lang/en_us.json",
+    "assets/millenairekingdoms/lang/tr_tr.json",
+    "com/millenairekingdoms/client/KingdomScreen$RowList$Row.class",
+    "com/millenairekingdoms/client/KingdomScreen$RowList.class",
+    "com/millenairekingdoms/client/KingdomScreen$Text.class",
+    "com/millenairekingdoms/client/KingdomScreen.class"
+  ],
+  "all_server_view_stock_payment_cargo_domain_payloads_identical_to_rc2": true,
+  "protocol": 3,
+  "translation_keys_per_language": 314,
+  "graphical_layout": "Unverified: no graphical client session available.",
+  "online_authentication": "Unverified: normal-server fixture is unchanged localhost/offline-mode.",
+  "stock_case": "User-world1047/0 remains open; RC2 diagnostics retained and stock rules unchanged."
+}

@@ -24,7 +24,7 @@ import org.millenaire.village.Village;
 import org.millenaire.village.VillageSavedData;
 import org.slf4j.Logger;
 
-/** Stage 6.2: the political decisions of NPC-governed kingdoms, taken once per decision interval (3 days by default)
+/** Stage 6.2: the political decisions of NPC-governed kingdoms, taken once per decision interval (1 day by default)
  * from KingdomDay, never per tick. Everything is read from persistent data (Millénaire relations and villager records,
  * kingdom data), so unloaded villages take part in politics; nothing here fights or simulates a battle. Raid orders it
  * creates start only as real Millénaire raids (RaidOrderService). A kingdom with a player ruler is never decided for:
@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 public final class AutonomyService {
     private static final Logger LOGGER = LogUtils.getLogger();
     /** Wars are not ended by NPC decision before this many days; after IDLE_DAYS without a victory they may be. */
-    public static final int PEACE_AFTER_DAYS = 12, IDLE_DAYS = 6, LONG_WAR_DAYS = 36;
+    public static final int PEACE_AFTER_DAYS = 6, IDLE_DAYS = 3, LONG_WAR_DAYS = 18;
     /** Base chance per evaluation that an independent village with good relations joins (or applies to) a kingdom. */
     public static final double JOIN_CHANCE = 0.10;
     private static final String TAG = "[Kingdoms] ";
@@ -161,7 +161,8 @@ public final class AutonomyService {
     /** Chance that k declares war on t at one evaluation: the profile's base, more for the stronger side, never certain. */
     public static double declareChance(ServerLevel level, KingdomSavedData data, Kingdom k, Kingdom t, Settings s) {
         double ratio = (double) Military.strength(level, data, k.id()) / Math.max(1, Military.defence(level, data, t.id()));
-        return s.frequency().declare * Math.max(0.5, Math.min(1.5, 0.5 + 0.5 * ratio));
+        double existing=s.frequency().declare * Math.max(0.5, Math.min(1.5, 0.5 + 0.5 * ratio));
+        return RoyalInvestmentPolicy.aggression(existing,com.millenairekingdoms.personality.KingdomPersonality.forCapital(level,k).category(),RoyalNpcConfig.weights());
     }
 
     private static int wars(ServerLevel level, KingdomSavedData data, long day, RandomSource random, Settings s) {
@@ -317,7 +318,7 @@ public final class AutonomyService {
         War war = data.activeWar(k.id());
         boolean attacking = war != null && war.attackerKingdom().equals(k.id());
         if (war != null && !attacking) return null; // A defender does not counter-conquer (stage-4 directional wars).
-        double chance = attacking ? s.frequency().campaign : s.frequency().independent;
+        double chance = campaignChance(level,k,attacking,s);
         if (random.nextDouble() >= chance) return null;
         Plan plan = plan(level, data, k.id(), attacking ? warTargets(data, war) : hostileIndependents(level, data, k, s), day, s);
         if (plan == null) return null;
@@ -332,6 +333,12 @@ public final class AutonomyService {
         if (attacking) PoliticsService.notifyRuler(level, war.defenderKingdom(), Component.literal(TAG + k.name() + " prepares a conquest raid on "
                 + PoliticsService.name(plan.target) + ".").withStyle(ChatFormatting.RED));
         return order;
+    }
+
+    /** Personality scales the old draw only; all source/target/directional/60%/cooldown checks remain in place. */
+    public static double campaignChance(ServerLevel level,Kingdom k,boolean attacking,Settings settings){
+        return RoyalInvestmentPolicy.aggression(attacking ? settings.frequency().campaign : settings.frequency().independent,
+                com.millenairekingdoms.personality.KingdomPersonality.forCapital(level,k).category(),RoyalNpcConfig.weights());
     }
 
     // ---- helpers ----

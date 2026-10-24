@@ -1,0 +1,15 @@
+{
+  "run": "royal-refund-baseline-01",
+  "task": "runRoyalReceiptGameTestServer",
+  "passed": false,
+  "required_failures": 1,
+  "capital": 128,
+  "recipient": 64,
+  "actual_total": 192,
+  "expected_total": 128,
+  "reproduced_duplication": 64,
+  "journal_state": "REFUNDED",
+  "native_inventory_remove_used": true,
+  "actual_chest_writes": true,
+  "actual_abrupt_halt": false
+}

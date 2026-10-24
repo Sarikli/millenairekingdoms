@@ -1,5 +1,48 @@
 # Changelog
 
+## 1.2.0-rc.5 — 2026-10-24 (natural capitals and decision timing)
+
+- Set new natural-capital chance to10% and both natural/development-founded capital spacing defaults to1000 blocks. Joining/shared political evaluations now default to1 day. Halve other decision waits with rounding down: founding7→3, raid cooldown3→1, truce10→5, peace age12→6/idle6→3/long-war36→18 days.
+- Halve NPC raid preparation6000→3000 ticks, order lifetime48000→24000 and queued-order checks100→50. NPC economic checks1200→600 ticks and attempt/project/village/route waits3/6/12/6→1/3/6/3 days. Retain all other probabilities, relation/level/reputation thresholds, personality weights, real payments/stock protections and actual cargo travel.
+- Existing active TOML values and already persisted due dates/truces/order lifetimes are retained. A [partial gameplay settings list](releases/1.2.0-rc.5/serverconfig-changes.toml) supports updating existing installations without replacing unrelated configuration. Full [timing table and compatibility details](docs/1.2.0_RC5_TIMINGS.md).
+
+- Focused paired GameTests logged exact All5/22/12/12/1/1 in each write/separate-JVM reopen, plus normal build and actual production-JAR save/stop/reopen. Generated normal config changed exactly the12 preset keys. An obsolete3-day assertion failed once, was corrected only in the fixture and passed in a fresh world; failure retained. [Exact evidence/scope](verification/1.2.0/rc.5-timings/README.md). Graphics/online remain unverified; unrelated successful suites were not repeated.
+
+## 1.2.0-rc.4 — 2026-10-24 (narrative personality names)
+
+- Name the kingdom's temperament in English and Turkish: Military → Warlike/Savaşçı, Religious → Traditionalist/Gelenekçi, Agricultural → Peaceful/Barışçıl, Artisan → Industrious/Üretken, Palace/General → Pragmatic/Pragmatik.
+- Keep the existing capital-origin identities, policy weights and persisted data. The five displayed names in each language and version metadata are the only changed production payloads; all200 Java classes match RC.3. English/Turkish retain314 matching keys and equivalent indexed/implicit format arguments. Build passed; no new or repeated GameTest result is claimed for this text change.
+- Rulership navigation and stock diagnostics remain available. Graphical label fit and authenticated login remain separate manual checks; the user's1047/0 stock report remains open.
+
+## 1.2.0-rc.3 — 2026-10-24 (rulership navigation)
+
+- Reduce the top navigation to five main tabs. Open Construction and Shipping with two buttons inside Rulership; the Rulership tab or Esc returns from either page. Reopening starts at the parent page.
+- Keep the royal forms intact, make rulership information scrollable, and retain the fixed claim/abdication controls and existing confirmation/authority checks. Add the English/Turkish return hint; retain RC.2 stock diagnostics.
+- Gradle build passed. The focused existing GUI suite logged **All 7 required tests passed** in both write and separate-JVM reopen; the actual RC.3 production JAR also completed ordinary startup/save/stop/reopen without a test mod. Server/view/payment/cargo/domain payloads are byte-identical to RC.2. No unrelated successful suite was repeated.
+- Graphical layout and online authentication remain unverified. The user's1047/0 shipment-stock report remains open; this UI change does not alter stock protection.
+
+## 1.2.0-rc.2 — 2026-10-24 (stock diagnostic follow-up)
+
+- Show actual and kept shipment stock, plus a product-hover breakdown of native target, construction, residents, configured minimum and Millénaire protection. Insufficient-stock messages show requested/sendable/kept amounts in English and Turkish.
+- Add a genuine original Norman religious storage regression:1047 cobblestone protects1024 and permits23; actual collected23/remaining1024 survive separate JVM, then cancellation returns all goods/one fee exactly. A controlled2048 minimum explains a genuine zero with no construction; it is not assumed to be the user's configuration.
+- Focused shipment GUI passed18+18, existing GUI7+7/build; actual RC2 normal production-JAR startup/save/stop/reopen passed. Stock/payment/cargo/domain bytecode is unchanged; no reserve is bypassed or world format changed.
+- **The reported user's1047/0 root cause remains open.** This follow-up exposes the values needed to diagnose the actual world; the controlled test does not reproduce its zero. Graphical tooltip layout and online authentication remain unverified. See [investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md).
+
+
+## 1.2.0-rc.1 — 2026-10-24 (release candidate)
+
+- Target the verified original Millénaire 9.0.3 with Minecraft 1.21.1, NeoForge 21.1.259 and Java 21; keep the dependency separate.
+- Spend real capital coins through durable, bound native-container receipts. Preserve denomination change, tax debts, refunds and later legitimate inventory activity; quarantine uncertain/future evidence.
+- Commission culturally eligible autonomous village construction. The original engine selects sites and its genuine NPC builders consume real materials; loaded physical block/entity persistence precedes completion acknowledgement. Add explicit cancellation and audited OP recovery.
+- Ship protected real surplus between member villages for a distance/quantity fee and server-tick travel time. Preserve native project/household stocks, exact held cargo, full/unloaded destinations and governance retirement without restricting ordinary trade.
+- Add Construction and Shipping to the existing kingdom screen with server-owned offers, replay protection, saved history/status and English/Turkish translations (seven tabs, protocol3).
+- Derive five personalities from exact native capital village types. Add bounded, need-based NPC investments/logistics through shared paid services, actual reserves/share limits, persistent cooldowns, war-time military preference and existing eligible campaign weighting. Player rule excludes new NPC economic decisions.
+- Preserve political format6 and original1.1.0/representative original1.1.1 serializer fields across restart; document strict new stores and unsupported full downgrade.
+- Retain actual failed/passing process-crash evidence, original builder/material/block gates and400-day/four-JVM conservation/performance measurements. The final [technical report](docs/1.2.0_RELEASE_REPORT.md) records exact regression results and RC checksum.
+- Graphical client layout and authenticated online login remain separately unverified in the manual checklist. This is a review candidate; no stable release, tag or merge is performed.
+
+Türkçe: Gerçek para ile özerk inşaat siparişi ve korunan stoktan süreli sevkiyat, iki dilli arayüz ve başkent türüne bağlı NPC ekonomi kararları eklendi. Vergi modeli ve normal Millénaire ticareti korundu. Gerçek envanter, makbuz, yeniden açma ve özgün NPC inşaat kanıtları raporda bulunur; görsel/çevrimiçi kontroller ayrı ve henüz doğrulanmamıştır.
+
 ## 1.1.1 — 2026-10-22 (local maintenance build)
 
 ### Fixed

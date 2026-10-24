@@ -1,0 +1,70 @@
+{
+  "artifact": {
+    "version": "1.2.0-rc.3",
+    "bytes": 614486,
+    "sha256": "260e38d393e1d445cb30f4375d078c09eef5c09fb18f5d687e4452da98035c31",
+    "prior_rc2_sha256": "1628fc37c790065056b15ab94bae38b2f88c09fe3f70e90e89cd4147b8fe9cf7",
+    "source_base_commit": "d03b70884bca1ae8a99597f18a2754bc7ebe35f4",
+    "source_commit_lookup": "git log -1 --format=%H -- releases/1.2.0-rc.3/millenairekingdoms-1.2.0-rc.3.jar",
+    "changed_payloads": [
+      "META-INF/MANIFEST.MF",
+      "META-INF/neoforge.mods.toml",
+      "assets/millenairekingdoms/lang/en_us.json",
+      "assets/millenairekingdoms/lang/tr_tr.json",
+      "com/millenairekingdoms/client/KingdomScreen$RowList$Row.class",
+      "com/millenairekingdoms/client/KingdomScreen$RowList.class",
+      "com/millenairekingdoms/client/KingdomScreen$Text.class",
+      "com/millenairekingdoms/client/KingdomScreen.class"
+    ],
+    "all_server_view_stock_payment_cargo_domain_payloads_identical_to_rc2": true,
+    "protocol": 3,
+    "translation_keys_per_language": 314,
+    "graphical_layout": "Unverified: no graphical client session available.",
+    "online_authentication": "Unverified: normal-server fixture is unchanged localhost/offline-mode.",
+    "stock_case": "User-world1047/0 remains open; RC2 diagnostics retained and stock rules unchanged."
+  },
+  "runs": [
+    {
+      "run": "royal-rc3-rulership-gui-01",
+      "suite": "verifyGui",
+      "world": "run/regression/royal-rc3-rulership-gui-01/verifyGui",
+      "write_then_separate_jvm_reopen": true,
+      "required_pass_counts": [
+        7,
+        7
+      ],
+      "raw_log_sha256": "d77bb7ccf45486e0cf1670384fe524fcccadfbe8936a99b815286bf9f9dd6f24",
+      "build_successful": true
+    }
+  ],
+  "normal_servers": [
+    {
+      "phase": "write",
+      "exit_code": 0,
+      "ready": true,
+      "saved": true,
+      "stopped": true,
+      "build_successful": true,
+      "rc_initialized": true,
+      "dependency_verified": true,
+      "test_mod_loaded": false,
+      "staged_jar_sha256": "260e38d393e1d445cb30f4375d078c09eef5c09fb18f5d687e4452da98035c31",
+      "log_sha256": "b80fb962f28e775b2c05497ff644a42ae1f44fd7562e837cf1a5564652cce435",
+      "authentication": "Unverified: unchanged existing smoke fixture is offline-mode on127.0.0.1:25579."
+    },
+    {
+      "phase": "reopen",
+      "exit_code": 0,
+      "ready": true,
+      "saved": true,
+      "stopped": true,
+      "build_successful": true,
+      "rc_initialized": true,
+      "dependency_verified": true,
+      "test_mod_loaded": false,
+      "staged_jar_sha256": "260e38d393e1d445cb30f4375d078c09eef5c09fb18f5d687e4452da98035c31",
+      "log_sha256": "cb0dceafd65b388c403005c0285da07054e78a99a8b93424f52f121b51284a39",
+      "authentication": "Unverified: unchanged existing smoke fixture is offline-mode on127.0.0.1:25579."
+    }
+  ]
+}

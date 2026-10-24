@@ -1,0 +1,25 @@
+{
+  "suite": "verifyRoyalShipments",
+  "cases": [
+    {
+      "run": "royal-physical-cargo-01",
+      "required_pass_counts": [
+        21,
+        21
+      ],
+      "normal_build_successful": true,
+      "log_sha256": "7fdedbf2aa439209606bfcd767c593f03d5aef073aa5b0b4f05ed2ba2c63fd67"
+    },
+    {
+      "run": "royal-physical-cargo-final-02",
+      "required_pass_counts": [
+        22,
+        22
+      ],
+      "normal_build_successful": true,
+      "log_sha256": "761563370a1b1771edeaa70e4df5ed38e7bfc5061d83614effd8775264509b4c"
+    }
+  ],
+  "production_jar_sha256": "778a640e5dbe72294f56d5ff2fb0b2da3e151693b0ee034df609a600cb56ab81",
+  "scope": "native container coordination with synthetic route/mandate and ledger inputs; no actual fees, authorized village route, runtime or abrupt-process claim"
+}

@@ -8,6 +8,6 @@ displayName="Millénaire Kingdoms integration tests (development only)"
 [[dependencies.millenairekingdoms_tests]]
 modId="millenairekingdoms"
 type="required"
-versionRange="[1.1.1]"
+versionRange="[${mod_version}]"
 ordering="AFTER"
 side="BOTH"

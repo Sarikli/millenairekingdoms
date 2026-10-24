@@ -1,0 +1,361 @@
+{
+  "run": "cargo-crash-20261024T081910-0f465a1b",
+  "kind": "abrupt-jvm-native-cargo-recovery",
+  "cases": [
+    {
+      "boundary": "before",
+      "world_run": "cargo-crash-20261024T081910-0f465a1b-before",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "before-prepare.log",
+          "uncompressed_log_sha256": "7464cc4b66714332b0150b0aa3fa4324c627b94537d404f46e605966eac3b73b"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "before-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "3237d2386dac8d4d0f61fd93f33822e77e128dad47b7739be3ebb7b41f081711"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "before-recover.log",
+          "uncompressed_log_sha256": "4faa1bb2855ba9d865685f181ec234d28b696eb286d752a300523d7af6bdf09a"
+        }
+      ]
+    },
+    {
+      "boundary": "collect",
+      "world_run": "cargo-crash-20261024T081910-0f465a1b-collect",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "collect-prepare.log",
+          "uncompressed_log_sha256": "b750976586739b5fd37eb1116badef34341ee10c2df6a68df848fc24180d0b08"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "collect-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "e1527bcf0a8d90a8fc587cf729c57066d423f8d10cfef18fa3beb0a10e9b6874"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "collect-recover.log",
+          "uncompressed_log_sha256": "5f0d35cb0b427968e66bddf2cab43247c3ea9cb1b552e0682e83bf3e0378e474"
+        }
+      ]
+    },
+    {
+      "boundary": "partial",
+      "world_run": "cargo-crash-20261024T081910-0f465a1b-partial",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "partial-prepare.log",
+          "uncompressed_log_sha256": "8a774f647e5471484f3b08ce1aa13fbd4f24af08e1d2bed3324af4f0f9d096a1"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "partial-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "ee8c0686c76b4e88b4ceea40f8477007c9b9b1f50b9848c7258d93d5c96c12a7"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "partial-recover.log",
+          "uncompressed_log_sha256": "fa2664289dc6c2269bbc9aa1f8eb82f56365b075693b76a781263a3f00de7067"
+        }
+      ]
+    },
+    {
+      "boundary": "deliver",
+      "world_run": "cargo-crash-20261024T081910-0f465a1b-deliver",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "deliver-prepare.log",
+          "uncompressed_log_sha256": "6dd74977613437bba807550ff849ec5fdb51303b09db1869ffd1abf105722656"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "deliver-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "9464f991f7a07321c31dfe7ea0643c2d5589e5232f69b0b96208c6207f826a26"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "deliver-recover.log",
+          "uncompressed_log_sha256": "8f08eaa880937a9e81753e6e98504ef9c226f81c8255eee712c9b86dbe49a335"
+        }
+      ]
+    },
+    {
+      "boundary": "return",
+      "world_run": "cargo-crash-20261024T081910-0f465a1b-return",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "return-prepare.log",
+          "uncompressed_log_sha256": "b88711c277532e87f84efd24ea19763da09460b93fefa6f11b614e16d7be733e"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "return-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "dd8a78de92f44ff6060fd9e829b6445a99466cb154ebf60e0a8f02b641f4fd67"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "return-recover.log",
+          "uncompressed_log_sha256": "76cdf9788db4e83eb25f81218f721f87285fd3b2fb84210b90d79c8d3382cbba"
+        }
+      ]
+    },
+    {
+      "boundary": "deliver-activity",
+      "world_run": "cargo-crash-20261024T081910-0f465a1b-deliver-activity",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "deliver-activity-prepare.log",
+          "uncompressed_log_sha256": "dfd95fa7b8af763701d92fac94fffb509e03172d84dcca66de3598f5e4980bc3"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "deliver-activity-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "8b99a22f3726787c69b874d5bf7eed879a2f349f555493502bf8bac358a91edd"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "deliver-activity-recover.log",
+          "uncompressed_log_sha256": "0a055b108fb781f144300442e2ea7ca104944e6b61d9b1e7a50060753e2841f6"
+        }
+      ]
+    },
+    {
+      "boundary": "slots-before-proof",
+      "world_run": "cargo-crash-20261024T081910-0f465a1b-slots-before-proof",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "slots-before-proof-prepare.log",
+          "uncompressed_log_sha256": "f20ecd5607ab87ae272559fba69f20b54f08877e6a0f9627c8266c4e588a2870"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "slots-before-proof-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "c13193485e426448040bd24af62f1d03bc1f4e71b61c089f7a461ad71bd1604b"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "slots-before-proof-recover.log",
+          "uncompressed_log_sha256": "7c976cfaa06ca3689f02bff720087757fc13ea39b19c5c35fa38bd4b131a3a45"
+        }
+      ]
+    },
+    {
+      "boundary": "collect-ack",
+      "world_run": "cargo-crash-20261024T081910-0f465a1b-collect-ack",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "collect-ack-prepare.log",
+          "uncompressed_log_sha256": "fb0a55bc44a61078afc00c8fda1a26a90be7e57600aae884c457e84cf7728ac8"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "collect-ack-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "cf6f13d45ec13116479e0be5c66e23252598b258e8c4232985dfdeb1794abfc3"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "collect-ack-recover.log",
+          "uncompressed_log_sha256": "883f77eaa7e0355d86d32ae154853a9d517cd7e263d890a1f6d26c83a3170180"
+        }
+      ]
+    },
+    {
+      "boundary": "deliver-ack",
+      "world_run": "cargo-crash-20261024T081910-0f465a1b-deliver-ack",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "deliver-ack-prepare.log",
+          "uncompressed_log_sha256": "728c6d71532c0f57f98ae32e63e044bd9c9f3858fc1de33bb38a728e7d36496c"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "deliver-ack-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "c21ba083add9248009a841b625015a7303ed1abf0de85bf105559036b46e2e43"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "deliver-ack-recover.log",
+          "uncompressed_log_sha256": "12e0bcd2cf21f97aab844558b94bc625bed7b4484928a52a3ad6812be2c26929"
+        }
+      ]
+    },
+    {
+      "boundary": "collect-activity",
+      "world_run": "cargo-crash-20261024T081910-0f465a1b-collect-activity",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "collect-activity-prepare.log",
+          "uncompressed_log_sha256": "d23b1c5c39315261ab68a7b83be08cc4d5b3202b941390d8ee39ca9797227593"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "collect-activity-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "73dd73fb0ef90d0934f3507c026e7c8fc89526a3a8f145114c8a89fa7c05143f"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "collect-activity-recover.log",
+          "uncompressed_log_sha256": "9bfd482b276dbc11f222f7c8479eed6d035c4e95892edc08c3f13dabc2149dad"
+        }
+      ]
+    }
+  ],
+  "complete": true,
+  "production_source_commit": "48f4bc9",
+  "normal_required_pass_lines": 20,
+  "expected_halt70_failures": 10,
+  "scope": "actual native container/operation-ledger abrupt cuts; synthetic route/agency/fee inputs, no live timed authorized shipping claim"
+}

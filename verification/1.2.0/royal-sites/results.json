@@ -1,0 +1,22 @@
+{
+  "suite": "verifyRoyalSites",
+  "run": "royal-sites-final-03",
+  "required_pass_counts": [
+    10,
+    10
+  ],
+  "separate_jvms": true,
+  "normal_build_passed": true,
+  "production_jar_sha256": "b91c9b93b7dad4b76dc4c59af95f06d5d272283f8dee68555d28c01c2b655d81",
+  "original_millenaire_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "failed_baseline": "royal-sites-baseline-02",
+  "failed_intermediate": "royal-sites-final-02",
+  "related_construction": {
+    "run": "royal-site-regression-01",
+    "required_pass_counts": [
+      53,
+      53
+    ],
+    "normal_build_passed": true
+  }
+}

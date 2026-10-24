@@ -1,0 +1,22 @@
+{
+  "suite": "verifyRoyalLive",
+  "run": "royal-live-01",
+  "required_pass_counts": [
+    1,
+    1
+  ],
+  "separate_jvms": true,
+  "tracking_enabled": true,
+  "interval_ticks": 100,
+  "maximum_jobs": 2,
+  "explicit_step_or_observe_after_issue": false,
+  "write_task_cursor": 2181,
+  "total_task_steps": 2405,
+  "read_task_cursor": 2405,
+  "carried_before": 11,
+  "carried_after": 0,
+  "final_template_match": 1.0,
+  "normal_build_passed": true,
+  "production_jar_sha256": "b91c9b93b7dad4b76dc4c59af95f06d5d272283f8dee68555d28c01c2b655d81",
+  "original_millenaire_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62"
+}

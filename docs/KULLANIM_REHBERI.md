@@ -74,10 +74,10 @@ gelince nedeni görünür. Hükümdar olmayan oyuncular her şeyi görebilir ama
   - Askerleri gönderecek köyün türü Millénaire'de baskın yapabilen bir tür olmalı;
   - köyde evde, kiralanmamış, yaşayan ve gücü olan en az bir akıncı bulunmalı;
   - hedefin savunma gücü, gönderen köyün baskın gücünün iki katından az olmalı (Millénaire'in kendi hedef kuralı);
-  - aynı hedefe son fetih baskınından sonra **3 gün** geçmiş olmalı;
+  - aynı hedefe son fetih baskınından sonra **1 gün** geçmiş olmalı;
   - krallığın aynı anda tek bekleyen emri ya da süren fetih baskını olur, bir hedefe aynı anda tek baskın gider.
 - **Yüklenmemiş köyler:** baskın yalnızca hedef köy yüklüyken (yakında bir oyuncu varken) başlar; aksi hâlde emir
-  bekler ve iki gün içinde başlayamazsa iptal olur. Eklenti yüklenmemiş köyler için sahte savaş üretmez, chunk açık tutmaz.
+  bekler ve bir gün içinde başlayamazsa iptal olur. Eklenti yüklenmemiş köyler için sahte savaş üretmez, chunk açık tutmaz.
 
 ## 5. Hazine ve gelir
 
@@ -95,7 +95,7 @@ gelince nedeni görünür. Hükümdar olmayan oyuncular her şeyi görebilir ama
 
 ## 6. NPC krallıkları: diplomasi, savaş ve barış
 
-Hükümdarsız krallıklar kendi kararlarını verir. Kararlar varsayılan olarak **3 Minecraft gününde bir** verilir,
+Hükümdarsız krallıklar kendi kararlarını verir. Kararlar varsayılan olarak **1 Minecraft gününde bir** verilir,
 kalıcı verilere (Millénaire ilişkileri ve köylü kayıtları) dayanır; yüklenmemiş köyler de siyasete katılır.
 Hükümdarlı bir krallık adına NPC hiçbir zaman savaş ilan etmez, barış yapmaz, köy kabul etmez ya da baskın göndermez.
 
@@ -113,10 +113,10 @@ Hükümdarlı bir krallık adına NPC hiçbir zaman savaş ilan etmez, barış y
   - Barış antlaşması ilişkiyi bir kez 20 puan iyileştirir.
 - **Fetih seferleri:** savaştaki NPC saldırgan, hazır köyleri arasında baskın gücü en yüksek olandan (eşitse en yakından) askerleri savunmacının köyüne (başkent açıksa
   başkente) gönderir; barıştaki NPC krallığı başkentiyle ilişkisi eşik altında olan, sahipsiz bağımsız bir köye sefer
-  açabilir. NPC emri çeyrek gün hazırlanır, sonra yukarıdaki askerî hazırlık kurallarıyla gerçek Millénaire baskını olarak başlar.
-- **Barış:** savaş en az **12 gün** sürdükten sonra NPC saldırgan şu nedenlerle barış yapabilir: askerî ilerleme
-  olmaması (6 gün), hazır ordunun kalmaması, birkaç köy almış olmak, ilişkilerin düzelmesi ya da savaşın uzaması
-  (36 gün). Saldırganın hükümdarı varsa NPC savunmacı yalnızca barış teklif eder. Barıştan sonra **10 gün ateşkes**
+  açabilir. NPC emri bir günün sekizde biri kadar hazırlanır, sonra yukarıdaki askerî hazırlık kurallarıyla gerçek Millénaire baskını olarak başlar.
+- **Barış:** savaş en az **6 gün** sürdükten sonra NPC saldırgan şu nedenlerle barış yapabilir: askerî ilerleme
+  olmaması (3 gün), hazır ordunun kalmaması, birkaç köy almış olmak, ilişkilerin düzelmesi ya da savaşın uzaması
+  (18 gün). Saldırganın hükümdarı varsa NPC savunmacı yalnızca barış teklif eder. Barıştan sonra **5 gün ateşkes**
   vardır (oyuncu ve NPC ilanları için; operatör komutları hariç). Fethedilen köyler yeni krallıklarında kalır.
 
 ## 6a. Gelişerek krallık kurma (1.1.0)
@@ -125,7 +125,7 @@ Sıradan bir NPC köyü normal doğar ve Millénaire'in kendi inşaatıyla büy�
 tamamladığında** (Millénaire'in sıfır tabanlı bina seviyesi; ilk inşaat seviye 0'dır) köy kendi krallığını kurmaya
 aday olur.
 
-- **Ne zaman:** her **7 Minecraft gününde bir**, o gün uygun olan her köy için bir kez zar atılır. Her gün ya da her tick
+- **Ne zaman:** her **3 Minecraft gününde bir**, o gün uygun olan her köy için bir kez zar atılır. Her gün ya da her tick
   zar atılmaz. Sunucu yeniden başlatılınca aynı dönem tekrarlanmaz; saat geri alınırsa fazladan deneme olmaz;
   `/time add` gibi büyük atlamalar tek değerlendirme sayılır.
 - **İhtimal:** 3. seviyede %5, sonraki her tamamlanmış seviyede +5 puan, en fazla %100. Örnek: seviye 4 %10, 5 %15,
@@ -138,14 +138,14 @@ aday olur.
   için başvurmuş köy o dönem kurmaz. Başka krallığa bağlı köyler bağımsızlık ilan etmez.
 - **Belediye binası tamamlanmış olmalı:** yükseltmesi süren bina (Millénaire durumu UPGRADING) uygun sayılmaz;
   değerlendirme bir sonraki döneme kalır.
-- **Mesafe:** yaşayan her başkentten en az **1.500 blok**. Aynı değerlendirmede kurulan bir krallık da sonraki köyler
+- **Mesafe:** yaşayan her başkentten en az **1.000 blok**. Aynı değerlendirmede kurulan bir krallık da sonraki köyler
   için bu kurala girer.
 - **Ne değişir:** yalnızca siyasi kayıt. Köy, adı "Kingdom of <köy>" olan yeni bir NPC krallığının başkenti ve tek
   üyesi olur; krallık aktif ve hükümdarsız başlar. Binalar, inşaat projeleri, köylüler, köy lideri, Millénaire köy
   sahibi, kültür, köy adı, envanterler, ekonomi ve itibar değişmez; köy yükseltilmez.
 - **Sonrası:** yeni krallık mevcut NPC siyasetine katılır (köy kabulü, savaş, gerçek baskınla fetih, barış ve ateşkes,
   günlük gelir), krallık ekranında görünür ve yeterli itibarı olan oyuncu hükümdarlığını devralabilir.
-- **Doğal başkentlerle ilişkisi:** dünya üretimindeki %2'lik doğal başkent sistemi aynen sürer. Doğal başkentler zaten
+- **Doğal başkentlerle ilişkisi:** dünya üretimindeki doğal başkent sisteminin varsayılan şansı %10'dur. Doğal başkentler zaten
   başkent olduğundan ikinci kez krallık kurmaz.
 - **Aynı gün katılım ve kuruluş:** NPC kararları (köy katılımı) önce, kuruluş sonra değerlendirilir. O gün bir krallığa
   katılan köy kuruluş yapamaz; yeni kurulan başkent katılım adayı olmaz.
@@ -157,22 +157,22 @@ aday olur.
 | Bölüm / anahtar | Varsayılan | Anlam |
 |---|---|---|
 | `naturalCapitals.enabled` | `true` | Yeni doğal köylerin nadiren NPC başkenti olması |
-| `naturalCapitals.chancePercent` | `2.0` | Uygun yeni doğal köy başına başkent olasılığı (%) |
-| `naturalCapitals.minCapitalDistance` | `1500` | Başkentler arası en az mesafe (blok) |
+| `naturalCapitals.chancePercent` | `10.0` | Uygun yeni doğal köy başına başkent olasılığı (%) |
+| `naturalCapitals.minCapitalDistance` | `1000` | Başkentler arası en az mesafe (blok) |
 | `npcAutonomy.enabled` | `true` | NPC krallıklarının kendi kararları |
 | `npcAutonomy.diplomaticJoining` | `true` | Bağımsız köylerin kendiliğinden katılması |
 | `npcAutonomy.warFrequency` | `BALANCED` | `RARE`, `BALANCED`, `FREQUENT` |
-| `npcAutonomy.decisionIntervalDays` | `3` | İki siyasi değerlendirme arası gün |
+| `npcAutonomy.decisionIntervalDays` | `1` | İki siyasi değerlendirme arası gün |
 | `npcAutonomy.warRelationThreshold` | `-70` | NPC savaş ilanı için başkentler arası ilişki eşiği |
-| `npcAutonomy.raidCooldownDays` | `3` | Aynı köye iki fetih baskını arası gün |
-| `npcAutonomy.truceDays` | `10` | Barıştan sonraki ateşkes günü |
+| `npcAutonomy.raidCooldownDays` | `1` | Aynı köye iki fetih baskını arası gün |
+| `npcAutonomy.truceDays` | `5` | Barıştan sonraki ateşkes günü |
 | `npcAutonomy.automaticCampaigns` | `true` | NPC krallıklarının kendi fetih baskınları |
 | `dynamicFounding.enabled` | `true` | Gelişen bağımsız köylerin kendi krallığını kurması |
 | `dynamicFounding.minimumTownhallLevel` | `3` | Kuruluş için en düşük tamamlanmış belediye binası seviyesi (0 tabanlı) |
-| `dynamicFounding.checkIntervalDays` | `7` | İki kuruluş değerlendirmesi arası Minecraft günü |
+| `dynamicFounding.checkIntervalDays` | `3` | İki kuruluş değerlendirmesi arası Minecraft günü |
 | `dynamicFounding.baseChancePercent` | `5.0` | En düşük seviyedeki ihtimal (%) |
 | `dynamicFounding.chanceIncreasePerLevel` | `5.0` | Her ek tamamlanmış seviyede eklenen puan (en çok %100) |
-| `dynamicFounding.minCapitalDistance` | `1500` | Kurucu köyle yaşayan her başkent arası en az mesafe (blok) |
+| `dynamicFounding.minCapitalDistance` | `1000` | Kurucu köyle yaşayan her başkent arası en az mesafe (blok) |
 
 İhtimal formülü: `clamp(baseChancePercent + (seviye − minimumTownhallLevel) × chanceIncreasePerLevel, 0, 100)`;
 en düşük seviyenin altında %0.

@@ -80,9 +80,9 @@ public final class FoundingGameTests {
 
     @GameTest(templateNamespace = NS, template = "empty", batch = "founding_rules", timeoutTicks = 200)
     public static void chanceTableFollowsCompletedLevels(GameTestHelper h) {
-        h.assertTrue(FoundingConfig.ENABLED.getDefault() && FoundingConfig.MINIMUM_LEVEL.getDefault() == 3 && FoundingConfig.INTERVAL_DAYS.getDefault() == 7
-                && FoundingConfig.BASE_CHANCE.getDefault() == 5.0 && FoundingConfig.INCREASE.getDefault() == 5.0 && FoundingConfig.MIN_DISTANCE.getDefault() == 1500,
-                "Config defaults: on, level 3, every 7 days, 5% + 5 per level, 1500 blocks");
+        h.assertTrue(FoundingConfig.ENABLED.getDefault() && FoundingConfig.MINIMUM_LEVEL.getDefault() == 3 && FoundingConfig.INTERVAL_DAYS.getDefault() == 3
+                && FoundingConfig.BASE_CHANCE.getDefault() == 5.0 && FoundingConfig.INCREASE.getDefault() == 5.0 && FoundingConfig.MIN_DISTANCE.getDefault() == 1000,
+                "Config defaults: on, level 3, every 3 days, 5% + 5 per level, 1000 blocks");
         h.assertTrue(DEFAULTS.equals(new FoundingConfig.Settings(FoundingConfig.ENABLED.getDefault(), FoundingConfig.MINIMUM_LEVEL.getDefault(),
                 FoundingConfig.INTERVAL_DAYS.getDefault(), FoundingConfig.BASE_CHANCE.getDefault(), FoundingConfig.INCREASE.getDefault(),
                 FoundingConfig.MIN_DISTANCE.getDefault())), "Code defaults equal the config defaults");
@@ -97,9 +97,9 @@ public final class FoundingGameTests {
                 "The formula follows the configured minimum level, base and increase");
         h.assertTrue(DynamicFounding.chancePercent(3, NEVER) == 0 && DynamicFounding.chancePercent(17, NEVER) == 0
                 && DynamicFounding.chancePercent(3, ALWAYS) == 100, "16-17. 0% and 100% configurations");
-        // 30. The natural-capital system keeps its own 2% rule.
-        h.assertTrue(CapitalConfig.CHANCE_PERCENT.getDefault() == 2.0 && CapitalConfig.CHANCE_PERCENT.get() == 2.0 && CapitalConfig.MIN_DISTANCE.getDefault() == 1500
-                && NaturalCapitals.chosen(2.0, 0.0199) && !NaturalCapitals.chosen(2.0, 0.02), "30. Natural capitals: still 2% of new natural villages");
+        // 30. The natural-capital system has its own 10% rule.
+        h.assertTrue(CapitalConfig.CHANCE_PERCENT.getDefault() == 10.0 && CapitalConfig.CHANCE_PERCENT.get() == 10.0 && CapitalConfig.MIN_DISTANCE.getDefault() == 1000
+                && NaturalCapitals.chosen(10.0, 0.0999) && !NaturalCapitals.chosen(10.0, 0.1), "30. Natural capitals: 10% of new natural villages");
         h.succeed();
     }
 
@@ -242,11 +242,11 @@ public final class FoundingGameTests {
             var d = new KingdomSavedData();
             Village capital = record(level, origin, type, set, variant, 3, BuildingInstance.Status.COMPLETE, made);
             d.create("Founding distance capital", id(capital));
-            Village near = record(level, origin.offset(1499, 0, 0), type, set, variant, 5, BuildingInstance.Status.COMPLETE, made);
-            Village diagonal = record(level, origin.offset(900, 0, 1199), type, set, variant, 5, BuildingInstance.Status.COMPLETE, made);
-            Village far = record(level, origin.offset(1500, 0, 0), type, set, variant, 5, BuildingInstance.Status.COMPLETE, made);
+            Village near = record(level, origin.offset(999, 0, 0), type, set, variant, 5, BuildingInstance.Status.COMPLETE, made);
+            Village diagonal = record(level, origin.offset(600, 0, 799), type, set, variant, 5, BuildingInstance.Status.COMPLETE, made);
+            Village far = record(level, origin.offset(1000, 0, 0), type, set, variant, 5, BuildingInstance.Status.COMPLETE, made);
             h.assertTrue(DynamicFounding.consider(level, d, near, ALWAYS, () -> 0.0).outcome() == Outcome.TOO_CLOSE
-                    && DynamicFounding.check(level, d, diagonal, ALWAYS).outcome() == Outcome.TOO_CLOSE && d.owner(id(near)) == null, "14. 1499 blocks is refused");
+                    && DynamicFounding.check(level, d, diagonal, ALWAYS).outcome() == Outcome.TOO_CLOSE && d.owner(id(near)) == null, "14. 999 blocks is refused");
             // 16-17 through the real config values.
             FoundingConfig.ENABLED.set(true);
             FoundingConfig.BASE_CHANCE.set(0.0); FoundingConfig.INCREASE.set(0.0);
@@ -256,10 +256,10 @@ public final class FoundingGameTests {
             FoundingConfig.BASE_CHANCE.set(100.0);
             var hundred = FoundingConfig.current();
             var r = DynamicFounding.consider(level, d, far, hundred, () -> 0.999999);
-            h.assertTrue(r.outcome() == Outcome.FOUNDED && r.kingdom().equals(d.owner(id(far))), "15/17. 1500 blocks is accepted; 100% founds");
+            h.assertTrue(r.outcome() == Outcome.FOUNDED && r.kingdom().equals(d.owner(id(far))), "15/17. 1000 blocks is accepted; 100% founds");
             // The new capital counts for the next village too.
-            Village second = record(level, origin.offset(2900, 0, 0), type, set, variant, 5, BuildingInstance.Status.COMPLETE, made);
-            h.assertTrue(DynamicFounding.check(level, d, second, hundred).outcome() == Outcome.TOO_CLOSE, "A founded capital keeps others 1500 blocks away");
+            Village second = record(level, origin.offset(1900, 0, 0), type, set, variant, 5, BuildingInstance.Status.COMPLETE, made);
+            h.assertTrue(DynamicFounding.check(level, d, second, hundred).outcome() == Outcome.TOO_CLOSE, "A founded capital keeps others 1000 blocks away");
             h.succeed();
         } finally {
             FoundingConfig.BASE_CHANCE.set(base); FoundingConfig.INCREASE.set(increase); FoundingConfig.ENABLED.set(enabled);
@@ -311,18 +311,18 @@ public final class FoundingGameTests {
                 if (draws.count > before) rolls.add(day);
                 h.assertTrue(draws.count - before <= 1, "19. At most one roll per evaluation");
             }
-            h.assertTrue(rolls.equals(List.of(7L, 14L, 21L, 28L)), "19. One evaluation per 7-day period: " + rolls);
+            h.assertTrue(rolls.equals(List.of(3L, 6L, 9L, 12L, 15L, 18L, 21L, 24L, 27L, 30L)), "19. One evaluation per 3-day period: " + rolls);
             int count = draws.count;
             h.assertTrue(!KingdomDay.run(level, d, 30, POLITICS_OFF, never, draws) && !KingdomDay.run(level, d, 28, POLITICS_OFF, never, draws)
                     && !KingdomDay.run(level, d, 3, POLITICS_OFF, never, draws) && draws.count == count, "21. Repeated or earlier days (clock set back) roll nothing");
             h.assertTrue(KingdomDay.run(level, d, 31, POLITICS_OFF, never, draws) && draws.count == count, "Counting resumes after the booked day, same period");
-            h.assertTrue(KingdomDay.run(level, d, 1001, POLITICS_OFF, never, draws) && draws.count == count + 1, "21. A jump of 970 days is one roll, no catch-up");
-            h.assertTrue(KingdomDay.run(level, d, 1002, POLITICS_OFF, never, draws) && draws.count == count + 1, "The next day is the same period");
+            h.assertTrue(KingdomDay.run(level, d, 1000, POLITICS_OFF, never, draws) && draws.count == count + 1, "21. A jump of 969 days is one roll, no catch-up");
+            h.assertTrue(KingdomDay.run(level, d, 1001, POLITICS_OFF, never, draws) && draws.count == count + 1, "The next day is the same period");
             // Founding off: no evaluation at all.
             h.assertTrue(KingdomDay.run(level, d, 1050, POLITICS_OFF, never.withEnabled(false), draws) && draws.count == count + 1, "Disabled: no roll");
             // Then 100%: founding happens on the next period start, once.
             h.assertTrue(KingdomDay.run(level, d, 1051, POLITICS_OFF, ALWAYS, draws) && d.owner(id(v)) == null, "Not a period start");
-            h.assertTrue(KingdomDay.run(level, d, 1057, POLITICS_OFF, ALWAYS, draws) && d.isCapital(id(v)), "Founded on the period start");
+            h.assertTrue(KingdomDay.run(level, d, 1053, POLITICS_OFF, ALWAYS, draws) && d.isCapital(id(v)), "Founded on the period start");
             long kingdoms = d.kingdoms().size();
             KingdomDay.run(level, d, 1064, POLITICS_OFF, ALWAYS, draws);
             h.assertTrue(d.kingdoms().size() == kingdoms, "No second kingdom later");
@@ -341,7 +341,7 @@ public final class FoundingGameTests {
             VillageType type = longestType(false); BuildingPlanSet set = hallSet(type); String variant = longestVariant(set);
             Village v = record(level, new BlockPos(1_100_000, 70, 1_100_000), type, set, variant, 6, BuildingInstance.Status.COMPLETE, new ArrayList<>());
             v.setVillageName("Founding restart");
-            long day = DynamicFounding.nextDueDay(Math.max(1, d.day()), 7);
+            long day = DynamicFounding.nextDueDay(Math.max(1, d.day()), DEFAULTS.intervalDays());
             // A booked day first (a new world books its first day without evaluating), then the period start.
             if (d.day() < 0) d.startDay(day - 1, Map.of());
             else if (d.day() < day - 1) KingdomDay.run(level, d, day - 1, POLITICS_OFF, NEVER, RandomSource.create(1));
@@ -560,7 +560,7 @@ public final class FoundingGameTests {
 
     // ---------------------------------------------------------------- long-term balance by calendar jump
 
-    /** Calendar-jump simulation with the default 5% + 5 per level, every 7 days. Town hall levels stay fixed (no growth is
+    /** Calendar-jump simulation with the default 5% + 5 per level, every 3 days. Town hall levels stay fixed (no growth is
      * simulated here; the live test covers real development). Group A: isolated villages (3000 blocks apart, no kingdoms)
      * measure the mean time to founding per level. Group B: a dense region (villages 700 blocks apart, two NPC kingdoms,
      * Millénaire's nightly diplomacy and NPC joining on) measures distance refusals, joining and the number of new kingdoms. */
@@ -571,7 +571,7 @@ public final class FoundingGameTests {
         try {
             VillageType type = longestType(true); BuildingPlanSet set = hallSet(type); String variant = longestVariant(set);
             int[] levels = {3, 4, 5, 7, 10, 13, 17};
-            // ---- A: isolated, 20 seeds x 7 levels x 4 villages, 728 days (104 evaluations)
+            // ---- A: isolated, 20 seeds x 7 levels x 4 villages, 728 days (242 evaluations)
             Map<Integer, List<Long>> times = new java.util.TreeMap<>(); Map<Integer, Integer> never = new java.util.TreeMap<>();
             List<Village> isolated = new ArrayList<>();
             for (int i = 0; i < levels.length * 4; i++)
@@ -591,7 +591,7 @@ public final class FoundingGameTests {
                     d.startDay(day, Map.of());
                     DynamicFounding.onDay(level, d, previous, day, DEFAULTS, random);
                     long spent = System.nanoTime() - t0;
-                    if (day % 7 != 0) { otherNanos += spent; others++; continue; }
+                    if (day % DEFAULTS.intervalDays() != 0) { otherNanos += spent; others++; continue; }
                     evalNanos += spent; evals++;
                     for (Village v : isolated) if (!foundedOn.containsKey(id(v)) && d.isCapital(id(v))) foundedOn.put(id(v), day);
                 }
@@ -605,12 +605,12 @@ public final class FoundingGameTests {
                 List<Long> t = times.getOrDefault(l, List.of());
                 double mean = t.stream().mapToLong(Long::longValue).average().orElse(Double.NaN);
                 double p = DynamicFounding.chancePercent(l, DEFAULTS) / 100.0;
-                double expected = 7 / p; // mean days to the first success of a geometric trial every 7 days
+                double expected = DEFAULTS.intervalDays() / p; // mean days to the first success at the configured cadence
                 long median = t.isEmpty() ? -1 : t.stream().sorted().toList().get(t.size() / 2);
                 System.out.printf("FOUNDING_SIM_A level %d chance %.0f%%: founded %d/80 within 728 days, mean %.1f days (expected %.1f, uncapped), median %d, never %d%n",
                         l, p * 100, t.size(), mean, expected, median, never.getOrDefault(l, 0));
                 h.assertTrue(t.size() + never.getOrDefault(l, 0) == 80, "Every village counted");
-                if (l >= 4) h.assertTrue(mean <= previousMean + 7, "Higher levels found sooner on average (level " + l + ")");
+                if (l >= 4) h.assertTrue(mean <= previousMean + DEFAULTS.intervalDays(), "Higher levels found sooner on average (level " + l + ")");
                 previousMean = mean;
             }
             System.out.printf("FOUNDING_SIM_A cost: %.3f ms per day with a founding evaluation, %.3f ms without (%d evaluations, %d villages in the world)%n",
@@ -642,7 +642,7 @@ public final class FoundingGameTests {
                     long t0 = System.nanoTime();
                     KingdomDay.run(level, d, day, politics, DEFAULTS, random);
                     nanos += System.nanoTime() - t0;
-                    if (day % 7 == 0) for (Village v : region) {
+                    if (day % DEFAULTS.intervalDays() == 0) for (Village v : region) {
                         var c = DynamicFounding.check(level, d, v, DEFAULTS);
                         if (c.outcome() == Outcome.TOO_CLOSE) tooClose++;
                     }
@@ -653,11 +653,11 @@ public final class FoundingGameTests {
                 Map<Integer, Integer> byLevel = new java.util.TreeMap<>();
                 foundedOn.keySet().forEach(v -> byLevel.merge(levelOf.get(v), 1, Integer::sum));
                 double meanDay = foundedOn.values().stream().mapToLong(Long::longValue).average().orElse(Double.NaN);
-                // Every founded capital keeps 1500 blocks from every other living capital.
+                // Every founded capital keeps the configured1000 blocks from every other living capital.
                 List<Village> capitals = region.stream().filter(v -> d.isCapital(id(v))).toList();
                 for (int i = 0; i < capitals.size(); i++) for (int j = i + 1; j < capitals.size(); j++) {
                     BlockPos a = capitals.get(i).getCenter(), b = capitals.get(j).getCenter();
-                    h.assertTrue(Math.hypot(a.getX() - b.getX(), a.getZ() - b.getZ()) >= 1500, "Capitals 1500 blocks apart");
+                    h.assertTrue(Math.hypot(a.getX() - b.getX(), a.getZ() - b.getZ()) >= 1000, "Capitals 1000 blocks apart");
                 }
                 h.assertTrue(foundedOn.keySet().stream().allMatch(v -> levelOf.get(v) >= 3), "Only level 3+ founds");
                 System.out.printf("FOUNDING_SIM_B seed %d: %d new kingdoms (by level %s), mean founding day %.1f, %d too-close refusals at evaluations, "

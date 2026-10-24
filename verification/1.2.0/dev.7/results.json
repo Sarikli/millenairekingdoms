@@ -1,0 +1,51 @@
+{
+  "runs": [
+    {
+      "run": "royal-integration-before-01",
+      "required_pass_counts": [],
+      "build_successful": false,
+      "sha256": "57ff7b88107f7d6b0692b54107bfdc30588c19c07dbd40a36a84058764acbc37"
+    },
+    {
+      "run": "royal-integration-02",
+      "required_pass_counts": [],
+      "build_successful": false,
+      "sha256": "30c87d77fedec6c5fe7e7fba6203fe5843d2573275fb49a4b1f337eb007ef5a0"
+    },
+    {
+      "run": "royal-integration-03",
+      "required_pass_counts": [],
+      "build_successful": false,
+      "sha256": "b04c61437efe98b92e4e3930cc5847ea501e28f7251f872279715b0f3c8926e3"
+    },
+    {
+      "run": "royal-dev7-integration-final-04",
+      "required_pass_counts": [
+        9,
+        9
+      ],
+      "build_successful": true,
+      "sha256": "c6b551f4bc290c18c3846592b44fafcc6d01af0ace932617bd8b1446ccf0b315"
+    },
+    {
+      "run": "royal-dev7-verifyroyalnpcruntime-01",
+      "required_pass_counts": [
+        3,
+        3
+      ],
+      "build_successful": true,
+      "sha256": "5afeee9a487693b4c8a6b48fbb44d094d2779217aca0979d3b448d069cbf7056"
+    },
+    {
+      "run": "royal-dev7-verifyroyalshipments-01",
+      "required_pass_counts": [
+        49,
+        49
+      ],
+      "build_successful": true,
+      "sha256": "05de085df6f43090c579154add6b8bb9f26741d2a8ce17b197d1e20310697575"
+    }
+  ],
+  "version": "1.2.0-dev.7",
+  "jar_sha256": "52ad68361414a7b9fdb35369712c8d19aaf76cd4812fc374128cbbfca690a360"
+}

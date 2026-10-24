@@ -184,6 +184,8 @@ public final class KingdomSavedData extends SavedData {
     }
     private State state = new State(Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Ledger.EMPTY);
     private CompoundTag legacyArchive = new CompoundTag();
+    // Only get(level) binds a live registry. Detached readers/tests never publish economic side effects.
+    private ServerLevel royalRuntimeLevel;
 
     public static Factory<KingdomSavedData> factory() {
         return new Factory<>(KingdomSavedData::new, KingdomSavedData::load, null);
@@ -191,7 +193,7 @@ public final class KingdomSavedData extends SavedData {
     public static KingdomSavedData get(ServerLevel level) {
         var storage = level.getDataStorage();
         var data = storage.get(factory(), NAME);
-        if (data != null) return data;
+        if (data != null) { data.royalRuntimeLevel = level; return data; }
         var folder = DimensionType.getStorageFolder(level.dimension(), level.getServer().getWorldPath(LevelResource.ROOT)).resolve("data");
         // DimensionDataStorage converts parse/IO failures to null. Never overwrite a damaged or newer file with an empty registry.
         check(Files.notExists(folder.resolve(NAME + ".dat")), "Kingdom data could not be loaded; restore a valid backup before continuing.");
@@ -200,6 +202,7 @@ public final class KingdomSavedData extends SavedData {
         data = legacy == null ? new KingdomSavedData() : fromLegacy(legacy.save(new CompoundTag(), level.registryAccess()), level.registryAccess());
         data.setDirty();
         storage.set(NAME, data);
+        data.royalRuntimeLevel = level;
         return data;
     }
 
@@ -645,7 +648,25 @@ public final class KingdomSavedData extends SavedData {
         publish(new State(state.kingdoms, state.membership, state.revisions, state.progress, active, receipts, last, state.wars, state.rulers,
                 state.ledger.withRaidDays(raidDays)));
     }
-    private void publish(State next) { state = next; setDirty(); }
+    private void publish(State next) {
+        if (royalRuntimeLevel != null && (!state.rulers.equals(next.rulers) || !state.membership.equals(next.membership) || !state.kingdoms.equals(next.kingdoms))) {
+            com.millenairekingdoms.construction.RoyalConstructionGovernance.beforePoliticalChange(royalRuntimeLevel, intent -> {
+                Kingdom kingdom = next.kingdoms.get(intent.kingdom()); Ruler ruler = next.rulers.get(intent.kingdom());
+                return kingdom == null || !kingdom.active || kingdom.fallen() || !kingdom.capital.equals(intent.capital())
+                        || !intent.kingdom().equals(next.membership.get(intent.village()))
+                        || !java.util.Objects.equals(state.rulers.get(intent.kingdom()), ruler)
+                        || (ruler == null ? intent.actor() != null : !ruler.player.equals(intent.actor()) || ruler.sinceGameTime != intent.rulerSince());
+            });
+            com.millenairekingdoms.shipping.RoyalShipmentGovernance.beforePoliticalChange(royalRuntimeLevel, intent -> {
+                Kingdom kingdom=next.kingdoms.get(intent.kingdom());Ruler ruler=next.rulers.get(intent.kingdom());
+                return kingdom==null || !kingdom.active || kingdom.fallen() || !kingdom.capital.equals(intent.capital())
+                        || !intent.kingdom().equals(next.membership.get(intent.source().village())) || !intent.kingdom().equals(next.membership.get(intent.destination().village()))
+                        || !java.util.Objects.equals(state.rulers.get(intent.kingdom()),ruler)
+                        || (ruler==null ? intent.actor()!=null : !ruler.player.equals(intent.actor()) || ruler.sinceGameTime!=intent.rulerSince());
+            });
+        }
+        state = next; setDirty();
+    }
 
     /** Old target-only wins are archived, never credited to an arbitrary new kingdom.
      * In-flight old conquests retain no-loot semantics and cleanup, but award no politics. */

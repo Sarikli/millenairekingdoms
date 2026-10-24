@@ -1,0 +1,29 @@
+{
+  "suite": "verifyRoyalGoods",
+  "run": "royal-stock-final-02",
+  "required_pass_counts": [
+    20,
+    20
+  ],
+  "separate_jvms": true,
+  "normal_build_passed": true,
+  "production_jar_sha256": "4a9a8f971666b0a01e167e7b21cc9dba54b87ae26fe52f915418ab250b0c06fb",
+  "original_millenaire_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "coverage": {
+    "pure_plans": 8,
+    "native_stock": 12
+  },
+  "real_resident_fixture": {
+    "living": 5,
+    "resident_reserve": 32,
+    "physical": 256,
+    "retained": 1056,
+    "available": 0
+  },
+  "native_reload": {
+    "physical": 96,
+    "retained": 16,
+    "available": 80
+  },
+  "shipment_or_durable_escrow_implemented": false
+}

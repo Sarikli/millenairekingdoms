@@ -80,6 +80,8 @@ public final class KingdomScreens {
         var war = data.activeWar(focus.id());
         if (war != null) view.put("war", war(level, data, war, focus));
         view.put("rights", rights(player, data, focus, isRuler));
+        view.put("construction",RoyalConstructionView.build(player,focus.id()));
+        view.put("shipments",RoyalShipmentView.build(player,focus.id()));
         if (isRuler) {
             view.put("targets", targets(player, level, data, focus));
             view.put("sources", sources(level, data, focus));
@@ -126,6 +128,8 @@ public final class KingdomScreens {
         }
         var ruler = data.ruler(k.id());
         e.putString("ruler", ruler == null ? "" : ruler.lastKnownName());
+        var personality=com.millenairekingdoms.personality.KingdomPersonality.forCapital(level,k);
+        e.putString("personality",personality.category().name());e.putBoolean("personalityFallback",!personality.specialized());
         ListTag members = new ListTag();
         data.members(k.id()).stream().map(id -> PoliticsService.village(level, id)).filter(v -> v != null)
                 .sorted(Comparator.comparing(v -> !v.getId().uuid().equals(k.capital()))).forEach(v -> {

@@ -1,0 +1,20 @@
+{
+  "version": "1.2.0-rc.2",
+  "bytes": 612926,
+  "sha256": "1628fc37c790065056b15ab94bae38b2f88c09fe3f70e90e89cd4147b8fe9cf7",
+  "prior_rc1_sha256": "17db082c52f7c6708ab3a4aaa143dbd2568d7f69244d2ecdfdb92fd7dbbff40f",
+  "changed_payloads": [
+    "META-INF/MANIFEST.MF",
+    "com/millenairekingdoms/client/KingdomScreen$RowList$Row.class",
+    "com/millenairekingdoms/client/KingdomScreen$RowList.class",
+    "com/millenairekingdoms/client/KingdomScreen.class",
+    "com/millenairekingdoms/gui/RoyalShipmentView.class",
+    "META-INF/neoforge.mods.toml",
+    "assets/millenairekingdoms/lang/en_us.json",
+    "assets/millenairekingdoms/lang/tr_tr.json"
+  ],
+  "stock_payment_cargo_domain_classes_unchanged": true,
+  "protocol": 3,
+  "case_status": "User world reports1047 physical/0 sendable; not reproduced in controlled no-project Norman religious source. Controlled1047 protects1024 and allows23, including actual collection/reopen/return/refund. RC2 adds readonly reservation breakdown, does not claim user-world root cause is fixed.",
+  "release_commit": "c515e1c1c86c79b898705b6bd297127dc3b46b18"
+}

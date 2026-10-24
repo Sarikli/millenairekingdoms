@@ -59,6 +59,7 @@ public final class NaturalCapitalGameTests {
     /** Share of a plan's solid, non-marker blocks that must stand in the world. Calibrated against Millénaire's own instant placement. */
     private static final double MIN_MATCH = 0.90;
     private static final int LOAD_RADIUS = 8;
+    private static final int CHIEF_LOAD_TIMEOUT_TICKS = 600;
 
     private static boolean read() { return "read".equals(System.getProperty("kingdoms.tests.persistence")); }
     /** -Dcapitals.only=natural|matrix|rules runs one group only (development convenience); the others pass at once. */
@@ -77,10 +78,10 @@ public final class NaturalCapitalGameTests {
         double chance = CapitalConfig.CHANCE_PERCENT.get(); int distance = CapitalConfig.MIN_DISTANCE.get();
         List<Village> made = new ArrayList<>();
         try {
-            h.assertTrue(CapitalConfig.CHANCE_PERCENT.getDefault() == 2.0 && CapitalConfig.MIN_DISTANCE.getDefault() == 1500
-                    && CapitalConfig.ENABLED.getDefault(), "Defaults: enabled, 2%, 1500 blocks");
-            h.assertTrue(NaturalCapitals.chosen(2.0, 0.0) && NaturalCapitals.chosen(2.0, 0.0199) && !NaturalCapitals.chosen(2.0, 0.02)
-                    && !NaturalCapitals.chosen(2.0, 0.5), "2%: samples below 0.02 only");
+            h.assertTrue(CapitalConfig.CHANCE_PERCENT.getDefault() == 10.0 && CapitalConfig.MIN_DISTANCE.getDefault() == 1000
+                    && CapitalConfig.ENABLED.getDefault(), "Defaults: enabled, 10%, 1000 blocks");
+            h.assertTrue(NaturalCapitals.chosen(10.0, 0.0) && NaturalCapitals.chosen(10.0, 0.0999) && !NaturalCapitals.chosen(10.0, 0.1)
+                    && !NaturalCapitals.chosen(10.0, 0.5), "10%: samples below 0.1 only");
             h.assertTrue(!NaturalCapitals.chosen(0.0, 0.0) && NaturalCapitals.chosen(100.0, 0.999999), "0% never, 100% always");
             // 3. The probability is read from the NeoForge config.
             CapitalConfig.CHANCE_PERCENT.set(50.0);
@@ -92,16 +93,16 @@ public final class NaturalCapitalGameTests {
             BlockPos origin = new BlockPos(500_000, 70, 500_000);
             Village capital = synthetic(level, origin, eligibleType(), made);
             var d = new KingdomSavedData(); var k = d.create("Rule capital", capital.getId().uuid());
-            h.assertTrue(!NaturalCapitals.farFromCapitals(level, d, origin.offset(1499, 0, 0), 1500)
-                    && NaturalCapitals.farFromCapitals(level, d, origin.offset(1500, 0, 0), 1500)
-                    && NaturalCapitals.farFromCapitals(level, d, origin.offset(900, 0, 1200), 1500)
-                    && !NaturalCapitals.farFromCapitals(level, d, origin.offset(900, 0, 1199), 1500), "Horizontal distance, 1500 inclusive");
+            h.assertTrue(!NaturalCapitals.farFromCapitals(level, d, origin.offset(999, 0, 0), 1000)
+                    && NaturalCapitals.farFromCapitals(level, d, origin.offset(1000, 0, 0), 1000)
+                    && NaturalCapitals.farFromCapitals(level, d, origin.offset(600, 0, 800), 1000)
+                    && !NaturalCapitals.farFromCapitals(level, d, origin.offset(600, 0, 799), 1000), "Horizontal distance, 1000 inclusive");
             h.assertTrue(NaturalCapitals.farFromCapitals(level, d, origin.offset(1000, 0, 0), 900), "A configured distance is used as given");
             d.setActive(k.id(), false);
-            h.assertTrue(!NaturalCapitals.farFromCapitals(level, d, origin.offset(1000, 0, 0), 1500), "An inactive but living kingdom still has a capital");
+            h.assertTrue(!NaturalCapitals.farFromCapitals(level, d, origin.offset(999, 0, 0), 1000), "An inactive but living kingdom still has a capital");
 
             // Rule order on real Millénaire village records (no structures needed before the space check).
-            Village near = synthetic(level, origin.offset(1000, 0, 0), eligibleType(), made);
+            Village near = synthetic(level, origin.offset(999, 0, 0), eligibleType(), made);
             CapitalConfig.CHANCE_PERCENT.set(100.0);
             h.assertTrue(NaturalCapitals.consider(level, d, near, 0.5).outcome() == Outcome.TOO_CLOSE, "Too close to a capital");
             CapitalConfig.CHANCE_PERCENT.set(2.0);
@@ -261,11 +262,11 @@ public final class NaturalCapitalGameTests {
 
     private record Candidate(String key, int dx, int dz, double chance, boolean capital) {}
     /** Relative to world spawn, all inside Millénaire's 2000-block "no initial completion" zone: a normal natural village
-     * keeps its level-0 town hall, so "unchanged" is visible. A-C: 2000 apart (both capitals), B: 1000-1414 from them
+     * keeps its level-0 town hall, so "unchanged" is visible. A-C: 2000 apart (both capitals), B: 600 from A
      * (too close), D: 1600 from A but chance 0 in the config. */
     private static final List<Candidate> CANDIDATES = List.of(
             new Candidate("A", 1000, 0, 100.0, true),
-            new Candidate("B", 1000, 1000, 100.0, false),
+            new Candidate("B", 1000, 600, 100.0, false),
             new Candidate("C", -1000, 0, 100.0, true),
             new Candidate("D", 1000, -1600, 0.0, false));
 
@@ -326,9 +327,20 @@ public final class NaturalCapitalGameTests {
                 return;
             }
             if (watched.isEmpty()) {
-                boolean ready = loaded(level, spawned.get("A").getCenter()) && loaded(level, spawned.get("C").getCenter())
-                        && !villagers(level, spawned.get("A")).isEmpty() && !villagers(level, spawned.get("C")).isEmpty();
-                if (!ready && level.getGameTime() - loadFrom[0] < 600) return;
+                // Terrain and the first returning villager can precede the chief's entity chunk load.
+                // Wait for the same live chiefs that checkWorld asserts, not just any village NPC.
+                boolean ready = loadedWithChief(level, spawned.get("A")) && loadedWithChief(level, spawned.get("C"));
+                long waited = level.getGameTime() - loadFrom[0];
+                if (ready || waited == 1 || waited % 100 == 0) {
+                    System.out.println("CAPITAL_CHIEF_LOAD tick=" + level.getGameTime() + " waited=" + waited + " ready=" + ready
+                            + " A=" + chiefLoadState(level, spawned.get("A")) + " C=" + chiefLoadState(level, spawned.get("C")));
+                }
+                if (!ready) {
+                    h.assertTrue(waited < CHIEF_LOAD_TIMEOUT_TICKS,
+                            "Timed out after " + waited + " ticks waiting for both capital chiefs: A="
+                                    + chiefLoadState(level, spawned.get("A")) + " C=" + chiefLoadState(level, spawned.get("C")));
+                    return;
+                }
                 checkWorld(h, level, spawned, file);
                 for (MillVillager m : villagers(level, spawned.get("A"))) watched.put(m.getUUID(), m.blockPosition());
                 watchFrom[0] = level.getGameTime();
@@ -528,6 +540,35 @@ public final class NaturalCapitalGameTests {
     private static List<MillVillager> villagers(ServerLevel level, Village v) {
         AABB box = new AABB(v.getCenter()).inflate(160, 128, 160);
         return level.getEntitiesOfClass(MillVillager.class, box, m -> m.isAlive() && v.getId().equals(m.getVillageId()));
+    }
+    private static boolean loadedWithChief(ServerLevel level, Village v) {
+        return loaded(level, v.getCenter())
+                && villagers(level, v).stream().anyMatch(com.millenairekingdoms.politics.ChiefInteraction::isChief);
+    }
+    /** Distinguish a saved chief from a live entity, and terrain readiness from entity-chunk readiness. */
+    private static String chiefLoadState(ServerLevel level, Village v) {
+        var people = villagers(level, v);
+        var chiefs = people.stream().filter(com.millenairekingdoms.politics.ChiefInteraction::isChief)
+                .map(m -> m.getUUID() + "@" + m.blockPosition().toShortString()).toList();
+        var records = v.getVillagerRecords().values().stream().filter(r -> {
+            var type = ModCultures.getVillagerType(r.getVillagerTypeId());
+            return type != null && type.hasTag("chief");
+        }).map(r -> {
+            BlockPos pos = r.getLastKnownPos();
+            var entity = level.getEntity(r.getUuid());
+            ChunkPos chunk = pos == null ? null : new ChunkPos(pos);
+            return r.getUuid() + "/" + r.getVillagerTypeId() + " savedPos=" + pos + " killed=" + r.isKilled()
+                    + " chunk=" + chunk + " terrain=" + (pos != null && level.hasChunkAt(pos))
+                    + " entitiesLoaded=" + (chunk != null && level.areEntitiesLoaded(chunk.toLong()))
+                    + " entityTicking=" + (pos != null && level.isPositionEntityTicking(pos))
+                    + " testForced=" + (chunk != null && level.getForcedChunks().contains(chunk.toLong()))
+                    + " entity=" + (entity == null ? "absent" : entity.blockPosition().toShortString()
+                            + "/alive=" + entity.isAlive() + "/removed=" + entity.isRemoved()
+                            + "/inQuery=" + people.contains(entity));
+        }).toList();
+        return "{village=" + v.getId() + " center=" + v.getCenter().toShortString()
+                + " terrainReady=" + loaded(level, v.getCenter()) + " villagers=" + people.size()
+                + " chiefs=" + chiefs + " records=" + records + "}";
     }
     private static void discard(ServerLevel level, Village v) {
         villagers(level, v).forEach(net.minecraft.world.entity.Entity::discard);

@@ -1,0 +1,18 @@
+{
+  "run": "royal-payment-05",
+  "suite": "verifyRoyalEconomy",
+  "write": 41,
+  "reload": 41,
+  "fresh_world": true,
+  "separate_jvms": true,
+  "version": "1.2.0-dev.1",
+  "millenaire": "9.0.3",
+  "dependency_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "development_jar_sha256": "05a456daf30a2714dc30cd2d61c2ed2972128fac11ed20bd4446a665cddd5a56",
+  "abrupt_process_termination_tested": false,
+  "notes": [
+    "Real original-plan metadata rehydrates storage without fixture repair.",
+    "Earlier failed launcher/fixture attempts are not counted.",
+    "No paid gameplay consumer is wired."
+  ]
+}

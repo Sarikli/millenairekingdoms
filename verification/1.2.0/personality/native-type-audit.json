@@ -1,0 +1,888 @@
+{
+  "dependency_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "revision": 1,
+  "types": [
+    {
+      "type": "millenaire:byzantines/ancienttemple",
+      "source": "millenaire/cultures/byzantines/villages/ancienttemple.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:byzantines/temple"
+    },
+    {
+      "type": "millenaire:byzantines/ancienttheatre",
+      "source": "millenaire/cultures/byzantines/villages/ancienttheatre.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:byzantines/theatre"
+    },
+    {
+      "type": "millenaire:byzantines/birchtower",
+      "source": "millenaire/cultures/byzantines/villages/birchtower.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:byzantines/birchtower"
+    },
+    {
+      "type": "millenaire:byzantines/controlled",
+      "source": "millenaire/cultures/byzantines/villages/controlled.json",
+      "status": "CONTROLLED_TYPE",
+      "category": "GENERAL",
+      "center": "millenaire:byzantines/playerfortress"
+    },
+    {
+      "type": "millenaire:byzantines/lighthouse",
+      "source": "millenaire/cultures/byzantines/villages/lighthouse.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:byzantines/pharos"
+    },
+    {
+      "type": "millenaire:byzantines/lonemonastery",
+      "source": "millenaire/cultures/byzantines/villages/lonemonastery.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:byzantines/lonemonastery"
+    },
+    {
+      "type": "millenaire:byzantines/lonesheepfarm",
+      "source": "millenaire/cultures/byzantines/villages/lonesheepfarm.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:byzantines/sheepranch"
+    },
+    {
+      "type": "millenaire:byzantines/lonesheepfarm_x",
+      "source": "millenaire/cultures/byzantines/villages/lonesheepfarm_x.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:byzantines/oldsheepfarm"
+    },
+    {
+      "type": "millenaire:byzantines/militaryvillage",
+      "source": "millenaire/cultures/byzantines/villages/militaryvillage.json",
+      "status": "MAPPED",
+      "category": "MILITARY",
+      "center": "millenaire:byzantines/fortress"
+    },
+    {
+      "type": "millenaire:byzantines/oaktower",
+      "source": "millenaire/cultures/byzantines/villages/oaktower.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:byzantines/oaktower"
+    },
+    {
+      "type": "millenaire:byzantines/pinetower",
+      "source": "millenaire/cultures/byzantines/villages/pinetower.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:byzantines/pinetower"
+    },
+    {
+      "type": "millenaire:byzantines/religiousvillage",
+      "source": "millenaire/cultures/byzantines/villages/religiousvillage.json",
+      "status": "MAPPED",
+      "category": "RELIGIOUS",
+      "center": "millenaire:byzantines/church"
+    },
+    {
+      "type": "millenaire:byzantines/tradingvillage",
+      "source": "millenaire/cultures/byzantines/villages/tradingvillage.json",
+      "status": "MAPPED",
+      "category": "ARTISAN",
+      "center": "millenaire:byzantines/kastron"
+    },
+    {
+      "type": "millenaire:byzantines/tropicaltower",
+      "source": "millenaire/cultures/byzantines/villages/tropicaltower.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:byzantines/jungletower"
+    },
+    {
+      "type": "millenaire:indian/adivasifarm",
+      "source": "millenaire/cultures/indian/villages/adivasifarm.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:indian/adivasifarm"
+    },
+    {
+      "type": "millenaire:indian/agricole",
+      "source": "millenaire/cultures/indian/villages/agricole.json",
+      "status": "MAPPED",
+      "category": "AGRICULTURAL",
+      "center": "millenaire:indian/chiefhouse"
+    },
+    {
+      "type": "millenaire:indian/agricole_hamlet",
+      "source": "millenaire/cultures/indian/villages/agricole_hamlet.json",
+      "status": "MAPPED",
+      "category": "AGRICULTURAL",
+      "center": "millenaire:indian/chiefhouse"
+    },
+    {
+      "type": "millenaire:indian/controlled",
+      "source": "millenaire/cultures/indian/villages/controlled.json",
+      "status": "CONTROLLED_TYPE",
+      "category": "GENERAL",
+      "center": "millenaire:indian/playerpalace"
+    },
+    {
+      "type": "millenaire:indian/controlled_walled",
+      "source": "millenaire/cultures/indian/villages/controlled_walled.json",
+      "status": "CONTROLLED_TYPE",
+      "category": "GENERAL",
+      "center": "millenaire:indian/playerpalace"
+    },
+    {
+      "type": "millenaire:indian/deserttradeoutpost",
+      "source": "millenaire/cultures/indian/villages/deserttradeoutpost.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:indian/deserttradeoutpost"
+    },
+    {
+      "type": "millenaire:indian/fort",
+      "source": "millenaire/cultures/indian/villages/fort.json",
+      "status": "MAPPED",
+      "category": "MILITARY",
+      "center": "millenaire:indian/fort"
+    },
+    {
+      "type": "millenaire:indian/fort_hamlet",
+      "source": "millenaire/cultures/indian/villages/fort_hamlet.json",
+      "status": "MAPPED",
+      "category": "MILITARY",
+      "center": "millenaire:indian/fort"
+    },
+    {
+      "type": "millenaire:indian/indiandesertedfarm",
+      "source": "millenaire/cultures/indian/villages/indiandesertedfarm.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:indian/indiandesertedfarm"
+    },
+    {
+      "type": "millenaire:indian/loneshrine",
+      "source": "millenaire/cultures/indian/villages/loneshrine.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:indian/loneshrine"
+    },
+    {
+      "type": "millenaire:indian/palace",
+      "source": "millenaire/cultures/indian/villages/palace.json",
+      "status": "MAPPED",
+      "category": "GENERAL",
+      "center": "millenaire:indian/palace"
+    },
+    {
+      "type": "millenaire:indian/palace_autonomous",
+      "source": "millenaire/cultures/indian/villages/palace_autonomous.json",
+      "status": "MAPPED",
+      "category": "GENERAL",
+      "center": "millenaire:indian/palace"
+    },
+    {
+      "type": "millenaire:indian/ruinedfort",
+      "source": "millenaire/cultures/indian/villages/ruinedfort.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:indian/ruinedfort"
+    },
+    {
+      "type": "millenaire:indian/sandblasted",
+      "source": "millenaire/cultures/indian/villages/sandblasted.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:indian/sandblasted"
+    },
+    {
+      "type": "millenaire:inuits/artisanalvillage",
+      "source": "millenaire/cultures/inuits/villages/artisanalvillage.json",
+      "status": "MAPPED",
+      "category": "ARTISAN",
+      "center": "millenaire:inuits/tannery"
+    },
+    {
+      "type": "millenaire:inuits/banditshack",
+      "source": "millenaire/cultures/inuits/villages/banditshack.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/banditshack"
+    },
+    {
+      "type": "millenaire:inuits/bison",
+      "source": "millenaire/cultures/inuits/villages/bison.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/bison"
+    },
+    {
+      "type": "millenaire:inuits/communityvillage",
+      "source": "millenaire/cultures/inuits/villages/communityvillage.json",
+      "status": "MAPPED",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/council"
+    },
+    {
+      "type": "millenaire:inuits/farmingvillage",
+      "source": "millenaire/cultures/inuits/villages/farmingvillage.json",
+      "status": "MAPPED",
+      "category": "AGRICULTURAL",
+      "center": "millenaire:inuits/tannery"
+    },
+    {
+      "type": "millenaire:inuits/huntingvillage",
+      "source": "millenaire/cultures/inuits/villages/huntingvillage.json",
+      "status": "MAPPED",
+      "category": "AGRICULTURAL",
+      "center": "millenaire:inuits/hunterth"
+    },
+    {
+      "type": "millenaire:inuits/huntingvillage_controlled",
+      "source": "millenaire/cultures/inuits/villages/huntingvillage_controlled.json",
+      "status": "CONTROLLED_TYPE",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/player_tannery"
+    },
+    {
+      "type": "millenaire:inuits/inuksuit",
+      "source": "millenaire/cultures/inuits/villages/inuksuit.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/inuksuit"
+    },
+    {
+      "type": "millenaire:inuits/lake2",
+      "source": "millenaire/cultures/inuits/villages/lake2.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/lake2"
+    },
+    {
+      "type": "millenaire:inuits/loneanimistic",
+      "source": "millenaire/cultures/inuits/villages/loneanimistic.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/loneanimistic"
+    },
+    {
+      "type": "millenaire:inuits/loneanishaman",
+      "source": "millenaire/cultures/inuits/villages/loneanishaman.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/loneanishaman"
+    },
+    {
+      "type": "millenaire:inuits/loneartisan",
+      "source": "millenaire/cultures/inuits/villages/loneartisan.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/loneartisan"
+    },
+    {
+      "type": "millenaire:inuits/lonedisiglu",
+      "source": "millenaire/cultures/inuits/villages/lonedisiglu.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/lonedisiglu"
+    },
+    {
+      "type": "millenaire:inuits/lonedisiglu2",
+      "source": "millenaire/cultures/inuits/villages/lonedisiglu2.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/lonedisiglu2"
+    },
+    {
+      "type": "millenaire:inuits/lonedislogcabin",
+      "source": "millenaire/cultures/inuits/villages/lonedislogcabin.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/lonedislogcabin"
+    },
+    {
+      "type": "millenaire:inuits/lonedislogcabin2",
+      "source": "millenaire/cultures/inuits/villages/lonedislogcabin2.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/lonedislogcabin2"
+    },
+    {
+      "type": "millenaire:inuits/lonefisherman",
+      "source": "millenaire/cultures/inuits/villages/lonefisherman.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/lonefisherman"
+    },
+    {
+      "type": "millenaire:inuits/loneiglu",
+      "source": "millenaire/cultures/inuits/villages/loneiglu.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/loneiglu"
+    },
+    {
+      "type": "millenaire:inuits/loneiglu2",
+      "source": "millenaire/cultures/inuits/villages/loneiglu2.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/loneiglu2"
+    },
+    {
+      "type": "millenaire:inuits/lonelogcabin",
+      "source": "millenaire/cultures/inuits/villages/lonelogcabin.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/lonelogcabin"
+    },
+    {
+      "type": "millenaire:inuits/lonelogcabin2",
+      "source": "millenaire/cultures/inuits/villages/lonelogcabin2.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/lonelogcabin2"
+    },
+    {
+      "type": "millenaire:inuits/lonewoodworker",
+      "source": "millenaire/cultures/inuits/villages/lonewoodworker.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/lonewoodworker"
+    },
+    {
+      "type": "millenaire:inuits/polarbearcave",
+      "source": "millenaire/cultures/inuits/villages/polarbearcave.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/polarbearcave"
+    },
+    {
+      "type": "millenaire:inuits/religiousvillage",
+      "source": "millenaire/cultures/inuits/villages/religiousvillage.json",
+      "status": "MAPPED",
+      "category": "RELIGIOUS",
+      "center": "millenaire:inuits/shamanistic"
+    },
+    {
+      "type": "millenaire:inuits/sanduit",
+      "source": "millenaire/cultures/inuits/villages/sanduit.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:inuits/sanduit"
+    },
+    {
+      "type": "millenaire:japanese/bandit_cave",
+      "source": "millenaire/cultures/japanese/villages/bandit_cave.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:japanese/bandit_cave"
+    },
+    {
+      "type": "millenaire:japanese/banditfort",
+      "source": "millenaire/cultures/japanese/villages/banditfort.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:japanese/banditfort"
+    },
+    {
+      "type": "millenaire:japanese/controlled",
+      "source": "millenaire/cultures/japanese/villages/controlled.json",
+      "status": "CONTROLLED_TYPE",
+      "category": "GENERAL",
+      "center": "millenaire:japanese/japaneseplayerpalace"
+    },
+    {
+      "type": "millenaire:japanese/gunji",
+      "source": "millenaire/cultures/japanese/villages/gunji.json",
+      "status": "MAPPED",
+      "category": "MILITARY",
+      "center": "millenaire:japanese/japanesefort"
+    },
+    {
+      "type": "millenaire:japanese/hotspringsinn",
+      "source": "millenaire/cultures/japanese/villages/hotspringsinn.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:japanese/hotspringsinn"
+    },
+    {
+      "type": "millenaire:japanese/japaneseoutpost",
+      "source": "millenaire/cultures/japanese/villages/japaneseoutpost.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:japanese/japaneseoutpost"
+    },
+    {
+      "type": "millenaire:japanese/kufun_tomb",
+      "source": "millenaire/cultures/japanese/villages/kufun_tomb.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:japanese/kufun_tomb"
+    },
+    {
+      "type": "millenaire:japanese/lonebuddha",
+      "source": "millenaire/cultures/japanese/villages/lonebuddha.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:japanese/lonebuddha"
+    },
+    {
+      "type": "millenaire:japanese/lonemine",
+      "source": "millenaire/cultures/japanese/villages/lonemine.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:japanese/lonemine"
+    },
+    {
+      "type": "millenaire:japanese/nogyo",
+      "source": "millenaire/cultures/japanese/villages/nogyo.json",
+      "status": "MAPPED",
+      "category": "AGRICULTURAL",
+      "center": "millenaire:japanese/japanesefarmbig"
+    },
+    {
+      "type": "millenaire:japanese/seiji",
+      "source": "millenaire/cultures/japanese/villages/seiji.json",
+      "status": "MAPPED",
+      "category": "GENERAL",
+      "center": "millenaire:japanese/japanesepalace"
+    },
+    {
+      "type": "millenaire:japanese/trading",
+      "source": "millenaire/cultures/japanese/villages/trading.json",
+      "status": "MAPPED",
+      "category": "ARTISAN",
+      "center": "millenaire:japanese/sakebrewery"
+    },
+    {
+      "type": "millenaire:japanese/woods_shrine",
+      "source": "millenaire/cultures/japanese/villages/woods_shrine.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:japanese/woods_shrine"
+    },
+    {
+      "type": "millenaire:mayan/agriculture",
+      "source": "millenaire/cultures/mayan/villages/agriculture.json",
+      "status": "MAPPED",
+      "category": "AGRICULTURAL",
+      "center": "millenaire:mayan/mayanacropolis"
+    },
+    {
+      "type": "millenaire:mayan/controlled",
+      "source": "millenaire/cultures/mayan/villages/controlled.json",
+      "status": "CONTROLLED_TYPE",
+      "category": "GENERAL",
+      "center": "millenaire:mayan/mayanplayerpyramid"
+    },
+    {
+      "type": "millenaire:mayan/lonemayancave",
+      "source": "millenaire/cultures/mayan/villages/lonemayancave.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:mayan/lonemayancave"
+    },
+    {
+      "type": "millenaire:mayan/lonemayancornfarm",
+      "source": "millenaire/cultures/mayan/villages/lonemayancornfarm.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:mayan/lonemayancornfarm"
+    },
+    {
+      "type": "millenaire:mayan/lonemayanfarm",
+      "source": "millenaire/cultures/mayan/villages/lonemayanfarm.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:mayan/lonemayanfarm"
+    },
+    {
+      "type": "millenaire:mayan/lonemayanmining",
+      "source": "millenaire/cultures/mayan/villages/lonemayanmining.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:mayan/lonemayanmining"
+    },
+    {
+      "type": "millenaire:mayan/lonemayanpyramid",
+      "source": "millenaire/cultures/mayan/villages/lonemayanpyramid.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:mayan/lonemayanpyramid"
+    },
+    {
+      "type": "millenaire:mayan/lonemayanruin",
+      "source": "millenaire/cultures/mayan/villages/lonemayanruin.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:mayan/lonemayanruin"
+    },
+    {
+      "type": "millenaire:mayan/lonemayanshaman",
+      "source": "millenaire/cultures/mayan/villages/lonemayanshaman.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:mayan/lonemayanshaman"
+    },
+    {
+      "type": "millenaire:mayan/mayanbandithome",
+      "source": "millenaire/cultures/mayan/villages/mayanbandithome.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:mayan/mayanbandithome"
+    },
+    {
+      "type": "millenaire:mayan/mayanbandits",
+      "source": "millenaire/cultures/mayan/villages/mayanbandits.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:mayan/mayanbandits"
+    },
+    {
+      "type": "millenaire:mayan/mayanruinedpyramid",
+      "source": "millenaire/cultures/mayan/villages/mayanruinedpyramid.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:mayan/mayanruinedpyramid"
+    },
+    {
+      "type": "millenaire:mayan/military",
+      "source": "millenaire/cultures/mayan/villages/military.json",
+      "status": "MAPPED",
+      "category": "MILITARY",
+      "center": "millenaire:mayan/mayanpyramid"
+    },
+    {
+      "type": "millenaire:mayan/religious",
+      "source": "millenaire/cultures/mayan/villages/religious.json",
+      "status": "MAPPED",
+      "category": "RELIGIOUS",
+      "center": "millenaire:mayan/mayanobservatory"
+    },
+    {
+      "type": "millenaire:norman/abandonedmill",
+      "source": "millenaire/cultures/norman/villages/abandonedmill.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:norman/abandonedmill"
+    },
+    {
+      "type": "millenaire:norman/abandonedmine",
+      "source": "millenaire/cultures/norman/villages/abandonedmine.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:norman/abandonedmine"
+    },
+    {
+      "type": "millenaire:norman/abandonedtower",
+      "source": "millenaire/cultures/norman/villages/abandonedtower.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:norman/abandonedtower"
+    },
+    {
+      "type": "millenaire:norman/agricole",
+      "source": "millenaire/cultures/norman/villages/agricole.json",
+      "status": "MAPPED",
+      "category": "AGRICULTURAL",
+      "center": "millenaire:norman/manor"
+    },
+    {
+      "type": "millenaire:norman/artisans",
+      "source": "millenaire/cultures/norman/villages/artisans.json",
+      "status": "MAPPED",
+      "category": "ARTISAN",
+      "center": "millenaire:norman/guildhouse"
+    },
+    {
+      "type": "millenaire:norman/banditlair",
+      "source": "millenaire/cultures/norman/villages/banditlair.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:norman/banditlair"
+    },
+    {
+      "type": "millenaire:norman/bandittower",
+      "source": "millenaire/cultures/norman/villages/bandittower.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:norman/bandittower"
+    },
+    {
+      "type": "millenaire:norman/bourg_autonome",
+      "source": "millenaire/cultures/norman/villages/bourg_autonome.json",
+      "status": "MAPPED",
+      "category": "GENERAL",
+      "center": "millenaire:norman/largefort"
+    },
+    {
+      "type": "millenaire:norman/controlled",
+      "source": "millenaire/cultures/norman/villages/controlled.json",
+      "status": "CONTROLLED_TYPE",
+      "category": "GENERAL",
+      "center": "millenaire:norman/playerlargefort"
+    },
+    {
+      "type": "millenaire:norman/ecclesiastique",
+      "source": "millenaire/cultures/norman/villages/ecclesiastique.json",
+      "status": "MAPPED",
+      "category": "RELIGIOUS",
+      "center": "millenaire:norman/abbey"
+    },
+    {
+      "type": "millenaire:norman/feloncastle",
+      "source": "millenaire/cultures/norman/villages/feloncastle.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:norman/feloncastle"
+    },
+    {
+      "type": "millenaire:norman/grosbourg",
+      "source": "millenaire/cultures/norman/villages/grosbourg.json",
+      "status": "MAPPED",
+      "category": "GENERAL",
+      "center": "millenaire:norman/largefort"
+    },
+    {
+      "type": "millenaire:norman/hameau_abbatiale",
+      "source": "millenaire/cultures/norman/villages/hameau_abbatiale.json",
+      "status": "MAPPED",
+      "category": "RELIGIOUS",
+      "center": "millenaire:norman/abbey"
+    },
+    {
+      "type": "millenaire:norman/hameau_agricole",
+      "source": "millenaire/cultures/norman/villages/hameau_agricole.json",
+      "status": "MAPPED",
+      "category": "AGRICULTURAL",
+      "center": "millenaire:norman/manor"
+    },
+    {
+      "type": "millenaire:norman/hameau_artisans",
+      "source": "millenaire/cultures/norman/villages/hameau_artisans.json",
+      "status": "MAPPED",
+      "category": "ARTISAN",
+      "center": "millenaire:norman/guildhouse"
+    },
+    {
+      "type": "millenaire:norman/loneabbey",
+      "source": "millenaire/cultures/norman/villages/loneabbey.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:norman/loneabbey"
+    },
+    {
+      "type": "millenaire:norman/loneinn",
+      "source": "millenaire/cultures/norman/villages/loneinn.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:norman/loneinn"
+    },
+    {
+      "type": "millenaire:norman/lonelumberman",
+      "source": "millenaire/cultures/norman/villages/lonelumberman.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:norman/lonelumbermanhut"
+    },
+    {
+      "type": "millenaire:norman/lonelumbermantaiga",
+      "source": "millenaire/cultures/norman/villages/lonelumbermantaiga.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:norman/lonelumbermantaigahut"
+    },
+    {
+      "type": "millenaire:norman/lonemill",
+      "source": "millenaire/cultures/norman/villages/lonemill.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:norman/lonemill"
+    },
+    {
+      "type": "millenaire:norman/loneminer",
+      "source": "millenaire/cultures/norman/villages/loneminer.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:norman/lonemine"
+    },
+    {
+      "type": "millenaire:norman/loneroadhouse",
+      "source": "millenaire/cultures/norman/villages/loneroadhouse.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:norman/loneroadhouse"
+    },
+    {
+      "type": "millenaire:norman/militaire",
+      "source": "millenaire/cultures/norman/villages/militaire.json",
+      "status": "MAPPED",
+      "category": "MILITARY",
+      "center": "millenaire:norman/fort"
+    },
+    {
+      "type": "millenaire:norman/notredame",
+      "source": "millenaire/cultures/norman/villages/notredame.json",
+      "status": "MAPPED",
+      "category": "RELIGIOUS",
+      "center": "millenaire:norman/warehouse"
+    },
+    {
+      "type": "millenaire:norman/pantheon",
+      "source": "millenaire/cultures/norman/villages/pantheon.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:norman/pantheon"
+    },
+    {
+      "type": "millenaire:norman/ruinedfarm",
+      "source": "millenaire/cultures/norman/villages/ruinedfarm.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:norman/ruinedfarm"
+    },
+    {
+      "type": "millenaire:norman/walledcontrolled",
+      "source": "millenaire/cultures/norman/villages/walledcontrolled.json",
+      "status": "CONTROLLED_TYPE",
+      "category": "GENERAL",
+      "center": "millenaire:norman/playerlargefort"
+    },
+    {
+      "type": "millenaire:seljuk/agriculture_small_seljuks",
+      "source": "millenaire/cultures/seljuk/villages/agriculture_small_seljuks.json",
+      "status": "MAPPED",
+      "category": "AGRICULTURAL",
+      "center": "millenaire:seljuk/hamlettownhall"
+    },
+    {
+      "type": "millenaire:seljuk/agriculture_village_seljuks",
+      "source": "millenaire/cultures/seljuk/villages/agriculture_village_seljuks.json",
+      "status": "MAPPED",
+      "category": "AGRICULTURAL",
+      "center": "millenaire:seljuk/gfarm"
+    },
+    {
+      "type": "millenaire:seljuk/artisans_small_seljuks",
+      "source": "millenaire/cultures/seljuk/villages/artisans_small_seljuks.json",
+      "status": "MAPPED",
+      "category": "ARTISAN",
+      "center": "millenaire:seljuk/hamlettownhall"
+    },
+    {
+      "type": "millenaire:seljuk/banditcamp",
+      "source": "millenaire/cultures/seljuk/villages/banditcamp.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:seljuk/banditcamp"
+    },
+    {
+      "type": "millenaire:seljuk/bandittower",
+      "source": "millenaire/cultures/seljuk/villages/bandittower.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:seljuk/bandittower"
+    },
+    {
+      "type": "millenaire:seljuk/controlled_fort_seljuks",
+      "source": "millenaire/cultures/seljuk/villages/controlled_fort_seljuks.json",
+      "status": "CONTROLLED_TYPE",
+      "category": "GENERAL",
+      "center": "millenaire:seljuk/sarayfortplayer"
+    },
+    {
+      "type": "millenaire:seljuk/controlled_small_village_seljuks",
+      "source": "millenaire/cultures/seljuk/villages/controlled_small_village_seljuks.json",
+      "status": "CONTROLLED_TYPE",
+      "category": "GENERAL",
+      "center": "millenaire:seljuk/hamlettownhallplayer"
+    },
+    {
+      "type": "millenaire:seljuk/hamamruin",
+      "source": "millenaire/cultures/seljuk/villages/hamamruin.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:seljuk/bath_abandoned"
+    },
+    {
+      "type": "millenaire:seljuk/lonecowfarm",
+      "source": "millenaire/cultures/seljuk/villages/lonecowfarm.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:seljuk/lonecowfarm"
+    },
+    {
+      "type": "millenaire:seljuk/lonefarm",
+      "source": "millenaire/cultures/seljuk/villages/lonefarm.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:seljuk/lonefarm"
+    },
+    {
+      "type": "millenaire:seljuk/lonemarket",
+      "source": "millenaire/cultures/seljuk/villages/lonemarket.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:seljuk/lonemarket"
+    },
+    {
+      "type": "millenaire:seljuk/lonemine",
+      "source": "millenaire/cultures/seljuk/villages/lonemine.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:seljuk/lonemine"
+    },
+    {
+      "type": "millenaire:seljuk/military_village_seljuks",
+      "source": "millenaire/cultures/seljuk/villages/military_village_seljuks.json",
+      "status": "MAPPED",
+      "category": "MILITARY",
+      "center": "millenaire:seljuk/sarayfort"
+    },
+    {
+      "type": "millenaire:seljuk/religious_village_seljuks",
+      "source": "millenaire/cultures/seljuk/villages/religious_village_seljuks.json",
+      "status": "MAPPED",
+      "category": "RELIGIOUS",
+      "center": "millenaire:seljuk/thmosque"
+    },
+    {
+      "type": "millenaire:seljuk/ruin",
+      "source": "millenaire/cultures/seljuk/villages/ruin.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:seljuk/ruin"
+    },
+    {
+      "type": "millenaire:seljuk/ruinlonemine",
+      "source": "millenaire/cultures/seljuk/villages/ruinlonemine.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:seljuk/ruinlonemine"
+    },
+    {
+      "type": "millenaire:seljuk/ruinwall",
+      "source": "millenaire/cultures/seljuk/villages/ruinwall.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:seljuk/ruinwall"
+    },
+    {
+      "type": "millenaire:seljuk/ruinwell",
+      "source": "millenaire/cultures/seljuk/villages/ruinwell.json",
+      "status": "LONE_BUILDING",
+      "category": "GENERAL",
+      "center": "millenaire:seljuk/ruinwell"
+    },
+    {
+      "type": "millenaire:seljuk/trading_village_seljuks",
+      "source": "millenaire/cultures/seljuk/villages/trading_village_seljuks.json",
+      "status": "MAPPED",
+      "category": "ARTISAN",
+      "center": "millenaire:seljuk/gmarket"
+    }
+  ]
+}

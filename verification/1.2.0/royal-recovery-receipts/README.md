@@ -1,0 +1,7 @@
+# Recovery after the native receipt protocol correction
+
+The comprehensive beta run reproduced an obsolete image-only test expectation: changing live coins63 while retaining an exact applied native operation proof correctly reconciles PAID; it is not ambiguous. That old write failed one of15 tests and produced no All-required-tests line; no reopen was launched. Raw failure retained.
+
+The original hard refusal test remains: PREPARED alone cannot authorize OP recovery; genuinely ambiguous physical63 now explicitly loses its native proof as a declared corrupt fixture, then quarantines RECOVERY_REQUIRED and OP recovery cannot reset it. A separate positive integration test uses original native inventory remove/add after a proven debit, reconciles exactly63, then audited forfeit retains exactly63 with the original64 fee COMMITTED and order CANCELLED. No guessed coin restoration/refund or new debit.
+
+Fresh corrected verifyRoyalRecovery / royal-beta-recovery-final-02 logged **All 16 required tests passed** in each write/separate reopen JVM and normal build passed, including genuine original builder adoption and physical completion. Only GameTest fixtures/coverage and runner diagnostics/resume changed; production JAR is byte-identical. Thus the first nine successful beta packages are retained and the runner resumes from verifyRoyalSites, without repeating unrelated successes. This is not a production relaxation or skipped recovery test.

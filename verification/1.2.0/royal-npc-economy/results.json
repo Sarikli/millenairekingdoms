@@ -1,0 +1,55 @@
+{
+  "phase": "6 coordinator implemented; automatic scheduling/live NPC gameplay still next",
+  "cases": [
+    {
+      "run": "royal-npc-economy-01",
+      "required_pass_counts": [
+        10,
+        10
+      ],
+      "normal_build_successful": true,
+      "raw_sha256": "3173ce9574cbd8d866450f4278ba4f761e4f0f3f9f884cf1aafb49b6124e3160"
+    },
+    {
+      "run": "royal-npc-economy-final-02",
+      "required_pass_counts": [
+        12,
+        12
+      ],
+      "normal_build_successful": true,
+      "raw_sha256": "57bc7f92e4037d0c5dc3758faa2ad210fdc9bfef0cc9f6550eb50d3abc54a042"
+    },
+    {
+      "run": "royal-npc-economy-budget-01",
+      "required_pass_counts": [
+        13,
+        13
+      ],
+      "normal_build_successful": true,
+      "raw_sha256": "ffede5ea9bb8127a2f789e912873c5145eeeff5a5d55dbcd099390011c1c78cd"
+    }
+  ],
+  "current_jar_sha256": "a740fa999055d4975b4e9a4f84a88f66832b06a90f30bb96ac49eadaccf04cad",
+  "native_first_construction": {
+    "plan": "millenaire:byzantines/acaciagrove",
+    "fee": 64,
+    "treasury_before": 256,
+    "treasury_after": 192,
+    "domain": "QUEUED"
+  },
+  "native_shortage": {
+    "plan": "millenaire:byzantines/acaciagrove",
+    "requirement": "millenaire:anywood_log",
+    "quantity": 5,
+    "fee": 9,
+    "treasury_after": 247,
+    "shared_delivery": "DELIVERED"
+  },
+  "restart_pre_dispatch_cancel": {
+    "held": 5,
+    "treasury_before": 247,
+    "returned": 5,
+    "treasury_after": 256
+  },
+  "physical_commissioned_building_completion": "NOT CLAIMED BY THIS GATE"
+}

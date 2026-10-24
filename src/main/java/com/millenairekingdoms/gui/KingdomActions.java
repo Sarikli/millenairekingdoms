@@ -24,7 +24,9 @@ import org.slf4j.Logger;
 public final class KingdomActions {
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final long MIN_TICKS = 4;
-    public enum Action { REFRESH, VIEW, CLAIM, ABDICATE, DECLARE_WAR, REQUEST_WAR, PEACE, JOIN, ACCEPT, REFUSE, FOUND, RAID, CANCEL_RAID, WITHDRAW }
+    public enum Action { REFRESH, VIEW, CLAIM, ABDICATE, DECLARE_WAR, REQUEST_WAR, PEACE, JOIN, ACCEPT, REFUSE, FOUND, RAID, CANCEL_RAID, WITHDRAW,
+        CONSTRUCTION_SELECT, CONSTRUCTION_ORDER, CONSTRUCTION_RESUME, CONSTRUCTION_CANCEL,
+        SHIPMENT_SOURCE, SHIPMENT_TARGET, SHIPMENT_PRODUCT, SHIPMENT_QUANTITY, SHIPMENT_ORDER, SHIPMENT_RESUME, SHIPMENT_CANCEL }
     private static final Map<UUID, Long> LAST = new HashMap<>();
 
     private KingdomActions() {}
@@ -32,6 +34,8 @@ public final class KingdomActions {
     public static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         LAST.remove(event.getEntity().getUUID());
         KingdomScreens.forget(event.getEntity().getUUID());
+        RoyalConstructionView.forget(event.getEntity().getUUID());
+        RoyalShipmentView.forget(event.getEntity().getUUID());
         com.millenairekingdoms.politics.ChiefInteraction.forget(event.getEntity().getUUID());
     }
 
@@ -47,10 +51,12 @@ public final class KingdomActions {
         try {
             message = run(player, action, request);
         } catch (IllegalArgumentException refused) {
-            message = KingdomException.of(refused).withStyle(ChatFormatting.DARK_RED);
+            message = (action.name().startsWith("CONSTRUCTION_") || action.name().startsWith("SHIPMENT_")) && !(refused instanceof KingdomException)
+                    ? Component.translatable("millenairekingdoms.gui.msg."+(action.name().startsWith("SHIPMENT_") ? "shipment_declined" : "construction_declined")).withStyle(ChatFormatting.DARK_RED)
+                    : KingdomException.of(refused).withStyle(ChatFormatting.DARK_RED);
         } catch (RuntimeException failure) {
             LOGGER.error("[Kingdoms] Kingdom screen action {} by {} failed.", action, player.getGameProfile().getName(), failure);
-            message = Component.translatableWithFallback("millenairekingdoms.gui.msg.error", "That did not work; nothing was changed.").withStyle(ChatFormatting.DARK_RED);
+            message = Component.translatableWithFallback("millenairekingdoms.gui.msg.error", "The request could not finish. Refresh and inspect its saved status before retrying.").withStyle(ChatFormatting.DARK_RED);
         }
         KingdomScreens.send(player, message);
         return message;
@@ -94,7 +100,29 @@ public final class KingdomActions {
             }
             case CANCEL_RAID -> { RaidOrderService.cancel(player); yield ok("raid_cancelled", "The waiting conquest raid was called off."); }
             case WITHDRAW -> ok("withdrew", "You took %s from the capital's town hall storage.", EconomyService.format(TreasuryService.withdraw(player, r.amount())));
+            case CONSTRUCTION_SELECT -> {RoyalConstructionView.select(player,nonNull(first));yield null;}
+            case CONSTRUCTION_ORDER -> {
+                var order=RoyalConstructionView.order(player,nonNull(first),nonNull(second),net.minecraft.resources.ResourceLocation.parse(r.text()));
+                yield constructionStatus(order);
+            }
+            case CONSTRUCTION_RESUME -> constructionStatus(new com.millenairekingdoms.construction.RoyalConstructionService(player.serverLevel()).retryPlayer(player,nonNull(first)));
+            case CONSTRUCTION_CANCEL -> constructionStatus(new com.millenairekingdoms.construction.RoyalConstructionService(player.serverLevel()).cancelPlayer(player,nonNull(first)));
+            case SHIPMENT_SOURCE -> {RoyalShipmentView.selectVillage(player,nonNull(first),true);yield null;}
+            case SHIPMENT_TARGET -> {RoyalShipmentView.selectVillage(player,nonNull(first),false);yield null;}
+            case SHIPMENT_PRODUCT -> {RoyalShipmentView.selectProduct(player,net.minecraft.resources.ResourceLocation.parse(r.text()));yield null;}
+            case SHIPMENT_QUANTITY -> {RoyalShipmentView.quantity(player,r.amount());yield null;}
+            case SHIPMENT_ORDER -> shipmentStatus(RoyalShipmentView.order(player,nonNull(first)));
+            case SHIPMENT_RESUME -> shipmentStatus(new com.millenairekingdoms.shipping.RoyalShipmentService(player.serverLevel()).resumePlayer(player,nonNull(first)));
+            case SHIPMENT_CANCEL -> shipmentStatus(new com.millenairekingdoms.shipping.RoyalShipmentService(player.serverLevel()).cancelPlayer(player,nonNull(first)));
         };
+    }
+
+    private static Component constructionStatus(com.millenairekingdoms.construction.RoyalConstructionStore.Entry order) {
+        return ok("construction_updated","Order status: %s.",Component.translatable("millenairekingdoms.gui.construction.stage."+order.stage().name()));
+    }
+    private static Component shipmentStatus(com.millenairekingdoms.shipping.RoyalShipmentStore.Entry entry){
+        String stage=entry.cancellationRequested() && !entry.terminal() && entry.stage()!=com.millenairekingdoms.shipping.RoyalShipmentStore.Stage.RECOVERY_REQUIRED ? "CANCELLING" : entry.stage().name();
+        return ok("shipment_updated","Shipment status: %s.",Component.translatable("millenairekingdoms.gui.shipment.stage."+stage));
     }
 
     private static String need(UUID id) { return nonNull(id).toString(); }
