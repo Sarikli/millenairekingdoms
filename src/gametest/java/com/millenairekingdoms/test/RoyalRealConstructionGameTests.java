@@ -71,6 +71,11 @@ public final class RoyalRealConstructionGameTests {
         final ServerLevel level;
         final boolean read;
         final boolean automatic;
+        final boolean economic,economicEnabledBefore;
+        String villageTypeId="millenaire:norman/hameau_artisans";
+        boolean economicPrepared,anywoodWatched;
+        long economicFunds;
+        final Map<Item,Integer> economicStocks=new HashMap<>();
         final RoyalConstructionService service;
         final Path marker;
         final boolean daylight;
@@ -92,8 +97,11 @@ public final class RoyalRealConstructionGameTests {
         Probe(GameTestHelper h,boolean read,RoyalConstructionService service) {
             this(h,read,service,false);
         }
-        Probe(GameTestHelper h,boolean read,RoyalConstructionService service,boolean automatic) {
-            this.h=h; level=h.getLevel(); this.read=read; this.service=service; this.automatic=automatic;
+        Probe(GameTestHelper h,boolean read,RoyalConstructionService service,boolean automatic) {this(h,read,service,automatic,false);}
+        Probe(GameTestHelper h,boolean read,RoyalConstructionService service,boolean automatic,boolean economic) {
+            this.h=h; level=h.getLevel(); this.read=read; this.service=service; this.automatic=automatic;this.economic=economic;
+            economicEnabledBefore=com.millenairekingdoms.autonomy.RoyalNpcConfig.ECONOMIC_ENABLED.get();
+            if(economic){villageTypeId="millenaire:norman/militaire";com.millenairekingdoms.autonomy.RoyalNpcConfig.ECONOMIC_ENABLED.set(false);}
             marker=level.getServer().getWorldPath(LevelResource.ROOT).resolve("royal-real-building.dat");
             daylight=level.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT);
             level.getGameRules().getRule(GameRules.RULE_DAYLIGHT).set(false,level.getServer()); level.setDayTime(6000);
@@ -121,7 +129,7 @@ public final class RoyalRealConstructionGameTests {
                 if(!level.hasChunksAt(anchor.offset(-120,0,-120),anchor.offset(120,0,120))) return;
                 if(!read) {
                     var manager=VillageSavedData.get(level).getVillageManager(); var before=manager.getAllVillages().stream().map(Village::getId).collect(java.util.stream.Collectors.toSet());
-                    var type=ModCultures.getVillageType(ResourceLocation.parse("millenaire:norman/hameau_artisans"));
+                    var type=ModCultures.getVillageType(ResourceLocation.parse(villageTypeId));
                     var surface=anchor.atY(level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,anchor.getX(),anchor.getZ()));
                     var failure=VillageSpawner.spawnVillage(level,surface,type,0);
                     h.assertTrue(failure==null,"Original baseline village spawn: "+(failure==null ? "ok" : failure.getString()));
@@ -140,8 +148,10 @@ public final class RoyalRealConstructionGameTests {
                     builderLoaded=true;
                     h.assertTrue(new RoyalPaymentService(level).inspectNpc(kingdom,id).state()==State.COMMITTED
                             && RoyalTreasurySnapshot.forNpc(level,kingdom).spendableValue()==remaining,"Reload retains real patronage without paying it again");
+                    if(economic)com.millenairekingdoms.autonomy.RoyalNpcConfig.ECONOMIC_ENABLED.set(true);
                     expected=expected(building); phase=4; return;
                 }
+                if(economic){economicSelection();return;}
                 var inventory=village.getTownhall().getInventory(); h.assertTrue(inventory!=null && inventory.add(level,ModItems.DENIER_ARGENT.get(),2)==2,"Known test funding enters actual existing townhall chests");
                 long before=RoyalTreasurySnapshot.forNpc(level,kingdom).spendableValue();
                 var choice=RoyalConstructionCatalog.forNpc(level,kingdom,village.getId().uuid()).options().stream()
@@ -185,6 +195,12 @@ public final class RoyalRealConstructionGameTests {
                     if(task.getReservedBuilder()!=null && level.getEntity(task.getReservedBuilder()) instanceof MillVillager actual && village.getId().equals(actual.getVillageId())) {
                         if(!read) builder=actual.getUUID();
                         if(actual.getUUID().equals(builder)) builderLoaded=true;
+                        if(economic && !read && anywoodWatched && !fetched){
+                            for(var item:economicStocks.keySet())if(new net.minecraft.world.item.ItemStack(item).is(AnywoodHelper.LOGS_TAG)){
+                                int full=Math.addExact(materials.getOrDefault(AnywoodHelper.ANYWOOD_LOG,0),materials.getOrDefault(BuiltInRegistries.ITEM.getKey(item),0));
+                                if(actual.getInventory().getCount(item)>=full){watched=item;needed=full;stock=economicStocks.get(item);break;}
+                            }
+                        }
                         if(!read && actual.getInventory().getCount(watched)>=needed) {
                             village.getTownhall().getInventory().invalidateCache();
                             fetched|=village.getTownhall().getInventory().getCount(level,watched)<stock;
@@ -221,6 +237,36 @@ public final class RoyalRealConstructionGameTests {
             }
         }
 
+        /** Supplies are a declared fixture input. After this setup only production NPC/monitor events choose and drive
+         * work; the probe never calls economic inspect/evaluate/step or a construction request/observer in this mode. */
+        private void economicSelection() {
+            var inventory=village.getTownhall().getInventory();
+            if(!economicPrepared){
+                h.assertTrue(inventory!=null && inventory.add(level,ModItems.DENIER_ARGENT.get(),4)==4,"Known fixture256 deniers enter original native capital storage before policy is enabled");
+                economicFunds=RoyalTreasurySnapshot.forNpc(level,kingdom).spendableValue();var bank=new HashMap<ResourceLocation,Integer>();int generic=0;
+                for(var option:RoyalConstructionCatalog.forNpc(level,kingdom,village.getId().uuid()).options())
+                    for(var entry:option.requiredMaterials().entrySet())if(AnywoodHelper.isAnywood(entry.getKey()))generic=Math.max(generic,entry.getValue());else bank.merge(entry.getKey(),entry.getValue(),Math::max);
+                if(generic>0)bank.merge(BuiltInRegistries.ITEM.getKey(Items.OAK_LOG),generic,Math::addExact);
+                for(var entry:bank.entrySet()){
+                    var item=ItemHelper.resolve(entry.getKey());h.assertTrue(item!=null,"Native legal candidate material resolves");int missing=Math.max(0,Math.multiplyExact(2,entry.getValue())-inventory.getCount(level,item));
+                    h.assertTrue(inventory.add(level,item,missing)==missing,"Known candidate material bank must fit actual native chests");
+                }
+                inventory.invalidateCache();for(var item:BuiltInRegistries.ITEM)if(new net.minecraft.world.item.ItemStack(item).is(AnywoodHelper.LOGS_TAG) || bank.containsKey(BuiltInRegistries.ITEM.getKey(item)))economicStocks.put(item,inventory.getCount(level,item));
+                economicPrepared=true;com.millenairekingdoms.autonomy.RoyalNpcConfig.ECONOMIC_ENABLED.set(true);
+                System.out.println("ROYAL_NPC_BUILDER_PREPARED type="+village.getVillageTypeId()+" funds="+economicFunds+" residents="+village.getVillagerUuids().size()+" candidateBank="+bank);return;
+            }
+            var attempts=new com.millenairekingdoms.economy.RoyalNpcDecisionStore(com.millenairekingdoms.economy.RoyalNpcDecisionStore.directory(level)).entries().stream().filter(d->d.kingdom().equals(kingdom)).toList();
+            var selected=attempts.stream().filter(d->d.choice().kind()==com.millenairekingdoms.economy.RoyalNpcDecisionStore.Kind.CONSTRUCTION).findFirst().orElse(null);
+            if(selected==null){if(!attempts.isEmpty())throw new IllegalStateException("Original full village produced no automatic justified commission: "+attempts);return;}
+            id=selected.id();var order=store().load(id);if(order==null)return;
+            h.assertTrue(order.stage()==Stage.QUEUED || order.stage()==Stage.IN_PROGRESS,"Automatic shared commission is genuinely accepted, never fabricated complete: "+order);
+            remaining=economicFunds-order.intent().fee();h.assertTrue(RoyalTreasurySnapshot.forNpc(level,kingdom).spendableValue()==remaining && new RoyalPaymentService(level).inspectNpc(kingdom,id).state()==State.COMMITTED,"Actual original automatic policy pays its one native fee under reserve/share before work");
+            materials=ModCultures.getBuildingPlanSet(order.intent().planSet()).getLevel(order.intent().variant(),0).requiredResources();
+            var watch=materials.entrySet().stream().filter(e->e.getValue()>0).sorted(Comparator.comparing(e->e.getKey().toString())).findFirst().orElseThrow();
+            anywoodWatched=AnywoodHelper.isAnywood(watch.getKey());watched=anywoodWatched ? Items.OAK_LOG : ItemHelper.resolve(watch.getKey());needed=watch.getValue();stock=economicStocks.getOrDefault(watched,inventory.getCount(level,watched));
+            System.out.println("ROYAL_NPC_BUILDER_SELECTED id="+id+" plan="+order.intent().planSet()+" fee="+order.intent().fee()+" remaining="+remaining+" materials="+materials+" reason="+selected.reason());phase=4;
+        }
+
         Map<BlockPos,Block> expected(BuildingInstance b) {
             var out=expectedBlocks(level,b);
             h.assertTrue(out.size()>100,"The actual original template must contain substantial real structure"); return out;
@@ -236,6 +282,7 @@ public final class RoyalRealConstructionGameTests {
                     +" builderSeen="+builderLoaded+" fetched="+fetched+" watched="+watched+" stock="+stock+" needed="+needed
                     +" carried="+(builder==null || !(level.getEntity(builder) instanceof MillVillager actual) || watched==null ? -1 : actual.getInventory().getCount(watched))
                     +" match="+(expected==null ? -1 : match())+" initialMatch="+initialMatch
+                    +" expectedBlocks="+(expected==null ? -1 : expected.size())
                     +" residents="+(village==null ? 0 : village.getVillagerUuids().stream().filter(u->level.getEntity(u)!=null).count());
         }
         RoyalConstructionStore store() { return new RoyalConstructionStore(level.getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-construction")); }
@@ -248,6 +295,7 @@ public final class RoyalRealConstructionGameTests {
                 village.syncRecords(level); village.setForceActive(false); village.setActive(false);
                 VillageChunkLoader.releaseVillageChunks(level,village.getCenter(),village.getLoadedChunks()); village.setChunksForceLoaded(false); village.setLoadedChunks(Set.of());
             }
+            if(economic)com.millenairekingdoms.autonomy.RoyalNpcConfig.ECONOMIC_ENABLED.set(economicEnabledBefore);
             force(false); level.getGameRules().getRule(GameRules.RULE_DAYLIGHT).set(daylight,level.getServer());
             level.getServer().tickRateManager().stopSprinting(); VillageSavedData.get(level).setDirty();
         }

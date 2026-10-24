@@ -293,6 +293,28 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_tests'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        royalNpcBuilderGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_npc_builder_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
+            systemProperty 'kingdoms.tests.liveConstruction', 'true'
+        }
+        royalNpcBuilderGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_npc_builder_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
+            systemProperty 'kingdoms.tests.liveConstruction', 'true'
+        }
         royalNpcRuntimeGameTestServer {
             type = 'gameTestServer'
             sourceSet = sourceSets.gametest
@@ -780,4 +802,11 @@ tasks.register('verifyRoyalNpcLive') {
     group = 'verification'
     description = 'Verify bounded or actual automatic NPC economic events in separate write and reopen JVMs.'
     dependsOn tasks.named('runRoyalNpcLiveGameTestServerReload')
+}
+
+tasks.named('runRoyalNpcBuilderGameTestServerReload') { dependsOn tasks.named('runRoyalNpcBuilderGameTestServer') }
+tasks.register('verifyRoyalNpcBuilders') {
+    group = 'verification'
+    description = 'Verify automatic paid NPC economic selection and genuine original physical builders across JVMs.'
+    dependsOn tasks.named('runRoyalNpcBuilderGameTestServerReload')
 }
