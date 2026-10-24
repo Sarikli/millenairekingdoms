@@ -1,0 +1,21 @@
+{
+  "version": "1.2.0-rc.1",
+  "source_review_commit": "58b25de",
+  "sha256": "17db082c52f7c6708ab3a4aaa143dbd2568d7f69244d2ecdfdb92fd7dbbff40f",
+  "bytes": 611997,
+  "beta_sha256": "cc66e461488e1c4f79ebee2dbc6d465cf136e948aebab122361bd753139e3943",
+  "different_payloads_from_verified_beta": [
+    "META-INF/MANIFEST.MF",
+    "META-INF/neoforge.mods.toml"
+  ],
+  "only_version_text_changed": true,
+  "identical_class_files": 200,
+  "dependency_version": "9.0.3",
+  "dependency_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "minecraft": "1.21.1",
+  "neoforge": "21.1.259",
+  "java": "21",
+  "network_protocol": 3,
+  "dependency_embedded": false,
+  "gametest_classes_embedded": false
+}

@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.2.0-rc.1 — 2026-10-24 (release candidate)
+
+- Target the verified original Millénaire 9.0.3 with Minecraft 1.21.1, NeoForge 21.1.259 and Java 21; keep the dependency separate.
+- Spend real capital coins through durable, bound native-container receipts. Preserve denomination change, tax debts, refunds and later legitimate inventory activity; quarantine uncertain/future evidence.
+- Commission culturally eligible autonomous village construction. The original engine selects sites and its genuine NPC builders consume real materials; loaded physical block/entity persistence precedes completion acknowledgement. Add explicit cancellation and audited OP recovery.
+- Ship protected real surplus between member villages for a distance/quantity fee and server-tick travel time. Preserve native project/household stocks, exact held cargo, full/unloaded destinations and governance retirement without restricting ordinary trade.
+- Add Construction and Shipping to the existing kingdom screen with server-owned offers, replay protection, saved history/status and English/Turkish translations (seven tabs, protocol3).
+- Derive five personalities from exact native capital village types. Add bounded, need-based NPC investments/logistics through shared paid services, actual reserves/share limits, persistent cooldowns, war-time military preference and existing eligible campaign weighting. Player rule excludes new NPC economic decisions.
+- Preserve political format6 and original1.1.0/representative original1.1.1 serializer fields across restart; document strict new stores and unsupported full downgrade.
+- Retain actual failed/passing process-crash evidence, original builder/material/block gates and400-day/four-JVM conservation/performance measurements. The final [technical report](docs/1.2.0_RELEASE_REPORT.md) records exact regression results and RC checksum.
+- Graphical client layout and authenticated online login remain separately unverified in the manual checklist. This is a review candidate; no stable release, tag or merge is performed.
+
+Türkçe: Gerçek para ile özerk inşaat siparişi ve korunan stoktan süreli sevkiyat, iki dilli arayüz ve başkent türüne bağlı NPC ekonomi kararları eklendi. Vergi modeli ve normal Millénaire ticareti korundu. Gerçek envanter, makbuz, yeniden açma ve özgün NPC inşaat kanıtları raporda bulunur; görsel/çevrimiçi kontroller ayrı ve henüz doğrulanmamıştır.
+
 ## 1.1.1 — 2026-10-22 (local maintenance build)
 
 ### Fixed
