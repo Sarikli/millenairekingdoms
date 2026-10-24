@@ -1,4 +1,4 @@
-#400 controlled days, ten native realms, four independent JVMs
+# 400 controlled days, ten native realms, four independent JVMs
 
 verifyRoyalSimulation / royal-simulation-01 logged **All 1 required tests passed** in EACH of four sequential JVMs (100,200,300,400 days), normal build passed. Each prior success is required before the next reopen. Original native townhall inventory definitions/records and political/financial/cargo/decision stores reopen without repair. CSV, compressed complete own test-domain snapshots, raw log and derived exact totals are retained here.
 
