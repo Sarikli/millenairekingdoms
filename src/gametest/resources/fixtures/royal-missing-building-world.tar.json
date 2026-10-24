@@ -1,0 +1,10 @@
+{
+  "sha256": "df5527acc41da8b0fdfdb1ffd5e3527bcecc5316b9bd77eb3bc9c8e49a1c26b3",
+  "source": "Actual failed pre-fix building-crash-20261023T213012-6de1b3da recovery, cleanly stopped after failed assertion",
+  "production_base": "82c1b05",
+  "expected_matches": 2,
+  "expected_template_positions": 233,
+  "expected_carried_spruce": 14,
+  "contains_third_party_jars": false,
+  "synthetic_metadata_or_inventory_repair": false
+}

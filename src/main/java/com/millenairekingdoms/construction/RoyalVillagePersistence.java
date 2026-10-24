@@ -38,7 +38,12 @@ public class RoyalVillagePersistence {
     public void building(ServerLevel level,UUID villageId,BuildingInstance expected) {
         thread(level); var village=village(level,villageId);
         if(village.getBuilding(expected.getId())!=expected) throw new IllegalStateException("Construction building is not the current village record");
-        preflight(level); flush(level);
+        preflight(level);
+        if(expected.getStatus()==BuildingInstance.Status.COMPLETE && (expected.getLevel()>0
+                || expected.getConstructionTask()!=null && expected.getConstructionTask().isComplete() && expected.getConstructionTask().totalSteps()>0)) {
+            RoyalConstructionPersistence.completed(level,village,expected);
+        }
+        flush(level);
         var saved=readVillage(level,villageId); CompoundTag found=null;
         for(Tag raw:saved.getList("buildings",Tag.TAG_COMPOUND)) {
             var tag=(CompoundTag)raw;

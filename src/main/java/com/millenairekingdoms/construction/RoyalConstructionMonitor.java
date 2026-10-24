@@ -20,6 +20,7 @@ import org.millenaire.village.Village;
 /** Observe original engine records. Never places blocks, advances tasks, chooses locations, loads chunks or starts spending.
  * Only acknowledged original building/task metadata can advance a royal order. Offline player authority remains UUID-bound. */
 final class RoyalConstructionMonitor {
+    private static final org.slf4j.Logger LOGGER=com.mojang.logging.LogUtils.getLogger();
     private final ServerLevel level;
     private final RoyalConstructionStore orders;
     private final RoyalVillagePersistence persistence;
@@ -76,7 +77,9 @@ final class RoyalConstructionMonitor {
             if(Objects.equals(village.getPendingProject(),new Village.PendingProject(intent.planSet(),intent.variant(),0,false,null))) return ambiguous(entry,Blocked.AMBIGUOUS_ENGINE_STATE);
             if(!level.isLoaded(building.getOrigin())) return blocked(entry,Blocked.UNLOADED);
             if(!credible(building)) return ambiguous(entry,Blocked.AMBIGUOUS_ENGINE_STATE);
-            persistence.building(level,intent.village(),building);
+            try { persistence.building(level,intent.village(),building); }
+            catch(RoyalConstructionPersistence.MissingStructure missing) { return ambiguous(entry,Blocked.BUILDING_MISSING); }
+            catch(RoyalConstructionPersistence.Unloaded unloaded) { return unloaded(entry,unloaded); }
             entry=orders.change(intent.id(),Stage.QUEUED,Stage.IN_PROGRESS,Blocked.NONE,building.getId().uuid());
         } else {
             building=village.getBuilding(new BuildingId(entry.building()));
@@ -84,12 +87,14 @@ final class RoyalConstructionMonitor {
             if(!lineage(building,intent) || !credible(building)) return ambiguous(entry,Blocked.AMBIGUOUS_ENGINE_STATE);
             if(!level.isLoaded(building.getOrigin())) return blocked(entry,Blocked.UNLOADED);
         }
-        // A valid subsequent engine upgrade also proves that this same new building's first level completed.
-        if(building.getLevel()>0 || building.getStatus()==BuildingInstance.Status.COMPLETE && building.getConstructionTask().isComplete()) {
-            persistence.building(level,intent.village(),building);
+        // A later upgrade must finish physically too; incomplete upgraded metadata alone cannot close tracking.
+        if(building.getStatus()==BuildingInstance.Status.COMPLETE && (building.getLevel()>0 || building.getConstructionTask().isComplete())) {
+            try { persistence.building(level,intent.village(),building); }
+            catch(RoyalConstructionPersistence.MissingStructure missing) { return ambiguous(entry,Blocked.BUILDING_MISSING); }
+            catch(RoyalConstructionPersistence.Unloaded unloaded) { return unloaded(entry,unloaded); }
             return orders.change(intent.id(),Stage.IN_PROGRESS,Stage.COMPLETED,Blocked.NONE,entry.building());
         }
-        return blocked(entry,building.getConstructionTask().isBlocked() ? Blocked.BUILDER_BLOCKED : Blocked.NONE);
+        return blocked(entry,building.getConstructionTask()==null || building.getConstructionTask().isBlocked() ? Blocked.BUILDER_BLOCKED : Blocked.NONE);
     }
 
     private static boolean lineage(BuildingInstance building,Intent intent) {
@@ -102,5 +107,9 @@ final class RoyalConstructionMonitor {
                 && (building.getStatus()!=BuildingInstance.Status.COMPLETE || building.getConstructionTask().isComplete());
     }
     private Entry blocked(Entry entry,Blocked blocked) { return orders.change(entry.intent().id(),entry.stage(),entry.stage(),blocked,entry.building()); }
+    private Entry unloaded(Entry entry,RoyalConstructionPersistence.Unloaded reason) {
+        if(entry.blocked()!=Blocked.UNLOADED) LOGGER.warn("[Kingdoms] Royal construction {} completion deferred: {}",entry.intent().id(),reason.getMessage());
+        return blocked(entry,Blocked.UNLOADED);
+    }
     private Entry ambiguous(Entry entry,Blocked reason) { return orders.change(entry.intent().id(),entry.stage(),Stage.RECOVERY_REQUIRED,reason,entry.building()); }
 }

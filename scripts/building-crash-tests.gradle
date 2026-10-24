@@ -1,0 +1,15 @@
+// Opt-in real-resident block/task-save probe, isolated from players' worlds and other suites.
+gradle.projectsEvaluated {
+    def p = gradle.rootProject
+    def stage = System.getProperty('kingdoms.crashStage')
+    def run = System.getProperty('kingdoms.testRun')
+    if (System.getProperty('kingdoms.testSuite') != 'verifyRoyalBuildingCrash' || !(run ==~ /building-crash-[A-Za-z0-9-]+/) || !(stage in ['prepare','interrupt','recover','guard'])) {
+        throw new GradleException('Set an explicit isolated physical-building crash run/stage')
+    }
+    p.neoForge.runs.configureEach { spec ->
+        if (spec.name.toLowerCase().contains('royalconstructiongametestserver')) {
+            gameDirectory = p.layout.projectDirectory.dir("run/regression/${run}/verifyRoyalBuildingCrash").asFile
+            systemProperty 'neoforge.enabledGameTestNamespaces', "millenairekingdoms_building_crash_${stage}"
+        }
+    }
+}

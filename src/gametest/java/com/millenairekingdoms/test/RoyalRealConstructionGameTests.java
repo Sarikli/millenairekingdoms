@@ -66,10 +66,10 @@ public final class RoyalRealConstructionGameTests {
         });
     }
 
-    private static final class Probe {
+    static final class Probe {
         final GameTestHelper h;
         final ServerLevel level;
-        final boolean read="read".equals(System.getProperty("kingdoms.tests.persistence"));
+        final boolean read;
         final RoyalConstructionService service;
         final Path marker;
         final boolean daylight;
@@ -85,7 +85,10 @@ public final class RoyalRealConstructionGameTests {
         double initialMatch;
         boolean fetched,builderLoaded,closed;
         Probe(GameTestHelper h) {
-            this.h=h; level=h.getLevel(); service=new RoyalConstructionService(level);
+            this(h,"read".equals(System.getProperty("kingdoms.tests.persistence")),new RoyalConstructionService(h.getLevel()));
+        }
+        Probe(GameTestHelper h,boolean read,RoyalConstructionService service) {
+            this.h=h; level=h.getLevel(); this.read=read; this.service=service;
             marker=level.getServer().getWorldPath(LevelResource.ROOT).resolve("royal-real-building.dat");
             daylight=level.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT);
             level.getGameRules().getRule(GameRules.RULE_DAYLIGHT).set(false,level.getServer()); level.setDayTime(6000);
@@ -213,12 +216,7 @@ public final class RoyalRealConstructionGameTests {
         }
 
         Map<BlockPos,Block> expected(BuildingInstance b) {
-            var out=new HashMap<BlockPos,Block>(); var plan=ModCultures.getBuildingPlan(b.getPlanId());
-            for(var step:BuildingPlacer.compilePlacementSteps(level,plan,b.getOrigin(),b.getRotation(),b)) {
-                var state=step.blockState();
-                if(!state.isAir() && !(state.getBlock() instanceof MockBlock) && !state.is(net.minecraft.tags.BlockTags.DIRT) && state.getBlock()!=Blocks.STRUCTURE_VOID)
-                    out.put(b.getOrigin().offset(step.relativePos()),state.getBlock());
-            }
+            var out=expectedBlocks(level,b);
             h.assertTrue(out.size()>100,"The actual original template must contain substantial real structure"); return out;
         }
         double match() { return (double)expected.entrySet().stream().filter(e->{
@@ -245,5 +243,14 @@ public final class RoyalRealConstructionGameTests {
             force(false); level.getGameRules().getRule(GameRules.RULE_DAYLIGHT).set(daylight,level.getServer());
             level.getServer().tickRateManager().stopSprinting(); VillageSavedData.get(level).setDirty();
         }
+    }
+    static Map<BlockPos,Block> expectedBlocks(ServerLevel level,BuildingInstance building) {
+        var out=new HashMap<BlockPos,Block>(); var plan=ModCultures.getBuildingPlan(building.getPlanId());
+        for(var step:BuildingPlacer.compilePlacementSteps(level,plan,building.getOrigin(),building.getRotation(),building)) {
+            var state=step.blockState();
+            if(!state.isAir() && !(state.getBlock() instanceof MockBlock) && !state.is(net.minecraft.tags.BlockTags.DIRT) && state.getBlock()!=Blocks.STRUCTURE_VOID)
+                out.put(building.getOrigin().offset(step.relativePos()),state.getBlock());
+        }
+        return out;
     }
 }
