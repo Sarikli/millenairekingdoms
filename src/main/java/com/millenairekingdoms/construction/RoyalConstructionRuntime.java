@@ -59,7 +59,16 @@ public final class RoyalConstructionRuntime {
         if(!level.getServer().isSameThread() || limit<1 || limit>16) throw new IllegalArgumentException("Invalid server construction tracking budget");
         if(!Files.exists(directory(level).resolve("orders.dat"))) return 0;
         var orders=new RoyalConstructionStore(directory(level)); String dimension=level.dimension().location().toString();
-        var entries=orders.entries().stream().filter(e->e.intent().dimension().equals(dimension) && !e.terminal() && e.stage()!=Stage.RECOVERY_REQUIRED)
+        // A persisted OP decision replaces its order's ordinary job, sharing the same total budget and cursor.
+        var decisions=new HashMap<UUID,UUID>();
+        if(Files.exists(RoyalRecoveryService.directory(level).resolve("decisions.dat"))) {
+            for(var decision:new RoyalRecoveryStore(RoyalRecoveryService.directory(level)).entries()) {
+                if(decision.state()==RoyalRecoveryStore.State.AUTHORIZED && decision.intent().order().dimension().equals(dimension))
+                    decisions.put(decision.intent().order().id(),decision.intent().id());
+            }
+        }
+        var entries=orders.entries().stream().filter(e->e.intent().dimension().equals(dimension)
+                        && (decisions.containsKey(e.intent().id()) || !e.terminal() && e.stage()!=Stage.RECOVERY_REQUIRED))
                 .sorted(Comparator.comparing(e->e.intent().id())).toList();
         var session=SESSIONS.computeIfAbsent(level,key->new Session());
         session.diagnostics.keySet().retainAll(entries.stream().map(e->e.intent().id()).collect(java.util.stream.Collectors.toSet()));
@@ -73,6 +82,9 @@ public final class RoyalConstructionRuntime {
         for(int offset=0;offset<count;offset++) {
             var entry=entries.get((start+offset)%entries.size()); UUID id=entry.intent().id(); session.cursor=id;
             try {
+                if(decisions.containsKey(id)) {
+                    new RoyalRecoveryService(level).resumeAuthorized(decisions.get(id)); session.diagnostics.remove(id); continue;
+                }
                 entry=service.observe(id);
                 if(entry.stage()==Stage.CANCELLING && entry.blocked()==Blocked.AUTHORITY) service.settleRetired(id);
                 else if(entry.stage()==Stage.REQUESTED || entry.stage()==Stage.PAID || entry.stage()==Stage.QUEUING || entry.stage()==Stage.CANCELLING) {

@@ -221,6 +221,24 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_construction_tests'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        royalRecoveryGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_recovery_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        royalRecoveryGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_recovery_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
         configureEach {
             logLevel = org.slf4j.event.Level.INFO
             jvmArguments.addAll '-Xms512m', '-Xmx3G'
@@ -372,4 +390,11 @@ tasks.register('verifyRoyalConstruction') {
     group = 'verification'
     description = 'Verify royal construction in a write JVM and a separate reload JVM.'
     dependsOn tasks.named('runRoyalConstructionGameTestServerReload')
+}
+
+tasks.named('runRoyalRecoveryGameTestServerReload') { dependsOn tasks.named('runRoyalRecoveryGameTestServer') }
+tasks.register('verifyRoyalRecovery') {
+    group = 'verification'
+    description = 'Verify audited operator construction recovery in two separate JVMs.'
+    dependsOn tasks.named('runRoyalRecoveryGameTestServerReload')
 }

@@ -24,6 +24,7 @@ public final class KingdomsCommands {
 
     public static void register(RegisterCommandsEvent event) {
         event.getDispatcher().register(Commands.literal("kingdoms").requires(source -> source.hasPermission(2))
+                .then(RoyalRecoveryCommands.tree())
                 .then(Commands.literal("war")
                         .then(Commands.literal("declare").then(kingdomArgument("attackerKingdom")
                                 .then(kingdomArgument("defenderKingdom").executes(c -> guarded(c, () -> {

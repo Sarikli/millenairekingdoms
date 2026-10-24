@@ -165,16 +165,16 @@ public final class RoyalCancellationGameTests {
         try(var f=fixture(h,"cancel-migration")) {
             var pending=intent(f); store.reserve(pending); store.change(pending.id(),Stage.REQUESTED,Stage.CANCELLING,Blocked.AUTHORITY,null);
             var file=directory.resolve("orders.dat"); var tag=NbtIo.readCompressed(file,NbtAccounter.create(1024*1024)); tag.putInt("format",1);
-            for(Tag raw:tag.getList("orders",Tag.TAG_COMPOUND)) ((CompoundTag)raw).remove("cancellationFrom"); NbtIo.writeCompressed(tag,file);
+            for(Tag raw:tag.getList("orders",Tag.TAG_COMPOUND)) { ((CompoundTag)raw).remove("cancellationFrom"); ((CompoundTag)raw).remove("recoveryDecision"); } NbtIo.writeCompressed(tag,file);
             var bytes=Files.readAllBytes(file); var migrated=new RoyalConstructionStore(directory).load(pending.id());
             h.assertTrue(migrated.stage()==Stage.CANCELLING && migrated.cancellationFrom()==Stage.CANCELLING && Arrays.equals(bytes,Files.readAllBytes(file)),"Reading v1 preserves bytes and explicitly retains unknown cancellation origin");
             store.change(pending.id(),Stage.CANCELLING,Stage.RECOVERY_REQUIRED,Blocked.AMBIGUOUS_ENGINE_STATE,null);
             var saved=NbtIo.readCompressed(file,NbtAccounter.create(1024*1024));
-            h.assertTrue(saved.getInt("format")==2 && store.load(pending.id()).cancellationFrom()==Stage.CANCELLING && store.load(pending.id()).intent().equals(pending),"Next atomic write migrates v1 intent without guessing refund eligibility");
+            h.assertTrue(saved.getInt("format")==3 && store.load(pending.id()).cancellationFrom()==Stage.CANCELLING && store.load(pending.id()).intent().equals(pending),"Next atomic write migrates v1 intent without guessing refund eligibility");
             var freshDirectory=directory.resolve("terminal"); var terminalStore=new RoyalConstructionStore(freshDirectory); terminalStore.reserve(pending);
             terminalStore.change(pending.id(),Stage.REQUESTED,Stage.CANCELLING,Blocked.NONE,null); terminalStore.change(pending.id(),Stage.CANCELLING,Stage.CANCELLED,Blocked.NONE,null);
             var terminalFile=freshDirectory.resolve("orders.dat"); tag=NbtIo.readCompressed(terminalFile,NbtAccounter.create(1024*1024)); tag.putInt("format",1);
-            for(Tag raw:tag.getList("orders",Tag.TAG_COMPOUND)) ((CompoundTag)raw).remove("cancellationFrom"); NbtIo.writeCompressed(tag,terminalFile);
+            for(Tag raw:tag.getList("orders",Tag.TAG_COMPOUND)) { ((CompoundTag)raw).remove("cancellationFrom"); ((CompoundTag)raw).remove("recoveryDecision"); } NbtIo.writeCompressed(tag,terminalFile);
             h.assertTrue(new RoyalConstructionStore(freshDirectory).reserve(pending).stage()==Stage.CANCELLED,"A migrated legacy terminal ID remains a tombstone, never a new unpaid order"); h.succeed();
         } finally { VillageSavedData.get(h.getLevel()).setDirty(); }
     }
@@ -194,7 +194,7 @@ public final class RoyalCancellationGameTests {
             h.assertTrue(entries.size()==Stage.values().length && Arrays.equals(before,Files.readAllBytes(file)),"Every v1 stage reads without destructive eager conversion");
             store.reserve(base); var reopened=new RoyalConstructionStore(path).entries();
             for(var entry:entries) h.assertTrue(reopened.stream().anyMatch(entry::equals),"Migration retains exact intent, quote, building, stage and cancellation ambiguity for "+entry.stage());
-            h.assertTrue(NbtIo.readCompressed(file,NbtAccounter.create(1024*1024)).getInt("format")==2,"Only a successful locked atomic mutation upgrades the index"); h.succeed();
+            h.assertTrue(NbtIo.readCompressed(file,NbtAccounter.create(1024*1024)).getInt("format")==3,"Only a successful locked atomic mutation upgrades the index"); h.succeed();
         } finally { VillageSavedData.get(h.getLevel()).setDirty(); }
     }
 

@@ -27,10 +27,10 @@ import net.minecraft.resources.ResourceLocation;
 /** Own atomic order intent/index, independent of political format 6 and Millenaire's building save.
  * States describe order coordination, not payment or proof of a finished building. Only the domain service may advance them. */
 public final class RoyalConstructionStore {
-    private static final int FORMAT=2, MAX_ORDERS=10_000;
+    private static final int FORMAT=3, MAX_ORDERS=10_000;
     private static final long MAX_BYTES=16L*1024*1024;
     public enum Stage { REQUESTED, PAID, QUEUING, QUEUED, IN_PROGRESS, COMPLETED, CANCELLING, CANCELLED, FAILED, RECOVERY_REQUIRED }
-    public enum Blocked { NONE, NATURAL_PROJECT, UNLOADED, MATERIALS, NO_SPACE, AUTHORITY, MEMBERSHIP, MISSING_PLAN, AMBIGUOUS_ENGINE_STATE, BUILDER_BLOCKED, BUILDING_MISSING }
+    public enum Blocked { NONE, NATURAL_PROJECT, UNLOADED, MATERIALS, NO_SPACE, AUTHORITY, MEMBERSHIP, MISSING_PLAN, AMBIGUOUS_ENGINE_STATE, BUILDER_BLOCKED, BUILDING_MISSING, OPERATOR_FORFEIT }
 
     public record Intent(UUID id,String dimension,UUID kingdom,UUID capital,UUID village,UUID actor,long rulerSince,
                          ResourceLocation villageType,ResourceLocation planSet,ResourceLocation plan,String variant,
@@ -45,7 +45,7 @@ public final class RoyalConstructionStore {
             if(originalBuildings.size()>4096) throw new IllegalArgumentException("Too many original building identities");
         }
     }
-    public record Entry(Intent intent,Stage stage,Blocked blocked,UUID building,Stage cancellationFrom) {
+    public record Entry(Intent intent,Stage stage,Blocked blocked,UUID building,Stage cancellationFrom,UUID recoveryDecision) {
         public Entry {
             Objects.requireNonNull(intent); Objects.requireNonNull(stage); Objects.requireNonNull(blocked);
             if((stage==Stage.IN_PROGRESS || stage==Stage.COMPLETED) && building==null) throw new IllegalArgumentException("Building identity required for construction progress");
@@ -55,7 +55,8 @@ public final class RoyalConstructionStore {
                     || cancellationFrom==Stage.COMPLETED || cancellationFrom==Stage.CANCELLED || cancellationFrom==Stage.FAILED
                     || cancellationFrom==Stage.RECOVERY_REQUIRED)) throw new IllegalArgumentException("Invalid cancellation origin");
         }
-        public Entry(Intent intent,Stage stage,Blocked blocked,UUID building) { this(intent,stage,blocked,building,null); }
+        public Entry(Intent intent,Stage stage,Blocked blocked,UUID building) { this(intent,stage,blocked,building,null,null); }
+        public Entry(Intent intent,Stage stage,Blocked blocked,UUID building,Stage cancellationFrom) { this(intent,stage,blocked,building,cancellationFrom,null); }
         public boolean terminal() { return stage==Stage.COMPLETED || stage==Stage.CANCELLED || stage==Stage.FAILED; }
     }
 
@@ -95,8 +96,10 @@ public final class RoyalConstructionStore {
             int count=0;
             for(var item:entries.entrySet()) {
                 var old=item.getValue();
-                if(old.terminal() || old.stage==Stage.RECOVERY_REQUIRED || !invalid.test(old.intent)) continue;
-                var retired=new Entry(old.intent,Stage.CANCELLING,Blocked.AUTHORITY,old.building,old.cancellationFrom!=null ? old.cancellationFrom : old.stage);
+                if(old.terminal() || !invalid.test(old.intent)) continue;
+                // A quarantined mandate must also remember authority loss, including same-tick reclaim. Stay quarantined.
+                var retired=new Entry(old.intent,old.stage==Stage.RECOVERY_REQUIRED ? Stage.RECOVERY_REQUIRED : Stage.CANCELLING,
+                        Blocked.AUTHORITY,old.building,old.cancellationFrom!=null ? old.cancellationFrom : old.stage==Stage.RECOVERY_REQUIRED ? Stage.CANCELLING : old.stage,old.recoveryDecision);
                 if(old.equals(retired)) continue;
                 item.setValue(retired); count++;
             }
@@ -109,12 +112,30 @@ public final class RoyalConstructionStore {
             Entry old=entries.get(id);
             if(old==null) throw new IllegalArgumentException("Unknown royal construction order");
             Stage origin=old.cancellationFrom!=null ? old.cancellationFrom : next==Stage.CANCELLING ? old.stage : null;
-            Entry changed=new Entry(old.intent,next,blocked,building,origin);
+            Entry changed=new Entry(old.intent,next,blocked,building,origin,old.recoveryDecision);
             if(old.equals(changed)) return old;
             if(old.stage!=expected || !allowed(expected,next) || (old.building!=null && !old.building.equals(building))) {
                 throw new IllegalStateException("Invalid royal order transition: "+old.stage+" -> "+next);
             }
             entries.put(id,changed); write(entries); return changed;
+        });
+    }
+
+    /** Internal audited recovery only. Ordinary change still cannot reset a quarantined/terminal order. */
+    synchronized Entry resolve(UUID id,UUID decision,Stage next,UUID building) {
+        return locked(entries->{
+            var old=entries.get(id); if(old==null) throw new IllegalArgumentException("Unknown recovery order");
+            Objects.requireNonNull(decision);
+            if(decision.equals(old.recoveryDecision)) return old;
+            boolean forfeit=next==Stage.CANCELLED;
+            if((!forfeit && next!=Stage.QUEUED && next!=Stage.IN_PROGRESS)
+                    || (old.stage!=Stage.RECOVERY_REQUIRED && !(forfeit && old.stage==Stage.CANCELLING && old.blocked==Blocked.AUTHORITY))
+                    || (!forfeit && old.cancellationFrom!=null) || old.building!=null && !old.building.equals(building)) {
+                throw new IllegalStateException("Audited recovery cannot reset this order or revive its cancelled mandate");
+            }
+            // Provenance joins the order transition atomically; it survives later progress/retirement if audit completion fails.
+            var resolved=new Entry(old.intent,next,forfeit ? Blocked.OPERATOR_FORFEIT : Blocked.NONE,building,forfeit ? old.cancellationFrom : null,decision);
+            entries.put(id,resolved); write(entries); return resolved;
         });
     }
 
@@ -144,15 +165,16 @@ public final class RoyalConstructionStore {
         }
         var active=new HashSet<String>();
         for(Tag raw:list) {
-            var item=(CompoundTag)raw; keys(item,format==1 ? Set.of("intent","stage","blocked","building") : Set.of("intent","stage","blocked","building","cancellationFrom"));
+            var item=(CompoundTag)raw; keys(item,format==1 ? Set.of("intent","stage","blocked","building") : format==2 ? Set.of("intent","stage","blocked","building","cancellationFrom") : Set.of("intent","stage","blocked","building","cancellationFrom","recoveryDecision"));
             if(!item.contains("intent",Tag.TAG_COMPOUND) || !item.contains("stage",Tag.TAG_STRING) || !item.contains("blocked",Tag.TAG_STRING)
-                    || (item.contains("building") && !item.hasUUID("building")) || (item.contains("cancellationFrom") && !item.contains("cancellationFrom",Tag.TAG_STRING))) throw new IllegalStateException("Incomplete royal order entry");
+                    || (item.contains("building") && !item.hasUUID("building")) || (item.contains("cancellationFrom") && !item.contains("cancellationFrom",Tag.TAG_STRING))
+                    || (item.contains("recoveryDecision") && !item.hasUUID("recoveryDecision"))) throw new IllegalStateException("Incomplete royal order entry");
             var stage=Stage.valueOf(item.getString("stage"));
             // v1 did not retain the origin. An unresolved legacy cancellation is explicitly ambiguous, never assumed refundable.
             Stage origin=format==1 && (stage==Stage.CANCELLING || stage==Stage.CANCELLED) ? Stage.CANCELLING
                     : item.contains("cancellationFrom") ? Stage.valueOf(item.getString("cancellationFrom")) : null;
             var entry=new Entry(loadIntent(item.getCompound("intent")),stage,Blocked.valueOf(item.getString("blocked")),
-                    item.hasUUID("building") ? item.getUUID("building") : null,origin);
+                    item.hasUUID("building") ? item.getUUID("building") : null,origin,item.hasUUID("recoveryDecision") ? item.getUUID("recoveryDecision") : null);
             if(result.putIfAbsent(entry.intent.id,entry)!=null) throw new IllegalStateException("Duplicate royal order identity");
             if(!entry.terminal() && !active.add(entry.intent.dimension+"/"+entry.intent.village)) throw new IllegalStateException("Duplicate active royal orders for a village");
         }
@@ -164,6 +186,7 @@ public final class RoyalConstructionStore {
         for(Entry entry:entries.values()) {
             var item=new CompoundTag(); item.put("intent",saveIntent(entry.intent)); item.putString("stage",entry.stage.name()); item.putString("blocked",entry.blocked.name());
             if(entry.cancellationFrom!=null) item.putString("cancellationFrom",entry.cancellationFrom.name());
+            if(entry.recoveryDecision!=null) item.putUUID("recoveryDecision",entry.recoveryDecision);
             if(entry.building!=null) item.putUUID("building",entry.building); list.add(item);
         }
         tag.put("orders",list);
@@ -178,7 +201,7 @@ public final class RoyalConstructionStore {
         } catch(IOException e) { throw failure(e); }
     }
 
-    private static CompoundTag saveIntent(Intent intent) {
+    static CompoundTag saveIntent(Intent intent) {
         var tag=new CompoundTag(); tag.putUUID("id",intent.id); tag.putString("dimension",intent.dimension); tag.putUUID("kingdom",intent.kingdom);
         tag.putUUID("capital",intent.capital); tag.putUUID("village",intent.village); if(intent.actor!=null) tag.putUUID("actor",intent.actor);
         tag.putLong("rulerSince",intent.rulerSince); tag.putString("villageType",intent.villageType.toString()); tag.putString("planSet",intent.planSet.toString());
@@ -186,7 +209,7 @@ public final class RoyalConstructionStore {
         var ids=new ListTag(); for(UUID id:intent.originalBuildings.stream().sorted().toList()) { var item=new CompoundTag(); item.putUUID("id",id); ids.add(item); }
         tag.put("originalBuildings",ids); return tag;
     }
-    private static Intent loadIntent(CompoundTag tag) {
+    static Intent loadIntent(CompoundTag tag) {
         keys(tag,Set.of("id","dimension","kingdom","capital","village","actor","rulerSince","villageType","planSet","plan","variant","fee","issued","originalBuildings"));
         for(String key:List.of("id","kingdom","capital","village")) if(!tag.hasUUID(key)) throw new IllegalStateException("Incomplete royal order identity: "+key);
         for(String key:List.of("dimension","villageType","planSet","plan","variant")) if(!tag.contains(key,Tag.TAG_STRING)) throw new IllegalStateException("Incomplete royal order field: "+key);

@@ -97,12 +97,12 @@ final class RoyalConstructionMonitor {
         return blocked(entry,building.getConstructionTask()==null || building.getConstructionTask().isBlocked() ? Blocked.BUILDER_BLOCKED : Blocked.NONE);
     }
 
-    private static boolean lineage(BuildingInstance building,Intent intent) {
+    static boolean lineage(BuildingInstance building,Intent intent) {
         var set=ModCultures.getBuildingPlanSet(intent.planSet()); var definition=set==null ? null : set.getLevel(intent.variant(),building.getLevel());
         return definition!=null && building.getLevel()>=0 && intent.planSet().equals(building.getPlanSetId())
                 && intent.variant().equals(building.getVariant()) && definition.planId().equals(building.getPlanId());
     }
-    private static boolean credible(BuildingInstance building) {
+    static boolean credible(BuildingInstance building) {
         return building.getLevel()>0 || building.getConstructionTask()!=null && building.getConstructionTask().totalSteps()>0
                 && (building.getStatus()!=BuildingInstance.Status.COMPLETE || building.getConstructionTask().isComplete());
     }
