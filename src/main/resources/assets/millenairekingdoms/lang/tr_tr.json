@@ -302,7 +302,7 @@
   "millenairekingdoms.gui.shipment.blocked.STORAGE": "Özgün depo kullanılamıyor",
   "millenairekingdoms.gui.shipment.blocked.PAYMENT": "Nakliye ödemesi bekliyor",
   "millenairekingdoms.gui.shipment.blocked.PHYSICAL_PROOF": "Ürünler güvenli envanter kontrolü bekliyor",
-  "millenairekingdoms.gui.personality": "Kişilik: %s",
+  "millenairekingdoms.gui.personality": "Karakter: %s",
   "millenairekingdoms.gui.personality_fallback": "NPC uzmanlığı yok",
   "millenairekingdoms.gui.personality.MILITARY": "Savaşçı",
   "millenairekingdoms.gui.personality.AGRICULTURAL": "Barışçıl",

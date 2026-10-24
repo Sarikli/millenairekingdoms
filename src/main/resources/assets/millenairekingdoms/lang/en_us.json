@@ -302,7 +302,7 @@
   "millenairekingdoms.gui.shipment.blocked.STORAGE": "Original storage is unavailable",
   "millenairekingdoms.gui.shipment.blocked.PAYMENT": "Transport payment is waiting",
   "millenairekingdoms.gui.shipment.blocked.PHYSICAL_PROOF": "Goods need a safe inventory check",
-  "millenairekingdoms.gui.personality": "Personality: %s",
+  "millenairekingdoms.gui.personality": "Ethos: %s",
   "millenairekingdoms.gui.personality_fallback": "No NPC specialization",
   "millenairekingdoms.gui.personality.MILITARY": "Warlike",
   "millenairekingdoms.gui.personality.AGRICULTURAL": "Peaceful",

@@ -1,0 +1,61 @@
+{
+  "artifact": {
+    "version": "1.2.0-rc.6",
+    "bytes": 614472,
+    "sha256": "11b91cd081bd3f2e466d613ae4ff1408394fc244bff6d34521bf1703d0c4fa9b",
+    "prior_rc5_sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6",
+    "changed_payloads": [
+      "META-INF/MANIFEST.MF",
+      "META-INF/neoforge.mods.toml",
+      "assets/millenairekingdoms/lang/en_us.json",
+      "assets/millenairekingdoms/lang/tr_tr.json"
+    ],
+    "identical_production_class_files": 200,
+    "translation_keys_per_language": 314,
+    "modified_key": "millenairekingdoms.gui.personality",
+    "en_us": "Ethos: %s",
+    "tr_tr": "Karakter: %s",
+    "protocol": 3,
+    "gameplay_configuration_and_all_other_resources_unchanged": true,
+    "source_base_commit": "0aaee671144a6fae89780cb0166361722caa48b9",
+    "source_commit_lookup": "git log -1 --format=%H -- releases/1.2.0-rc.6/millenairekingdoms-1.2.0-rc.6.jar",
+    "generated_server_configuration_identical_to_rc5": true,
+    "graphical_label_fit": "Unverified; no graphical client session.",
+    "online_authentication": "Unverified; unchanged localhost/offline-mode fixture."
+  },
+  "build": {
+    "successful": true,
+    "raw_log_sha256": "98ed5a153c1e61cc5b7f003d14214274dc5c1d24ac8aed70eddd338f7be0bb3d",
+    "gametest_packages_run": 0
+  },
+  "normal_servers": [
+    {
+      "phase": "write",
+      "exit_code": 0,
+      "ready": true,
+      "saved": true,
+      "stopped": true,
+      "build_successful": true,
+      "rc_initialized": true,
+      "dependency_verified": true,
+      "test_mod_loaded": false,
+      "staged_jar_sha256": "11b91cd081bd3f2e466d613ae4ff1408394fc244bff6d34521bf1703d0c4fa9b",
+      "log_sha256": "9204b27e07459fa02b9648f95b54f13055c2c068543ac02db5a8ee01780220fa",
+      "authentication": "Unverified: unchanged existing smoke fixture is offline-mode on127.0.0.1:25579."
+    },
+    {
+      "phase": "reopen",
+      "exit_code": 0,
+      "ready": true,
+      "saved": true,
+      "stopped": true,
+      "build_successful": true,
+      "rc_initialized": true,
+      "dependency_verified": true,
+      "test_mod_loaded": false,
+      "staged_jar_sha256": "11b91cd081bd3f2e466d613ae4ff1408394fc244bff6d34521bf1703d0c4fa9b",
+      "log_sha256": "6bc43edbeb68103570560b6847eb598388f2bce830357462a46e97ee7b042dda",
+      "authentication": "Unverified: unchanged existing smoke fixture is offline-mode on127.0.0.1:25579."
+    }
+  ]
+}

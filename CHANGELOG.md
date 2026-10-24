@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0-rc.6 — 2026-10-25 (Ethos / Karakter heading)
+
+- Rename the kingdom screen heading to **Ethos** in English and **Karakter** in Turkish. Keep all five temperament names and the existing translation key/format argument.
+- Build and packed translation checks passed; all200 production classes match RC.5. Only the two heading values and version metadata differ. No GameTest package was repeated for this text change; graphical label fit remains unverified. RC.5 timing defaults/configuration and previous evidence remain intact.
+
 ## 1.2.0-rc.5 — 2026-10-24 (natural capitals and decision timing)
 
 - Set new natural-capital chance to10% and both natural/development-founded capital spacing defaults to1000 blocks. Joining/shared political evaluations now default to1 day. Halve other decision waits with rounding down: founding7→3, raid cooldown3→1, truce10→5, peace age12→6/idle6→3/long-war36→18 days.
