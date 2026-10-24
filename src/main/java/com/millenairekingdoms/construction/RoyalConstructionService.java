@@ -49,6 +49,8 @@ public final class RoyalConstructionService {
         this.orders=new RoyalConstructionStore(level.getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-construction"));
     }
     public Entry requestNpc(UUID kingdom,UUID village,ResourceLocation planSet,UUID id) { return request(null,kingdom,village,planSet,id,null); }
+    /** Immutable server policy approval; reject changed prices before reserving a new domain intent. */
+    public Entry requestQuotedNpc(UUID kingdom,UUID village,ResourceLocation planSet,UUID id,long expectedFee) {return request(null,kingdom,village,planSet,id,expectedFee);}
     public Entry requestPlayer(ServerPlayer player,UUID village,ResourceLocation planSet,UUID id) {
         thread(); dimension(player); return request(player,PoliticsService.ruledKingdom(player).id(),village,planSet,id,null);
     }

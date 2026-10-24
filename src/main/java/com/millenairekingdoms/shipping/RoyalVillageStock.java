@@ -103,6 +103,26 @@ public final class RoyalVillageStock {
     public List<ItemStack> slots(){return slots.stream().map(ItemStack::copy).toList();}
     public List<Item> products(){return slots.stream().filter(RoyalVillageStock::ordinary).map(ItemStack::getItem).distinct().sorted(java.util.Comparator.comparing(i->BuiltInRegistries.ITEM.getKey(i).toString())).toList();}
 
+    /** Read-only current native project deficits, with original anywood/fixed-log overlap semantics. All native
+     * auxiliary storage has already passed loaded guards. This never reserves/removes/creates materials. */
+    public java.util.Map<ResourceLocation,Integer> missing(java.util.Map<ResourceLocation,Integer> required){
+        requireUnchanged();if(required.values().stream().anyMatch(q->q<0))throw new IllegalArgumentException("Unknown native material quantities");
+        inventory.invalidateCache();var missing=new java.util.LinkedHashMap<ResourceLocation,Integer>();
+        for(var entry:required.entrySet().stream().sorted(java.util.Map.Entry.comparingByKey()).toList()){
+            if(AnywoodHelper.isAnywood(entry.getKey()))continue;
+            var item=BuiltInRegistries.ITEM.getOptional(entry.getKey()).orElseThrow(()->new IllegalStateException("Unknown native project material"));
+            int deficit=Math.max(0,entry.getValue()-inventory.getCount(level,item));if(deficit>0)missing.put(entry.getKey(),deficit);
+        }
+        int anywood=required.getOrDefault(AnywoodHelper.ANYWOOD_LOG,0);
+        if(anywood>0){
+            int count=AnywoodHelper.anywoodAvailable(inventory.getCountByTag(level,AnywoodHelper.LOGS_TAG),required,key->{
+                var item=BuiltInRegistries.ITEM.getOptional(key).orElseThrow(()->new IllegalStateException("Unknown fixed-log material"));return inventory.getCount(level,item);
+            });
+            if(count<anywood)missing.put(AnywoodHelper.ANYWOOD_LOG,anywood-count);
+        }
+        requireUnchanged();return java.util.Map.copyOf(missing);
+    }
+
     /** Native export policy plus conservative full construction/household needs against removable ordinary stock.
      * Furnace/firepit/custom counts are never credited as transferable or as backing those protected ordinary goods. */
     public Availability availability(Item item) {

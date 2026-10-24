@@ -293,6 +293,24 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_tests'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        royalNpcEconomyGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_npc_economy_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        royalNpcEconomyGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_npc_economy_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
         royalNpcBudgetGameTestServer {
             type = 'gameTestServer'
             sourceSet = sourceSets.gametest
@@ -701,4 +719,11 @@ tasks.register('verifyRoyalNpcBudget') {
     group = 'verification'
     description = 'Verify strict NPC attempt cooldowns and actual delayed first-fee budgets across JVMs.'
     dependsOn tasks.named('runRoyalNpcBudgetGameTestServerReload')
+}
+
+tasks.named('runRoyalNpcEconomyGameTestServerReload') { dependsOn tasks.named('runRoyalNpcEconomyGameTestServer') }
+tasks.register('verifyRoyalNpcEconomy') {
+    group = 'verification'
+    description = 'Verify actual need-based shared paid NPC construction and native shortage shipping across JVMs.'
+    dependsOn tasks.named('runRoyalNpcEconomyGameTestServerReload')
 }

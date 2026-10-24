@@ -12,14 +12,17 @@ import net.minecraft.world.level.storage.LevelResource;
 
 /** First-fee guard for persisted policy-owned domain IDs, including delayed previously-unpaid requests. Existing
  * PREPARED/native-proof reconciliation, paid acknowledgements/refunds and player requests do not create new spending. */
-final class RoyalNpcBudget {
+@org.jetbrains.annotations.ApiStatus.Internal
+public final class RoyalNpcBudget {
     private RoyalNpcBudget(){}
     static void requireNewSpend(ServerLevel level,RoyalTreasurySnapshot treasury,UUID id,RoyalPaymentService.Purpose purpose,UUID reference,long amount){
         var directory=RoyalNpcDecisionStore.directory(level);if(!Files.exists(directory.resolve("decisions.dat")))return;
         var decision=new RoyalNpcDecisionStore(directory).load(id);if(decision==null)return;
         var limits=RoyalNpcConfig.budgets();var profile=KingdomPersonality.forKingdom(level,treasury.kingdom());var budget=decision.budget();var choice=decision.choice();
+        var capital=com.millenairekingdoms.politics.PoliticsService.village(level,budget.capital());
         if(!limits.enabled() || !decision.dimension().equals(level.dimension().location().toString()) || !decision.kingdom().equals(treasury.kingdom())
                 || !budget.capital().equals(treasury.capital()) || !profile.specialized() || !java.util.Objects.equals(budget.capitalType(),profile.villageType())
+                || capital==null || capital.getOwnerUUID()!=null
                 || !id.equals(reference) || choice.fee()!=amount)throw new IllegalArgumentException("Original NPC policy capital/type/agency/fee authorization is no longer valid");
         if(purpose==RoyalPaymentService.Purpose.CONSTRUCTION && choice.kind()==RoyalNpcDecisionStore.Kind.CONSTRUCTION){
             var path=level.getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-construction");
@@ -35,7 +38,11 @@ final class RoyalNpcBudget {
                 throw new IllegalArgumentException("NPC first fee differs from its original bound shipment attempt");
         }else throw new IllegalArgumentException("NPC first fee purpose differs from its original policy attempt");
         treasury.requireUnchanged();long funds=treasury.spendableValue(),reserve=Math.max(limits.reserve(),budget.reserve());int share=Math.min(limits.sharePermille(),budget.sharePermille());
-        if(funds<amount || funds-amount<reserve || amount>maximumFee(funds,share))throw new IllegalStateException("NPC first fee waits for actual treasury reserve/share limits: funds="+funds+", fee="+amount+", reserve="+reserve+", sharePermille="+share);
+        if(!allows(funds,amount,reserve,share))throw new IllegalStateException("NPC first fee waits for actual treasury reserve/share limits: funds="+funds+", fee="+amount+", reserve="+reserve+", sharePermille="+share);
+    }
+    public static boolean allows(long funds,long amount,long reserve,int share){
+        if(funds<0 || amount<1 || reserve<0)throw new IllegalArgumentException("Invalid NPC physical budget inputs");
+        return funds>=amount && funds-amount>=reserve && amount<=maximumFee(funds,share);
     }
     /** floor(funds*share/1000) without overflowing a long. */
     static long maximumFee(long funds,int share){

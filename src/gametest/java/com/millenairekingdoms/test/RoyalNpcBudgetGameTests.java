@@ -152,6 +152,15 @@ public final class RoyalNpcBudgetGameTests {
         }
     }
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void localCapitalOwnershipChangeBlocksAnOtherwiseApprovedDelayedFirstNpcFee(GameTestHelper h){
+        try(var r=RoyalShipmentSupport.realm(h,"npc-budget-local-capital")){
+            funds(r,4);var c=choice(r);var id=UUID.randomUUID();store(h).begin(approval(r,id,c.planSet(),128,250));
+            r.capital().setOwner(UUID.randomUUID(),"Local player owner");refused(h,()->new RoyalConstructionService(r.level()).requestNpc(r.kingdom(),r.from(),c.planSet(),id));
+            h.assertTrue(r.coins()==256 && r.payments().load(id)==null && r.source().getPendingProject()==null,
+                    "Policy first-fee guard rechecks local native capital control even while political NPC rule and original type remain unchanged");h.succeed();
+        }
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
     public static void actualShipmentFirstFeeUsesTheSameDelayedReserveGuard(GameTestHelper h){
         try(var r=RoyalShipmentSupport.realm(h,"npc-budget-shipping")){
             funds(r,4);var product=id("minecraft:cherry_log");var q=r.service().quoteNpc(r.kingdom(),r.from(),r.to(),product,40);var id=UUID.randomUUID();

@@ -53,6 +53,7 @@ public final class RoyalShipmentService {
     /** Read-only price/time preview also reports insufficient surplus; actual requests still require the full quantity. */
     public Quote previewPlayer(ServerPlayer player,UUID from,UUID to,ResourceLocation product,int quantity){thread();dimension(player);return quote(player,PoliticsService.ruledKingdom(player).id(),from,to,product,quantity,false);}
     public Entry requestNpc(UUID kingdom,UUID from,UUID to,ResourceLocation product,int quantity,UUID id){return request(null,kingdom,from,to,product,quantity,id,null,null);}
+    public Entry requestQuotedNpc(UUID kingdom,UUID from,UUID to,ResourceLocation product,int quantity,UUID id,long fee,long travelTicks){return request(null,kingdom,from,to,product,quantity,id,fee,travelTicks);}
     public Entry requestPlayer(ServerPlayer player,UUID from,UUID to,ResourceLocation product,int quantity,UUID id){thread();dimension(player);return request(player,PoliticsService.ruledKingdom(player).id(),from,to,product,quantity,id,null,null);}
     public Entry requestQuotedPlayer(ServerPlayer player,UUID from,UUID to,ResourceLocation product,int quantity,UUID id,long fee,long travelTicks){thread();dimension(player);return request(player,PoliticsService.ruledKingdom(player).id(),from,to,product,quantity,id,fee,travelTicks);}
     public Entry resumePlayer(ServerPlayer player,UUID id){thread();dimension(player);bind(require(id),player,PoliticsService.ruledKingdom(player).id());return exclusive(id,()->advance(id,player));}
