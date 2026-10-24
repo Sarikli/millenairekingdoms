@@ -315,6 +315,46 @@ neoForge {
             systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
             systemProperty 'kingdoms.tests.liveConstruction', 'true'
         }
+        royalSimulationGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_simulation_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+            systemProperty 'kingdoms.tests.simulationEpoch', '0'
+        }
+        royalSimulationGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_simulation_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+            systemProperty 'kingdoms.tests.simulationEpoch', '1'
+        }
+        royalSimulationGameTestServerThird {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_simulation_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+            systemProperty 'kingdoms.tests.simulationEpoch', '2'
+        }
+        royalSimulationGameTestServerFourth {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_simulation_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+            systemProperty 'kingdoms.tests.simulationEpoch', '3'
+        }
         royalIntegrationGameTestServer {
             type = 'gameTestServer'
             sourceSet = sourceSets.gametest
@@ -834,4 +874,13 @@ tasks.register('verifyRoyalIntegration') {
     group = 'verification'
     description = 'Verify independent economic features, real tax budgets, governance and legacy saves across JVMs.'
     dependsOn tasks.named('runRoyalIntegrationGameTestServerReload')
+}
+
+tasks.named('runRoyalSimulationGameTestServerReload') { dependsOn tasks.named('runRoyalSimulationGameTestServer') }
+tasks.named('runRoyalSimulationGameTestServerThird') { dependsOn tasks.named('runRoyalSimulationGameTestServerReload') }
+tasks.named('runRoyalSimulationGameTestServerFourth') { dependsOn tasks.named('runRoyalSimulationGameTestServerThird') }
+tasks.register('verifyRoyalSimulation') {
+    group = 'verification'
+    description = 'Measure400 controlled economic days across10 realms and4 separate JVM saves; no simulated physical completion.'
+    dependsOn tasks.named('runRoyalSimulationGameTestServerFourth')
 }
