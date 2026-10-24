@@ -161,7 +161,8 @@ public final class AutonomyService {
     /** Chance that k declares war on t at one evaluation: the profile's base, more for the stronger side, never certain. */
     public static double declareChance(ServerLevel level, KingdomSavedData data, Kingdom k, Kingdom t, Settings s) {
         double ratio = (double) Military.strength(level, data, k.id()) / Math.max(1, Military.defence(level, data, t.id()));
-        return s.frequency().declare * Math.max(0.5, Math.min(1.5, 0.5 + 0.5 * ratio));
+        double existing=s.frequency().declare * Math.max(0.5, Math.min(1.5, 0.5 + 0.5 * ratio));
+        return RoyalInvestmentPolicy.aggression(existing,com.millenairekingdoms.personality.KingdomPersonality.forCapital(level,k).category(),RoyalNpcConfig.weights());
     }
 
     private static int wars(ServerLevel level, KingdomSavedData data, long day, RandomSource random, Settings s) {
@@ -317,7 +318,7 @@ public final class AutonomyService {
         War war = data.activeWar(k.id());
         boolean attacking = war != null && war.attackerKingdom().equals(k.id());
         if (war != null && !attacking) return null; // A defender does not counter-conquer (stage-4 directional wars).
-        double chance = attacking ? s.frequency().campaign : s.frequency().independent;
+        double chance = campaignChance(level,k,attacking,s);
         if (random.nextDouble() >= chance) return null;
         Plan plan = plan(level, data, k.id(), attacking ? warTargets(data, war) : hostileIndependents(level, data, k, s), day, s);
         if (plan == null) return null;
@@ -332,6 +333,12 @@ public final class AutonomyService {
         if (attacking) PoliticsService.notifyRuler(level, war.defenderKingdom(), Component.literal(TAG + k.name() + " prepares a conquest raid on "
                 + PoliticsService.name(plan.target) + ".").withStyle(ChatFormatting.RED));
         return order;
+    }
+
+    /** Personality scales the old draw only; all source/target/directional/60%/cooldown checks remain in place. */
+    public static double campaignChance(ServerLevel level,Kingdom k,boolean attacking,Settings settings){
+        return RoyalInvestmentPolicy.aggression(attacking ? settings.frequency().campaign : settings.frequency().independent,
+                com.millenairekingdoms.personality.KingdomPersonality.forCapital(level,k).category(),RoyalNpcConfig.weights());
     }
 
     // ---- helpers ----

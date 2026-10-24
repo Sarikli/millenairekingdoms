@@ -61,6 +61,7 @@ public final class KingdomsCommands {
                     var s = com.millenairekingdoms.autonomy.AutonomyConfig.current();
                     var war = data.activeWar(k.id());
                     boolean attacking = war != null && war.attackerKingdom().equals(k.id());
+                    reply(c, com.millenairekingdoms.autonomy.RoyalInvestmentPolicy.describe(com.millenairekingdoms.autonomy.RoyalInvestmentPolicy.context(level,data,k,k.capital())));
                     var targets = attacking ? com.millenairekingdoms.autonomy.AutonomyService.warTargets(data, war)
                             : com.millenairekingdoms.autonomy.AutonomyService.hostileIndependents(level, data, k, s);
                     reply(c, k.name() + " | npc=" + data.npcGoverned(k.id()) + " | " + (war == null ? "at peace" : attacking ? "attacking" : "defending")

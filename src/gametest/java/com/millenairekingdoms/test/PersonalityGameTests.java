@@ -39,7 +39,7 @@ public final class PersonalityGameTests {
     private static final AtomicInteger NEXT=new AtomicInteger();
     private static final String[] REPRESENTATIVES={"norman/militaire","norman/agricole","norman/ecclesiastique","norman/artisans","norman/grosbourg"};
     private static ResourceLocation id(String path){return ResourceLocation.fromNamespaceAndPath("millenaire",path);}
-    private static final class Villages implements AutoCloseable {
+    static final class Villages implements AutoCloseable {
         final GameTestHelper h;final List<Village> villages=new ArrayList<>();
         Villages(GameTestHelper h){this.h=h;}
         Village add(String path){
