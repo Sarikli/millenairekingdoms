@@ -31,6 +31,10 @@ public final class RoyalConstructionCatalog {
         thread(player.serverLevel());
         return read(player.serverLevel(),PoliticsService.ruledKingdom(player).id(),village,player.getUUID());
     }
+    /** Already-issued work only, after the monitor rechecks its original UUID-bound mandate. No new spending agency. */
+    static Catalog forIssuedOrder(ServerLevel level,RoyalConstructionStore.Intent intent) {
+        return read(level,intent.kingdom(),intent.village(),intent.actor());
+    }
 
     private static Catalog read(ServerLevel level,UUID kingdom,UUID id,UUID actor) {
         thread(level); var data=KingdomSavedData.get(level);

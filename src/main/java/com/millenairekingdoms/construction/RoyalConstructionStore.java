@@ -145,7 +145,7 @@ public final class RoyalConstructionStore {
             case REQUESTED -> to==Stage.PAID || to==Stage.CANCELLING || to==Stage.FAILED || to==Stage.RECOVERY_REQUIRED;
             case PAID -> to==Stage.QUEUING || to==Stage.CANCELLING || to==Stage.RECOVERY_REQUIRED;
             case QUEUING -> to==Stage.QUEUED || to==Stage.IN_PROGRESS || to==Stage.CANCELLING || to==Stage.RECOVERY_REQUIRED;
-            case QUEUED -> to==Stage.IN_PROGRESS || to==Stage.CANCELLING || to==Stage.FAILED || to==Stage.RECOVERY_REQUIRED;
+            case QUEUED -> to==Stage.QUEUING || to==Stage.IN_PROGRESS || to==Stage.CANCELLING || to==Stage.FAILED || to==Stage.RECOVERY_REQUIRED;
             case IN_PROGRESS -> to==Stage.COMPLETED || to==Stage.CANCELLING || to==Stage.FAILED || to==Stage.RECOVERY_REQUIRED;
             case CANCELLING -> to==Stage.CANCELLED || to==Stage.RECOVERY_REQUIRED;
             case COMPLETED, CANCELLED, FAILED, RECOVERY_REQUIRED -> false;

@@ -106,7 +106,13 @@ final class RoyalConstructionMonitor {
         return building.getLevel()>0 || building.getConstructionTask()!=null && building.getConstructionTask().totalSteps()>0
                 && (building.getStatus()!=BuildingInstance.Status.COMPLETE || building.getConstructionTask().isComplete());
     }
-    private Entry blocked(Entry entry,Blocked blocked) { return orders.change(entry.intent().id(),entry.stage(),entry.stage(),blocked,entry.building()); }
+    private Entry blocked(Entry entry,Blocked blocked) {
+        // NO_SPACE is also durable evidence of why the original pending slot became empty. Native cooldowns are
+        // transient; temporary unavailability must not erase that evidence and turn a known failed site into queue loss.
+        if(entry.blocked()==Blocked.NO_SPACE && (entry.stage()==Stage.QUEUED || entry.stage()==Stage.QUEUING)
+                && (blocked==Blocked.UNLOADED || blocked==Blocked.MISSING_PLAN)) return entry;
+        return orders.change(entry.intent().id(),entry.stage(),entry.stage(),blocked,entry.building());
+    }
     private Entry unloaded(Entry entry,RoyalConstructionPersistence.Unloaded reason) {
         if(entry.blocked()!=Blocked.UNLOADED) LOGGER.warn("[Kingdoms] Royal construction {} completion deferred: {}",entry.intent().id(),reason.getMessage());
         return blocked(entry,Blocked.UNLOADED);

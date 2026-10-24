@@ -64,7 +64,56 @@ public final class RoyalConstructionService {
     public Entry observe(UUID id) {
         thread(); var entry=orders.load(id); if(entry==null) throw new IllegalArgumentException("Unknown royal order");
         if(!entry.intent().dimension().equals(level.dimension().location().toString())) throw new IllegalArgumentException("Order belongs to another dimension");
-        return exclusive(entry.intent().village(),()->new RoyalConstructionMonitor(level,orders,persistence).observe(orders.load(id)));
+        return exclusive(entry.intent().village(),()->{
+            var current=orders.load(id);
+            if(current.stage()==Stage.QUEUING && current.blocked()==Blocked.NO_SPACE) return retrySite(current);
+            current=new RoyalConstructionMonitor(level,orders,persistence).observe(current);
+            return current.stage()==Stage.QUEUED && current.blocked()==Blocked.NO_SPACE ? retrySite(current) : current;
+        });
+    }
+
+    /** Reoffer only a known native placement failure. No location search/choice, resource grant or new payment. */
+    private Entry retrySite(Entry entry) {
+        var intent=entry.intent(); var village=PoliticsService.village(level,intent.village());
+        var publications=PUBLICATIONS.computeIfAbsent(level.getServer(),key->new java.util.HashMap<>());
+        if(entry.stage()==Stage.QUEUING) {
+            // Recheck mandate before identity checks, including village removal or authority loss during failed I/O.
+            var checked=new RoyalConstructionMonitor(level,orders,persistence).observe(entry);
+            if(checked.stage()!=Stage.QUEUING) return checked;
+            if(!village.isActive() || !level.isLoaded(village.getCenter())) return entry;
+            var publication=publications.get(intent.id());
+            if(publication==null || publication.village()!=village) return ambiguous(entry);
+            var fresh=village.getBuildings().stream().filter(b->!intent.originalBuildings().contains(b.getId().uuid()) && RoyalConstructionMonitor.lineage(b,intent)).toList();
+            if(fresh.size()>1) return ambiguous(entry);
+            if(!fresh.isEmpty()) {
+                var building=fresh.getFirst();
+                if(!RoyalConstructionMonitor.credible(building) || pending(intent).equals(village.getPendingProject())) return ambiguous(entry);
+                if(!level.isLoaded(building.getOrigin())) return entry;
+                var receipt=payments.inspectConstruction(intent.id(),intent.kingdom(),intent.capital(),intent.actor(),intent.fee());
+                if(receipt==null || receipt.state()!=State.COMMITTED) return ambiguous(entry);
+                persistence.building(level,intent.village(),building);
+                entry=orders.change(intent.id(),Stage.QUEUING,Stage.IN_PROGRESS,Blocked.NONE,building.getId().uuid()); publications.remove(intent.id());
+                return new RoyalConstructionMonitor(level,orders,persistence).observe(entry);
+            }
+            if(publication.pending()!=village.getPendingProject() || !pending(intent).equals(village.getPendingProject())) return ambiguous(entry);
+        } else {
+            if(!village.isActive() || !level.isLoaded(village.getCenter())) return entry;
+            // A native pending project always keeps its slot, including an equal-field natural project.
+            if(village.getPendingProject()!=null || village.getPlacementCooldowns().getOrDefault(intent.planSet(),0L)>level.getGameTime()) return entry;
+            if(!eligible(RoyalConstructionCatalog.forIssuedOrder(level,intent),intent)) return entry;
+            template(intent.plan());
+        }
+        var receipt=payments.inspectConstruction(intent.id(),intent.kingdom(),intent.capital(),intent.actor(),intent.fee());
+        if(receipt==null || receipt.state()!=State.COMMITTED) return ambiguous(entry);
+        if(entry.stage()==Stage.QUEUED) {
+            // Existing accepted receipt remains committed. A crash at this publication boundary is quarantined on startup.
+            entry=orders.change(intent.id(),Stage.QUEUED,Stage.QUEUING,Blocked.NO_SPACE,null);
+            var pending=pending(intent); village.setPendingProject(pending); village.setNoProjectsLeftUntil(0);
+            publications.put(intent.id(),new Publication(village,pending));
+        }
+        persistence.pending(level,intent.village(),pending(intent));
+        entry=orders.change(intent.id(),Stage.QUEUING,Stage.QUEUED,Blocked.NONE,null); publications.remove(intent.id());
+        return new RoyalConstructionMonitor(level,orders,persistence).observe(entry);
     }
     /** Before engine ticks on a new JVM: field equality cannot establish interrupted publication ownership. */
     public int quarantineInterruptedPublications() {
