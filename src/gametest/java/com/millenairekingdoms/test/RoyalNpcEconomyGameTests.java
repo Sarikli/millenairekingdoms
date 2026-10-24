@@ -47,7 +47,7 @@ public final class RoyalNpcEconomyGameTests {
     private static void money(RoyalShipmentSupport.Realm r,int silver){r.chest(r.capital()).clearContent();r.chest(r.capital()).setItem(0,new ItemStack(ModItems.DENIER_ARGENT.get(),silver));r.capital().getTownhall().getInventory().invalidateCache();}
     private static void clear(RoyalShipmentSupport.Realm r,Village v){for(var pos:v.getTownhall().getInventory().getChestPositions())((net.minecraft.world.level.block.entity.ChestBlockEntity)r.level().getBlockEntity(pos)).clearContent();v.getTownhall().getInventory().invalidateCache();}
     private static void add(GameTestHelper h,RoyalShipmentSupport.Realm r,Village v,Item item,int quantity){int added=v.getTownhall().getInventory().add(r.level(),item,quantity);h.assertTrue(added==quantity,"Known fixture materials enter actual native storage in full: "+item+" "+quantity+"/"+added);v.getTownhall().getInventory().invalidateCache();}
-    private static int count(RoyalShipmentSupport.Realm r,Village v,Item item){v.getTownhall().getInventory().invalidateCache();return v.getTownhall().getInventory().getCount(r.level(),item);}
+    static int count(RoyalShipmentSupport.Realm r,Village v,Item item){v.getTownhall().getInventory().invalidateCache();return v.getTownhall().getInventory().getCount(r.level(),item);}
     private static RoyalConstructionCatalog.Option option(RoyalShipmentSupport.Realm r,Village v){return RoyalConstructionCatalog.forNpc(r.level(),r.kingdom(),v.getId().uuid()).options().stream()
             .filter(o->RoyalInvestmentPolicy.role(o.planSet())!=RoyalInvestmentPolicy.Role.UNCLASSIFIED && !o.requiredMaterials().isEmpty())
             .sorted(java.util.Comparator.comparingInt(o->o.requiredMaterials().size())).findFirst().orElseThrow();}
@@ -60,8 +60,8 @@ public final class RoyalNpcEconomyGameTests {
         var entity=VillagerSpawnFactory.spawnInVillage(r.level(),r.source(),type.id(),r.source().getCenter().above(),r.source().getTownhall().getId());
         h.assertTrue(entity!=null && entity.isAlive() && r.level().getEntity(entity.getUUID())==entity && r.source().getVillagerRecords().containsKey(entity.getUUID()),"Actual original factory creates and registers a genuine loaded builder fixture; no fake record/NPC");return entity;
     }
-    private record Shortage(RoyalConstructionCatalog.Option option,ResourceLocation requirement,Item product,int needed,int sourceBefore,int retained,Village.PendingProject pending){}
-    private static Shortage shortage(GameTestHelper h,RoyalShipmentSupport.Realm r){
+    record Shortage(RoyalConstructionCatalog.Option option,ResourceLocation requirement,Item product,int needed,int sourceBefore,int retained,Village.PendingProject pending){}
+    static Shortage shortage(GameTestHelper h,RoyalShipmentSupport.Realm r){
         money(r,4);clear(r,r.source());
         var chosen=RoyalConstructionCatalog.forNpc(r.level(),r.kingdom(),r.to()).options().stream()
                 .filter(o->o.requiredMaterials().entrySet().stream().anyMatch(e->e.getValue()>0 && e.getValue()<=64))
