@@ -257,6 +257,24 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_site_tests'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        royalGuiGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_gui_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        royalGuiGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_gui_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
         royalLiveGameTestServer {
             type = 'gameTestServer'
             sourceSet = sourceSets.gametest
@@ -449,4 +467,11 @@ tasks.register('verifyRoyalLive') {
     group = 'verification'
     description = 'Verify genuine NPC construction through actual periodic server events in separate JVMs.'
     dependsOn tasks.named('runRoyalLiveGameTestServerReload')
+}
+
+tasks.named('runRoyalGuiGameTestServerReload') { dependsOn tasks.named('runRoyalGuiGameTestServer') }
+tasks.register('verifyRoyalGui') {
+    group = 'verification'
+    description = 'Verify server-owned construction offers and player actions across JVMs.'
+    dependsOn tasks.named('runRoyalGuiGameTestServerReload')
 }

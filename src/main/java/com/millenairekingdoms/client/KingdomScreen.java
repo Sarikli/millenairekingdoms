@@ -19,14 +19,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
-/** The kingdom screen: five tabs drawn on Millénaire's own parchment, showing the server's snapshot. It decides nothing:
+/** The kingdom screen uses Millénaire's own parchment and the server's snapshot. It decides nothing:
  * buttons only send requests, disabled buttons only mirror what the server reported, and every answer comes back as a
  * new snapshot. Millénaire's own village and chief screens are untouched. */
 public final class KingdomScreen extends Screen {
     private static final ResourceLocation PARCHMENT = ResourceLocation.fromNamespaceAndPath("millenaire", "textures/gui/village_chief.png");
     // Millénaire's parchment palette (PanelRenderHelper).
     static final int TITLE = 0xFF2A1A00, TEXT = 0xFF333333, MUTED = 0xFF6E5B3E, GOOD = 0xFF2B6A1E, BAD = 0xFF8A1C1C, LINE = 0xFFAA8866;
-    enum Tab { KINGDOM, MILITARY, DIPLOMACY, ECONOMY, RULERSHIP }
+    enum Tab { KINGDOM, MILITARY, DIPLOMACY, ECONOMY, RULERSHIP, CONSTRUCTION }
     private static Tab lastTab = Tab.KINGDOM;
 
     private CompoundTag view;
@@ -34,6 +34,8 @@ public final class KingdomScreen extends Screen {
     private UUID selectedTarget, selectedSource, selectedKingdom, selectedRequest, joinKingdom, enemyKingdom;
     private String amount = "", kingdomName = "";
     private boolean confirmAbdicate;
+    private boolean confirmConstructionCancel;
+    private String selectedConstructionPlan;
     private int left, top, panelWidth, panelHeight;
     private final List<Text> texts = new ArrayList<>();
     private final List<RowList> lists = new ArrayList<>();
@@ -52,6 +54,12 @@ public final class KingdomScreen extends Screen {
     void update(CompoundTag next) {
         if (amountBox != null) amount = amountBox.getValue();
         if (nameBox != null) kingdomName = nameBox.getValue();
+        var previous=view.getCompound("construction");var current=next.getCompound("construction");
+        if(!previous.hasUUID("village") || !current.hasUUID("village") || !previous.getUUID("village").equals(current.getUUID("village"))) {
+            selectedConstructionPlan=null;confirmConstructionCancel=false;
+        }
+        var oldOrder=previous.getCompound("order");var newOrder=current.getCompound("order");
+        if(!oldOrder.hasUUID("id") || !newOrder.hasUUID("id") || !oldOrder.getUUID("id").equals(newOrder.getUUID("id"))) confirmConstructionCancel=false;
         this.view = next;
         rebuildWidgets();
     }
@@ -66,7 +74,7 @@ public final class KingdomScreen extends Screen {
         left = (width - panelWidth) / 2; top = (height - panelHeight) / 2;
         int tabWidth = (panelWidth - 24) / Tab.values().length;
         for (Tab t : Tab.values()) {
-            Button b = Button.builder(Component.translatable("millenairekingdoms.gui.tab." + t.name().toLowerCase(java.util.Locale.ROOT)), x -> { tab = t; lastTab = t; confirmAbdicate = false; rebuildWidgets(); })
+            Button b = Button.builder(Component.translatable("millenairekingdoms.gui.tab." + t.name().toLowerCase(java.util.Locale.ROOT)), x -> { tab = t; lastTab = t; confirmAbdicate = false; confirmConstructionCancel=false; rebuildWidgets(); })
                     .bounds(left + 12 + t.ordinal() * tabWidth, top + 22, tabWidth - 2, 16).build();
             b.active = t != tab;
             addRenderableWidget(b);
@@ -80,6 +88,7 @@ public final class KingdomScreen extends Screen {
             case DIPLOMACY -> diplomacyTab();
             case ECONOMY -> economyTab();
             case RULERSHIP -> rulershipTab();
+            case CONSTRUCTION -> constructionTab();
         }
     }
 
@@ -87,6 +96,58 @@ public final class KingdomScreen extends Screen {
     private int y0() { return top + 44; }
     private int contentWidth() { return panelWidth - 28; }
     private int bottom() { return top + panelHeight - 28; }
+
+    private void constructionTab() {
+        int x=x0(),y=y0(),w=contentWidth(),half=w*11/20;
+        var c=view.getCompound("construction");var villages=c.getList("villages",Tag.TAG_COMPOUND);
+        if(!c.hasUUID("village") || villages.isEmpty()) {
+            wrapped(x,y,constructionReason(c.getString("reason")),w,BAD,5);return;
+        }
+        int index=0;for(int n=0;n<villages.size();n++) if(villages.getCompound(n).getUUID("id").equals(c.getUUID("village"))) index=n;
+        var village=villages.getCompound(index);var next=villages.getCompound((index+1)%villages.size());
+        Component villageLabel=t("construction.village",village.getString("name"));
+        if(!c.getBoolean("available")) villageLabel=Component.empty().append(villageLabel).append(" · ").append(t("construction.unavailable"));
+        button(x,y,w,villageLabel,b->send(KingdomActionPayload.of("CONSTRUCTION_SELECT",next.getUUID("id"))),villages.size()>1,null);y+=21;
+        text(x,y,t("construction.plans"),TITLE,half-4);
+        int rx=x+half+2,rw=w-half-2; text(rx,y,t("construction.current"),TITLE,rw);
+        var plans=c.getList("plans",Tag.TAG_COMPOUND);CompoundTag selected=null;
+        for(Tag raw:plans) {var plan=(CompoundTag)raw;if(plan.getString("plan").equals(selectedConstructionPlan))selected=plan;}
+        if(selected==null && !plans.isEmpty()) {selected=plans.getCompound(0);selectedConstructionPlan=selected.getString("plan");}
+        int listHeight=Math.max(33,bottom()-y-63);var choices=list(x,y+11,half-4,listHeight);
+        for(Tag raw:plans) {
+            var plan=(CompoundTag)raw;String id=plan.getString("plan");
+            choices.add(Component.literal(plan.getString("name")+" · "+coins(plan.getLong("fee"))),plan.getBoolean("canOrder") ? TEXT : MUTED,id.equals(selectedConstructionPlan),
+                    ()->{selectedConstructionPlan=id;rebuildWidgets();});
+        }
+        if(selected!=null) {
+            var plan=selected;
+            var purchase=Button.builder(t("construction.order",coins(plan.getLong("fee"))),b->send(new KingdomActionPayload("CONSTRUCTION_ORDER",
+                    Optional.of(c.getUUID("village")),Optional.of(plan.getUUID("offer")),0,plan.getString("plan"))))
+                    .bounds(x,y+listHeight+14,half-4,16).build();purchase.active=plan.getBoolean("canOrder");
+            Component tip=Component.literal(plan.getString("name"));if(!purchase.active)tip=Component.empty().append(tip).append("\n").append(constructionReason(plan.getString("reason")));
+            purchase.setTooltip(Tooltip.create(tip));addRenderableWidget(purchase);
+        } else wrapped(x,y+listHeight+14,constructionReason(c.getString("reason")),half-4,MUTED,2);
+        int ry=y+11;var order=c.getCompound("order");
+        if(order.hasUUID("id")) {
+            ry=line(rx,ry,Component.literal(order.getString("name")),rw);
+            ry=line(rx,ry,t("construction.stage."+order.getString("stage")),rw,TITLE);
+            if(!order.getString("blocked").equals("NONE")) ry=wrapped(rx,ry,t("construction.blocked."+order.getString("blocked")),rw,BAD,2);
+            if(order.contains("progress"))ry=line(rx,ry,t("construction.progress",order.getInt("progress")),rw);
+            ry=line(rx,ry,t("construction.price",coins(order.getLong("fee"))),rw);
+            button(rx,ry,rw,t(confirmConstructionCancel ? "construction.confirm_cancel" : "construction.cancel"),b->{
+                if(confirmConstructionCancel) {confirmConstructionCancel=false;send(KingdomActionPayload.of("CONSTRUCTION_CANCEL",order.getUUID("id")));}
+                else {confirmConstructionCancel=true;rebuildWidgets();}
+            },order.getBoolean("canCancel"),t("construction.cancel_unavailable"));ry+=20;
+            if(order.getBoolean("canResume"))button(rx,ry,rw,t("construction.resume"),b->send(KingdomActionPayload.of("CONSTRUCTION_RESUME",order.getUUID("id"))),true,null);
+        } else {
+            ry=wrapped(rx,ry,t(c.getBoolean("stateKnown") ? "construction.no_order" : "construction.order_unknown"),rw,MUTED,2);
+            if(c.contains("reason"))wrapped(rx,ry,constructionReason(c.getString("reason")),rw,BAD,4);
+        }
+        wrapped(x,bottom()-25,t(order.getBoolean("refundable") ? "construction.refund_note" : "construction.patronage_note"),w,MUTED,2);
+    }
+    private static Component constructionReason(String reason) {
+        return t("construction.reason."+(reason.isEmpty() ? "NO_ELIGIBLE_PLAN" : reason));
+    }
 
     // ---------------------------------------------------------------- tabs
 

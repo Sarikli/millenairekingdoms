@@ -27,7 +27,7 @@ import org.millenaire.culture.ModCultures;
 import org.millenaire.village.Village;
 import org.millenaire.world.BuildingPlacer;
 
-/** Internal paid request/retry/cancellation. No GUI/scheduler consumer until governance/builders gates pass.
+/** Server-owned paid request/retry/cancellation shared by player actions and bounded existing-order tracking.
  * Engine placement/builders/resources remain responsible for construction; this service only fills an empty pending slot. */
 @org.jetbrains.annotations.ApiStatus.Internal
 public final class RoyalConstructionService {
@@ -48,9 +48,13 @@ public final class RoyalConstructionService {
         this.level=level; this.persistence=persistence; this.payments=payments;
         this.orders=new RoyalConstructionStore(level.getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-construction"));
     }
-    public Entry requestNpc(UUID kingdom,UUID village,ResourceLocation planSet,UUID id) { return request(null,kingdom,village,planSet,id); }
+    public Entry requestNpc(UUID kingdom,UUID village,ResourceLocation planSet,UUID id) { return request(null,kingdom,village,planSet,id,null); }
     public Entry requestPlayer(ServerPlayer player,UUID village,ResourceLocation planSet,UUID id) {
-        thread(); dimension(player); return request(player,PoliticsService.ruledKingdom(player).id(),village,planSet,id);
+        thread(); dimension(player); return request(player,PoliticsService.ruledKingdom(player).id(),village,planSet,id,null);
+    }
+    /** The expected fee comes from a server-issued GUI offer. Current catalog pricing is still authoritative. */
+    public Entry requestQuotedPlayer(ServerPlayer player,UUID village,ResourceLocation planSet,UUID id,long expectedFee) {
+        thread(); dimension(player); return request(player,PoliticsService.ruledKingdom(player).id(),village,planSet,id,expectedFee);
     }
     public Entry retryNpc(UUID kingdom,UUID id) { return retry(null,kingdom,id); }
     public Entry retryPlayer(ServerPlayer player,UUID id) {
@@ -156,7 +160,7 @@ public final class RoyalConstructionService {
         });
     }
 
-    private Entry request(ServerPlayer player,UUID kingdom,UUID villageId,ResourceLocation selected,UUID id) {
+    private Entry request(ServerPlayer player,UUID kingdom,UUID villageId,ResourceLocation selected,UUID id,Long expectedFee) {
         thread(); var catalog=catalog(player,kingdom,villageId);
         return exclusive(villageId,()->{
             var old=orders.load(id);
@@ -168,6 +172,8 @@ public final class RoyalConstructionService {
             if(!catalog.active() || !level.isLoaded(PoliticsService.village(level,villageId).getCenter())) throw new IllegalStateException("Village is unloaded; postpone royal construction");
             if(catalog.naturalProjectPending()) throw new IllegalStateException("Village already has natural pending work; wait without replacing it");
             var choice=catalog.options().stream().filter(o->o.planSet().equals(selected)).findFirst().orElseThrow(()->new IllegalArgumentException("Building is not a current normal-growth choice"));
+            if(expectedFee!=null && choice.patronageFee()!=expectedFee) throw new com.millenairekingdoms.util.KingdomException(
+                    "millenairekingdoms.gui.msg.construction_price_changed","The patronage price changed. Refresh and review the new offer before ordering.");
             template(choice.plan());
             var data=KingdomSavedData.get(level); var village=PoliticsService.village(level,villageId);
             var intent=new Intent(id,level.dimension().location().toString(),kingdom,data.kingdom(kingdom).capital(),villageId,

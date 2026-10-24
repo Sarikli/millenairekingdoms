@@ -19,7 +19,7 @@ public record KingdomActionPayload(String action, Optional<UUID> first, Optional
             ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), KingdomActionPayload::first,
             ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), KingdomActionPayload::second,
             ByteBufCodecs.VAR_LONG, KingdomActionPayload::amount,
-            ByteBufCodecs.stringUtf8(64), KingdomActionPayload::text,
+            ByteBufCodecs.stringUtf8(128), KingdomActionPayload::text,
             KingdomActionPayload::new);
     @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
 
