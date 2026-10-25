@@ -97,11 +97,11 @@ public final class RoyalConstructionService {
             if(!village.isActive() || !level.isLoaded(village.getCenter())) return entry;
             var publication=publications.get(intent.id());
             if(publication==null || publication.village()!=village) return ambiguous(entry);
-            var fresh=village.getBuildings().stream().filter(b->!intent.originalBuildings().contains(b.getId().uuid()) && RoyalConstructionMonitor.lineage(b,intent)).toList();
+            var fresh=village.getBuildings().stream().filter(b->RoyalConstructionMonitor.fulfillment(b,intent)).toList();
             if(fresh.size()>1) return ambiguous(entry);
             if(!fresh.isEmpty()) {
                 var building=fresh.getFirst();
-                if(!RoyalConstructionMonitor.credible(building) || pending(intent).equals(village.getPendingProject())) return ambiguous(entry);
+                if(!RoyalConstructionMonitor.credible(building,intent) || pending(intent).equals(village.getPendingProject())) return ambiguous(entry);
                 if(!level.isLoaded(building.getOrigin())) return entry;
                 var receipt=payments.inspectConstruction(intent.id(),intent.kingdom(),intent.capital(),intent.actor(),intent.fee());
                 if(receipt==null || receipt.state()!=State.COMMITTED) return ambiguous(entry);
@@ -176,18 +176,34 @@ public final class RoyalConstructionService {
         });
     }
 
+    public Entry requestQuotedUpgrade(ServerPlayer player,UUID villageId,UUID buildingId,UUID id,long expectedFee){
+        thread();dimension(player);var k=PoliticsService.ruledKingdom(player);var village=PoliticsService.village(level,villageId);
+        var building=village==null?null:village.getBuilding(new org.millenaire.building.BuildingId(buildingId));
+        if(building==null)throw new IllegalArgumentException("Upgrade building is missing");
+        return requestQuotedUpgrade(player,villageId,buildingId,id,expectedFee,building.getLevel()+1);
+    }
+    public Entry requestQuotedUpgrade(ServerPlayer player,UUID villageId,UUID buildingId,UUID id,long expectedFee,int expectedLevel){
+        thread();dimension(player);var k=PoliticsService.ruledKingdom(player);var village=PoliticsService.village(level,villageId);
+        var building=village==null?null:village.getBuilding(new org.millenaire.building.BuildingId(buildingId));
+        if(building==null)throw new IllegalArgumentException("Upgrade building is missing");
+        return request(player,k.id(),villageId,building.getPlanSetId(),id,expectedFee,buildingId,expectedLevel);
+    }
     private Entry request(ServerPlayer player,UUID kingdom,UUID villageId,ResourceLocation selected,UUID id,Long expectedFee) {
+        return request(player,kingdom,villageId,selected,id,expectedFee,null,null);
+    }
+    private Entry request(ServerPlayer player,UUID kingdom,UUID villageId,ResourceLocation selected,UUID id,Long expectedFee,UUID upgradeBuilding,Integer expectedTargetLevel) {
         thread(); var catalog=catalog(player,kingdom,villageId);
         return exclusive(villageId,()->{
             var old=orders.load(id);
             if(old!=null) {
                 bind(old,player,kingdom);
+                if(upgradeBuilding!=null && (!upgradeBuilding.equals(old.intent().upgradeBuilding()) || expectedTargetLevel!=old.intent().targetLevel()))throw new IllegalArgumentException("Upgrade ID is bound to another target or level");
                 if(!old.intent().village().equals(villageId) || !old.intent().planSet().equals(selected)) throw new IllegalArgumentException("Order ID is bound to another village or building");
                 return advance(old,player);
             }
             if(!catalog.active() || !level.isLoaded(PoliticsService.village(level,villageId).getCenter())) throw new IllegalStateException("Village is unloaded; postpone royal construction");
             if(catalog.naturalProjectPending() && player==null) throw new IllegalStateException("Village already has natural pending work; wait without replacing it");
-            var choice=catalog.options().stream().filter(o->o.planSet().equals(selected)).findFirst().orElseThrow(()->new IllegalArgumentException("Building is not a current normal-growth choice"));
+            var choice=(upgradeBuilding==null?catalog.options():catalog.upgrades()).stream().filter(o->o.planSet().equals(selected) && java.util.Objects.equals(o.upgradeBuilding(),upgradeBuilding) && (expectedTargetLevel==null || expectedTargetLevel==o.targetLevel())).findFirst().orElseThrow(()->new IllegalArgumentException("Building is not a current normal-growth choice"));
             if(expectedFee!=null && choice.patronageFee()!=expectedFee) throw new com.millenairekingdoms.util.KingdomException(
                     "millenairekingdoms.gui.msg.construction_price_changed","The patronage price changed. Refresh and review the new offer before ordering.");
             template(choice.plan());
@@ -195,7 +211,7 @@ public final class RoyalConstructionService {
             var intent=new Intent(id,level.dimension().location().toString(),kingdom,data.kingdom(kingdom).capital(),villageId,
                     player==null ? null : player.getUUID(),player==null ? 0 : data.ruler(kingdom).sinceGameTime(),village.getVillageTypeId(),
                     choice.planSet(),choice.plan(),choice.variant(),choice.patronageFee(),Math.max(0,level.getGameTime()),
-                    village.getBuildings().stream().map(b->b.getId().uuid()).collect(Collectors.toSet()));
+                    village.getBuildings().stream().map(b->b.getId().uuid()).collect(Collectors.toSet()),choice.upgradeBuilding(),choice.targetLevel());
             var reserved=catalog.naturalProjectPending() ? orders.reserveWaiting(intent) : orders.reserve(intent);
             if(reserved.stage()==Stage.WAITING)RoyalConstructionRuntime.watchWaiting(level,reserved);
             return advance(reserved,player);
@@ -324,9 +340,10 @@ public final class RoyalConstructionService {
     }
 
     private boolean eligible(RoyalConstructionCatalog.Catalog catalog,Intent intent) {
-        var set=ModCultures.getBuildingPlanSet(intent.planSet()); var def=set==null ? null : set.getLevel(intent.variant(),0);
-        return catalog.options().stream().anyMatch(o->o.planSet().equals(intent.planSet())) && def!=null && def.planId().equals(intent.plan())
-                && NormalGrowthBridge.conditions(PoliticsService.village(level,intent.village()),def);
+        var set=ModCultures.getBuildingPlanSet(intent.planSet()); var def=set==null ? null : set.getLevel(intent.variant(),intent.targetLevel());
+        return (intent.upgrade()?catalog.upgrades():catalog.options()).stream().anyMatch(o->o.planSet().equals(intent.planSet())
+                && java.util.Objects.equals(o.upgradeBuilding(),intent.upgradeBuilding()) && o.targetLevel()==intent.targetLevel())
+                && def!=null && def.planId().equals(intent.plan()) && (intent.upgrade() || NormalGrowthBridge.conditions(PoliticsService.village(level,intent.village()),def));
     }
     private void template(ResourceLocation id) {
         var plan=ModCultures.getBuildingPlan(id);
@@ -348,10 +365,9 @@ public final class RoyalConstructionService {
         if(!data.kingdom(kingdom).capital().equals(intent.capital()) || !PoliticsService.village(level,intent.village()).getVillageTypeId().equals(intent.villageType())
                 || (player!=null && data.ruler(kingdom).sinceGameTime()!=intent.rulerSince())) throw new IllegalArgumentException("Order authority, capital or village type changed");
     }
-    private static Village.PendingProject pending(Intent intent) { return new Village.PendingProject(intent.planSet(),intent.variant(),0,false,null); }
+    private static Village.PendingProject pending(Intent intent) { return intent.pending(); }
     private static java.util.List<BuildingInstance> newBuildings(Village village,Intent intent) {
-        return village.getBuildings().stream().filter(b->!intent.originalBuildings().contains(b.getId().uuid()) && intent.planSet().equals(b.getPlanSetId())
-                && intent.plan().equals(b.getPlanId()) && intent.variant().equals(b.getVariant()) && b.getLevel()==0).toList();
+        return village.getBuildings().stream().filter(b->RoyalConstructionMonitor.fulfillment(b,intent)).toList();
     }
     private Entry blocked(Entry entry,Blocked reason) { return orders.change(entry.intent().id(),entry.stage(),entry.stage(),reason,entry.building()); }
     private <T> T exclusive(UUID village,Supplier<T> action) {

@@ -131,20 +131,20 @@ public final class KingdomScreen extends Screen {
         text(x,y,t("construction.plans"),TITLE,half-4);
         int rx=x+half+2,rw=w-half-2; text(rx,y,t("construction.current"),TITLE,rw);
         var plans=c.getList("plans",Tag.TAG_COMPOUND);CompoundTag selected=null;
-        for(Tag raw:plans) {var plan=(CompoundTag)raw;if(plan.getString("plan").equals(selectedConstructionPlan))selected=plan;}
-        if(selected==null && !plans.isEmpty()) {selected=plans.getCompound(0);selectedConstructionPlan=selected.getString("plan");}
+        for(Tag raw:plans) {var plan=(CompoundTag)raw;if(plan.getString("key").equals(selectedConstructionPlan))selected=plan;}
+        if(selected==null && !plans.isEmpty()) {selected=plans.getCompound(0);selectedConstructionPlan=selected.getString("key");}
         int listHeight=Math.max(33,bottom()-y-63);var choices=list(x,y+11,half-4,listHeight);
         for(Tag raw:plans) {
-            var plan=(CompoundTag)raw;String id=plan.getString("plan");
-            choices.add(Component.literal(plan.getString("name")+" · "+coins(plan.getLong("fee"))),plan.getBoolean("canOrder") ? TEXT : MUTED,id.equals(selectedConstructionPlan),
+            var plan=(CompoundTag)raw;String id=plan.getString("key");
+            choices.add(Component.empty().append(constructionPlanName(plan)).append(" · "+coins(plan.getLong("fee"))),plan.getBoolean("canOrder") ? TEXT : MUTED,id.equals(selectedConstructionPlan),
                     ()->{selectedConstructionPlan=id;rebuildWidgets();});
         }
         if(selected!=null) {
             var plan=selected;
-            var purchase=Button.builder(t(c.getBoolean("naturalPending") ? "construction.queue_order" : "construction.order",coins(plan.getLong("fee"))),b->send(new KingdomActionPayload("CONSTRUCTION_ORDER",
+            var purchase=Button.builder(t(plan.getBoolean("upgrade")?(c.getBoolean("naturalPending")?"construction.queue_upgrade":"construction.upgrade_order"):(c.getBoolean("naturalPending")?"construction.queue_order":"construction.order"),coins(plan.getLong("fee"))),b->send(new KingdomActionPayload("CONSTRUCTION_ORDER",
                     Optional.of(c.getUUID("village")),Optional.of(plan.getUUID("offer")),0,plan.getString("plan"))))
                     .bounds(x,y+listHeight+14,half-4,16).build();purchase.active=plan.getBoolean("canOrder");
-            Component tip=Component.literal(plan.getString("name"));if(!purchase.active)tip=Component.empty().append(tip).append("\n").append(constructionReason(plan.getString("reason")));
+            Component tip=constructionPlanName(plan);if(!purchase.active)tip=Component.empty().append(tip).append("\n").append(constructionReason(plan.getString("reason")));
             else if(c.getBoolean("naturalPending"))tip=Component.empty().append(tip).append("\n").append(t("construction.waiting_note"));
             purchase.setTooltip(Tooltip.create(tip));addRenderableWidget(purchase);
         } else wrapped(x,y+listHeight+14,constructionReason(c.getString("reason")),half-4,MUTED,2);
@@ -166,6 +166,9 @@ public final class KingdomScreen extends Screen {
         }
         wrapped(x,bottom()-25,t(order.getString("stage").equals("WAITING") || !order.hasUUID("id") && c.getBoolean("naturalPending") ? "construction.waiting_note" : order.getBoolean("refundable") ? "construction.refund_note" : "construction.patronage_note"),w,MUTED,2);
     }
+    private static Component constructionPlanName(CompoundTag plan){
+        return plan.getBoolean("upgrade")?t("construction.upgrade_choice",plan.getString("name"),plan.getInt("targetLevel")+1,plan.getInt("x"),plan.getInt("z")):Component.literal(plan.getString("name"));
+    }
     private static Component constructionReason(String reason) {
         return t("construction.reason."+(reason.isEmpty() ? "NO_ELIGIBLE_PLAN" : reason));
     }
@@ -175,11 +178,11 @@ public final class KingdomScreen extends Screen {
         var s=view.getCompound("shipments");var villages=s.getList("villages",Tag.TAG_COMPOUND);
         if(!s.hasUUID("source") || !s.hasUUID("target") || villages.size()<2){wrapped(x,y,shipmentReason(s.getString("reason")),w,BAD,5);return;}
         shipmentVillage(x,y,w,s,villages,true);shipmentVillage(x,y+20,w,s,villages,false);y+=42;
-        var products=s.getList("products",Tag.TAG_COMPOUND);int productIndex=0;
-        for(int n=0;n<products.size();n++)if(products.getCompound(n).getString("id").equals(s.getString("product")))productIndex=n;
+        var products=s.getList("products",Tag.TAG_COMPOUND);
         if(!products.isEmpty()){
-            String next=products.getCompound((productIndex+1)%products.size()).getString("id");
-            shipmentButton(x,y,lw,shipmentItem(s.getString("product")),b->send(new KingdomActionPayload("SHIPMENT_PRODUCT",Optional.empty(),Optional.empty(),0,next)),products.size()>1,shipmentStockDetails(s));
+            shipmentButton(x,y,lw,shipmentItem(s.getString("product")),b->{
+                minecraft.setScreen(new ShipmentProductScreen(this,products,s.getString("product")));
+            },true,Component.empty().append(t("shipment.choose_product")).append("\n").append(shipmentStockDetails(s)==null ? Component.empty() : shipmentStockDetails(s)));
         }else text(x,y,t("shipment.no_goods"),MUTED,lw);
         int sy=y+20;
         if(shipmentQuantity.isEmpty())shipmentQuantity=Integer.toString(s.getInt("quantity"));
@@ -240,6 +243,7 @@ public final class KingdomScreen extends Screen {
         var reserve=state.getCompound("reserve");return summary.append("\n").append(t("shipment.stock_details",reserve.getInt("target"),reserve.getInt("construction"),reserve.getInt("residents"),reserve.getInt("minimum"),reserve.getInt("nativeProtected")));
     }
     private static Component shipmentItem(String id){var item=net.minecraft.core.registries.BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse(id));return item.<Component>map(i->Component.translatable(i.getDescriptionId())).orElseGet(()->Component.literal(id));}
+    void chooseShipmentProduct(String id){send(new KingdomActionPayload("SHIPMENT_PRODUCT",Optional.empty(),Optional.empty(),0,id));}
     private static long seconds(long ticks){return ticks/20+(ticks%20==0 ? 0 : 1);}
 
     private void shipmentButton(int x,int y,int width,Component label,Consumer<Button> press,boolean active,Component hint){
@@ -507,7 +511,7 @@ public final class KingdomScreen extends Screen {
         RowList incomes = list(x, y + 11, half - 4, bottom() - (y + 11));
         for (Tag tag : k.getList("members", Tag.TAG_COMPOUND)) {
             CompoundTag m = (CompoundTag) tag;
-            incomes.add(m.getBoolean("capital") ? t("income_capital", m.getString("name")) : t("income_row", m.getString("name"), m.getInt("level"), m.getLong("income")),
+            incomes.add(m.getBoolean("capital") ? t("income_capital", m.getString("name"),m.getInt("level"),m.getLong("income")) : t("income_row", m.getString("name"), m.getInt("level"), m.getLong("income")),
                     TEXT, false, null);
         }
         int rx = x + half + 2, rw = w - half - 2, ry = y;
@@ -666,12 +670,14 @@ public final class KingdomScreen extends Screen {
 
     /** A small scrollable list of clickable rows drawn on the parchment. */
     static final class RowList {
-        record Row(Component text, int color, boolean selected, Runnable click) {}
-        final int x, y, w, h, rowHeight = 11;
+        record Row(Component text, int color, boolean selected, Runnable click,net.minecraft.world.item.ItemStack icon) {}
+        final int x, y, w, h, rowHeight;
         final List<Row> rows = new ArrayList<>();
         int scroll;
-        RowList(int x, int y, int w, int h) { this.x = x; this.y = y; this.w = w; this.h = h; }
-        void add(Component text, int color, boolean selected, Runnable click) { rows.add(new Row(text, color, selected, click)); }
+        RowList(int x, int y, int w, int h) {this(x,y,w,h,11);}
+        RowList(int x,int y,int w,int h,int rowHeight) {this.x=x;this.y=y;this.w=w;this.h=h;this.rowHeight=rowHeight;}
+        void add(Component text, int color, boolean selected, Runnable click) { rows.add(new Row(text, color, selected, click,net.minecraft.world.item.ItemStack.EMPTY)); }
+        void addIcon(Component text,boolean selected,Runnable click,net.minecraft.world.item.ItemStack icon){rows.add(new Row(text,TEXT,selected,click,icon));}
         void addWrapped(Font font,Component text,int color){
             if(text==null)return;
             for(var part:font.split(text,Math.max(1,w-10))){
@@ -690,7 +696,9 @@ public final class KingdomScreen extends Screen {
                 boolean hover = row.click != null && mouseX >= x && mouseX < x + w && mouseY >= ry && mouseY < ry + rowHeight;
                 if (row.selected) g.fill(x + 1, ry, x + w - 1, ry + rowHeight, 0x55A07850);
                 else if (hover) g.fill(x + 1, ry, x + w - 1, ry + rowHeight, 0x30A07850);
-                g.drawString(font, font.plainSubstrByWidth(row.text.getString(), w - 8), x + 3, ry + 2, row.color, false);
+                int indent=row.icon.isEmpty()?3:23;
+                if(!row.icon.isEmpty())g.renderItem(row.icon,x+3,ry+2);
+                g.drawString(font,font.plainSubstrByWidth(row.text.getString(),w-indent-5),x+indent,ry+(rowHeight-font.lineHeight)/2,row.color,false);
             }
             if (rows.size() > visible()) {
                 int bar = Math.max(8, h * visible() / rows.size());

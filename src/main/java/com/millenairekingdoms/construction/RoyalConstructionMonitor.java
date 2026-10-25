@@ -49,18 +49,18 @@ final class RoyalConstructionMonitor {
             if(receipt.state()==State.PAID) payments.acknowledgeConstruction(intent.id(),intent.kingdom(),intent.capital(),intent.actor(),intent.fee());
         }
         if(!village.isActive() || !level.isLoaded(village.getCenter())) return blocked(entry,Blocked.UNLOADED);
-        var set=ModCultures.getBuildingPlanSet(intent.planSet()); var definition=set==null ? null : set.getLevel(intent.variant(),0);
+        var set=ModCultures.getBuildingPlanSet(intent.planSet()); var definition=set==null ? null : set.getLevel(intent.variant(),intent.targetLevel());
         if(definition==null || !definition.planId().equals(intent.plan())) return blocked(entry,Blocked.MISSING_PLAN);
         if(entry.stage()!=Stage.QUEUED && entry.stage()!=Stage.IN_PROGRESS) return entry;
 
         BuildingInstance building;
         if(entry.stage()==Stage.QUEUED) {
-            var fresh=village.getBuildings().stream().filter(b->!intent.originalBuildings().contains(b.getId().uuid()) && lineage(b,intent)).toList();
+            var fresh=village.getBuildings().stream().filter(b->fulfillment(b,intent)).toList();
             if(fresh.size()>1) return ambiguous(entry,Blocked.AMBIGUOUS_ENGINE_STATE);
             if(fresh.isEmpty()) {
                 var pending=village.getPendingProject();
-                if(village.getPlacementCooldowns().getOrDefault(intent.planSet(),0L)>level.getGameTime() || entry.blocked()==Blocked.NO_SPACE) return blocked(entry,Blocked.NO_SPACE);
-                if(!Objects.equals(pending,new Village.PendingProject(intent.planSet(),intent.variant(),0,false,null))) {
+                if(!intent.upgrade() && (village.getPlacementCooldowns().getOrDefault(intent.planSet(),0L)>level.getGameTime() || entry.blocked()==Blocked.NO_SPACE)) return blocked(entry,Blocked.NO_SPACE);
+                if(!Objects.equals(pending,intent.pending())) {
                     return pending==null ? ambiguous(entry,Blocked.AMBIGUOUS_ENGINE_STATE) : blocked(entry,Blocked.NATURAL_PROJECT);
                 }
                 var inventory=village.getTownhall()==null ? null : village.getTownhall().getInventory();
@@ -74,9 +74,9 @@ final class RoyalConstructionMonitor {
                 return blocked(entry,NormalGrowthBridge.resources(level,village,definition) ? Blocked.NONE : Blocked.MATERIALS);
             }
             building=fresh.getFirst();
-            if(Objects.equals(village.getPendingProject(),new Village.PendingProject(intent.planSet(),intent.variant(),0,false,null))) return ambiguous(entry,Blocked.AMBIGUOUS_ENGINE_STATE);
+            if(Objects.equals(village.getPendingProject(),intent.pending())) return ambiguous(entry,Blocked.AMBIGUOUS_ENGINE_STATE);
             if(!level.isLoaded(building.getOrigin())) return blocked(entry,Blocked.UNLOADED);
-            if(!credible(building)) return ambiguous(entry,Blocked.AMBIGUOUS_ENGINE_STATE);
+            if(!credible(building,intent)) return ambiguous(entry,Blocked.AMBIGUOUS_ENGINE_STATE);
             try { persistence.building(level,intent.village(),building); }
             catch(RoyalConstructionPersistence.MissingStructure missing) { return ambiguous(entry,Blocked.BUILDING_MISSING); }
             catch(RoyalConstructionPersistence.Unloaded unloaded) { return unloaded(entry,unloaded); }
@@ -84,7 +84,7 @@ final class RoyalConstructionMonitor {
         } else {
             building=village.getBuilding(new BuildingId(entry.building()));
             if(building==null) return ambiguous(entry,Blocked.BUILDING_MISSING);
-            if(!lineage(building,intent) || !credible(building)) return ambiguous(entry,Blocked.AMBIGUOUS_ENGINE_STATE);
+            if(!lineage(building,intent) || !credible(building,intent)) return ambiguous(entry,Blocked.AMBIGUOUS_ENGINE_STATE);
             if(!level.isLoaded(building.getOrigin())) return blocked(entry,Blocked.UNLOADED);
         }
         // A later upgrade must finish physically too; incomplete upgraded metadata alone cannot close tracking.
@@ -99,8 +99,15 @@ final class RoyalConstructionMonitor {
 
     static boolean lineage(BuildingInstance building,Intent intent) {
         var set=ModCultures.getBuildingPlanSet(intent.planSet()); var definition=set==null ? null : set.getLevel(intent.variant(),building.getLevel());
-        return definition!=null && building.getLevel()>=0 && intent.planSet().equals(building.getPlanSetId())
+        return definition!=null && building.getLevel()>=intent.targetLevel() && (!intent.upgrade() || intent.upgradeBuilding().equals(building.getId().uuid())) && intent.planSet().equals(building.getPlanSetId())
                 && intent.variant().equals(building.getVariant()) && definition.planId().equals(building.getPlanId());
+    }
+    static boolean fulfillment(BuildingInstance building,Intent intent){
+        return (intent.upgrade()?intent.upgradeBuilding().equals(building.getId().uuid()):!intent.originalBuildings().contains(building.getId().uuid())) && lineage(building,intent);
+    }
+    static boolean credible(BuildingInstance building,Intent intent){
+        return intent.upgrade()?building.getConstructionTask()!=null && building.getConstructionTask().totalSteps()>0
+                && (building.getStatus()!=BuildingInstance.Status.COMPLETE || building.getConstructionTask().isComplete()):credible(building);
     }
     static boolean credible(BuildingInstance building) {
         return building.getLevel()>0 || building.getConstructionTask()!=null && building.getConstructionTask().totalSteps()>0

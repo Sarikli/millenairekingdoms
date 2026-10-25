@@ -138,7 +138,7 @@ public final class KingdomScreens {
                     m.putBoolean("capital", v.getId().uuid().equals(k.capital()));
                     int townhall = EconomyService.centerLevel(v);
                     m.putInt("level", townhall);
-                    m.putLong("income", v.getId().uuid().equals(k.capital()) ? 0 : (long) townhall * EconomyService.DENIERS_PER_LEVEL);
+                    m.putLong("income", (long) townhall * EconomyService.DENIERS_PER_LEVEL);
                     members.add(m);
                 });
         e.put("members", members);

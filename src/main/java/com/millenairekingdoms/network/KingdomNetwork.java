@@ -7,7 +7,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /** Two payloads, both handled on the main thread (NeoForge's default): the server's screen snapshot and the client's requests. */
 public final class KingdomNetwork {
-    public static final String VERSION = "3";
+    public static final String VERSION = "4";
     private KingdomNetwork() {}
 
     public static void register(RegisterPayloadHandlersEvent event) {

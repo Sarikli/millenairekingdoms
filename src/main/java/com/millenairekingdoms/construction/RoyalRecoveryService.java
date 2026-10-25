@@ -106,15 +106,15 @@ public final class RoyalRecoveryService {
         if(village==null) throw new IllegalArgumentException("Original village is missing; recovery never creates a replacement");
         if(mode==Mode.ADOPT_PENDING) {
             if(entry.building()!=null || !pending(i).equals(village.getPendingProject())
-                    || village.getBuildings().stream().anyMatch(b->!i.originalBuildings().contains(b.getId().uuid()) && RoyalConstructionMonitor.lineage(b,i))) {
+                    || village.getBuildings().stream().anyMatch(b->RoyalConstructionMonitor.fulfillment(b,i))) {
                 throw new IllegalArgumentException("No unambiguous exact original pending project exists; inspect or choose a genuine building UUID");
             }
             return null;
         }
         var building=selected==null ? null : village.getBuilding(new BuildingId(selected));
-        if(building==null || i.originalBuildings().contains(selected) || entry.building()!=null && !entry.building().equals(selected)
-                || !RoyalConstructionMonitor.lineage(building,i) || !RoyalConstructionMonitor.credible(building)
-                || village.getBuildings().stream().filter(b->!i.originalBuildings().contains(b.getId().uuid()) && RoyalConstructionMonitor.lineage(b,i)).count()!=1
+        if(building==null || (!i.upgrade() && i.originalBuildings().contains(selected)) || entry.building()!=null && !entry.building().equals(selected)
+                || !RoyalConstructionMonitor.lineage(building,i) || !RoyalConstructionMonitor.credible(building,i)
+                || village.getBuildings().stream().filter(b->RoyalConstructionMonitor.fulfillment(b,i)).count()!=1
                 || pending(i).equals(village.getPendingProject())) throw new IllegalArgumentException("Selected building is not unambiguous genuine new work for this immutable order");
         return building;
     }
@@ -142,7 +142,7 @@ public final class RoyalRecoveryService {
     private static void binding(RoyalRecoveryStore.Entry decision,RoyalConstructionStore.Entry order) {
         if(!decision.intent().order().equals(order.intent())) throw new IllegalArgumentException("Recovery audit no longer matches the full immutable order intent");
     }
-    private static Village.PendingProject pending(RoyalConstructionStore.Intent i) {return new Village.PendingProject(i.planSet(),i.variant(),0,false,null);}
+    private static Village.PendingProject pending(RoyalConstructionStore.Intent i) {return i.pending();}
     private void operator(CommandSourceStack source) {
         thread(); if(source.getLevel()!=level || !source.hasPermission(2)) throw new IllegalArgumentException("Operator permission level 2 in this dimension is required");
     }

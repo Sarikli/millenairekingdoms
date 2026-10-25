@@ -86,7 +86,7 @@
   "millenairekingdoms.gui.storage": "Capital town hall storage: %s (%s gold, %s silver, %s deniers)",
   "millenairekingdoms.gui.owed": "Waiting for storage space: %s",
   "millenairekingdoms.gui.village_incomes": "Daily income per village",
-  "millenairekingdoms.gui.income_capital": "%s (capital)",
+  "millenairekingdoms.gui.income_capital": "✦ %s · Lv %s · %s d/day",
   "millenairekingdoms.gui.income_row": "%s · L%s · %sd",
   "millenairekingdoms.gui.withdraw_title": "Take coins from the treasury",
   "millenairekingdoms.gui.amount": "Deniers",
@@ -318,5 +318,11 @@
   "millenairekingdoms.gui.construction.waiting_note": "Charged once on acceptance after village work. Starts while the original ruler is online.",
   "millenairekingdoms.gui.construction.blocked.RULER_UNAVAILABLE": "Waiting for the original ruler to return to this dimension",
   "millenairekingdoms.gui.construction.blocked.TREASURY_UNAVAILABLE": "Waiting for the original capital treasury",
-  "millenairekingdoms.gui.construction.blocked.INSUFFICIENT_FUNDS": "Waiting for enough spendable deniers"
+  "millenairekingdoms.gui.construction.blocked.INSUFFICIENT_FUNDS": "Waiting for enough spendable deniers",
+  "millenairekingdoms.gui.shipment.choose_product": "Choose shipment product",
+  "millenairekingdoms.gui.shipment.search_product": "Search products…",
+  "millenairekingdoms.gui.shipment.no_product_match": "No matching products",
+  "millenairekingdoms.gui.construction.upgrade_choice": "%s → Lv %s (%s, %s)",
+  "millenairekingdoms.gui.construction.upgrade_order": "Upgrade (%s)",
+  "millenairekingdoms.gui.construction.queue_upgrade": "Queue upgrade (%s)"
 }

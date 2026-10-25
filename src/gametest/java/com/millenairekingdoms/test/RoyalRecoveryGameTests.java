@@ -279,7 +279,7 @@ public final class RoyalRecoveryGameTests {
             var tag=NbtIo.readCompressed(file,NbtAccounter.create(1024*1024)); tag.putInt("format",2); NbtIo.writeCompressed(tag,file); var bytes=Files.readAllBytes(file);
             var before=store.load(i.id()); h.assertTrue(before.cancellationFrom()==Stage.REQUESTED && before.recoveryDecision()==null && Arrays.equals(bytes,Files.readAllBytes(file)),"v2 cancellation reads without eager rewrite or invented recovery provenance");
             store.change(i.id(),Stage.CANCELLING,Stage.CANCELLED,Blocked.AUTHORITY,null);
-            h.assertTrue(NbtIo.readCompressed(file,NbtAccounter.create(1024*1024)).getInt("format")==4 && store.reserve(i).stage()==Stage.CANCELLED
+            h.assertTrue(NbtIo.readCompressed(file,NbtAccounter.create(1024*1024)).getInt("format")==5 && store.reserve(i).stage()==Stage.CANCELLED
                     && store.load(i.id()).intent().equals(i) && store.load(i.id()).cancellationFrom()==Stage.REQUESTED,"First successful locked mutation migrates v2 while retaining intent, cancellation and terminal ID"); h.succeed();
         }
     }

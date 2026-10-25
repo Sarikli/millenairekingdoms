@@ -46,14 +46,14 @@ public final class EconomyGameTests {
                     && EconomyService.centerLevel(free) == 5, "Town hall levels read from Millénaire's plan level and status");
             var d = new KingdomSavedData(); var k = d.create("Economy " + UUID.randomUUID(), id(capital));
             for (Village v : new Village[]{one, three, upgrading, building}) d.attach(k.id(), id(v));
-            h.assertTrue(EconomyService.dailyIncome(h.getLevel(), d, k.id()) == 4 + 12 + 16, "Level × 4 per attached village; capital and unbuilt excluded");
+            h.assertTrue(EconomyService.dailyIncome(h.getLevel(), d, k.id()) == 28 + 4 + 12 + 16, "Level × 4 per attached village; capital included, unbuilt excluded");
             d.startDay(0, Map.of());
             h.assertTrue(EconomyService.runDay(h.getLevel(), d, 1), "Day 1 runs");
-            h.assertTrue(chest(h, capital).countItem(ModItems.DENIER.get()) == 32 && d.owed(k.id()) == 0, "32 deniers placed in the capital chest");
+            h.assertTrue(chest(h, capital).countItem(ModItems.DENIER.get()) == 60 && d.owed(k.id()) == 0, "60 deniers placed in the capital chest");
             h.assertTrue(chest(h, free).isEmpty() && chest(h, one).isEmpty(), "Independent villages and members are not tax centres");
             var five = new KingdomSavedData(); var f = five.create("Economy five " + UUID.randomUUID(), id(one));
             five.attach(f.id(), id(free)); five.startDay(0, Map.of());
-            h.assertTrue(EconomyService.dailyIncome(h.getLevel(), five, f.id()) == 20, "Level 5 → 20 deniers");
+            h.assertTrue(EconomyService.dailyIncome(h.getLevel(), five, f.id()) == 24, "Level1 capital4 plus level5 member20");
             h.succeed();
         } finally { remove(h, capital, one, three, upgrading, building, free); }
     }
@@ -66,12 +66,12 @@ public final class EconomyGameTests {
             d.startDay(4, Map.of());
             ChestBlockEntity chest = chest(h, capital);
             h.assertTrue(!EconomyService.runDay(h.getLevel(), d, 4) && chest.isEmpty(), "The starting day pays nothing");
-            h.assertTrue(EconomyService.runDay(h.getLevel(), d, 5) && coins(chest) == 8, "Day 5 pays 8");
-            h.assertTrue(!EconomyService.runDay(h.getLevel(), d, 5) && !EconomyService.runDay(h.getLevel(), d, 3) && coins(chest) == 8,
+            h.assertTrue(EconomyService.runDay(h.getLevel(), d, 5) && coins(chest) == 12, "Day 5 pays 12");
+            h.assertTrue(!EconomyService.runDay(h.getLevel(), d, 5) && !EconomyService.runDay(h.getLevel(), d, 3) && coins(chest) == 12,
                     "The same day or an earlier day (time set back) never pays again");
             var reloaded = KingdomSavedData.load(d.save(new CompoundTag(), h.getLevel().registryAccess()), h.getLevel().registryAccess());
-            h.assertTrue(!EconomyService.runDay(h.getLevel(), reloaded, 5) && coins(chest) == 8, "A reload (restart) of day 5 does not pay again");
-            h.assertTrue(EconomyService.runDay(h.getLevel(), reloaded, 12) && coins(chest) == 16 && reloaded.day() == 12,
+            h.assertTrue(!EconomyService.runDay(h.getLevel(), reloaded, 5) && coins(chest) == 12, "A reload (restart) of day 5 does not pay again");
+            h.assertTrue(EconomyService.runDay(h.getLevel(), reloaded, 12) && coins(chest) == 24 && reloaded.day() == 12,
                     "Skipping from day 5 to 12 pays one day, not seven");
             h.succeed();
         } finally { remove(h, capital, member); }
@@ -108,7 +108,7 @@ public final class EconomyGameTests {
             var ka = d.create("Victor " + UUID.randomUUID(), id(a)); var kb = d.create("Fallen " + UUID.randomUUID(), id(b));
             d.attach(kb.id(), id(member)); d.startDay(0, Map.of());
             EconomyService.runDay(h.getLevel(), d, 1);
-            h.assertTrue(coins(chest(h, b)) == 12 && coins(chest(h, a)) == 0, "Before the war B's capital receives B's income");
+            h.assertTrue(coins(chest(h, b)) == 20 && coins(chest(h, a)) == 4, "Before the war B's capital receives B's income");
             // A one-win conquest of an independent village mid-day: it pays its new kingdom from the next day.
             win(d, id(a), id(free));
             d.declareWar(ka.id(), kb.id(), 2);
@@ -116,7 +116,7 @@ public final class EconomyGameTests {
             win(d, id(a), id(b)); win(d, id(a), id(b));
             h.assertTrue(d.kingdom(kb.id()).fallen() && ka.id().equals(d.owner(id(b))), "B's capital fell");
             EconomyService.runDay(h.getLevel(), d, 2);
-            h.assertTrue(coins(chest(h, a)) == 4 + 12 + 8 && coins(chest(h, b)) == 12,
+            h.assertTrue(coins(chest(h, a)) == 32 && coins(chest(h, b)) == 20,
                     "Next day the conquered villages, former capital included, pay A's capital; B is no longer a tax centre");
             h.succeed();
         } finally { remove(h, a, b, member, free); }
@@ -134,7 +134,7 @@ public final class EconomyGameTests {
             d.attach(kn.id(), id(m1)); d.attach(kr.id(), id(m2)); d.attach(ki.id(), id(m3));
             d.claimRule(kr.id(), UUID.randomUUID(), "Ruler", 1); d.setActive(ki.id(), false); d.startDay(0, Map.of());
             EconomyService.runDay(h.getLevel(), d, 1);
-            h.assertTrue(coins(chest(h, npc)) == 4 && coins(chest(h, ruled)) == 4 && coins(chest(h, idle)) == 0,
+            h.assertTrue(coins(chest(h, npc)) == 8 && coins(chest(h, ruled)) == 8 && coins(chest(h, idle)) == 0,
                     "NPC-governed and ruled kingdoms both earn; an inactive kingdom does not");
             h.succeed();
         } finally { remove(h, npc, ruled, idle, m1, m2, m3); }
@@ -150,9 +150,9 @@ public final class EconomyGameTests {
         long next = Math.max(data.day(), h.getLevel().getDayTime() / EconomyService.DAY_TICKS) + 1;
         h.getLevel().setDayTime(next * EconomyService.DAY_TICKS + 100);
         h.runAfterDelay(60, () -> {
-            h.assertTrue(data.day() == next && coins(chest(h, capital)) == 8, "The day change paid 8 deniers once");
+            h.assertTrue(data.day() == next && coins(chest(h, capital)) == 12, "The day change paid 12 deniers once");
             h.runAfterDelay(60, () -> {
-                h.assertTrue(coins(chest(h, capital)) == 8 && data.day() == next, "Later ticks of the same day pay nothing more");
+                h.assertTrue(coins(chest(h, capital)) == 12 && data.day() == next, "Later ticks of the same day pay nothing more");
                 data.setActive(k.id(), false); remove(h, capital, member);
                 h.succeed();
             });

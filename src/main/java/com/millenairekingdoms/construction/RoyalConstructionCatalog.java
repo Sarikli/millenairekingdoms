@@ -19,11 +19,14 @@ import org.millenaire.village.Village;
  * No placement, ownership, pending-project, resource or chunk mutation. An order service must revalidate before paying. */
 public final class RoyalConstructionCatalog {
     public record Option(ResourceLocation planSet,ResourceLocation plan,String variant,String nativeName,long patronageFee,
-                         Map<ResourceLocation,Integer> requiredMaterials) {
+                         Map<ResourceLocation,Integer> requiredMaterials,UUID upgradeBuilding,int targetLevel) {
         public Option { requiredMaterials=Map.copyOf(requiredMaterials); }
+        public Option(ResourceLocation set,ResourceLocation plan,String variant,String name,long fee,Map<ResourceLocation,Integer> materials){this(set,plan,variant,name,fee,materials,null,0);}
+        public String key(){return upgradeBuilding==null?planSet.toString():upgradeBuilding+":"+targetLevel;}
     }
-    public record Catalog(UUID kingdom,UUID village,boolean active,boolean naturalProjectPending,List<Option> options) {
-        public Catalog { options=List.copyOf(options); }
+    public record Catalog(UUID kingdom,UUID village,boolean active,boolean naturalProjectPending,List<Option> options,List<Option> upgrades) {
+        public Catalog { options=List.copyOf(options);upgrades=List.copyOf(upgrades); }
+        public Catalog(UUID kingdom,UUID village,boolean active,boolean pending,List<Option> options){this(kingdom,village,active,pending,options,List.of());}
     }
     private RoyalConstructionCatalog() {}
 
@@ -53,9 +56,18 @@ public final class RoyalConstructionCatalog {
         if(type==null || type.playerControlled() || village.getOwnerUUID()!=null) {
             throw new IllegalArgumentException("Royal construction is available only for recognized autonomous NPC villages");
         }
-        var choices=new LinkedHashMap<ResourceLocation,Option>(); long fee=RoyalPrices.construction(RoyalEconomyConfig.current());
+        var upgrades=new java.util.ArrayList<Option>();var choices=new LinkedHashMap<ResourceLocation,Option>(); long fee=RoyalPrices.construction(RoyalEconomyConfig.current());
         for(var candidate:NormalGrowthBridge.candidates(level,village,type)) {
             var set=candidate.set(); var def=candidate.level(); var plan=ModCultures.getBuildingPlan(def.planId());
+            if(candidate.upgrade()) {
+                var building=candidate.building();var pending=village.getPendingProject();
+                if(actor!=null && building!=null && building!=village.getTownhall() && !set.isTownHall() && !building.isWallSegment()
+                        && set.culture().equals(village.getCultureId()) && plan!=null && plan.culture().equals(village.getCultureId())
+                        && !(pending!=null && pending.isUpgrade() && building.getId().equals(pending.buildingId()))
+                        && def.level()>0 && def.level()<=256 && def.requiredResources().values().stream().noneMatch(n->n<0))
+                    upgrades.add(new Option(set.id(),plan.id(),candidate.variant(),set.nativeName(),RoyalPrices.upgrade(RoyalEconomyConfig.current(),def.level()),def.requiredResources(),building.getId().uuid(),def.level()));
+                continue;
+            }
             if(candidate.upgrade() || def.level()!=0 || set.isTownHall() || set.isSubBuilding() || set.parentBuilding()!=null
                     || !set.culture().equals(village.getCultureId()) || plan==null || !plan.culture().equals(village.getCultureId())) continue;
             long count=village.getBuildings().stream().filter(b->set.id().equals(b.getPlanSetId())).count();
@@ -64,7 +76,7 @@ public final class RoyalConstructionCatalog {
             choices.putIfAbsent(set.id(),new Option(set.id(),plan.id(),candidate.variant(),set.nativeName(),fee,def.requiredResources()));
         }
         return new Catalog(kingdom,id,village.isActive(),naturalWorkPending(village),
-                choices.values().stream().sorted(Comparator.comparing(o->o.planSet.toString())).toList());
+                choices.values().stream().sorted(Comparator.comparing(o->o.planSet.toString())).toList(),upgrades.stream().sorted(Comparator.comparing(Option::key)).toList());
     }
     private static void thread(ServerLevel level) {
         if(!level.getServer().isSameThread()) throw new IllegalStateException("Royal construction catalog requires the server thread");

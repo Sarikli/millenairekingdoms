@@ -49,6 +49,9 @@ public final class ConquestTestMod {
             event.register(RoyalSiteGameTests.class);
             event.register(RoyalLiveRuntimeGameTests.class);
             event.register(RoyalWaitingLiveGameTests.class);
+        event.register(RoyalUpgradeGameTests.class);
+        event.register(RoyalUpgradeLiveGameTests.class);
+        event.register(CapitalProductionGameTests.class);
             event.register(RoyalConstructionGuiGameTests.class);
             event.register(RoyalGoodsGameTests.class);
             event.register(RoyalStockGameTests.class);

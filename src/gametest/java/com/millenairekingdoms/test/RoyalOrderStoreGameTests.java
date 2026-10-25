@@ -39,7 +39,7 @@ public final class RoyalOrderStoreGameTests {
         var file=path.resolve("orders.dat");var tag=NbtIo.readCompressed(file,net.minecraft.nbt.NbtAccounter.unlimitedHeap());tag.putInt("format",3);NbtIo.writeCompressed(tag,file);var bytes=Files.readAllBytes(file);
         h.assertTrue(store.load(original.id()).intent().equals(original) && Arrays.equals(bytes,Files.readAllBytes(file)),"Format3 reads preserve every bound field and original bytes");
         store.reserve(intent(UUID.randomUUID(),UUID.randomUUID(),64,"a"));var migrated=NbtIo.readCompressed(file,net.minecraft.nbt.NbtAccounter.unlimitedHeap());
-        h.assertTrue(migrated.getInt("format")==4 && store.load(original.id()).intent().equals(original),"A locked mutation upgrades to4 without rebinding legacy intent");
+        h.assertTrue(migrated.getInt("format")==5 && store.load(original.id()).intent().equals(original),"A locked mutation upgrades to5 without rebinding legacy intent");
         tag.putInt("format",3);var entry=tag.getList("orders",Tag.TAG_COMPOUND).getCompound(0);entry.putString("stage","WAITING");entry.getCompound("intent").putUUID("actor",UUID.randomUUID());entry.getCompound("intent").putLong("rulerSince",1);
         NbtIo.writeCompressed(tag,file);bytes=Files.readAllBytes(file);refused(h,()->store.load(original.id()));
         h.assertTrue(Arrays.equals(bytes,Files.readAllBytes(file)),"A new waiting state marked as legacy is rejected without rewriting it");h.succeed();

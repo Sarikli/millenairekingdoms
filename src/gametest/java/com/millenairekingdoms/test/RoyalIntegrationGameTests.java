@@ -62,21 +62,21 @@ public final class RoyalIntegrationGameTests {
             var tag=NbtIo.readCompressed(marker,NbtAccounter.unlimitedHeap());
             try(var r=RoyalShipmentSupport.restore(h,tag,true)){
                 var id=tag.getUUID("attempt");long day=tag.getLong("day");
-                h.assertTrue(r.coins()==208 && data.owed(r.kingdom())==0 && data.day()==day && r.payments().load(id).state()==State.COMMITTED && r.source().getPendingProject()!=null,"Original tax-funded native pending, single fee and actual208 coins survive JVM restart without repair");
-                h.assertTrue(!EconomyService.runDay(level,data,day) && new RoyalNpcEconomyService(level).evaluate(r.kingdom(),day,RandomSource.create(3)).attempt()==null && r.coins()==208,"Persisted tax day/decision cooldown forbid duplicated income or fees");
-                System.out.println("ROYAL_INTEGRATION_TAX_RESTART_READ_PASS coins=208 owed=0 fee=64 dailyIncome=8");h.succeed();return;
+                h.assertTrue(r.coins()==248 && data.owed(r.kingdom())==0 && data.day()==day && r.payments().load(id).state()==State.COMMITTED && r.source().getPendingProject()!=null,"Original tax-funded native pending, single fee and actual248 coins survive JVM restart without repair");
+                h.assertTrue(!EconomyService.runDay(level,data,day) && new RoyalNpcEconomyService(level).evaluate(r.kingdom(),day,RandomSource.create(3)).attempt()==null && r.coins()==248,"Persisted tax day/decision cooldown forbid duplicated income or fees");
+                System.out.println("ROYAL_INTEGRATION_TAX_RESTART_READ_PASS coins=248 owed=0 fee=64 dailyIncome=12");h.succeed();return;
             }
         }
         var r=RoyalShipmentSupport.realm(h,"Ten actual tax days");RoyalNpcEconomyGameTests.money(r,3);var option=RoyalNpcEconomyGameTests.option(r,r.source());RoyalNpcEconomyGameTests.materials(h,r,r.source(),option.requiredMaterials(),null);var builder=RoyalNpcEconomyGameTests.builder(h,r);boolean saved=false;
         try{
-            h.assertTrue(EconomyService.dailyIncome(level,data,r.kingdom())==8,"Two attached completed level1 halls yield the unchanged real4-denier tax each");long start=Math.max(0,data.day());UUID paid=null;
+            h.assertTrue(EconomyService.dailyIncome(level,data,r.kingdom())==12,"Capital and two attached completed level1 halls each yield4 deniers");long start=Math.max(0,data.day());UUID paid=null;
             for(int n=1;n<=10;n++){
                 h.assertTrue(EconomyService.runDay(level,data,start+n),"Actual native tax day advances once");var result=new RoyalNpcEconomyService(level).evaluate(r.kingdom(),start+n,RandomSource.create(3));
-                if(result.kind()==Kind.CONSTRUCTION){h.assertTrue(n==10 && paid==null,"Reserve/share protect the first nine days, then permit one justified commission");paid=result.attempt();}
-                h.assertTrue(r.coins()==192+8*n-(paid==null?0:64) && data.owed(r.kingdom())==0,"Physical currency equals initial192 plus actual daily income minus one fee, never owed balances");
+                if(result.kind()==Kind.CONSTRUCTION){h.assertTrue(n==7 && paid==null,"Reserve/share protect the first six days, then permit one justified commission");paid=result.attempt();}
+                h.assertTrue(r.coins()==192+12*n-(paid==null?0:64) && data.owed(r.kingdom())==0,"Physical currency equals initial192 plus actual daily income minus one fee, never owed balances");
             }
-            h.assertTrue(paid!=null && r.coins()==208,"Ten real taxed days support one64 commission with208 retained");var tag=r.marker();tag.putUUID("attempt",paid);tag.putLong("day",start+10);NbtIo.writeCompressed(tag,marker);r.save();saved=true;r.capital().setActive(false);r.source().setActive(false);r.target().setActive(false);
-            System.out.println("ROYAL_INTEGRATION_TAX_WRITE_PASS coins=208 owed=0 fee=64 dailyIncome=8 days=10");h.succeed();
+            h.assertTrue(paid!=null && r.coins()==248,"Ten real taxed days support one64 commission with248 retained");var tag=r.marker();tag.putUUID("attempt",paid);tag.putLong("day",start+10);NbtIo.writeCompressed(tag,marker);r.save();saved=true;r.capital().setActive(false);r.source().setActive(false);r.target().setActive(false);
+            System.out.println("ROYAL_INTEGRATION_TAX_WRITE_PASS coins=248 owed=0 fee=64 dailyIncome=12 days=10");h.succeed();
         }finally{builder.discard();if(!saved)r.close();}
     }
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)

@@ -29,12 +29,12 @@ public final class RoyalConstructionView {
     private static final long OFFER_TICKS=1200;
     private static final int MAX_PLANS=128;
     private static final Map<ServerPlayer,Session> SESSIONS=new WeakHashMap<>();
-    private record Offer(UUID id,UUID village,ResourceLocation plan,long fee,long expires) {}
+    private record Offer(UUID id,UUID village,ResourceLocation plan,long fee,long expires,UUID building,int targetLevel) {}
     private static final class Session {
         String dimension;
         UUID kingdom,capital,village;
         long tenure;
-        final Map<ResourceLocation,Offer> offers=new HashMap<>();
+        final Map<String,Offer> offers=new HashMap<>();
     }
     private RoyalConstructionView() {}
     public static void forget(UUID player) {SESSIONS.keySet().removeIf(p->p.getUUID().equals(player));}
@@ -73,7 +73,8 @@ public final class RoyalConstructionView {
             if(current!=null) {
                 var order=new CompoundTag();var i=current.intent();order.putUUID("id",i.id());order.putString("plan",i.planSet().toString());
                 var set=ModCultures.getBuildingPlanSet(i.planSet());order.putString("name",set==null ? i.planSet().toString() : set.nativeName());
-                order.putString("stage",current.stage().name());order.putString("blocked",current.blocked().name());order.putLong("fee",i.fee());
+                order.putString("stage",current.stage().name());order.putString("blocked",current.blocked().name());order.putLong("fee",i.fee());order.putBoolean("upgrade",i.upgrade());order.putInt("targetLevel",i.targetLevel());
+                if(i.upgrade()){var target=village.getBuilding(new BuildingId(i.upgradeBuilding()));if(target!=null){order.putInt("x",target.getOrigin().getX());order.putInt("z",target.getOrigin().getZ());}}
                 boolean own=player.getUUID().equals(i.actor()) && k.id().equals(i.kingdom()) && k.capital().equals(i.capital()) && state.tenure==i.rulerSince()
                         && type!=null && !type.playerControlled() && village.getOwnerUUID()==null && i.villageType().equals(village.getVillageTypeId());
                 order.putBoolean("canCancel",own && busy && current.stage()!=Stage.RECOVERY_REQUIRED);
@@ -95,16 +96,19 @@ public final class RoyalConstructionView {
             var plans=new ListTag();
             if(type!=null && !type.playerControlled() && village.getOwnerUUID()==null) {
                 var catalog=RoyalConstructionCatalog.forPlayer(player,state.village);
-                for(var choice:catalog.options().stream().limit(MAX_PLANS).toList()) {
-                    var offer=state.offers.get(choice.planSet());long now=level.getGameTime();
+                var choices=java.util.stream.Stream.concat(catalog.options().stream(),catalog.upgrades().stream()).limit(MAX_PLANS).toList();
+                for(var choice:choices) {
+                    var offer=state.offers.get(choice.key());long now=level.getGameTime();
                     if(offer==null || usedIds.contains(offer.id()) || offer.fee()!=choice.patronageFee() || now>offer.expires()) {
-                        offer=new Offer(UUID.randomUUID(),state.village,choice.planSet(),choice.patronageFee(),Math.max(0,now)+OFFER_TICKS);state.offers.put(choice.planSet(),offer);
+                        offer=new Offer(UUID.randomUUID(),state.village,choice.planSet(),choice.patronageFee(),Math.max(0,now)+OFFER_TICKS,choice.upgradeBuilding(),choice.targetLevel());state.offers.put(choice.key(),offer);
                     }
                     String denial=!reason.isEmpty() ? reason : catalog.naturalProjectPending() ? "" : !treasury ? "TREASURY_UNAVAILABLE" : funds<offer.fee() ? "INSUFFICIENT_FUNDS" : "";
                     var p=new CompoundTag();p.putUUID("offer",offer.id());p.putString("plan",choice.planSet().toString());p.putString("name",choice.nativeName());
+                    p.putString("key",choice.key());p.putBoolean("upgrade",choice.upgradeBuilding()!=null);p.putInt("targetLevel",choice.targetLevel());
+                    if(choice.upgradeBuilding()!=null){var target=village.getBuilding(new BuildingId(choice.upgradeBuilding()));p.putUUID("building",choice.upgradeBuilding());p.putInt("x",target.getOrigin().getX());p.putInt("z",target.getOrigin().getZ());}
                     p.putLong("fee",offer.fee());p.putBoolean("canOrder",denial.isEmpty());if(!denial.isEmpty())p.putString("reason",denial);plans.add(p);
                 }
-                var offered=catalog.options().stream().limit(MAX_PLANS).map(RoyalConstructionCatalog.Option::planSet).collect(java.util.stream.Collectors.toSet());state.offers.keySet().retainAll(offered);
+                var offered=choices.stream().map(RoyalConstructionCatalog.Option::key).collect(java.util.stream.Collectors.toSet());state.offers.keySet().retainAll(offered);
             } else state.offers.clear();
             out.put("plans",plans);if(!reason.isEmpty())out.putString("reason",reason);else if(plans.isEmpty())out.putString("reason","NO_ELIGIBLE_PLAN");
         } catch(KingdomException authority) {out.putString("reason","AUTHORITY");}
@@ -122,10 +126,11 @@ public final class RoyalConstructionView {
         var path=level.getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-construction");
         var existing=Files.exists(path.resolve("orders.dat")) ? new RoyalConstructionStore(path).load(offerId) : null;
         if(existing!=null) return new RoyalConstructionService(level).requestPlayer(player,village,plan,offerId);
-        var state=session(player,k);var offer=state.offers.get(plan);
+        var state=session(player,k);var offer=state.offers.values().stream().filter(o->o.id().equals(offerId) && o.plan().equals(plan)).findFirst().orElse(null);
         if(offer==null || !offer.id().equals(offerId) || !offer.village().equals(village) || level.getGameTime()>offer.expires())
             throw refused("offer_expired","This offer expired or changed. Refresh and select the plan again.");
-        return new RoyalConstructionService(level).requestQuotedPlayer(player,village,plan,offer.id(),offer.fee());
+        return offer.building()==null?new RoyalConstructionService(level).requestQuotedPlayer(player,village,plan,offer.id(),offer.fee())
+                :new RoyalConstructionService(level).requestQuotedUpgrade(player,village,offer.building(),offer.id(),offer.fee(),offer.targetLevel());
     }
     private static Session session(ServerPlayer player,KingdomSavedData.Kingdom kingdom) {
         var level=player.serverLevel();var data=KingdomSavedData.get(level);var ruler=data.ruler(kingdom.id());

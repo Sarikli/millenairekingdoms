@@ -86,7 +86,7 @@
   "millenairekingdoms.gui.storage": "Başkent belediye binası deposu: %s (%s altın, %s gümüş, %s denier)",
   "millenairekingdoms.gui.owed": "Depoda yer bekleyen gelir: %s",
   "millenairekingdoms.gui.village_incomes": "Köylere göre günlük gelir",
-  "millenairekingdoms.gui.income_capital": "%s (başkent)",
+  "millenairekingdoms.gui.income_capital": "✦ %s · Sv %s · %s d/gün",
   "millenairekingdoms.gui.income_row": "%s · S%s · %sd",
   "millenairekingdoms.gui.withdraw_title": "Hazineden sikke çek",
   "millenairekingdoms.gui.amount": "Denier",
@@ -318,5 +318,11 @@
   "millenairekingdoms.gui.construction.waiting_note": "Köyün işi bitince kabulde tek ücret alınır. Hükümdar çevrimiçiyken başlar.",
   "millenairekingdoms.gui.construction.blocked.RULER_UNAVAILABLE": "Hükümdarın bu boyuta dönmesi bekleniyor",
   "millenairekingdoms.gui.construction.blocked.TREASURY_UNAVAILABLE": "Özgün başkent hazinesi bekleniyor",
-  "millenairekingdoms.gui.construction.blocked.INSUFFICIENT_FUNDS": "Yeterli kullanılabilir denier bekleniyor"
+  "millenairekingdoms.gui.construction.blocked.INSUFFICIENT_FUNDS": "Yeterli kullanılabilir denier bekleniyor",
+  "millenairekingdoms.gui.shipment.choose_product": "Sevkiyat ürünü seç",
+  "millenairekingdoms.gui.shipment.search_product": "Ürün ara…",
+  "millenairekingdoms.gui.shipment.no_product_match": "Eşleşen ürün yok",
+  "millenairekingdoms.gui.construction.upgrade_choice": "%s → Sv %s (%s, %s)",
+  "millenairekingdoms.gui.construction.upgrade_order": "Yükselt (%s)",
+  "millenairekingdoms.gui.construction.queue_upgrade": "Yükseltmeyi sıraya al (%s)"
 }

@@ -27,14 +27,14 @@ import net.minecraft.resources.ResourceLocation;
 /** Own atomic order intent/index, independent of political format 6 and Millenaire's building save.
  * States describe order coordination, not payment or proof of a finished building. Only the domain service may advance them. */
 public final class RoyalConstructionStore {
-    private static final int FORMAT=4, MAX_ORDERS=10_000;
+    private static final int FORMAT=5, MAX_ORDERS=10_000;
     private static final long MAX_BYTES=16L*1024*1024;
     public enum Stage { WAITING, REQUESTED, PAID, QUEUING, QUEUED, IN_PROGRESS, COMPLETED, CANCELLING, CANCELLED, FAILED, RECOVERY_REQUIRED }
     public enum Blocked { NONE, NATURAL_PROJECT, UNLOADED, MATERIALS, NO_SPACE, AUTHORITY, MEMBERSHIP, MISSING_PLAN, AMBIGUOUS_ENGINE_STATE, BUILDER_BLOCKED, BUILDING_MISSING, OPERATOR_FORFEIT, RULER_UNAVAILABLE, TREASURY_UNAVAILABLE, INSUFFICIENT_FUNDS }
 
     public record Intent(UUID id,String dimension,UUID kingdom,UUID capital,UUID village,UUID actor,long rulerSince,
                          ResourceLocation villageType,ResourceLocation planSet,ResourceLocation plan,String variant,
-                         long fee,long issuedGameTime,Set<UUID> originalBuildings) {
+                         long fee,long issuedGameTime,Set<UUID> originalBuildings,UUID upgradeBuilding,int targetLevel) {
         public Intent {
             Objects.requireNonNull(id); Objects.requireNonNull(kingdom); Objects.requireNonNull(capital); Objects.requireNonNull(village);
             Objects.requireNonNull(villageType); Objects.requireNonNull(planSet); Objects.requireNonNull(plan); Objects.requireNonNull(variant);
@@ -42,15 +42,23 @@ public final class RoyalConstructionStore {
                     || issuedGameTime<0 || rulerSince<0 || (actor==null && rulerSince!=0)) throw new IllegalArgumentException("Invalid royal construction intent");
             dimension=ResourceLocation.parse(dimension).toString();
             originalBuildings=Set.copyOf(originalBuildings);
+            if((upgradeBuilding==null)!=(targetLevel==0) || targetLevel<0 || targetLevel>256
+                    || upgradeBuilding!=null && (actor==null || !originalBuildings.contains(upgradeBuilding)))throw new IllegalArgumentException("Invalid bound upgrade target");
             if(originalBuildings.size()>4096) throw new IllegalArgumentException("Too many original building identities");
         }
+        public Intent(UUID id,String dimension,UUID kingdom,UUID capital,UUID village,UUID actor,long rulerSince,
+                ResourceLocation villageType,ResourceLocation planSet,ResourceLocation plan,String variant,long fee,long issued,Set<UUID> originalBuildings){
+            this(id,dimension,kingdom,capital,village,actor,rulerSince,villageType,planSet,plan,variant,fee,issued,originalBuildings,null,0);
+        }
+        public boolean upgrade(){return upgradeBuilding!=null;}
+        public org.millenaire.village.Village.PendingProject pending(){return new org.millenaire.village.Village.PendingProject(planSet,variant,targetLevel,upgrade(),upgrade()?new org.millenaire.building.BuildingId(upgradeBuilding):null);}
     }
     public record Entry(Intent intent,Stage stage,Blocked blocked,UUID building,Stage cancellationFrom,UUID recoveryDecision) {
         public Entry {
             Objects.requireNonNull(intent); Objects.requireNonNull(stage); Objects.requireNonNull(blocked);
             if(stage==Stage.WAITING && (intent.actor()==null || building!=null)) throw new IllegalArgumentException("Only an unpaid player mandate can wait for native work");
             if((stage==Stage.IN_PROGRESS || stage==Stage.COMPLETED) && building==null) throw new IllegalArgumentException("Building identity required for construction progress");
-            if(building!=null && intent.originalBuildings.contains(building)) throw new IllegalArgumentException("An existing building cannot fulfill a new royal construction order");
+            if(building!=null && (intent.upgrade() ? !building.equals(intent.upgradeBuilding()) : intent.originalBuildings.contains(building))) throw new IllegalArgumentException("An existing building cannot fulfill a new royal construction order");
             if(stage==Stage.CANCELLING && cancellationFrom==null) throw new IllegalArgumentException("Cancellation must retain its origin before any refund");
             if(cancellationFrom!=null && (stage!=Stage.CANCELLING && stage!=Stage.CANCELLED && stage!=Stage.RECOVERY_REQUIRED
                     || cancellationFrom==Stage.COMPLETED || cancellationFrom==Stage.CANCELLED || cancellationFrom==Stage.FAILED
@@ -109,7 +117,7 @@ public final class RoyalConstructionStore {
                 throw new IllegalStateException("Only acknowledged paid, unpublished work can begin publication");
             var i=old.intent();var baseline=new HashSet<>(i.originalBuildings());baseline.addAll(currentBuildings);
             var intent=new Intent(i.id(),i.dimension(),i.kingdom(),i.capital(),i.village(),i.actor(),i.rulerSince(),i.villageType(),
-                    i.planSet(),i.plan(),i.variant(),i.fee(),i.issuedGameTime(),baseline);
+                    i.planSet(),i.plan(),i.variant(),i.fee(),i.issuedGameTime(),baseline,i.upgradeBuilding(),i.targetLevel());
             var next=new Entry(intent,Stage.QUEUING,Blocked.NONE,null);
             entries.put(id,next);write(entries);return next;
         });
@@ -202,7 +210,7 @@ public final class RoyalConstructionStore {
             // v1 did not retain the origin. An unresolved legacy cancellation is explicitly ambiguous, never assumed refundable.
             Stage origin=format==1 && (stage==Stage.CANCELLING || stage==Stage.CANCELLED) ? Stage.CANCELLING
                     : item.contains("cancellationFrom") ? Stage.valueOf(item.getString("cancellationFrom")) : null;
-            var entry=new Entry(loadIntent(item.getCompound("intent")),stage,Blocked.valueOf(item.getString("blocked")),
+            var entry=new Entry(loadIntent(item.getCompound("intent"),format>=5),stage,Blocked.valueOf(item.getString("blocked")),
                     item.hasUUID("building") ? item.getUUID("building") : null,origin,item.hasUUID("recoveryDecision") ? item.getUUID("recoveryDecision") : null);
             if(result.putIfAbsent(entry.intent.id,entry)!=null) throw new IllegalStateException("Duplicate royal order identity");
             if(!entry.terminal() && !active.add(entry.intent.dimension+"/"+entry.intent.village)) throw new IllegalStateException("Duplicate active royal orders for a village");
@@ -236,10 +244,16 @@ public final class RoyalConstructionStore {
         tag.putLong("rulerSince",intent.rulerSince); tag.putString("villageType",intent.villageType.toString()); tag.putString("planSet",intent.planSet.toString());
         tag.putString("plan",intent.plan.toString()); tag.putString("variant",intent.variant); tag.putLong("fee",intent.fee); tag.putLong("issued",intent.issuedGameTime);
         var ids=new ListTag(); for(UUID id:intent.originalBuildings.stream().sorted().toList()) { var item=new CompoundTag(); item.putUUID("id",id); ids.add(item); }
-        tag.put("originalBuildings",ids); return tag;
+        tag.put("originalBuildings",ids);
+        if(intent.upgrade()){tag.putUUID("upgradeBuilding",intent.upgradeBuilding());tag.putInt("targetLevel",intent.targetLevel());}
+        return tag;
     }
-    static Intent loadIntent(CompoundTag tag) {
-        keys(tag,Set.of("id","dimension","kingdom","capital","village","actor","rulerSince","villageType","planSet","plan","variant","fee","issued","originalBuildings"));
+    static Intent loadIntent(CompoundTag tag) {return loadIntent(tag,true);}
+    static Intent loadIntent(CompoundTag tag,boolean upgradesAllowed) {
+        keys(tag,Set.of("id","dimension","kingdom","capital","village","actor","rulerSince","villageType","planSet","plan","variant","fee","issued","originalBuildings","upgradeBuilding","targetLevel"));
+        boolean upgrade=tag.contains("upgradeBuilding") || tag.contains("targetLevel");
+        if(upgrade && (!upgradesAllowed || !tag.hasUUID("upgradeBuilding") || !tag.contains("targetLevel",Tag.TAG_INT) || tag.getInt("targetLevel")<1))
+            throw new IllegalStateException("Upgrade target requires construction format5; original preserved");
         for(String key:List.of("id","kingdom","capital","village")) if(!tag.hasUUID(key)) throw new IllegalStateException("Incomplete royal order identity: "+key);
         for(String key:List.of("dimension","villageType","planSet","plan","variant")) if(!tag.contains(key,Tag.TAG_STRING)) throw new IllegalStateException("Incomplete royal order field: "+key);
         for(String key:List.of("rulerSince","fee","issued")) if(!tag.contains(key,Tag.TAG_LONG)) throw new IllegalStateException("Incomplete royal order amount/time: "+key);
@@ -252,7 +266,7 @@ public final class RoyalConstructionStore {
         }
         return new Intent(tag.getUUID("id"),tag.getString("dimension"),tag.getUUID("kingdom"),tag.getUUID("capital"),tag.getUUID("village"),
                 tag.hasUUID("actor") ? tag.getUUID("actor") : null,tag.getLong("rulerSince"),ResourceLocation.parse(tag.getString("villageType")),
-                ResourceLocation.parse(tag.getString("planSet")),ResourceLocation.parse(tag.getString("plan")),tag.getString("variant"),tag.getLong("fee"),tag.getLong("issued"),ids);
+                ResourceLocation.parse(tag.getString("planSet")),ResourceLocation.parse(tag.getString("plan")),tag.getString("variant"),tag.getLong("fee"),tag.getLong("issued"),ids,upgrade?tag.getUUID("upgradeBuilding"):null,upgrade?tag.getInt("targetLevel"):0);
     }
     private static void keys(CompoundTag tag,Set<String> allowed) {
         if(!allowed.containsAll(tag.getAllKeys())) throw new IllegalStateException("Unknown royal order data; original file preserved");

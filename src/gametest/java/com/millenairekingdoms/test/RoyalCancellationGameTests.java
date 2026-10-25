@@ -170,7 +170,7 @@ public final class RoyalCancellationGameTests {
             h.assertTrue(migrated.stage()==Stage.CANCELLING && migrated.cancellationFrom()==Stage.CANCELLING && Arrays.equals(bytes,Files.readAllBytes(file)),"Reading v1 preserves bytes and explicitly retains unknown cancellation origin");
             store.change(pending.id(),Stage.CANCELLING,Stage.RECOVERY_REQUIRED,Blocked.AMBIGUOUS_ENGINE_STATE,null);
             var saved=NbtIo.readCompressed(file,NbtAccounter.create(1024*1024));
-            h.assertTrue(saved.getInt("format")==4 && store.load(pending.id()).cancellationFrom()==Stage.CANCELLING && store.load(pending.id()).intent().equals(pending),"Next atomic write migrates v1 intent without guessing refund eligibility");
+            h.assertTrue(saved.getInt("format")==5 && store.load(pending.id()).cancellationFrom()==Stage.CANCELLING && store.load(pending.id()).intent().equals(pending),"Next atomic write migrates v1 intent without guessing refund eligibility");
             var freshDirectory=directory.resolve("terminal"); var terminalStore=new RoyalConstructionStore(freshDirectory); terminalStore.reserve(pending);
             terminalStore.change(pending.id(),Stage.REQUESTED,Stage.CANCELLING,Blocked.NONE,null); terminalStore.change(pending.id(),Stage.CANCELLING,Stage.CANCELLED,Blocked.NONE,null);
             var terminalFile=freshDirectory.resolve("orders.dat"); tag=NbtIo.readCompressed(terminalFile,NbtAccounter.create(1024*1024)); tag.putInt("format",1);
@@ -195,7 +195,7 @@ public final class RoyalCancellationGameTests {
             h.assertTrue(entries.size()==Stage.values().length-1 && Arrays.equals(before,Files.readAllBytes(file)),"Every v1 stage reads without destructive eager conversion");
             store.reserve(base); var reopened=new RoyalConstructionStore(path).entries();
             for(var entry:entries) h.assertTrue(reopened.stream().anyMatch(entry::equals),"Migration retains exact intent, quote, building, stage and cancellation ambiguity for "+entry.stage());
-            h.assertTrue(NbtIo.readCompressed(file,NbtAccounter.create(1024*1024)).getInt("format")==4,"Only a successful locked atomic mutation upgrades the index"); h.succeed();
+            h.assertTrue(NbtIo.readCompressed(file,NbtAccounter.create(1024*1024)).getInt("format")==5,"Only a successful locked atomic mutation upgrades the index"); h.succeed();
         } finally { VillageSavedData.get(h.getLevel()).setDirty(); }
     }
 

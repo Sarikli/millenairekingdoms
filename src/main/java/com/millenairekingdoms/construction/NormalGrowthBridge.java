@@ -14,8 +14,8 @@ import org.millenaire.village.VillageGrowthManager;
 /** Narrow read-only boundary to the pinned 9.0.3 eligibility logic. No copied tier rules, rush calls or engine mutation.
  * Missing/private signature changes fail closed instead of offering invented construction candidates. */
 final class NormalGrowthBridge {
-    record Candidate(BuildingPlanSet set,BuildingPlanSet.LevelDef level,String variant,boolean upgrade) {}
-    private record Methods(Method candidates,Method set,Method level,Method variant,Method upgrade,Method conditions,Method resources) {}
+    record Candidate(BuildingPlanSet set,BuildingPlanSet.LevelDef level,String variant,boolean upgrade,org.millenaire.building.BuildingInstance building) {}
+    private record Methods(Method candidates,Method set,Method level,Method variant,Method upgrade,Method building,Method conditions,Method resources) {}
     private static final class Pinned { static final Methods METHODS=resolve(); }
     private NormalGrowthBridge() {}
 
@@ -23,9 +23,9 @@ final class NormalGrowthBridge {
         var methods=Pinned.METHODS; var result=new ArrayList<Candidate>();
         for(Object raw:(List<?>)invoke(methods.candidates,null,level,village,type)) {
             var candidate=new Candidate((BuildingPlanSet)invoke(methods.set,raw),(BuildingPlanSet.LevelDef)invoke(methods.level,raw),
-                    (String)invoke(methods.variant,raw),(boolean)invoke(methods.upgrade,raw));
+                    (String)invoke(methods.variant,raw),(boolean)invoke(methods.upgrade,raw),(org.millenaire.building.BuildingInstance)invoke(methods.building,raw));
             // Player-building candidates do not run this check in getAllCandidates; keep the new-building gate too.
-            if(!candidate.upgrade && (boolean)invoke(methods.conditions,null,village,candidate.level)) result.add(candidate);
+            if(candidate.upgrade || (boolean)invoke(methods.conditions,null,village,candidate.level)) result.add(candidate);
         }
         return List.copyOf(result);
     }
@@ -41,7 +41,7 @@ final class NormalGrowthBridge {
         try {
             Class<?> record=Class.forName("org.millenaire.village.VillageGrowthManager$GrowthCandidate",false,VillageGrowthManager.class.getClassLoader());
             return new Methods(method(VillageGrowthManager.class,"getAllCandidates",ServerLevel.class,Village.class,VillageType.class),
-                    method(record,"planSet"),method(record,"levelDef"),method(record,"variant"),method(record,"isUpgrade"),
+                    method(record,"planSet"),method(record,"levelDef"),method(record,"variant"),method(record,"isUpgrade"),method(record,"existingBuilding"),
                     method(VillageGrowthManager.class,"checkNewBuildingConditions",Village.class,BuildingPlanSet.LevelDef.class),
                     method(VillageGrowthManager.class,"hasResourcesForProject",ServerLevel.class,Village.class,BuildingPlanSet.LevelDef.class));
         } catch(ReflectiveOperationException e) { throw new IllegalStateException("Audited normal-growth API is unavailable; no royal building can be offered",e); }
