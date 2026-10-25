@@ -615,6 +615,24 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_history_tests'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        atlasGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_atlas_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        atlasGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_atlas_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
         configureEach {
             logLevel = org.slf4j.event.Level.INFO
             jvmArguments.addAll '-Xms512m', '-Xmx3G'
@@ -905,3 +923,6 @@ tasks.register('verifyRoyalSimulation') {
 
  tasks.named('runHistoryGameTestServerReload') { dependsOn tasks.named('runHistoryGameTestServer') }
  tasks.register('verifyHistory') { group = 'verification'; dependsOn tasks.named('runHistoryGameTestServerReload') }
+
+ tasks.named('runAtlasGameTestServerReload') { dependsOn tasks.named('runAtlasGameTestServer') }
+ tasks.register('verifyAtlas') { group = 'verification'; dependsOn tasks.named('runAtlasGameTestServerReload') }

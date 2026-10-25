@@ -16,6 +16,7 @@ public final class ConquestTestMod {
             event.register(HistoryGameTests.class);
             event.register(NarrativeGameTests.class);
             event.register(ChronicleViewGameTests.class);
+            event.register(AtlasGameTests.class);
             event.register(KingdomGameTests.class);
             event.register(WarGameTests.class);
             event.register(CapitalGameTests.class);
