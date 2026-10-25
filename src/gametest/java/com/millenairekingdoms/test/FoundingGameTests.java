@@ -496,9 +496,9 @@ public final class FoundingGameTests {
             h.assertTrue(k.equals(AutonomyService.joinTarget(level, d, neighbour))
                     && AutonomyService.decideJoin(level, d, neighbour, AutonomySupport.yes()) == AutonomyService.JoinDecision.JOINED
                     && k.id().equals(d.owner(id(neighbour))), "24. An independent village joins the new kingdom diplomatically");
-            // 25. Economy: the member's town hall pays the new capital every day.
-            h.assertTrue(EconomyService.dailyIncome(level, d, k.id()) == (long) EconomyService.centerLevel(neighbour) * EconomyService.DENIERS_PER_LEVEL
-                    && EconomyService.dailyIncome(level, d, k.id()) > 0, "25. Daily income from the member village");
+            // 25. RC.8 economy: founder production and member income both reach the capital.
+            h.assertTrue(EconomyService.dailyIncome(level, d, k.id()) == (long) (EconomyService.centerLevel(founder) + EconomyService.centerLevel(neighbour)) * EconomyService.DENIERS_PER_LEVEL
+                    && EconomyService.dailyIncome(level, d, k.id()) > 0, "25. Daily capital production plus member-village income");
             // 24-25. War: hostile relations and a ready army; then peace and truce follow the normal rules.
             AutonomySupport.relation(founder, rival, -90);
             for (int i = 0; i < 4; i++) AutonomySupport.raider(founder);

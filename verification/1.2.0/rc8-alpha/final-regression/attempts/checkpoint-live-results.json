@@ -1,0 +1,17 @@
+[
+  {
+    "archive_log": "verification/1.2.0/rc8-alpha/final-regression/attempts/alpha-dev72-reg-founding-01-write.log.gz",
+    "archive_sha256": "6abe1ab5bd320248e69d13bb45bbd3b4fef842e07789daac4bed4919c8e6aa35",
+    "raw_sha256": "f164fbbd5e1be46e154a2e38a7d49c8fd0af4c50a09803af4a82eeed0864f6bf"
+  },
+  {
+    "archive_log": "verification/1.2.0/rc8-alpha/final-regression/attempts/alpha-dev72-reg-royallive-01-write.log.gz",
+    "archive_sha256": "0e85c2eec10701b116556493c481d45ad59289f132185422e702d8c82a518d32",
+    "raw_sha256": "7b9eb759481a6c75b71e6617bbcb2ee3fbdca01b92eacfc89dad6e06b152e867"
+  },
+  {
+    "archive_log": "verification/1.2.0/rc8-alpha/final-regression/attempts/alpha-dev72-reg-royallive-02-write.log.gz",
+    "archive_sha256": "b3a2bbe3e38eb34d6ac35d29d483d3af7f537d53c55b1e76faec3687842f966b",
+    "raw_sha256": "38ff0784c6f139051008d161fb2596c8b4927e6e3caf06c7c31d76e08b7399bc"
+  }
+]

@@ -27,13 +27,13 @@ public final class RoyalPriceGameTests {
         try {
             var k=kingdom(h,c); var data=KingdomSavedData.get(h.getLevel()); data.attach(k.id(),m.getId().uuid());
             long income=EconomyService.dailyIncome(h.getLevel(),data,k.id());
-            h.assertTrue(income==8 && RoyalPrices.construction(RoyalEconomyConfig.Settings.DEFAULTS)==income*8,
-                    "Default 64-denier patronage equals eight days from one level-2 member; capital is not taxed");
+            h.assertTrue(income==12 && RoyalPrices.construction(RoyalEconomyConfig.Settings.DEFAULTS)==64,
+                    "Default64-denier patronage stays fixed; RC.8 capital4 plus level2 member8 yields12 per day");
             chest(h,c).setItem(0,new ItemStack(ModItems.DENIER_ARGENT.get())); var id=UUID.randomUUID(); var service=new RoyalPaymentService(h.getLevel());
             h.assertTrue(service.payNpc(k.id(),id,RoyalPaymentService.Purpose.CONSTRUCTION,UUID.randomUUID(),64).state()==State.PAID
                     && RoyalTreasurySnapshot.forNpc(h.getLevel(),k.id()).spendableValue()==0,"Default patronage actually removes its real silver coin");
             service.commitNpc(k.id(),id);
-            h.assertTrue(EconomyService.dailyIncome(h.getLevel(),data,k.id())==8 && data.owed(k.id())==0,"Administrative charge neither changes taxation nor creates owed income"); h.succeed();
+            h.assertTrue(EconomyService.dailyIncome(h.getLevel(),data,k.id())==12 && data.owed(k.id())==0,"Administrative charge neither changes taxation nor creates owed income"); h.succeed();
         } finally { remove(h,c,m); }
     }
 

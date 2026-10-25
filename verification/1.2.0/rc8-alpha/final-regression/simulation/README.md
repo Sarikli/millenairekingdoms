@@ -1,4 +1,4 @@
-#400 modeled days, four actual JVMs
+# 400 modeled days, four actual JVMs
 
 Each sequential100→200→300→400 modeled-day epoch logged `All 1 required tests passed`, exit0/BUILD SUCCESSFUL on identical dev7.2 SHA8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae. Every previous success gates the next separate-JVM reopen of the SAME world. Raw logs/results, periodic metrics and saved-data/marker snapshots are retained. The snapshot omits chunk/entity regions and is not a playable world or downgrade backup.
 
