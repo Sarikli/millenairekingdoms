@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0-rc.8 — 2026-10-25 (upgrades, product picker, capital production)
+
+- Add player royal upgrades for original eligible completed non-centre buildings, binding exact UUID/next level/quote. Charge construction base × target display level:128/192/256 with64 base, material costs separate. Retain unpaid queue, one village slot, authority/fee/recovery safeguards and original NPC work. Order5 lazily reads1–4, audit2 reads1; network4 prevents old clients misreading the new upgrade offers.
+- Replace shipment product cycling with a searchable icon/name list and Back/Esc return; retain server stock/authorization/transport rules.
+- Add capital production4 deniers per completed centre level/day through the existing daily ledger/native coins, including capitals without members; preserve once-per-day/restart/unavailable-storage behavior and existing member rates.
+- Nine related paired packages logged their exact All28/3/26/7/55/16/10/18/9 lines per JVM, with real original building→two upgrades for64+128+192,100% final physical match and actual capital coin/day restart. Two publication process cuts and ordinary production-JAR save/reopen also verified. Initial plan-only fixture selection failure is retained; corrected only the test, kept the successful unchanged-binary GUI pair. [Exact evidence/scope](verification/1.2.0/rc.8-upgrades/README.md). Graphics/auth remain unverified; no unrelated full matrix/400-day repeat.
+
 ## 1.2.0-rc.7 — 2026-10-25 (construction waiting queue)
 
 - Let players queue one unpaid royal mandate behind ongoing ordinary native construction/upgrade. Preserve the current native project/task; revalidate current online ruler, original loaded target/treasury, eligibility and real funds before automatic single payment at the saved quote. Persist waiting across restart, cancel without fees/native deletion, retain one active royal slot per village.

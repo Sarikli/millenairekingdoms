@@ -1,0 +1,65 @@
+{
+  "version": "1.2.0-rc.8",
+  "bytes": 628317,
+  "sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+  "original_millenaire_version": "9.0.3",
+  "original_millenaire_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "source_base_commit": "85796cbd9499db1e4698080b3c47663e7111dfc5",
+  "source_commit_lookup": "git log -1 --format=%H -- src/main/java/com/millenairekingdoms/construction/RoyalConstructionStore.java",
+  "artifact_commit_lookup": "git log -1 --format=%H -- releases/1.2.0-rc.8/millenairekingdoms-1.2.0-rc.8.jar",
+  "network_protocol": 4,
+  "construction_format": 5,
+  "recovery_audit_format": 2,
+  "legacy_construction_reads": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "legacy_recovery_audit_reads": [
+    1
+  ],
+  "translation_keys_per_language": 326,
+  "normal_generated_config_identical_to_rc7": true,
+  "packed_comparison": {
+    "sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+    "bytes": 628317,
+    "production_classes": 203,
+    "identical_to_rc7_classes": 178,
+    "changed": [
+      "META-INF/MANIFEST.MF",
+      "META-INF/neoforge.mods.toml",
+      "assets/millenairekingdoms/lang/en_us.json",
+      "assets/millenairekingdoms/lang/tr_tr.json",
+      "com/millenairekingdoms/client/KingdomScreen$RowList$Row.class",
+      "com/millenairekingdoms/client/KingdomScreen$RowList.class",
+      "com/millenairekingdoms/client/KingdomScreen.class",
+      "com/millenairekingdoms/construction/NormalGrowthBridge$Candidate.class",
+      "com/millenairekingdoms/construction/NormalGrowthBridge$Methods.class",
+      "com/millenairekingdoms/construction/NormalGrowthBridge.class",
+      "com/millenairekingdoms/construction/RoyalConstructionCatalog$Catalog.class",
+      "com/millenairekingdoms/construction/RoyalConstructionCatalog$Option.class",
+      "com/millenairekingdoms/construction/RoyalConstructionCatalog.class",
+      "com/millenairekingdoms/construction/RoyalConstructionMonitor.class",
+      "com/millenairekingdoms/construction/RoyalConstructionService.class",
+      "com/millenairekingdoms/construction/RoyalConstructionStore$Entry.class",
+      "com/millenairekingdoms/construction/RoyalConstructionStore$Intent.class",
+      "com/millenairekingdoms/construction/RoyalConstructionStore.class",
+      "com/millenairekingdoms/construction/RoyalRecoveryService.class",
+      "com/millenairekingdoms/construction/RoyalRecoveryStore$Intent.class",
+      "com/millenairekingdoms/construction/RoyalRecoveryStore.class",
+      "com/millenairekingdoms/economy/EconomyService.class",
+      "com/millenairekingdoms/economy/RoyalPrices.class",
+      "com/millenairekingdoms/gui/KingdomScreens.class",
+      "com/millenairekingdoms/gui/RoyalConstructionView$Offer.class",
+      "com/millenairekingdoms/gui/RoyalConstructionView$Session.class",
+      "com/millenairekingdoms/gui/RoyalConstructionView.class",
+      "com/millenairekingdoms/network/KingdomNetwork.class"
+    ],
+    "added": [
+      "com/millenairekingdoms/client/ShipmentProductScreen.class"
+    ],
+    "removed": [],
+    "lang_keys": 326
+  }
+}

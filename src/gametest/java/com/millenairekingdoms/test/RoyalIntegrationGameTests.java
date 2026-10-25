@@ -72,7 +72,7 @@ public final class RoyalIntegrationGameTests {
             h.assertTrue(EconomyService.dailyIncome(level,data,r.kingdom())==12,"Capital and two attached completed level1 halls each yield4 deniers");long start=Math.max(0,data.day());UUID paid=null;
             for(int n=1;n<=10;n++){
                 h.assertTrue(EconomyService.runDay(level,data,start+n),"Actual native tax day advances once");var result=new RoyalNpcEconomyService(level).evaluate(r.kingdom(),start+n,RandomSource.create(3));
-                if(result.kind()==Kind.CONSTRUCTION){h.assertTrue(n==7 && paid==null,"Reserve/share protect the first six days, then permit one justified commission");paid=result.attempt();}
+                if(result.kind()==Kind.CONSTRUCTION){h.assertTrue(n==6 && paid==null,"Reserve/share protect the first five days, then permit one justified commission");paid=result.attempt();}
                 h.assertTrue(r.coins()==192+12*n-(paid==null?0:64) && data.owed(r.kingdom())==0,"Physical currency equals initial192 plus actual daily income minus one fee, never owed balances");
             }
             h.assertTrue(paid!=null && r.coins()==248,"Ten real taxed days support one64 commission with248 retained");var tag=r.marker();tag.putUUID("attempt",paid);tag.putLong("day",start+10);NbtIo.writeCompressed(tag,marker);r.save();saved=true;r.capital().setActive(false);r.source().setActive(false);r.target().setActive(false);
