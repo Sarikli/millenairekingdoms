@@ -32,7 +32,7 @@ final class ChronicleFilterScreen extends Screen {
     private void rebuildRows(){rows=new KingdomScreen.RowList(left+8,top+51,pw-16,Math.max(22,ph-81),22);
         rows.add(ChronicleScreen.t("all"),0xFF493321,!realms && chosenKind.isEmpty(),()->{if(realms){parent.scope=null;parent.villageScope=null;onClose();parent.refresh();}else{chosenKind="";rebuildRows();}});
         if(realms)for(var raw:response.getList("realms",10)){var r=(CompoundTag)raw;rows.add(Component.literal(r.getString("name")+(r.getBoolean("fallen")?" †":"")),0xFF493321,parent.scope!=null && parent.scope.equals(r.getUUID("id")),()->{parent.scope=r.getUUID("id");parent.villageScope=null;onClose();parent.refresh();});}
-        else for(var kind:HistoryEvent.Kind.values())rows.add(Component.literal(minecraft.options.languageCode.equals("tr_tr")?ChronicleNarrator.titleTr(kind):ChronicleNarrator.titleEn(kind)),0xFF493321,chosenKind.equals(kind.name()),()->{chosenKind=kind.name();rebuildRows();});
+        else for(var kind:HistoryEvent.Kind.values())rows.add(Component.literal(ChronicleNarrator.title(kind,ClientText::resolve)),0xFF493321,chosenKind.equals(kind.name()),()->{chosenKind=kind.name();rebuildRows();});
     }
     private void request(UUID cursor){serial++;retryTicks=0;pending=new ChronicleRequestPayload(session,serial,"REALMS",Optional.empty(),"",0,Long.MAX_VALUE,Optional.ofNullable(cursor),search.getValue(),Optional.empty());PacketDistributor.sendToServer(pending);}
     @Override public void tick(){if(retryTicks>0 && --retryTicks==0 && pending!=null)PacketDistributor.sendToServer(pending);}

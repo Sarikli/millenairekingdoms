@@ -23,10 +23,11 @@ final class ChronicleScreen extends Screen {
     private ChronicleRequestPayload pending;private int retryTicks;
     private KingdomScreen.RowList entries,prose;
     private int left,top,pw,ph;
+    private Object languageState;
     ChronicleScreen(Screen parent,UUID scope,UUID village){super(t("title"));this.parent=parent;this.scope=scope;this.villageScope=village;}
-    static Component t(String key,Object...args){return Component.translatable("millenairekingdoms.history."+key,args);}
+    static Component t(String key,Object...args){return ClientText.component("millenairekingdoms.history."+key,args);}
     void request(UUID cursor){this.cursor=cursor;serial++;retryTicks=0;pending=new ChronicleRequestPayload(session,serial,"CHRONICLE",Optional.ofNullable(scope),kind,from,to,Optional.ofNullable(cursor),"",Optional.empty(),Optional.ofNullable(villageScope));PacketDistributor.sendToServer(pending);}
-    @Override public void tick(){if(retryTicks>0 && --retryTicks==0 && pending!=null)PacketDistributor.sendToServer(pending);}
+    @Override public void tick(){if(retryTicks>0 && --retryTicks==0 && pending!=null)PacketDistributor.sendToServer(pending);if(languageState!=net.minecraft.locale.Language.getInstance()){languageState=net.minecraft.locale.Language.getInstance();rebuildWidgets();}}
     void refresh(){previous.clear();request(null);}
     void receive(CompoundTag incoming){if(!incoming.getUUID("session").equals(session)||incoming.getLong("serial")!=serial)return;if(incoming.getInt("retryAfter")>0){retryTicks=Math.min(20,incoming.getInt("retryAfter"));return;}pending=null;retryTicks=0;view=incoming;events=incoming.getList("events",10).stream().map(t->HistoryEvent.load((CompoundTag)t)).toList();next=incoming.hasUUID("next")?incoming.getUUID("next"):null;if(events.stream().noneMatch(e->e.id().equals(selected)))selected=events.isEmpty()?null:events.getFirst().id();rebuildWidgets();}
     @Override protected void init(){
@@ -38,11 +39,11 @@ final class ChronicleScreen extends Screen {
         button(left+8,top+47,74,t("filters"),()->minecraft.setScreen(new ChronicleFilterScreen(this,false)));
         int mainTop=top+70,bottom=top+ph-48,listWidth=Math.max(96,(pw-24)*2/5);
         entries=new KingdomScreen.RowList(left+8,mainTop,listWidth,Math.max(22,bottom-mainTop),22);
-        for(var e:events){String date=Component.translatable("millenairekingdoms.history.day",e.day()).getString();var account=ChronicleNarrator.render(e,scope,language());entries.add(Component.literal(date+" · "+account.heading()),0xFF493321,e.id().equals(selected),()->{selected=e.id();rebuildWidgets();});}
+        for(var e:events){String date=Component.translatable("millenairekingdoms.history.day",e.day()).getString();var account=ChronicleNarrator.render(e,scope,ClientText::resolve);entries.add(Component.literal(date+" · "+account.heading()),0xFF493321,e.id().equals(selected),()->{selected=e.id();rebuildWidgets();});}
         prose=new KingdomScreen.RowList(left+16+listWidth,mainTop,pw-listWidth-24,Math.max(22,bottom-mainTop));
         var chosen=events.stream().filter(e->e.id().equals(selected)).findFirst().orElse(null);
         if(scope!=null){prose.addWrapped(font,view.contains("founded")?t("founded",view.getLong("founded")):t("founding_unknown"),0xFF705237);if(view.getBoolean("fallen"))prose.addWrapped(font,t("fallen"),0xFF705237);}
-        if(chosen!=null){var account=ChronicleNarrator.render(chosen,scope,language());prose.addWrapped(font,Component.literal(account.heading()),0xFF493321);prose.addWrapped(font,t("voice",account.perspective(),account.culture()),0xFF705237);prose.addWrapped(font,Component.literal(account.prose()),0xFF493321);
+        if(chosen!=null){var account=ChronicleNarrator.render(chosen,scope,ClientText::resolve);prose.addWrapped(font,Component.literal(account.heading()),0xFF493321);prose.addWrapped(font,t("voice",account.perspective(),account.culture()),0xFF705237);prose.addWrapped(font,Component.literal(account.prose()),0xFF493321);
             for(var realm:chosen.realms())prose.add(Component.literal(realm.name()),0xFF62442B,false,()->HistoryClient.openAtlas(this,realm.id(),chosen.id(),null));
             for(var place:chosen.places())prose.add(t(place.located()?"place":"place_hidden",place.name(),place.x(),place.z()),0xFF705237,false,place.located()?()->HistoryClient.openAtlas(this,scope,chosen.id(),place.id()):null);
         }else prose.addWrapped(font,t(view.contains("error")?"unavailable":"empty"),0xFF493321);

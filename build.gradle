@@ -59,6 +59,24 @@ neoForge {
             programArgument '--nogui'
             taskBefore stageServerJar
         }
+        localizationGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_localization_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        localizationGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_localization_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
         gameTestServer {
             type = 'gameTestServer'
             sourceSet = sourceSets.gametest
@@ -983,3 +1001,6 @@ tasks.register('verifyRoyalSimulation') {
 
  tasks.named('runHistoryWorldGameTestServerReload') { dependsOn tasks.named('runHistoryWorldGameTestServer') }
  tasks.register('verifyHistoryWorld') { group = 'verification'; dependsOn tasks.named('runHistoryWorldGameTestServerReload') }
+
+tasks.named('runLocalizationGameTestServerReload') { dependsOn tasks.named('runLocalizationGameTestServer') }
+tasks.register('verifyLocalization') { group = 'verification'; dependsOn tasks.named('runLocalizationGameTestServerReload') }
