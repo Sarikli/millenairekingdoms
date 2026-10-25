@@ -112,7 +112,7 @@ public final class PoliticsService {
                 kingdom.name(), target.name(), relation, HOSTILE_RELATION);
         checkTruce(data, kingdom, target);
         War war = data.declareWar(kingdom.id(), target.id(), level.getGameTime());
-        notifyRuler(level, target.id(), Component.literal(TAG + kingdom.name() + " declared war on your kingdom.").withStyle(ChatFormatting.RED));
+        notifyRuler(level, target.id(), com.millenairekingdoms.localization.PublicText.of("%s%s declared war on your kingdom.", TAG, kingdom.name()).withStyle(ChatFormatting.RED));
         return war;
     }
 
@@ -123,7 +123,7 @@ public final class PoliticsService {
         check(!target.fallen(), "fallen", "%s has fallen.", target.name());
         checkTruce(data, kingdom, target);
         War war = data.declareWar(kingdom.id(), target.id(), level.getGameTime());
-        notifyRuler(level, target.id(), Component.literal(TAG + kingdom.name() + " declared war on your kingdom.").withStyle(ChatFormatting.RED));
+        notifyRuler(level, target.id(), com.millenairekingdoms.localization.PublicText.of("%s%s declared war on your kingdom.", TAG, kingdom.name()).withStyle(ChatFormatting.RED));
         return war;
     }
 
@@ -146,7 +146,7 @@ public final class PoliticsService {
         if (attacker.id().equals(kingdom.id())) {
             data.peace(war.id(), KingdomSavedData.RULER_PEACE_REASON);
             DiplomacyService.treaty(level, data, war);
-            notifyRuler(level, defender.id(), Component.literal(TAG + attacker.name() + " made peace with your kingdom.").withStyle(ChatFormatting.GREEN));
+            notifyRuler(level, defender.id(), com.millenairekingdoms.localization.PublicText.of("%s%s made peace with your kingdom.", TAG, attacker.name()).withStyle(ChatFormatting.GREEN));
             return PeaceResult.MADE;
         }
         if (data.npcGoverned(attacker.id())) {
@@ -158,8 +158,8 @@ public final class PoliticsService {
             return PeaceResult.MADE;
         }
         data.offerPeace(war.id());
-        notifyRuler(level, attacker.id(), Component.literal(TAG + defender.name() + " offers peace. ").withStyle(ChatFormatting.GOLD)
-                .append(button("[Accept peace]", "/kingdom war peace", "End the war with " + defender.name())));
+        notifyRuler(level, attacker.id(), com.millenairekingdoms.localization.PublicText.of("%s%s offers peace. ", TAG, defender.name()).withStyle(ChatFormatting.GOLD)
+                .append(button(com.millenairekingdoms.localization.PublicText.of("[Accept peace]"), "/kingdom war peace", com.millenairekingdoms.localization.PublicText.of("End the war with %s", defender.name()))));
         return PeaceResult.OFFERED;
     }
 
@@ -189,10 +189,9 @@ public final class PoliticsService {
         if (ruler != null && !ruler.player().equals(player.getUUID())) {
             check(owned, "join_ruler_only", "Only the ruler of %s can bring in a village that is not yours.", kingdom.name());
             data.requestJoin(villageId, kingdom.id(), player.getUUID(), player.getGameProfile().getName(), level.getGameTime());
-            notifyRuler(level, kingdom.id(), Component.literal(TAG + player.getGameProfile().getName() + " asks to bring " + name(village)
-                    + " into " + kingdom.name() + ". ").withStyle(ChatFormatting.GOLD)
-                    .append(button("[Accept]", "/kingdom accept " + villageId, "Attach " + name(village))).append(" ")
-                    .append(button("[Refuse]", "/kingdom refuse " + villageId, "Refuse the application")));
+            notifyRuler(level, kingdom.id(), com.millenairekingdoms.localization.PublicText.of("%s%s asks to bring %s into %s. ", TAG, player.getGameProfile().getName(), name(village), kingdom.name()).withStyle(ChatFormatting.GOLD)
+                    .append(button(com.millenairekingdoms.localization.PublicText.of("[Accept]"), "/kingdom accept " + villageId, com.millenairekingdoms.localization.PublicText.of("Attach %s", name(village)))).append(" ")
+                    .append(button(com.millenairekingdoms.localization.PublicText.of("[Refuse]"), "/kingdom refuse " + villageId, com.millenairekingdoms.localization.PublicText.of("Refuse the application"))));
             return JoinResult.REQUESTED;
         }
         if (ruler != null) check(ruledKingdom(player).id().equals(kingdom.id()), "not_ruler_of", "You do not rule %s.", kingdom.name());
@@ -225,7 +224,7 @@ public final class PoliticsService {
         }
         data.attach(kingdom.id(), villageId);
         var applicant = request.fromNpcVillage() ? null : level.getServer().getPlayerList().getPlayer(request.player());
-        if (applicant != null) applicant.sendSystemMessage(Component.literal(TAG + name(village) + " joined " + kingdom.name() + ".").withStyle(ChatFormatting.GREEN));
+        if (applicant != null) applicant.sendSystemMessage(com.millenairekingdoms.localization.PublicText.of("%s%s joined %s.", TAG, name(village), kingdom.name()).withStyle(ChatFormatting.GREEN));
         return village;
     }
 
@@ -282,7 +281,7 @@ public final class PoliticsService {
         UUID ruled = data.ruledBy(player.getUUID());
         if (focus == null && ruled != null) focus = data.kingdom(ruled);
         if (focus == null) {
-            player.sendSystemMessage(Component.literal(TAG + "No capital within 64 blocks and you rule no kingdom.").withStyle(ChatFormatting.GRAY));
+            player.sendSystemMessage(com.millenairekingdoms.localization.PublicText.of("%sNo capital within 64 blocks and you rule no kingdom.", TAG).withStyle(ChatFormatting.GRAY));
             return;
         }
         var ruler = data.ruler(focus.id());
@@ -290,50 +289,45 @@ public final class PoliticsService {
         Village capital = village(level, focus.capital());
         int reputation = capital == null ? 0 : capital.getCombinedReputation(level, player.getUUID());
         player.sendSystemMessage(Component.literal(TAG + focus.name()).withStyle(ChatFormatting.GOLD)
-                .append(Component.literal(" | ruler: " + (ruler == null ? "none (the NPC leader governs)" : ruler.lastKnownName())
-                        + " | villages: " + data.members(focus.id()).size() + (focus.active() ? "" : " | INACTIVE")).withStyle(ChatFormatting.WHITE)));
-        player.sendSystemMessage(Component.literal("Your reputation here: " + reputation + " (war request " + WAR_REQUEST_REPUTATION
-                + ", claim " + CLAIM_REPUTATION + (isRuler ? ", decisions " + DECISION_REPUTATION : "") + ")"));
+                .append(com.millenairekingdoms.localization.PublicText.of(" | ruler: %s | villages: %s%s", (ruler == null ? com.millenairekingdoms.localization.PublicText.of("none (the NPC leader governs)") : ruler.lastKnownName()), data.members(focus.id()).size(), (focus.active() ? "" : com.millenairekingdoms.localization.PublicText.of(" | INACTIVE"))).withStyle(ChatFormatting.WHITE)));
+        player.sendSystemMessage(com.millenairekingdoms.localization.PublicText.of("Your reputation here: %s (war request %s, claim %s%s)", reputation, WAR_REQUEST_REPUTATION, CLAIM_REPUTATION, (isRuler ? com.millenairekingdoms.localization.PublicText.of(", decisions %s", DECISION_REPUTATION) : "")));
         long owed = data.owed(focus.id());
-        player.sendSystemMessage(Component.literal("Daily income: " + EconomyService.format(EconomyService.dailyIncome(level, data, focus.id()))
-                + " into the capital's town hall storage" + (owed > 0 ? " | waiting for space or a loaded capital: " + EconomyService.format(owed) : "")));
+        player.sendSystemMessage(com.millenairekingdoms.localization.PublicText.of("Daily income: %s into the capital's town hall storage%s", EconomyService.format(EconomyService.dailyIncome(level, data, focus.id())), (owed > 0 ? com.millenairekingdoms.localization.PublicText.of(" | waiting for space or a loaded capital: %s", EconomyService.format(owed)) : "")));
         War war = data.activeWar(focus.id());
         if (war != null) {
             boolean attacking = war.attackerKingdom().equals(focus.id());
             Kingdom other = data.kingdom(attacking ? war.defenderKingdom() : war.attackerKingdom());
-            MutableComponent line = Component.literal("At war " + (attacking ? "against " : "defending against ") + other.name()
-                    + (data.peaceOffered(war.id()) ? " (peace offered)" : "") + " ").withStyle(ChatFormatting.RED);
-            if (isRuler) line.append(button(attacking ? "[Make peace]" : "[Offer peace]", "/kingdom war peace",
-                    attacking ? "End this war" : "Ask " + other.name() + " for peace"));
+            MutableComponent line = com.millenairekingdoms.localization.PublicText.of("At war %s%s%s ", (attacking ? com.millenairekingdoms.localization.PublicText.of("against ") : com.millenairekingdoms.localization.PublicText.of("defending against ")), other.name(), (data.peaceOffered(war.id()) ? com.millenairekingdoms.localization.PublicText.of(" (peace offered)") : "")).withStyle(ChatFormatting.RED);
+            if (isRuler) line.append(button(attacking ? com.millenairekingdoms.localization.PublicText.of("[Make peace]") : com.millenairekingdoms.localization.PublicText.of("[Offer peace]"), "/kingdom war peace",
+                    attacking ? com.millenairekingdoms.localization.PublicText.of("End this war") : com.millenairekingdoms.localization.PublicText.of("Ask %s for peace", other.name())));
             player.sendSystemMessage(line);
         }
         if (ruler == null && ruled == null && focus.active()) {
             player.sendSystemMessage(reputation >= CLAIM_REPUTATION
-                    ? Component.literal("You may take over the rule. ").append(button("[Claim rule]", "/kingdom claim", "Become ruler of " + focus.name()))
-                    : Component.literal("Claiming the rule needs reputation " + CLAIM_REPUTATION + ".").withStyle(ChatFormatting.GRAY));
+                    ? com.millenairekingdoms.localization.PublicText.of("You may take over the rule. ").append(button(com.millenairekingdoms.localization.PublicText.of("[Claim rule]"), "/kingdom claim", com.millenairekingdoms.localization.PublicText.of("Become ruler of %s", focus.name())))
+                    : com.millenairekingdoms.localization.PublicText.of("Claiming the rule needs reputation %s.", CLAIM_REPUTATION).withStyle(ChatFormatting.GRAY));
         }
         Kingdom finalFocus = focus;
         data.kingdoms().stream().filter(k -> !k.fallen() && !k.id().equals(finalFocus.id())).sorted(Comparator.comparing(Kingdom::name)).forEach(k -> {
             Village other = village(level, k.capital());
             Integer relation = capital == null || other == null ? null : capital.getRelation(other.getId());
-            MutableComponent line = Component.literal("  " + k.name() + ": relation " + (relation == null ? "?" : relation) + " ");
+            MutableComponent line = com.millenairekingdoms.localization.PublicText.of("  %s: relation %s ", k.name(), (relation == null ? "?" : relation));
             if (war == null && finalFocus.active() && k.active() && relation != null && data.truceUntil(finalFocus.id(), k.id()) < 0) {
-                if (isRuler) line.append(button("[Declare war]", "/kingdom war declare " + k.id(), "Declare war on " + k.name()));
+                if (isRuler) line.append(button(com.millenairekingdoms.localization.PublicText.of("[Declare war]"), "/kingdom war declare " + k.id(), com.millenairekingdoms.localization.PublicText.of("Declare war on %s", k.name())));
                 else if (ruler == null && reputation >= WAR_REQUEST_REPUTATION && relation <= HOSTILE_RELATION)
-                    line.append(button("[Request war]", "/kingdom war request " + k.id(), "Ask the leader to declare war on " + k.name()));
+                    line.append(button(com.millenairekingdoms.localization.PublicText.of("[Request war]"), "/kingdom war request " + k.id(), com.millenairekingdoms.localization.PublicText.of("Ask the leader to declare war on %s", k.name())));
             }
             player.sendSystemMessage(line);
         });
         if (isRuler) {
             data.joinRequests().entrySet().stream().filter(e -> e.getValue().kingdom().equals(finalFocus.id())).forEach(e -> {
                 Village applicant = village(level, e.getKey());
-                player.sendSystemMessage(Component.literal("Application: " + (applicant == null ? e.getKey() : name(applicant))
-                        + (e.getValue().fromNpcVillage() ? " (the village itself)" : " from " + e.getValue().playerName()) + " ").append(button("[Accept]", "/kingdom accept " + e.getKey(), "Attach the village"))
-                        .append(" ").append(button("[Refuse]", "/kingdom refuse " + e.getKey(), "Refuse the application")));
+                player.sendSystemMessage(com.millenairekingdoms.localization.PublicText.of("Application: %s%s ", (applicant == null ? e.getKey() : name(applicant)), (e.getValue().fromNpcVillage() ? com.millenairekingdoms.localization.PublicText.of(" (the village itself)") : com.millenairekingdoms.localization.PublicText.of(" from %s", e.getValue().playerName()))).append(button(com.millenairekingdoms.localization.PublicText.of("[Accept]"), "/kingdom accept " + e.getKey(), com.millenairekingdoms.localization.PublicText.of("Attach the village")))
+                        .append(" ").append(button(com.millenairekingdoms.localization.PublicText.of("[Refuse]"), "/kingdom refuse " + e.getKey(), com.millenairekingdoms.localization.PublicText.of("Refuse the application"))));
             });
-            player.sendSystemMessage(button("[Abdicate]", "/kingdom abdicate", "Give up the rule of " + focus.name()));
+            player.sendSystemMessage(button(com.millenairekingdoms.localization.PublicText.of("[Abdicate]"), "/kingdom abdicate", com.millenairekingdoms.localization.PublicText.of("Give up the rule of %s", focus.name())));
         }
-        player.sendSystemMessage(button("[Open the kingdom screen]", "/kingdom gui", "All kingdom matters in one window"));
+        player.sendSystemMessage(button(com.millenairekingdoms.localization.PublicText.of("[Open the kingdom screen]"), "/kingdom gui", com.millenairekingdoms.localization.PublicText.of("All kingdom matters in one window")));
     }
 
     /** /kingdom info near an independent village: what it would take to join a kingdom or, for an owner, to found one. */
@@ -343,26 +337,26 @@ public final class PoliticsService {
         if (village == null) return;
         boolean own = village.isControlledBy(player.getUUID());
         int townhall = com.millenairekingdoms.economy.EconomyService.centerLevel(village);
-        MutableComponent line = Component.literal(TAG + name(village) + " (independent, town hall level " + townhall
-                + (village.getOwnerUUID() == null ? "" : ", owner " + village.getOwnerName()) + ") ").withStyle(ChatFormatting.GOLD);
+        MutableComponent line = com.millenairekingdoms.localization.PublicText.of("%s%s (independent, town hall level %s%s) ", TAG, name(village), townhall, (village.getOwnerUUID() == null ? "" : com.millenairekingdoms.localization.PublicText.of(", owner %s", village.getOwnerName()))).withStyle(ChatFormatting.GOLD);
         if (own && townhall >= FOUND_LEVEL && data.ruledBy(player.getUUID()) == null)
-            line.append(Component.literal("[Found a kingdom]").withStyle(style -> style.withColor(ChatFormatting.AQUA).withUnderlined(true)
+            line.append(com.millenairekingdoms.localization.PublicText.of("[Found a kingdom]").withStyle(style -> style.withColor(ChatFormatting.AQUA).withUnderlined(true)
                     .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/kingdom found "))
-                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Type the new kingdom's name")))));
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, com.millenairekingdoms.localization.PublicText.of("Type the new kingdom's name")))));
         player.sendSystemMessage(line);
         if (village.getOwnerUUID() != null && !own) return;
         data.kingdoms().stream().filter(k -> !k.fallen() && k.active()).sorted(Comparator.comparing(Kingdom::name)).forEach(k -> {
             Village capital = village(level, k.capital());
             if (capital == null) return;
-            player.sendSystemMessage(Component.literal("  " + k.name() + ": relation with its capital " + capital.getRelation(village.getId()) + " ")
-                    .append(button("[Join]", "/kingdom join " + k.id(), "Ask to bring this village into " + k.name())));
+            player.sendSystemMessage(com.millenairekingdoms.localization.PublicText.of("  %s: relation with its capital %s ", k.name(), capital.getRelation(village.getId()))
+                    .append(button(com.millenairekingdoms.localization.PublicText.of("[Join]"), "/kingdom join " + k.id(), com.millenairekingdoms.localization.PublicText.of("Ask to bring this village into %s", k.name()))));
         });
     }
 
-    public static MutableComponent button(String label, String command, String hover) {
-        return Component.literal(label).withStyle(style -> style.withColor(ChatFormatting.AQUA).withUnderlined(true)
-                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command))
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(hover))));
+    public static MutableComponent button(String label,String command,String hover){return button(com.millenairekingdoms.localization.PublicText.of(label),command,com.millenairekingdoms.localization.PublicText.of(hover));}
+    public static MutableComponent button(Component label,String command,Component hover){
+        return label.copy().withStyle(style->style.withColor(ChatFormatting.AQUA).withUnderlined(true)
+                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,command))
+                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,hover)));
     }
     /** Messages the kingdom's ruler if online; a null kingdom does nothing. */
     public static void notifyRuler(ServerLevel level, UUID kingdomId, Component message) {

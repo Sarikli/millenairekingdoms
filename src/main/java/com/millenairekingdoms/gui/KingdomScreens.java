@@ -123,6 +123,7 @@ public final class KingdomScreens {
         if (capital != null) {
             e.putString("capital", PoliticsService.name(capital));
             var culture = ModCultures.getCulture(capital.getCultureId());
+            e.putString("cultureId",capital.getCultureId().toString());
             e.putString("culture", culture == null || culture.displayName() == null ? capital.getCultureId().getPath() : culture.displayName());
             e.putInt("x", capital.getCenter().getX()); e.putInt("y", capital.getCenter().getY()); e.putInt("z", capital.getCenter().getZ());
         }

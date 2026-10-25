@@ -18,7 +18,7 @@ public final class ChronicleViewGameTests {
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=200)
     public static void requestCodecBindsSessionFiltersAndRejectsForgedModesAndBounds(GameTestHelper h){
         var request=request("CHRONICLE",UUID.randomUUID(),"WAR",12,80,UUID.randomUUID(),"İznik");var buf=new RegistryFriendlyByteBuf(Unpooled.buffer(),h.getLevel().registryAccess());
-        try{ChronicleRequestPayload.CODEC.encode(buf,request);h.assertTrue(ChronicleRequestPayload.CODEC.decode(buf).equals(request) && KingdomNetwork.VERSION.equals("7"),"New bounded read-only channel retains correlation and filters on matching clients");}finally{buf.release();}
+        try{ChronicleRequestPayload.CODEC.encode(buf,request);h.assertTrue(ChronicleRequestPayload.CODEC.decode(buf).equals(request) && KingdomNetwork.VERSION.equals("8"),"New bounded read-only channel retains correlation and filters on matching clients");}finally{buf.release();}
         HistoryGameTests.refused(h,()->request("WRITE",null,"",0,1,null,""));HistoryGameTests.refused(h,()->request("CHRONICLE",null,"FAKE",0,1,null,""));HistoryGameTests.refused(h,()->request("CHRONICLE",null,"",8,1,null,""));HistoryGameTests.refused(h,()->request("CHRONICLE",null,"",0,1,null,"x".repeat(65)));h.succeed();
     }
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=200)

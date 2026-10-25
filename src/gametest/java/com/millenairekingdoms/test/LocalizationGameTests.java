@@ -7,6 +7,8 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.zip.GZIPInputStream;
+import java.util.regex.Pattern;
+import com.millenairekingdoms.localization.PublicText;
 import net.minecraft.gametest.framework.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.storage.LevelResource;
@@ -41,5 +43,60 @@ public final class LocalizationGameTests {
         if(!read){var e=NarrativeGameTests.event(HistoryEvent.Kind.SHIPMENT,13,"millenaire:japanese","ARTISAN");var tag=new CompoundTag();tag.put("event",e.save());HistoryFiles.write(file,tag);}
         var before=HistoryFiles.read(file);var e=HistoryEvent.load(before.getCompound("event"));for(var locale:LocalizedResources.locales())ChronicleNarrator.render(e,null,locale);
         h.assertTrue(before.equals(HistoryFiles.read(file)) && before.getCompound("event").equals(e.save()),"Locale selection produces no event/save writes or duplicated facts; same native fact bytes survive a different JVM");h.succeed();
+    }
+    private static Map<String,Integer> slots(String value){
+        var result=new TreeMap<String,Integer>();var pattern=Pattern.compile("%(?:(\\d+)\\$)?([sdf])|%%");var match=pattern.matcher(value);int next=1,end=0;
+        while(match.find()){
+            if(value.substring(end,match.start()).contains("%"))throw new IllegalArgumentException("Malformed percent instruction: "+value);
+            String identity;if(match.group().equals("%%"))identity="literal-percent";else identity=(match.group(1)==null?Integer.toString(next++):match.group(1))+match.group(2);
+            result.merge(identity,1,Integer::sum);end=match.end();
+        }
+        if(value.substring(end).contains("%"))throw new IllegalArgumentException("Trailing malformed percent instruction: "+value);return result;
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void everyOriginalLocaleHasEveryMandatoryKeyAndAllSemanticArguments(GameTestHelper h){
+        var source=LocalizedResources.catalog("en_us");int checked=0;
+        for(var locale:LocalizedResources.locales()){
+            var target=LocalizedResources.catalog(locale);h.assertTrue(target.keySet().equals(source.keySet()) && LocalizedResources.missingKeys(locale).isEmpty(),"Complete mandatory resource key set for "+locale);
+            for(var entry:source.entrySet()){
+                var value=target.get(entry.getKey());h.assertTrue(!value.isBlank() && !value.contains("ZX000ZX") && slots(entry.getValue()).equals(slots(value)),"Semantic argument identities/multiplicity and format grammar: "+locale+"/"+entry.getKey());checked++;
+            }
+        }
+        System.out.println("LOCALIZATION_COVERAGE locales="+LocalizedResources.locales().size()+" keys_per_locale="+source.size()+" values="+checked+" missing=0 malformed=0 native_review=false");h.succeed();
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void everyLocaleRendersAll13KindsBothPerspectivesCulturesAndEthosWithoutEnglishFallback(GameTestHelper h){
+        var cultures=List.of("norman","byzantines","seljuk","indian","japanese","mayan","inuits","unknown");var ethos=List.of("MILITARY","RELIGIOUS","AGRICULTURAL","ARTISAN","GENERAL");int cases=0;
+        for(var locale:LocalizedResources.locales())for(var kind:HistoryEvent.Kind.values())for(int n=0;n<24;n++){
+            var event=NarrativeGameTests.event(kind,n,"millenaire:"+cultures.get(n%cultures.size()),ethos.get(n%ethos.size()));var before=event.save();var voices=new HashSet<String>();
+            for(var realm:event.realms()){
+                var account=ChronicleNarrator.render(event,realm.id(),(key,args)->{
+                    h.assertTrue(LocalizedResources.catalog(locale).containsKey(key),"Narrative must resolve directly in "+locale+" without English fallback: "+key);return LocalizedResources.text(locale,key,args);
+                });
+                h.assertTrue(!account.heading().isBlank() && account.prose().length()>40 && !account.prose().contains("millenairekingdoms.") && account.prose().contains("İznik"),"All event kinds render localized prose while factual names remain literal: "+locale+"/"+kind);voices.add(account.prose());cases++;
+            }
+            if(kind==HistoryEvent.Kind.WAR)h.assertTrue(voices.size()==2,"War perspectives remain distinct in "+locale);
+            h.assertTrue(before.equals(event.save()),"Rendering never changes facts for "+locale);
+        }
+        System.out.println("LOCALIZATION_NARRATIVES cases="+cases+" event_kinds="+HistoryEvent.Kind.values().length+" missing_narrative_keys=0 native_review=false");h.succeed();
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void publicChatAndDynamicRefusalsKeepNamesFactsAndClickCommandsStructured(GameTestHelper h){
+        String name="O'Neill %s / İznik";var message=PublicText.of("You now rule %s. The NPC leader keeps running the village.",name);
+        h.assertTrue(message.getContents() instanceof net.minecraft.network.chat.contents.TranslatableContents && message.getString().equals("You now rule "+name+". The NPC leader keeps running the village."),"Server fallback stays byte-identical and names are literal component parameters");
+        var diagnostic=PublicText.error("no military progress for 12 days");h.assertTrue(diagnostic.getContents() instanceof net.minecraft.network.chat.contents.TranslatableContents && diagnostic.getString().equals("no military progress for 12 days"),"Dynamic reason is translated only at presentation; the factual day value/internal reason stay intact");
+        var id=UUID.randomUUID();var structured=PublicText.of("%s",id);h.assertTrue(structured.getString().equals(id.toString()),"UUID/resource/enum identifiers become literal supported text arguments instead of invalid Minecraft component values");
+        var refusal=new com.millenairekingdoms.util.KingdomException("millenairekingdoms.raid.refused","The raid cannot start: %s.",diagnostic);h.assertTrue(refusal.getMessage().equals("The raid cannot start: no military progress for 12 days."),"Structured localized reasons retain readable English exception/log fallback rather than component debug syntax");
+        var literal=PublicText.error("future operation "+UUID.randomUUID());h.assertTrue(!(literal.getContents() instanceof net.minecraft.network.chat.contents.TranslatableContents),"Unknown diagnostic preserves readable English evidence instead of inventing a translation");
+        var button=com.millenairekingdoms.politics.PoliticsService.button(PublicText.of("[Accept]"),"/kingdom accept 00000000-0000-0000-0000-000000000001",PublicText.of("Attach %s",name));
+        h.assertTrue(button.getStyle().getClickEvent().getValue().endsWith("00000000-0000-0000-0000-000000000001") && button.getStyle().getHoverEvent()!=null,"Translation preserves the original authoritative command/click and hover payloads");h.succeed();
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void literalDiagnosticInventoryAndEveryDynamicTemplateHaveTranslationsInEveryLocale(GameTestHelper h)throws Exception{
+        try(var in=LocalizationGameTests.class.getResourceAsStream("/assets/millenairekingdoms/public-text-sources.json")){
+            var root=JsonParser.parseReader(new InputStreamReader(in,StandardCharsets.UTF_8)).getAsJsonObject();var keys=new HashSet<String>();root.getAsJsonObject("errors").entrySet().forEach(e->keys.add(e.getValue().getAsString()));root.getAsJsonArray("patterns").forEach(e->keys.add(PublicText.key(e.getAsString())));
+            for(var locale:LocalizedResources.locales())h.assertTrue(LocalizedResources.catalog(locale).keySet().containsAll(keys),"Literal and dynamic player-facing diagnostic inventory present in "+locale);
+            h.assertTrue(keys.size()>500,"Public error/notification inventory is included, alongside GUI and literary narrative resources");
+        }h.succeed();
     }
 }

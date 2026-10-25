@@ -31,6 +31,7 @@ final class ChronicleScreen extends Screen {
     void refresh(){previous.clear();request(null);}
     void receive(CompoundTag incoming){if(!incoming.getUUID("session").equals(session)||incoming.getLong("serial")!=serial)return;if(incoming.getInt("retryAfter")>0){retryTicks=Math.min(20,incoming.getInt("retryAfter"));return;}pending=null;retryTicks=0;view=incoming;events=incoming.getList("events",10).stream().map(t->HistoryEvent.load((CompoundTag)t)).toList();next=incoming.hasUUID("next")?incoming.getUUID("next"):null;if(events.stream().noneMatch(e->e.id().equals(selected)))selected=events.isEmpty()?null:events.getFirst().id();rebuildWidgets();}
     @Override protected void init(){
+        languageState=net.minecraft.locale.Language.getInstance();
         int entryScroll=entries!=null && Objects.equals(shownCursor,cursor)?entries.scroll:0;int proseScroll=prose!=null && Objects.equals(lastShown,selected)?prose.scroll:0;shownCursor=cursor;lastShown=selected;
         pw=Math.min(740,width-16);ph=Math.min(420,height-16);left=(width-pw)/2;top=(height-ph)/2;int third=(pw-24)/3;
         button(left+8,top+25,third,t("kingdom"),()->{minecraft.setScreen(new ChronicleFilterScreen(this,true));});
@@ -39,7 +40,7 @@ final class ChronicleScreen extends Screen {
         button(left+8,top+47,74,t("filters"),()->minecraft.setScreen(new ChronicleFilterScreen(this,false)));
         int mainTop=top+70,bottom=top+ph-48,listWidth=Math.max(96,(pw-24)*2/5);
         entries=new KingdomScreen.RowList(left+8,mainTop,listWidth,Math.max(22,bottom-mainTop),22);
-        for(var e:events){String date=Component.translatable("millenairekingdoms.history.day",e.day()).getString();var account=ChronicleNarrator.render(e,scope,ClientText::resolve);entries.add(Component.literal(date+" · "+account.heading()),0xFF493321,e.id().equals(selected),()->{selected=e.id();rebuildWidgets();});}
+        for(var e:events){String date=ClientText.component("millenairekingdoms.history.day",e.day()).getString();var account=ChronicleNarrator.render(e,scope,ClientText::resolve);entries.add(Component.literal(date+" · "+account.heading()),0xFF493321,e.id().equals(selected),()->{selected=e.id();rebuildWidgets();});}
         prose=new KingdomScreen.RowList(left+16+listWidth,mainTop,pw-listWidth-24,Math.max(22,bottom-mainTop));
         var chosen=events.stream().filter(e->e.id().equals(selected)).findFirst().orElse(null);
         if(scope!=null){prose.addWrapped(font,view.contains("founded")?t("founded",view.getLong("founded")):t("founding_unknown"),0xFF705237);if(view.getBoolean("fallen"))prose.addWrapped(font,t("fallen"),0xFF705237);}

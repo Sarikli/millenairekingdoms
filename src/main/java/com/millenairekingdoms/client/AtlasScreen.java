@@ -19,6 +19,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 /** Independent full-screen atlas. No terrain requests, world mutation or external mapping mod. */
 final class AtlasScreen extends Screen {
+    private Object languageState;
     private record Pending(String mode,UUID kingdom,UUID cursor,int generation){}
     private final Screen parent;private final UUID session=UUID.randomUUID(),event,village;
     private final Map<UUID,CompoundTag> sites=new LinkedHashMap<>(),kingdoms=new LinkedHashMap<>(),wars=new LinkedHashMap<>();
@@ -31,10 +32,10 @@ final class AtlasScreen extends Screen {
     private UUID paneRealm;private boolean paneInfo;
     private KingdomScreen.RowList rows;private int mapLeft,mapTop,mapRight,mapBottom,panelX,panelWidth;
     AtlasScreen(Screen parent,UUID kingdom,UUID event,UUID village){super(t("title"));this.parent=parent;this.selectedKingdom=kingdom;this.event=event;this.village=village;this.showInfo=kingdom!=null;}
-    static Component t(String key,Object...args){return Component.translatable("millenairekingdoms.atlas."+key,args);}
+    static Component t(String key,Object...args){return ClientText.component("millenairekingdoms.atlas."+key,args);}
     void refresh(){generation++;queue.clear();waiting.clear();restarts=0;status="loading";queue.add(new Pending("ATLAS",null,null,generation));}
     @Override public void tick(){
-        ticks++;if((status.equals("ready") || status.equals("empty")) && queue.isEmpty() && waiting.isEmpty() && ticks-lastRefresh>=100)refresh();if(ticks-lastSent<5 || queue.isEmpty())return;lastSent=ticks;var p=queue.remove();if(p.generation!=generation)return;long id=++serial;waiting.put(id,p);
+        ticks++;if(languageState!=net.minecraft.locale.Language.getInstance()){languageState=net.minecraft.locale.Language.getInstance();rebuildWidgets();}if((status.equals("ready") || status.equals("empty")) && queue.isEmpty() && waiting.isEmpty() && ticks-lastRefresh>=100)refresh();if(ticks-lastSent<5 || queue.isEmpty())return;lastSent=ticks;var p=queue.remove();if(p.generation!=generation)return;long id=++serial;waiting.put(id,p);
         PacketDistributor.sendToServer(new ChronicleRequestPayload(session,id,p.mode,Optional.ofNullable(p.kingdom),"",0,Long.MAX_VALUE,Optional.ofNullable(p.cursor),"",Optional.ofNullable(event),Optional.ofNullable(village)));
     }
     void receive(CompoundTag view){
@@ -65,12 +66,13 @@ final class AtlasScreen extends Screen {
 
     private static void collect(Map<UUID,CompoundTag> map,CompoundTag view,String key){for(var raw:view.getList(key,10)){var tag=(CompoundTag)raw;if(tag.hasUUID("id"))map.put(tag.getUUID("id"),tag);}}
     @Override protected void init(){
+        languageState=net.minecraft.locale.Language.getInstance();
         int retainedScroll=rows!=null && Objects.equals(paneRealm,selectedKingdom) && paneInfo==showInfo?rows.scroll:0;paneRealm=selectedKingdom;paneInfo=showInfo;
         panelWidth=Math.min(210,Math.max(104,width/3));mapLeft=6;mapTop=46;mapRight=width-6-(showPanel?panelWidth+8:0);mapBottom=height-26;panelX=mapRight+8;
         button(6,6,54,Component.translatable("gui.back"),this::onClose);button(64,6,84,ChronicleScreen.t("title"),()->HistoryClient.open(this,selectedKingdom));button(152,6,64,ChronicleScreen.t("refresh"),this::refresh);button(220,6,Math.min(94,width-226),t(showPanel?"hide_panel":"show_panel"),()->{showPanel=!showPanel;rebuildWidgets();});
         rows=null;if(!showPanel)return;int half=(panelWidth-4)/2;button(panelX,mapTop,half,t("kingdoms"),()->{showInfo=false;rebuildWidgets();});button(panelX+half+4,mapTop,half,t("information"),()->{showInfo=true;rebuildWidgets();});
         rows=new KingdomScreen.RowList(panelX,mapTop+23,panelWidth,Math.max(22,mapBottom-mapTop-69),showInfo?11:20);
-        if(showInfo)buildInfo();else for(var k:kingdoms.values().stream().sorted(Comparator.comparing(k->k.getString("name"))).toList())rows.add(Component.literal(k.getString("name")),k.getInt("color"),k.getUUID("id").equals(selectedKingdom),()->selectKingdom(k.getUUID("id"),true));
+        if(showInfo)buildInfo();else for(var k:kingdoms.values().stream().sorted(Comparator.comparing(k->k.getString("name"))).toList())rows.add(com.millenairekingdoms.localization.PublicText.of("%s", k.getString("name")),k.getInt("color"),k.getUUID("id").equals(selectedKingdom),()->selectKingdom(k.getUUID("id"),true));
         if(!showInfo)rows.add(t("independent"),0xFF625E51,selectedKingdom==null,()->{selectedKingdom=null;selectedVillage=null;info=new CompoundTag();rebuildWidgets();});
         rows.scroll=retainedScroll;
         button(panelX,mapBottom-41,panelWidth,t(selectedVillage==null?"chronicle":"village_history"),()->HistoryClient.open(this,selectedKingdom,selectedVillage));
@@ -78,14 +80,14 @@ final class AtlasScreen extends Screen {
     }
     private void buildInfo(){
         if(info.isEmpty()){
-            if(selectedVillage!=null && sites.containsKey(selectedVillage)){var site=sites.get(selectedVillage);line(Component.literal(site.getString("name")));line(t("independent"));line(Component.literal(site.getString("typeName")));}else line(t("select"));return;
+            if(selectedVillage!=null && sites.containsKey(selectedVillage)){var site=sites.get(selectedVillage);line(com.millenairekingdoms.localization.PublicText.of("%s", site.getString("name")));line(t("independent"));line(com.millenairekingdoms.localization.PublicText.of("%s", site.getString("typeName")));}else line(t("select"));return;
         }
-        line(Component.literal(info.getString("name")));line(t("culture",info.getString("cultureName")));line(Component.translatable("millenairekingdoms.gui.personality",Component.translatable("millenairekingdoms.gui.personality."+info.getString("ethos"))));
+        line(com.millenairekingdoms.localization.PublicText.of("%s", info.getString("name")));line(t("culture",ClientText.culture(info.getString("culture"),info.getString("cultureName"))));line(Component.translatable("millenairekingdoms.gui.personality",Component.translatable("millenairekingdoms.gui.personality."+info.getString("ethos"))));
         line(info.contains("founded")?ChronicleScreen.t("founded",info.getLong("founded")):ChronicleScreen.t("founding_unknown"));
         if(info.getBoolean("fallen"))line(ChronicleScreen.t("fallen"));else{
             line(t("capital",info.getString("capital")));line(t("members",info.getInt("memberCount")));line(info.getString("ruler").isBlank()?t("npc_government"):t("ruler",info.getString("ruler")));line(info.getBoolean("war")?t("war",info.getString("opponent")):t("peace"));
             if(info.getBoolean("economicRights")){line(t("income",info.getLong("income")));line(t("owed",info.getLong("owed")));line(info.getBoolean("storageLoaded")?t("treasury",info.getLong("treasury")):t("storage_unloaded"));}
-            for(var raw:info.getList("members",10)){var member=(CompoundTag)raw;rows.add(Component.literal(member.getString("name")),0xFF493321,false,()->{centerX=member.getInt("x");centerZ=member.getInt("z");selectedVillage=member.getUUID("id");});rows.addWrapped(font,Component.literal(member.getString("typeName")),0xFF705237);}
+            for(var raw:info.getList("members",10)){var member=(CompoundTag)raw;rows.add(com.millenairekingdoms.localization.PublicText.of("%s", member.getString("name")),0xFF493321,false,()->{centerX=member.getInt("x");centerZ=member.getInt("z");selectedVillage=member.getUUID("id");});rows.addWrapped(font,com.millenairekingdoms.localization.PublicText.of("%s", member.getString("typeName")),0xFF705237);}
         }
     }
     private void line(Component text){rows.addWrapped(font,text,0xFF493321);}
@@ -121,7 +123,7 @@ final class AtlasScreen extends Screen {
     private static void quad(GuiGraphics g,float ax,float ay,float bx,float by,float cx,float cy,float dx,float dy,int color){var pose=g.pose().last().pose();VertexConsumer vertices=g.bufferSource().getBuffer(RenderType.gui());vertices.addVertex(pose,ax,ay,0).setColor(color);vertices.addVertex(pose,bx,by,0).setColor(color);vertices.addVertex(pose,cx,cy,0).setColor(color);vertices.addVertex(pose,dx,dy,0).setColor(color);}
     private static void line(GuiGraphics g,float ax,float ay,float bx,float by,float width,int color){double len=Math.hypot(bx-ax,by-ay);if(len<.01)return;float dx=(float)((by-ay)/len*width/2),dy=(float)(-(bx-ax)/len*width/2);quad(g,ax+dx,ay+dy,bx+dx,by+dy,bx-dx,by-dy,ax-dx,ay-dy,color);}
     @Override public void render(GuiGraphics g,int mx,int my,float tick){super.render(g,mx,my,tick);g.drawString(font,title,8,30,0xFF493321,false);g.drawString(font,font.plainSubstrByWidth(ChronicleScreen.t("current_map").getString(),width-16),8,height-17,0xFF493321,false);if(!status.equals("ready"))g.drawString(font,t(status),mapLeft+8,mapTop+8,0xFF493321,false);if(rows!=null)rows.render(g,font,mx,my);
-        var hovered=hover(mx,my);if(hovered!=null)g.renderTooltip(font,List.of(Component.literal(hovered.getString("name")),Component.literal(hovered.getString("typeName")),t(hovered.getBoolean("capital")?"capital_marker":"village_marker")),Optional.empty(),mx,my);
+        var hovered=hover(mx,my);if(hovered!=null)g.renderTooltip(font,List.of(com.millenairekingdoms.localization.PublicText.of("%s", hovered.getString("name")),com.millenairekingdoms.localization.PublicText.of("%s", hovered.getString("typeName")),t(hovered.getBoolean("capital")?"capital_marker":"village_marker")),Optional.empty(),mx,my);
     }
     @Override public boolean mouseClicked(double x,double y,int button){if(super.mouseClicked(x,y,button))return true;if(button==0 && rows!=null && rows.click(x,y))return true;if(button==0 && inside(x,y)){
         var hovered=hover(x,y);if(hovered!=null){UUID village=hovered.getUUID("id");if(hovered.hasUUID("kingdom"))selectKingdom(hovered.getUUID("kingdom"),false);else{selectedKingdom=null;info=new CompoundTag();showInfo=true;}selectedVillage=village;rebuildWidgets();}

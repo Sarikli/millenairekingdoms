@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 
 /** Client selection only: the server still validates the source/product and issues its own price/stock offer. */
 final class ShipmentProductScreen extends Screen {
+    private Object languageState;
     private final KingdomScreen parent;
     private final List<ResourceLocation> products=new ArrayList<>();
     private final String selected;
@@ -30,6 +31,7 @@ final class ShipmentProductScreen extends Screen {
         }
     }
     @Override protected void init(){
+        languageState=net.minecraft.locale.Language.getInstance();
         panelWidth=Math.min(360,width-16);panelHeight=Math.min(260,height-16);left=(width-panelWidth)/2;top=(height-panelHeight)/2;
         search=new EditBox(font,left+12,top+28,panelWidth-24,18,Component.translatable("millenairekingdoms.gui.shipment.search_product"));
         search.setMaxLength(128);search.setHint(Component.translatable("millenairekingdoms.gui.shipment.search_product"));search.setValue(query);
@@ -55,5 +57,6 @@ final class ShipmentProductScreen extends Screen {
     @Override public boolean mouseClicked(double x,double y,int button){return super.mouseClicked(x,y,button) || button==0 && rows.click(x,y);}
     @Override public boolean mouseScrolled(double x,double y,double dx,double dy){return rows.scroll(x,y,dy) || super.mouseScrolled(x,y,dx,dy);}
     @Override public void onClose(){minecraft.setScreen(parent);}
+    @Override public void tick(){super.tick();if(languageState!=net.minecraft.locale.Language.getInstance()){languageState=net.minecraft.locale.Language.getInstance();rebuildWidgets();}}
     @Override public boolean isPauseScreen(){return false;}
 }

@@ -23,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
  * buttons only send requests, disabled buttons only mirror what the server reported, and every answer comes back as a
  * new snapshot. Millénaire's own village and chief screens are untouched. */
 public final class KingdomScreen extends Screen {
+    private Object languageState;
     private static final ResourceLocation PARCHMENT = ResourceLocation.fromNamespaceAndPath("millenaire", "textures/gui/village_chief.png");
     // Millénaire's parchment palette (PanelRenderHelper).
     static final int TITLE = 0xFF2A1A00, TEXT = 0xFF333333, MUTED = 0xFF6E5B3E, GOOD = 0xFF2B6A1E, BAD = 0xFF8A1C1C, LINE = 0xFFAA8866;
@@ -48,7 +49,7 @@ public final class KingdomScreen extends Screen {
     private final java.util.Map<String, Integer> scrolls = new java.util.HashMap<>();
     private Tab listTab = tab;
 
-    private record Text(int x, int y, Component text, int color, int width) {}
+    private record Text(int x, int y, Component text, int color, int width,net.minecraft.util.FormattedCharSequence visual) {}
 
     KingdomScreen(CompoundTag view) {
         super(Component.translatable("millenairekingdoms.gui.title"));
@@ -75,6 +76,7 @@ public final class KingdomScreen extends Screen {
     // ---------------------------------------------------------------- layout
 
     @Override protected void init() {
+        languageState=net.minecraft.locale.Language.getInstance();
         for (int i = 0; i < lists.size(); i++) scrolls.put(listTab + ":" + i, lists.get(i).scroll);
         listTab = tab;
         texts.clear(); lists.clear(); amountBox = null; nameBox = null; shipmentQuantityBox=null;
@@ -152,7 +154,7 @@ public final class KingdomScreen extends Screen {
         } else wrapped(x,y+listHeight+14,constructionReason(c.getString("reason")),half-4,MUTED,2);
         int ry=y+11;var order=c.getCompound("order");
         if(order.hasUUID("id")) {
-            ry=line(rx,ry,Component.literal(order.getString("name")),rw);
+            ry=line(rx,ry,ClientText.building(order.getString("plan"),order.getString("name")),rw);
             ry=line(rx,ry,t("construction.stage."+order.getString("stage")),rw,TITLE);
             if(!order.getString("blocked").equals("NONE")) ry=wrapped(rx,ry,t("construction.blocked."+order.getString("blocked")),rw,BAD,2);
             if(order.contains("progress"))ry=line(rx,ry,t("construction.progress",order.getInt("progress")),rw);
@@ -169,7 +171,7 @@ public final class KingdomScreen extends Screen {
         wrapped(x,bottom()-25,t(order.getString("stage").equals("WAITING") || !order.hasUUID("id") && c.getBoolean("naturalPending") ? "construction.waiting_note" : order.getBoolean("refundable") ? "construction.refund_note" : "construction.patronage_note"),w,MUTED,2);
     }
     private static Component constructionPlanName(CompoundTag plan){
-        return plan.getBoolean("upgrade")?t("construction.upgrade_choice",plan.getString("name"),plan.getInt("targetLevel")+1,plan.getInt("x"),plan.getInt("z")):Component.literal(plan.getString("name"));
+        return plan.getBoolean("upgrade")?t("construction.upgrade_choice",ClientText.building(plan.getString("plan"),plan.getString("name")),plan.getInt("targetLevel")+1,plan.getInt("x"),plan.getInt("z")):ClientText.building(plan.getString("plan"),plan.getString("name"));
     }
     private static Component constructionReason(String reason) {
         return t("construction.reason."+(reason.isEmpty() ? "NO_ELIGIBLE_PLAN" : reason));
@@ -265,7 +267,7 @@ public final class KingdomScreen extends Screen {
         CompoundTag k = view.getCompound("kingdom");
         int x = x0(), y = y0(), half = contentWidth() / 2;
         y = line(x, y, t("capital", k.getString("capital")), half);
-        y = line(x, y, t("culture", k.getString("culture")), half);
+        y = line(x, y, t("culture", ClientText.culture(k.getString("cultureId"),k.getString("culture"))), half);
         if(k.contains("personality"))y=line(x,y,t("personality",t("personality."+k.getString("personality"))),half);
         if(k.getBoolean("personalityFallback"))y=line(x,y,t("personality_fallback"),half,MUTED);
         y = line(x, y, t("coordinates", k.getInt("x"), k.getInt("y"), k.getInt("z")), half);
@@ -338,7 +340,7 @@ public final class KingdomScreen extends Screen {
             if (targets.rows.isEmpty()) targets.add(t("no_targets"), MUTED, false, null);
             int rx = x + half + 2, rw = w - half - 2, ry = listTop;
             if (selected != null) {
-                ry = line(rx, ry, Component.literal(selected.getString("name")), rw, TITLE);
+                ry = line(rx, ry, com.millenairekingdoms.localization.PublicText.of("%s", selected.getString("name")), rw, TITLE);
                 ry = line(rx, ry, t("target_detail", selected.getInt("defence"), selected.getInt("distance")), rw);
                 if (selected.contains("required")) ry = line(rx, ry, t("target_progress", selected.getInt("wins"), selected.getInt("required")), rw);
                 if (selected.getLong("cooldown") > 0) ry = line(rx, ry, t("cooldown", selected.getLong("cooldown")), rw, BAD);
@@ -353,7 +355,7 @@ public final class KingdomScreen extends Screen {
                 button(rx, ry, rw, t("cancel_raid"), b -> send(KingdomActionPayload.of("CANCEL_RAID")), !o.getBoolean("npc"), null);
                 ry += 20;
                 ry = wrapped(rx, ry, t("order_line", o.getString("target"), o.contains("source") ? o.getString("source") : "-",
-                        o.getLong("expiresIn") / 20, o.getString("waiting")), rw, MUTED, Math.max(1, (bottom() - 22 - ry) / 10));
+                        o.getLong("expiresIn") / 20, com.millenairekingdoms.localization.PublicText.error(o.getString("waiting"))), rw, MUTED, Math.max(1, (bottom() - 22 - ry) / 10));
             } else {
                 button(rx, ry, rw, t("start_raid"), b -> send(KingdomActionPayload.of("RAID", selectedTarget, selectedSource)),
                         selected != null && selected.getBoolean("ready"), selected == null ? t("select_target") : null);
@@ -432,7 +434,7 @@ public final class KingdomScreen extends Screen {
             CompoundTag k = (CompoundTag) tag;
             UUID id = k.getUUID("id");
             boolean self = id.equals(view.getUUID("focus"));
-            MutableComponent row = Component.literal(k.getString("name"));
+            MutableComponent row = com.millenairekingdoms.localization.PublicText.of("%s", k.getString("name"));
             if (self) row.append(" ").append(t("this_kingdom"));
             else {
                 row.append(" · ").append(k.contains("relation") ? t("relation", k.getInt("relation")) : t("relation_unknown"));
@@ -594,7 +596,7 @@ public final class KingdomScreen extends Screen {
         try { return Component.Serializer.fromJson(value, minecraft.level.registryAccess()); }
         catch (RuntimeException broken) { return Component.literal(value); }
     }
-    private static MutableComponent t(String key, Object... args) { return Component.translatable("millenairekingdoms.gui." + key, args); }
+    private static MutableComponent t(String key, Object... args) { return ClientText.component("millenairekingdoms.gui." + key, args); }
     private static String coins(long deniers) {
         long gold = deniers / 4096, rest = deniers % 4096, silver = rest / 64, bronze = rest % 64;
         StringBuilder b = new StringBuilder();
@@ -613,14 +615,12 @@ public final class KingdomScreen extends Screen {
         var parts = font.split(text, w);
         for (int i = 0; i < parts.size() && i < maxLines; i++) {
             var part = parts.get(i);
-            StringBuilder plain = new StringBuilder();
-            part.accept((index, style, codePoint) -> { plain.appendCodePoint(codePoint); return true; });
-            text(x, y, Component.literal(plain.toString()), color, w);
+            texts.add(new Text(x,y,Component.empty(),color,w,part));
             y += 10;
         }
         return y + 1;
     }
-    private void text(int x, int y, Component text, int color, int width) { texts.add(new Text(x, y, text, color, width)); }
+    private void text(int x, int y, Component text, int color, int width) { texts.add(new Text(x, y, text, color, width,null)); }
     private RowList list(int x, int y, int w, int h) {
         RowList l = new RowList(x, y, w, Math.max(12, h));
         l.scroll = scrolls.getOrDefault(tab + ":" + lists.size(), 0);
@@ -643,11 +643,11 @@ public final class KingdomScreen extends Screen {
     @Override public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
         super.render(g, mouseX, mouseY, partialTick);
         CompoundTag k = view.getCompound("kingdom");
-        Component heading = view.contains("focus") ? Component.literal(k.getString("name")) : title;
+        Component heading = view.contains("focus") ? com.millenairekingdoms.localization.PublicText.of("%s", k.getString("name")) : title;
         if(view.contains("focus") && isRoyalPage(tab))heading=t("tab.rulership").append(" · ").append(t("tab."+tab.name().toLowerCase(java.util.Locale.ROOT)));
         g.drawString(font, font.plainSubstrByWidth(heading.getString(), panelWidth - 24), left + 12, top + 9, TITLE, false);
         g.fill(left + 12, top + 40, left + panelWidth - 12, top + 41, LINE);
-        for (Text text : texts) g.drawString(font, font.plainSubstrByWidth(text.text.getString(), text.width), text.x, text.y, text.color, false);
+        for(Text text:texts){var parts=text.visual==null?font.split(text.text,Math.max(1,text.width)):List.of(text.visual);var visual=parts.isEmpty()?net.minecraft.util.FormattedCharSequence.EMPTY:parts.getFirst();int x=net.minecraft.locale.Language.getInstance().isDefaultRightToLeft()?text.x+text.width-font.width(visual):text.x;g.drawString(font,visual,x,text.y,text.color,false);}
         for (RowList list : lists) list.render(g, font, mouseX, mouseY);
         if (view.contains("message")) {
             // History and Refresh own the footer edges; the reply wraps between them.
@@ -672,23 +672,24 @@ public final class KingdomScreen extends Screen {
         for (RowList list : lists) if (list.scroll(mouseX, mouseY, scrollY)) return true;
         return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
+    @Override public void tick(){super.tick();if(languageState!=net.minecraft.locale.Language.getInstance()){languageState=net.minecraft.locale.Language.getInstance();rebuildWidgets();}}
     @Override public boolean isPauseScreen() { return false; }
 
     /** A small scrollable list of clickable rows drawn on the parchment. */
     static final class RowList {
-        record Row(Component text, int color, boolean selected, Runnable click,net.minecraft.world.item.ItemStack icon) {}
+        record Row(Component text, int color, boolean selected, Runnable click,net.minecraft.world.item.ItemStack icon,net.minecraft.util.FormattedCharSequence visual) {}
         final int x, y, w, h, rowHeight;
         final List<Row> rows = new ArrayList<>();
         int scroll;
         RowList(int x, int y, int w, int h) {this(x,y,w,h,11);}
         RowList(int x,int y,int w,int h,int rowHeight) {this.x=x;this.y=y;this.w=w;this.h=h;this.rowHeight=rowHeight;}
-        void add(Component text, int color, boolean selected, Runnable click) { rows.add(new Row(text, color, selected, click,net.minecraft.world.item.ItemStack.EMPTY)); }
-        void addIcon(Component text,boolean selected,Runnable click,net.minecraft.world.item.ItemStack icon){rows.add(new Row(text,TEXT,selected,click,icon));}
+        void add(Component text, int color, boolean selected, Runnable click) { rows.add(new Row(text, color, selected, click,net.minecraft.world.item.ItemStack.EMPTY,null)); }
+        void addIcon(Component text,boolean selected,Runnable click,net.minecraft.world.item.ItemStack icon){rows.add(new Row(text,TEXT,selected,click,icon,null));}
         void addWrapped(Font font,Component text,int color){
             if(text==null)return;
             for(var part:font.split(text,Math.max(1,w-10))){
-                var plain=new StringBuilder();part.accept((index,style,codePoint)->{plain.appendCodePoint(codePoint);return true;});
-                add(Component.literal(plain.toString()),color,false,null);
+                // Font.split already supplies visual/BiDi order. Keep that sequence instead of reordering it twice.
+                rows.add(new Row(Component.empty(),color,false,null,net.minecraft.world.item.ItemStack.EMPTY,part));
             }
         }
         int visible() { return h / rowHeight; }
@@ -702,9 +703,14 @@ public final class KingdomScreen extends Screen {
                 boolean hover = row.click != null && mouseX >= x && mouseX < x + w && mouseY >= ry && mouseY < ry + rowHeight;
                 if (row.selected) g.fill(x + 1, ry, x + w - 1, ry + rowHeight, 0x55A07850);
                 else if (hover) g.fill(x + 1, ry, x + w - 1, ry + rowHeight, 0x30A07850);
-                int indent=row.icon.isEmpty()?3:23;
-                if(!row.icon.isEmpty())g.renderItem(row.icon,x+3,ry+2);
-                g.drawString(font,font.plainSubstrByWidth(row.text.getString(),w-indent-5),x+indent,ry+(rowHeight-font.lineHeight)/2,row.color,false);
+                int indent=row.icon.isEmpty()?3:23;boolean rtl=net.minecraft.locale.Language.getInstance().isDefaultRightToLeft();
+                if(!row.icon.isEmpty())g.renderItem(row.icon,rtl?x+w-19:x+3,ry+2);
+                var parts=row.visual==null?font.split(row.text,Math.max(1,w-indent-5)):List.of(row.visual);
+                var visual=parts.isEmpty()?net.minecraft.util.FormattedCharSequence.EMPTY:parts.getFirst();
+                int tx=rtl?x+w-indent-2-font.width(visual):x+indent;
+                g.drawString(font,visual,tx,ry+(rowHeight-font.lineHeight)/2,row.color,false);
+                if(row.visual==null && font.width(row.text)>w-indent-5 && mouseX>=x && mouseX<x+w && mouseY>=ry && mouseY<ry+rowHeight)
+                    g.renderTooltip(font,List.of(row.text),Optional.empty(),mouseX,mouseY);
             }
             if (rows.size() > visible()) {
                 int bar = Math.max(8, h * visible() / rows.size());

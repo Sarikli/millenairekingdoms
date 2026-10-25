@@ -18,14 +18,12 @@ public final class RoyalRecoveryCommands {
     public static LiteralArgumentBuilder<CommandSourceStack> tree() {
         return Commands.literal("royal_recovery").requires(s->s.hasPermission(2))
                 .then(Commands.literal("list").executes(c->guarded(c,()->{
-                    var entries=service(c).entries(c.getSource()); reply(c,"Recovery decisions in this dimension: "+entries.size());
+                    var entries=service(c).entries(c.getSource()); reply(c,com.millenairekingdoms.localization.PublicText.of("Recovery decisions in this dimension: %s", entries.size()));
                     for(var e:entries) reply(c,describe(e));
                 })))
                 .then(Commands.literal("inspect_order").then(Commands.argument("order",UuidArgument.uuid()).executes(c->guarded(c,()->{
                     var e=service(c).inspectOrder(c.getSource(),UuidArgument.getUuid(c,"order"));
-                    reply(c,"Order "+e.intent().id()+" | "+e.stage()+" / "+e.blocked()+" | village="+e.intent().village()
-                            +" | plan="+e.intent().plan()+" | fee="+e.intent().fee()+" | building="+e.building()
-                            +" | retiredFrom="+e.cancellationFrom()+" | recoveryDecision="+e.recoveryDecision());
+                    reply(c,com.millenairekingdoms.localization.PublicText.of("Order %s | %s / %s | village=%s | plan=%s | fee=%s | building=%s | retiredFrom=%s | recoveryDecision=%s", e.intent().id(), e.stage(), e.blocked(), e.intent().village(), e.intent().plan(), e.intent().fee(), e.building(), e.cancellationFrom(), e.recoveryDecision()));
                 }))))
                 .then(Commands.literal("adopt_pending").then(Commands.argument("order",UuidArgument.uuid())
                         .then(Commands.argument("reason",StringArgumentType.greedyString()).executes(c->authorize(c,RoyalRecoveryStore.Mode.ADOPT_PENDING)))))
@@ -35,17 +33,17 @@ public final class RoyalRecoveryCommands {
                 .then(Commands.literal("forfeit_fee").then(Commands.argument("order",UuidArgument.uuid())
                         .then(Commands.argument("reason",StringArgumentType.greedyString()).executes(c->authorize(c,RoyalRecoveryStore.Mode.FORFEIT_FEE)))))
                 .then(Commands.literal("resume").then(Commands.argument("decision",UuidArgument.uuid()).executes(c->guarded(c,()->
-                        reply(c,describe(service(c).resume(c.getSource(),UuidArgument.getUuid(c,"decision"))))))))
+                        reply(c,com.millenairekingdoms.localization.PublicText.of("%s", describe(service(c).resume(c.getSource(),UuidArgument.getUuid(c,"decision")))))))))
                 .then(Commands.literal("abandon").then(Commands.argument("decision",UuidArgument.uuid())
-                        .then(Commands.argument("reason",StringArgumentType.greedyString()).executes(c->guarded(c,()->reply(c,describe(service(c).abandon(
-                                c.getSource(),UuidArgument.getUuid(c,"decision"),StringArgumentType.getString(c,"reason")))))))));
+                        .then(Commands.argument("reason",StringArgumentType.greedyString()).executes(c->guarded(c,()->reply(c,com.millenairekingdoms.localization.PublicText.of("%s", describe(service(c).abandon(
+                                c.getSource(),UuidArgument.getUuid(c,"decision"),StringArgumentType.getString(c,"reason"))))))))));
     }
     private static int authorize(CommandContext<CommandSourceStack> c,RoyalRecoveryStore.Mode mode) {
         UUID decision=UUID.randomUUID();
         return guarded(c,()->{
             var service=service(c); var e=service.authorize(c.getSource(),decision,UuidArgument.getUuid(c,"order"),mode,
                     mode==RoyalRecoveryStore.Mode.ADOPT_BUILDING ? UuidArgument.getUuid(c,"building") : null,StringArgumentType.getString(c,"reason"));
-            reply(c,"Persisted recovery decision "+decision+"; fee retained, original work preserved. Resume this ID if interrupted.");
+            reply(c,com.millenairekingdoms.localization.PublicText.of("Persisted recovery decision %s; fee retained, original work preserved. Resume this ID if interrupted.", decision));
             reply(c,describe(service.resume(c.getSource(),e.intent().id())));
         },decision);
     }
@@ -60,10 +58,10 @@ public final class RoyalRecoveryCommands {
         try {action.run();return 1;}
         catch(Exception failure) {
             LogUtils.getLogger().warn("[Kingdoms] Operator recovery command failed; decision={}; retained durable state",decision,failure);
-            c.getSource().sendFailure(Component.literal("Recovery paused: "+failure.getMessage()+". Inspect /kingdoms royal_recovery list; durable changes may already exist."
-                    +(decision==null ? "" : " Decision ID: "+decision))); return 0;
+            c.getSource().sendFailure(com.millenairekingdoms.localization.PublicText.of("Recovery paused: %s. Inspect /kingdoms royal_recovery list; durable changes may already exist.%s", failure.getMessage(), (decision==null ? "" : com.millenairekingdoms.localization.PublicText.of(" Decision ID: %s", decision)))); return 0;
         }
     }
     private static void reply(CommandContext<CommandSourceStack> c,String text) {c.getSource().sendSuccess(()->Component.literal(text),false);}
+    private static void reply(CommandContext<CommandSourceStack> c,Component text) {c.getSource().sendSuccess(()->text,false);}
     @FunctionalInterface private interface Action {void run() throws Exception;}
 }

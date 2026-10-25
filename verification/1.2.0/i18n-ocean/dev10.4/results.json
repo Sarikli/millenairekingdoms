@@ -1,0 +1,79 @@
+{
+  "artifact": {
+    "version": "1.2.0-rc8-alpha.dev10.4",
+    "bytes": 879935,
+    "sha256": "f13ddd5989e2d064821b9334533a896cfe8a1a5ba3265f9257a5e82a4872e508",
+    "baseline_commit": "1fb9e5f04e19e0c9ed7c21bee171800f55e5d747",
+    "source_parent": "0c5e8346aed308e84b53b7d5cf50a316a1045b07"
+  },
+  "pairs": [
+    {
+      "suite": "verifyGeography",
+      "run": "i18n-dev10-geography-05",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "15"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/i18n-dev10-geography-05-write.log",
+          "sha256": "f2be6c6aa75c5d7e9bec1495dc7fee98824f458a367408760732137fc39ed913",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev10.4.jar",
+          "jar_sha256": "f13ddd5989e2d064821b9334533a896cfe8a1a5ba3265f9257a5e82a4872e508",
+          "archive_log": "verification/1.2.0/i18n-ocean/dev10.4/i18n-dev10-geography-05-write.log.gz",
+          "archive_sha256": "830034907c87ba5df66f220bde0ec905accf83ef794d3f3224c274e41759a1f4"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "15"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/i18n-dev10-geography-05-reopen.log",
+          "sha256": "cf6117b8317fe13ccb45f34e808d9aa1106e70db26244e29cf1825c02e2389d5",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev10.4.jar",
+          "jar_sha256": "f13ddd5989e2d064821b9334533a896cfe8a1a5ba3265f9257a5e82a4872e508",
+          "archive_log": "verification/1.2.0/i18n-ocean/dev10.4/i18n-dev10-geography-05-reopen.log.gz",
+          "archive_sha256": "6daa65407afbe63a0781c1a8c252648a102b36138f0e36912947a782a9dfe4c6"
+        }
+      ]
+    },
+    {
+      "suite": "verifyGui",
+      "run": "i18n-dev10-gui-05",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "7"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/i18n-dev10-gui-05-write.log",
+          "sha256": "ee1c024395d72e74f4e58b867bffc5d60f02151b90698acc310d5e87ccbb13bb",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev10.4.jar",
+          "jar_sha256": "f13ddd5989e2d064821b9334533a896cfe8a1a5ba3265f9257a5e82a4872e508",
+          "archive_log": "verification/1.2.0/i18n-ocean/dev10.4/i18n-dev10-gui-05-write.log.gz",
+          "archive_sha256": "8992a8aeeaed5e0c0454cef92aeb4658144eac46056b661db8201a2710ac9951"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "7"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/i18n-dev10-gui-05-reopen.log",
+          "sha256": "8b8bca0582e623280be8d30f305e913ec761ea23acaebb272e369ba501fa2f64",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev10.4.jar",
+          "jar_sha256": "f13ddd5989e2d064821b9334533a896cfe8a1a5ba3265f9257a5e82a4872e508",
+          "archive_log": "verification/1.2.0/i18n-ocean/dev10.4/i18n-dev10-gui-05-reopen.log.gz",
+          "archive_sha256": "0c62e0aa2d4e1c509e16586bd9d2991267eac4f42f3db140057491f220080400"
+        }
+      ]
+    }
+  ]
+}

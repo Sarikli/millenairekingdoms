@@ -72,7 +72,7 @@ public final class RaidOrderService {
                 String why = attempt.status() == Status.DROPPED ? attempt.reason() : "expired while waiting: " + attempt.reason();
                 LOGGER.info("[Kingdoms] Conquest order {} of {} on {} dropped ({}).", order.id(), data.kingdom(order.kingdom()) == null ? order.kingdom()
                         : data.kingdom(order.kingdom()).name(), order.target(), why);
-                tell(level, data, order, Component.literal("[Kingdoms] The conquest raid on " + targetName(level, order) + " was called off: " + why + ".")
+                tell(level, data, order, com.millenairekingdoms.localization.PublicText.of("[Kingdoms] The conquest raid on %s was called off: %s.", targetName(level, order), attempt.status()==Status.DROPPED?com.millenairekingdoms.localization.PublicText.error(why):com.millenairekingdoms.localization.PublicText.of("expired while waiting: %s",com.millenairekingdoms.localization.PublicText.error(attempt.reason())))
                         .withStyle(ChatFormatting.GRAY));
             } else WAITING.put(order.id(), attempt.reason());
         }
@@ -121,8 +121,7 @@ public final class RaidOrderService {
         try {
             var raid = ConquestService.launch(level, source.getId().uuid(), order.target(), order.issuer(), order.id());
             LOGGER.info("[Kingdoms] Conquest order {} started raid {}: {} -> {}.", order.id(), raid.id(), PoliticsService.name(source), PoliticsService.name(target));
-            tell(level, data, order, Component.literal("[Kingdoms] " + PoliticsService.name(source) + " sent its soldiers against "
-                    + PoliticsService.name(target) + ".").withStyle(ChatFormatting.GOLD));
+            tell(level, data, order, com.millenairekingdoms.localization.PublicText.of("[Kingdoms] %s sent its soldiers against %s.", PoliticsService.name(source), PoliticsService.name(target)).withStyle(ChatFormatting.GOLD));
             return new Attempt(Status.STARTED, "", raid);
         } catch (IllegalArgumentException notNow) {
             return Attempt.waiting(notNow.getMessage());
@@ -148,7 +147,7 @@ public final class RaidOrderService {
         Attempt attempt = attempt(level, data, order, AutonomyConfig.current());
         if (attempt.status() == Status.DROPPED) {
             data.removeOrder(order.id());
-            throw new KingdomException("millenairekingdoms.raid.refused", "The raid cannot start: %s.", attempt.reason());
+            throw new KingdomException("millenairekingdoms.raid.refused", "The raid cannot start: %s.", com.millenairekingdoms.localization.PublicText.error(attempt.reason()));
         }
         if (attempt.status() == Status.WAITING) WAITING.put(order.id(), attempt.reason());
         return attempt;
