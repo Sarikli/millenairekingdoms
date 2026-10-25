@@ -1,0 +1,32 @@
+[
+  {
+    "path": "fml.toml",
+    "sha256": "cc127c6067eb9e23289edc1c774afd71456456eef06c688af6731a72d3bba5e5",
+    "identical_to_alpha2": true
+  },
+  {
+    "path": "millenaire-common.toml",
+    "sha256": "42ba19b5b9f5d7f41e98d4cf1e80b65f84f87897c694f6a3375dddb03ef5550f",
+    "identical_to_alpha2": true
+  },
+  {
+    "path": "millenaire-server.toml",
+    "sha256": "c011cd41fc9dcddcad33889d956d23379a0b55a748f0d758ac036287a54bf4d6",
+    "identical_to_alpha2": true
+  },
+  {
+    "path": "millenairekingdoms-server.toml",
+    "sha256": "449238dde2d72e5cfb3c185558b71e26bf1d3d16f60a2be5e3e6ef2aac0deede",
+    "identical_to_alpha2": true
+  },
+  {
+    "path": "neoforge-common.toml",
+    "sha256": "e6f7578cf8c11ade0a47e36bf3863fc96f84cdf4bb679c0fceabb1e8a2f42399",
+    "identical_to_alpha2": true
+  },
+  {
+    "path": "neoforge-server.toml",
+    "sha256": "0f1415d7fef6d7f6194275501d500b633dd3310aea40d64128edd1b096372f60",
+    "identical_to_alpha2": true
+  }
+]

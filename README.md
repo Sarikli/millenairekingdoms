@@ -2,6 +2,7 @@
 
 > **1.2.0 development branch — By Royal Decree.** This branch targets Millénaire 9.0.3.
 > The experimental alpha adds persistent literary chronicles and a standalone political atlas to real-coin payments, native construction/upgrades and protected shipments. Manual client/online gates remain open.
+> **Current alpha.3:** ocean scanning and its client layer are completely disabled at the user's request; the political atlas and26-language chronicles remain. [Current JAR/checksum](releases/1.2.0-rc8-alpha.3/) · [deactivation report](docs/1.2.0_OCEAN_DISABLED.md).
 > See [progress](docs/1.2.0_PROGRESS.md) and [development setup](docs/1.2.0_DEVELOPMENT.md).
 > [RC8 alpha JAR/checksum and report](releases/1.2.0-rc8-alpha/) · [preserved RC.8](releases/1.2.0-rc.8/) · [open stock investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md).
 > [Preserved RC.1 technical report](docs/1.2.0_RELEASE_REPORT.md).
@@ -17,13 +18,13 @@ left untouched, and the original Millénaire JAR is never modified.
 
 | | |
 |---|---|
-| Development version | 1.2.0-rc8-alpha (experimental) |
+| Development version | 1.2.0-rc8-alpha.3 (experimental; ocean surveying disabled) |
 | Minecraft | 1.21.1 |
 | Loader | NeoForge 21.1.259 |
 | Required dependency | Millénaire 9.0.3 |
 | Java | 21 |
 | Mod ID | `millenairekingdoms` |
-| Languages | English, Turkish |
+| Languages | All26 original Millénaire9.0.3 locales; new translations are AI/machine-assisted drafts pending native review |
 
 1.1.1 is a maintenance build: expired raid orders, ruler-transition cleanup and conquest diplomacy are fixed;
 name-based commands and save-compatibility tests are strengthened. No new gameplay system is added.
