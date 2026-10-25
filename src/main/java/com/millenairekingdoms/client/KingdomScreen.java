@@ -593,16 +593,16 @@ public final class KingdomScreen extends Screen {
         return value.startsWith("{") || value.startsWith("\"") ? json(value) : Component.literal(value);
     }
     private Component json(String value) {
-        try { return Component.Serializer.fromJson(value, minecraft.level.registryAccess()); }
+        try { return ClientText.numbers(Component.Serializer.fromJson(value, minecraft.level.registryAccess())); }
         catch (RuntimeException broken) { return Component.literal(value); }
     }
     private static MutableComponent t(String key, Object... args) { return ClientText.component("millenairekingdoms.gui." + key, args); }
     private static String coins(long deniers) {
         long gold = deniers / 4096, rest = deniers % 4096, silver = rest / 64, bronze = rest % 64;
         StringBuilder b = new StringBuilder();
-        if (gold > 0) b.append(gold).append("o ");
-        if (silver > 0) b.append(silver).append("a ");
-        if (bronze > 0 || b.isEmpty()) b.append(bronze).append("d");
+        if (gold > 0) b.append(com.millenairekingdoms.localization.LocalizedResources.number(net.minecraft.client.Minecraft.getInstance().options.languageCode,gold)).append("o ");
+        if (silver > 0) b.append(com.millenairekingdoms.localization.LocalizedResources.number(net.minecraft.client.Minecraft.getInstance().options.languageCode,silver)).append("a ");
+        if (bronze > 0 || b.isEmpty()) b.append(com.millenairekingdoms.localization.LocalizedResources.number(net.minecraft.client.Minecraft.getInstance().options.languageCode,bronze)).append("d");
         return b.toString().strip();
     }
     private void view(UUID kingdom) { if (kingdom != null) send(KingdomActionPayload.of("VIEW", kingdom)); }
@@ -683,11 +683,11 @@ public final class KingdomScreen extends Screen {
         int scroll;
         RowList(int x, int y, int w, int h) {this(x,y,w,h,11);}
         RowList(int x,int y,int w,int h,int rowHeight) {this.x=x;this.y=y;this.w=w;this.h=h;this.rowHeight=rowHeight;}
-        void add(Component text, int color, boolean selected, Runnable click) { rows.add(new Row(text, color, selected, click,net.minecraft.world.item.ItemStack.EMPTY,null)); }
-        void addIcon(Component text,boolean selected,Runnable click,net.minecraft.world.item.ItemStack icon){rows.add(new Row(text,TEXT,selected,click,icon,null));}
+        void add(Component text, int color, boolean selected, Runnable click) { rows.add(new Row(ClientText.numbers(text), color, selected, click,net.minecraft.world.item.ItemStack.EMPTY,null)); }
+        void addIcon(Component text,boolean selected,Runnable click,net.minecraft.world.item.ItemStack icon){rows.add(new Row(ClientText.numbers(text),TEXT,selected,click,icon,null));}
         void addWrapped(Font font,Component text,int color){
             if(text==null)return;
-            for(var part:font.split(text,Math.max(1,w-10))){
+            for(var part:font.split(ClientText.numbers(text),Math.max(1,w-10))){
                 // Font.split already supplies visual/BiDi order. Keep that sequence instead of reordering it twice.
                 rows.add(new Row(Component.empty(),color,false,null,net.minecraft.world.item.ItemStack.EMPTY,part));
             }

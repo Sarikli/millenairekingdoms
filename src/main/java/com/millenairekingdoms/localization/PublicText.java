@@ -19,6 +19,7 @@ public final class PublicText {
         var values=arguments.clone();for(int n=0;n<values.length;n++){var value=values[n];if(!(value instanceof Component || value instanceof Number || value instanceof Boolean || value instanceof String))values[n]=String.valueOf(value);}
         return Component.translatableWithFallback(key(english),english,values);
     }
+    public static void send(net.minecraft.server.level.ServerPlayer player,Component message){player.sendSystemMessage(LocalizedComponents.numbers(message,player.clientInformation().language()));}
     public static MutableComponent error(String english){
         if(english==null)return Component.empty();var key=CATALOG.errors().get(english);if(key!=null)return Component.translatableWithFallback(key,english.replace("%","%%"));
         if(english.length()<=8192)for(var diagnostic:CATALOG.patterns()){var match=diagnostic.expression().matcher(english);if(match.matches()){var values=new Object[diagnostic.arguments()];for(int n=0;n<values.length;n++)values[n]=match.group(n+1);return of(diagnostic.template(),values);}}

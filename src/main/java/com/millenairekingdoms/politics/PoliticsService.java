@@ -224,7 +224,7 @@ public final class PoliticsService {
         }
         data.attach(kingdom.id(), villageId);
         var applicant = request.fromNpcVillage() ? null : level.getServer().getPlayerList().getPlayer(request.player());
-        if (applicant != null) applicant.sendSystemMessage(com.millenairekingdoms.localization.PublicText.of("%s%s joined %s.", TAG, name(village), kingdom.name()).withStyle(ChatFormatting.GREEN));
+        if (applicant != null) com.millenairekingdoms.localization.PublicText.send(applicant,com.millenairekingdoms.localization.PublicText.of("%s%s joined %s.", TAG, name(village), kingdom.name()).withStyle(ChatFormatting.GREEN));
         return village;
     }
 
@@ -281,18 +281,18 @@ public final class PoliticsService {
         UUID ruled = data.ruledBy(player.getUUID());
         if (focus == null && ruled != null) focus = data.kingdom(ruled);
         if (focus == null) {
-            player.sendSystemMessage(com.millenairekingdoms.localization.PublicText.of("%sNo capital within 64 blocks and you rule no kingdom.", TAG).withStyle(ChatFormatting.GRAY));
+            com.millenairekingdoms.localization.PublicText.send(player,com.millenairekingdoms.localization.PublicText.of("%sNo capital within 64 blocks and you rule no kingdom.", TAG).withStyle(ChatFormatting.GRAY));
             return;
         }
         var ruler = data.ruler(focus.id());
         boolean isRuler = ruler != null && ruler.player().equals(player.getUUID());
         Village capital = village(level, focus.capital());
         int reputation = capital == null ? 0 : capital.getCombinedReputation(level, player.getUUID());
-        player.sendSystemMessage(Component.literal(TAG + focus.name()).withStyle(ChatFormatting.GOLD)
+        com.millenairekingdoms.localization.PublicText.send(player,Component.literal(TAG + focus.name()).withStyle(ChatFormatting.GOLD)
                 .append(com.millenairekingdoms.localization.PublicText.of(" | ruler: %s | villages: %s%s", (ruler == null ? com.millenairekingdoms.localization.PublicText.of("none (the NPC leader governs)") : ruler.lastKnownName()), data.members(focus.id()).size(), (focus.active() ? "" : com.millenairekingdoms.localization.PublicText.of(" | INACTIVE"))).withStyle(ChatFormatting.WHITE)));
-        player.sendSystemMessage(com.millenairekingdoms.localization.PublicText.of("Your reputation here: %s (war request %s, claim %s%s)", reputation, WAR_REQUEST_REPUTATION, CLAIM_REPUTATION, (isRuler ? com.millenairekingdoms.localization.PublicText.of(", decisions %s", DECISION_REPUTATION) : "")));
+        com.millenairekingdoms.localization.PublicText.send(player,com.millenairekingdoms.localization.PublicText.of("Your reputation here: %s (war request %s, claim %s%s)", reputation, WAR_REQUEST_REPUTATION, CLAIM_REPUTATION, (isRuler ? com.millenairekingdoms.localization.PublicText.of(", decisions %s", DECISION_REPUTATION) : "")));
         long owed = data.owed(focus.id());
-        player.sendSystemMessage(com.millenairekingdoms.localization.PublicText.of("Daily income: %s into the capital's town hall storage%s", EconomyService.format(EconomyService.dailyIncome(level, data, focus.id())), (owed > 0 ? com.millenairekingdoms.localization.PublicText.of(" | waiting for space or a loaded capital: %s", EconomyService.format(owed)) : "")));
+        com.millenairekingdoms.localization.PublicText.send(player,com.millenairekingdoms.localization.PublicText.of("Daily income: %s into the capital's town hall storage%s", EconomyService.format(EconomyService.dailyIncome(level, data, focus.id())), (owed > 0 ? com.millenairekingdoms.localization.PublicText.of(" | waiting for space or a loaded capital: %s", EconomyService.format(owed)) : "")));
         War war = data.activeWar(focus.id());
         if (war != null) {
             boolean attacking = war.attackerKingdom().equals(focus.id());
@@ -300,10 +300,10 @@ public final class PoliticsService {
             MutableComponent line = com.millenairekingdoms.localization.PublicText.of("At war %s%s%s ", (attacking ? com.millenairekingdoms.localization.PublicText.of("against ") : com.millenairekingdoms.localization.PublicText.of("defending against ")), other.name(), (data.peaceOffered(war.id()) ? com.millenairekingdoms.localization.PublicText.of(" (peace offered)") : "")).withStyle(ChatFormatting.RED);
             if (isRuler) line.append(button(attacking ? com.millenairekingdoms.localization.PublicText.of("[Make peace]") : com.millenairekingdoms.localization.PublicText.of("[Offer peace]"), "/kingdom war peace",
                     attacking ? com.millenairekingdoms.localization.PublicText.of("End this war") : com.millenairekingdoms.localization.PublicText.of("Ask %s for peace", other.name())));
-            player.sendSystemMessage(line);
+            com.millenairekingdoms.localization.PublicText.send(player,line);
         }
         if (ruler == null && ruled == null && focus.active()) {
-            player.sendSystemMessage(reputation >= CLAIM_REPUTATION
+            com.millenairekingdoms.localization.PublicText.send(player,reputation >= CLAIM_REPUTATION
                     ? com.millenairekingdoms.localization.PublicText.of("You may take over the rule. ").append(button(com.millenairekingdoms.localization.PublicText.of("[Claim rule]"), "/kingdom claim", com.millenairekingdoms.localization.PublicText.of("Become ruler of %s", focus.name())))
                     : com.millenairekingdoms.localization.PublicText.of("Claiming the rule needs reputation %s.", CLAIM_REPUTATION).withStyle(ChatFormatting.GRAY));
         }
@@ -317,17 +317,17 @@ public final class PoliticsService {
                 else if (ruler == null && reputation >= WAR_REQUEST_REPUTATION && relation <= HOSTILE_RELATION)
                     line.append(button(com.millenairekingdoms.localization.PublicText.of("[Request war]"), "/kingdom war request " + k.id(), com.millenairekingdoms.localization.PublicText.of("Ask the leader to declare war on %s", k.name())));
             }
-            player.sendSystemMessage(line);
+            com.millenairekingdoms.localization.PublicText.send(player,line);
         });
         if (isRuler) {
             data.joinRequests().entrySet().stream().filter(e -> e.getValue().kingdom().equals(finalFocus.id())).forEach(e -> {
                 Village applicant = village(level, e.getKey());
-                player.sendSystemMessage(com.millenairekingdoms.localization.PublicText.of("Application: %s%s ", (applicant == null ? e.getKey() : name(applicant)), (e.getValue().fromNpcVillage() ? com.millenairekingdoms.localization.PublicText.of(" (the village itself)") : com.millenairekingdoms.localization.PublicText.of(" from %s", e.getValue().playerName()))).append(button(com.millenairekingdoms.localization.PublicText.of("[Accept]"), "/kingdom accept " + e.getKey(), com.millenairekingdoms.localization.PublicText.of("Attach the village")))
+                com.millenairekingdoms.localization.PublicText.send(player,com.millenairekingdoms.localization.PublicText.of("Application: %s%s ", (applicant == null ? e.getKey() : name(applicant)), (e.getValue().fromNpcVillage() ? com.millenairekingdoms.localization.PublicText.of(" (the village itself)") : com.millenairekingdoms.localization.PublicText.of(" from %s", e.getValue().playerName()))).append(button(com.millenairekingdoms.localization.PublicText.of("[Accept]"), "/kingdom accept " + e.getKey(), com.millenairekingdoms.localization.PublicText.of("Attach the village")))
                         .append(" ").append(button(com.millenairekingdoms.localization.PublicText.of("[Refuse]"), "/kingdom refuse " + e.getKey(), com.millenairekingdoms.localization.PublicText.of("Refuse the application"))));
             });
-            player.sendSystemMessage(button(com.millenairekingdoms.localization.PublicText.of("[Abdicate]"), "/kingdom abdicate", com.millenairekingdoms.localization.PublicText.of("Give up the rule of %s", focus.name())));
+            com.millenairekingdoms.localization.PublicText.send(player,button(com.millenairekingdoms.localization.PublicText.of("[Abdicate]"), "/kingdom abdicate", com.millenairekingdoms.localization.PublicText.of("Give up the rule of %s", focus.name())));
         }
-        player.sendSystemMessage(button(com.millenairekingdoms.localization.PublicText.of("[Open the kingdom screen]"), "/kingdom gui", com.millenairekingdoms.localization.PublicText.of("All kingdom matters in one window")));
+        com.millenairekingdoms.localization.PublicText.send(player,button(com.millenairekingdoms.localization.PublicText.of("[Open the kingdom screen]"), "/kingdom gui", com.millenairekingdoms.localization.PublicText.of("All kingdom matters in one window")));
     }
 
     /** /kingdom info near an independent village: what it would take to join a kingdom or, for an owner, to found one. */
@@ -342,12 +342,12 @@ public final class PoliticsService {
             line.append(com.millenairekingdoms.localization.PublicText.of("[Found a kingdom]").withStyle(style -> style.withColor(ChatFormatting.AQUA).withUnderlined(true)
                     .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/kingdom found "))
                     .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, com.millenairekingdoms.localization.PublicText.of("Type the new kingdom's name")))));
-        player.sendSystemMessage(line);
+        com.millenairekingdoms.localization.PublicText.send(player,line);
         if (village.getOwnerUUID() != null && !own) return;
         data.kingdoms().stream().filter(k -> !k.fallen() && k.active()).sorted(Comparator.comparing(Kingdom::name)).forEach(k -> {
             Village capital = village(level, k.capital());
             if (capital == null) return;
-            player.sendSystemMessage(com.millenairekingdoms.localization.PublicText.of("  %s: relation with its capital %s ", k.name(), capital.getRelation(village.getId()))
+            com.millenairekingdoms.localization.PublicText.send(player,com.millenairekingdoms.localization.PublicText.of("  %s: relation with its capital %s ", k.name(), capital.getRelation(village.getId()))
                     .append(button(com.millenairekingdoms.localization.PublicText.of("[Join]"), "/kingdom join " + k.id(), com.millenairekingdoms.localization.PublicText.of("Ask to bring this village into %s", k.name()))));
         });
     }
@@ -364,7 +364,7 @@ public final class PoliticsService {
         var ruler = data(level).ruler(kingdomId);
         if (ruler == null) return;
         var player = level.getServer().getPlayerList().getPlayer(ruler.player());
-        if (player != null) player.sendSystemMessage(message);
+        if (player != null) com.millenairekingdoms.localization.PublicText.send(player,message);
     }
     static KingdomSavedData data(ServerLevel level) {
         ConquestService.reconcile(level);

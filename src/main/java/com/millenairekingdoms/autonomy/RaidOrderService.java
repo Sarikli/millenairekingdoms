@@ -202,7 +202,7 @@ public final class RaidOrderService {
     private static void tell(ServerLevel level, KingdomSavedData data, RaidOrder order, Component message) {
         if (order.issuer() == null) return;
         var player = level.getServer().getPlayerList().getPlayer(order.issuer());
-        if (player != null) player.sendSystemMessage(message);
+        if (player != null) com.millenairekingdoms.localization.PublicText.send(player,message);
     }
     static List<RaidOrder> of(KingdomSavedData data, UUID kingdom) {
         return data.orders().stream().filter(o -> o.kingdom().equals(kingdom)).toList();

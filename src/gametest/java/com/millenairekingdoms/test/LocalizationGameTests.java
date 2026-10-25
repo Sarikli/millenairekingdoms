@@ -73,7 +73,7 @@ public final class LocalizationGameTests {
                 var account=ChronicleNarrator.render(event,realm.id(),(key,args)->{
                     h.assertTrue(LocalizedResources.catalog(locale).containsKey(key),"Narrative must resolve directly in "+locale+" without English fallback: "+key);return LocalizedResources.text(locale,key,args);
                 });
-                h.assertTrue(!account.heading().isBlank() && account.prose().length()>40 && !account.prose().contains("millenairekingdoms.") && account.prose().contains("İznik"),"All event kinds render localized prose while factual names remain literal: "+locale+"/"+kind);voices.add(account.prose());cases++;
+                h.assertTrue(!account.heading().isBlank() && account.prose().length()>40 && !account.prose().contains("millenairekingdoms.") && account.prose().contains(kind==HistoryEvent.Kind.CONSTRUCTION_COMPLETE?"O'Neill %s":"İznik"),"All event kinds render localized prose while factual names remain literal: "+locale+"/"+kind);voices.add(account.prose());cases++;
             }
             if(kind==HistoryEvent.Kind.WAR)h.assertTrue(voices.size()==2,"War perspectives remain distinct in "+locale);
             h.assertTrue(before.equals(event.save()),"Rendering never changes facts for "+locale);
@@ -87,14 +87,16 @@ public final class LocalizationGameTests {
         var diagnostic=PublicText.error("no military progress for 12 days");h.assertTrue(diagnostic.getContents() instanceof net.minecraft.network.chat.contents.TranslatableContents && diagnostic.getString().equals("no military progress for 12 days"),"Dynamic reason is translated only at presentation; the factual day value/internal reason stay intact");
         var id=UUID.randomUUID();var structured=PublicText.of("%s",id);h.assertTrue(structured.getString().equals(id.toString()),"UUID/resource/enum identifiers become literal supported text arguments instead of invalid Minecraft component values");
         var refusal=new com.millenairekingdoms.util.KingdomException("millenairekingdoms.raid.refused","The raid cannot start: %s.",diagnostic);h.assertTrue(refusal.getMessage().equals("The raid cannot start: no military progress for 12 days."),"Structured localized reasons retain readable English exception/log fallback rather than component debug syntax");
+        var typed=net.minecraft.network.chat.Component.translatableWithFallback("test.numeric","%s / %s",1234,net.minecraft.network.chat.Component.literal("1234")).withStyle(style->style.withClickEvent(new net.minecraft.network.chat.ClickEvent(net.minecraft.network.chat.ClickEvent.Action.RUN_COMMAND,"/kingdom gui")));
+        var arabic=com.millenairekingdoms.localization.LocalizedComponents.numbers(typed,"ar_sa");h.assertTrue(arabic.getString().equals(LocalizedResources.number("ar_sa",1234)+" / 1234") && arabic.getStyle().getClickEvent().getValue().equals("/kingdom gui") && ((net.minecraft.network.chat.contents.TranslatableContents)typed.getContents()).getArgs()[0] instanceof Number,"Typed numbers follow the active locale; numeric-looking names, commands and original component facts remain literal/unchanged");
         var literal=PublicText.error("future operation "+UUID.randomUUID());h.assertTrue(!(literal.getContents() instanceof net.minecraft.network.chat.contents.TranslatableContents),"Unknown diagnostic preserves readable English evidence instead of inventing a translation");
         var button=com.millenairekingdoms.politics.PoliticsService.button(PublicText.of("[Accept]"),"/kingdom accept 00000000-0000-0000-0000-000000000001",PublicText.of("Attach %s",name));
         h.assertTrue(button.getStyle().getClickEvent().getValue().endsWith("00000000-0000-0000-0000-000000000001") && button.getStyle().getHoverEvent()!=null,"Translation preserves the original authoritative command/click and hover payloads");h.succeed();
     }
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
     public static void literalDiagnosticInventoryAndEveryDynamicTemplateHaveTranslationsInEveryLocale(GameTestHelper h)throws Exception{
-        try(var in=LocalizationGameTests.class.getResourceAsStream("/assets/millenairekingdoms/public-text-sources.json")){
-            var root=JsonParser.parseReader(new InputStreamReader(in,StandardCharsets.UTF_8)).getAsJsonObject();var keys=new HashSet<String>();root.getAsJsonObject("errors").entrySet().forEach(e->keys.add(e.getValue().getAsString()));root.getAsJsonArray("patterns").forEach(e->keys.add(PublicText.key(e.getAsString())));
+        try(var in=PublicText.class.getResourceAsStream("/assets/millenairekingdoms/public-text-sources.json")){
+            h.assertTrue(in!=null,"Production diagnostic resource is read through its owning mod module");var root=JsonParser.parseReader(new InputStreamReader(in,StandardCharsets.UTF_8)).getAsJsonObject();var keys=new HashSet<String>();root.getAsJsonObject("errors").entrySet().forEach(e->keys.add(e.getValue().getAsString()));root.getAsJsonArray("patterns").forEach(e->keys.add(PublicText.key(e.getAsString())));
             for(var locale:LocalizedResources.locales())h.assertTrue(LocalizedResources.catalog(locale).keySet().containsAll(keys),"Literal and dynamic player-facing diagnostic inventory present in "+locale);
             h.assertTrue(keys.size()>500,"Public error/notification inventory is included, alongside GUI and literary narrative resources");
         }h.succeed();

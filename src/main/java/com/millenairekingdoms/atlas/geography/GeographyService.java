@@ -129,7 +129,7 @@ public final class GeographyService {
         var chunk=level.getChunkSource().getChunkNow(x>>4,z>>4);if(chunk==null || !chunk.hasPrimedHeightmap(Heightmap.Types.WORLD_SURFACE))return GeographyTile.UNKNOWN;
         int y=chunk.getHeight(Heightmap.Types.WORLD_SURFACE,x&15,z&15);if(y<level.getMinBuildHeight() || y>=level.getMaxBuildHeight())return GeographyTile.UNKNOWN;
         var position=new BlockPos(x,y,z);var block=chunk.getBlockState(position);if(block.isAir())return GeographyTile.UNKNOWN;
-        if(!block.getFluidState().is(FluidTags.WATER))return GeographyTile.LAND;
+        if(!block.getFluidState().is(FluidTags.WATER) || block.blocksMotion())return GeographyTile.LAND;
         if(Math.abs((long)y+1-level.getSeaLevel())>2)return GeographyTile.OTHER_WATER;
         var biome=chunk.getNoiseBiome(QuartPos.fromBlock(x),QuartPos.fromBlock(level.getSeaLevel()),QuartPos.fromBlock(z));
         if(biome.is(BiomeTags.IS_RIVER))return GeographyTile.OTHER_WATER;

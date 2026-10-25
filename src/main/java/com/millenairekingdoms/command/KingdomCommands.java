@@ -74,7 +74,7 @@ public final class KingdomCommands {
 
     private static void raid(ServerPlayer p, java.util.UUID target, java.util.UUID source) {
         var attempt = RaidOrderService.order(p, target, source);
-        reply(p, attempt.status() == RaidOrderService.Status.STARTED ? com.millenairekingdoms.localization.PublicText.of("Conquest raid started.") : com.millenairekingdoms.localization.PublicText.of("Conquest raid ordered; it starts when possible (%s). It is called off after two days.", com.millenairekingdoms.localization.PublicText.error(attempt.reason())));
+        reply(p, attempt.status() == RaidOrderService.Status.STARTED ? com.millenairekingdoms.localization.PublicText.of("Conquest raid started.") : com.millenairekingdoms.localization.PublicText.of("Conquest raid ordered; it starts when possible (%s). It is called off after one day.", com.millenairekingdoms.localization.PublicText.error(attempt.reason())));
     }
     private static void raidStatus(ServerPlayer p) {
         var data = KingdomSavedData.get(p.serverLevel());
@@ -102,6 +102,6 @@ public final class KingdomCommands {
         var data = KingdomSavedData.get(p.serverLevel()); return data.kingdom(data.ruledBy(p.getUUID()));
     }
     private static String name(ServerPlayer p, java.util.UUID kingdom) { return KingdomSavedData.get(p.serverLevel()).kingdom(kingdom).name(); }
-    private static void reply(ServerPlayer p, String text) { p.sendSystemMessage(Component.literal("[Kingdoms] " + text)); }
-    private static void reply(ServerPlayer p, Component text) { p.sendSystemMessage(Component.literal("[Kingdoms] ").append(text)); }
+    private static void reply(ServerPlayer p, String text) { com.millenairekingdoms.localization.PublicText.send(p,Component.literal("[Kingdoms] " + text)); }
+    private static void reply(ServerPlayer p, Component text) { com.millenairekingdoms.localization.PublicText.send(p,Component.literal("[Kingdoms] ").append(text)); }
 }
