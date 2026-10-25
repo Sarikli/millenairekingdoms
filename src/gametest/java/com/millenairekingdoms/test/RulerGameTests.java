@@ -108,7 +108,7 @@ public final class RulerGameTests {
         UUID alice = UUID.randomUUID(), bob = UUID.randomUUID();
         d.claimRule(a.id(), alice, "Alice", 11); d.claimRule(b.id(), bob, "Bob", 12);
         CompoundTag saved = save(d, h);
-        h.assertTrue(saved.getInt("format") == KingdomSavedData.FORMAT && saved.getList("rulers", Tag.TAG_COMPOUND).size() == 2, "Current format stores rulers");
+        h.assertTrue(saved.getInt("format") == 6 && saved.getList("rulers", Tag.TAG_COMPOUND).size() == 2, "Detached compatibility format6 stores rulers without a fabricated historical commit");
         var loaded = KingdomSavedData.load(saved.copy(), h.getLevel().registryAccess());
         h.assertTrue(!loaded.isDirty() && loaded.ruler(a.id()).equals(d.ruler(a.id())) && loaded.ruler(b.id()).equals(d.ruler(b.id())),
                 "Rulers round-trip unchanged");

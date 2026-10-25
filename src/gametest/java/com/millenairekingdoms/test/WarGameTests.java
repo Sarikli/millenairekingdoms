@@ -141,7 +141,7 @@ public final class WarGameTests {
         h.assertTrue(old.getInt("format") == 2, "Fixture is an authentic 0.3.0 save");
         var plain = KingdomSavedData.load(old.copy(), h.getLevel().registryAccess());
         CompoundTag migrated = save(plain, h);
-        h.assertTrue(plain.isDirty() && migrated.getInt("format") == KingdomSavedData.FORMAT, "Old save is upgraded on next save");
+        h.assertTrue(plain.isDirty() && migrated.getInt("format") == 6, "Old save is upgraded to compatibility format6 on next save, without fabricated history");
         for (String key : old.getAllKeys()) if (!key.equals("format"))
             h.assertTrue(old.get(key).equals(migrated.get(key)) || unorderedListsEqual(old.get(key), migrated.get(key)), "Upgrade preserves " + key);
         // A 0.3.0 save stored warless 1/2 progress; it must not complete an independent conquest.
@@ -186,7 +186,7 @@ public final class WarGameTests {
         h.assertTrue(old.getInt("format") == 1, "Fixture is authentic stage-3 format");
         var loaded = KingdomSavedData.load(old, h.getLevel().registryAccess());
         CompoundTag migrated = save(loaded, h);
-        h.assertTrue(migrated.getInt("format") == KingdomSavedData.FORMAT && loaded.isDirty() && loaded.wars().isEmpty(), "Migration marks the current format for saving without inventing wars");
+        h.assertTrue(migrated.getInt("format") == 6 && loaded.isDirty() && loaded.wars().isEmpty(), "Migration marks compatibility format6 for saving without inventing wars or history");
         for (String key : old.getAllKeys()) if (!key.equals("format") && !key.equals("progress") && !key.equals("receipts"))
             h.assertTrue(old.get(key).equals(migrated.get(key)) || unorderedListsEqual(old.get(key), migrated.get(key)), "Migration preserves field " + key);
         for (String key : java.util.List.of("progress", "receipts"))

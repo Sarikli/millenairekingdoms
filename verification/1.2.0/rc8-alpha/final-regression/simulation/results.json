@@ -1,0 +1,66 @@
+[
+  {
+    "epoch": 0,
+    "exit": 0,
+    "passes": [
+      "1"
+    ],
+    "build": true,
+    "log": "/workspace/royal-decree/alpha-dev72-simulation-01-epoch0.log",
+    "sha256": "c0c71b4b467f95fb64bbc3079ee2d76159237c4406508a6d06b8a85c3403560f",
+    "jar_sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+    "metrics": [
+      "ROYAL_SIMULATION_EPOCH_PASS epoch=0 days=100 realms=10 cultures=5 personalities=5 evaluateCount=1000 evaluateP50us=15006 evaluateP95us=39640 evaluateMaxus=409651 runtimeP95us=136003 runtimeMaxus=422796 actualPhysicalCompletionsClaimed=0"
+    ],
+    "archive_log": "verification/1.2.0/rc8-alpha/final-regression/simulation/alpha-dev72-simulation-01-epoch0.log.gz",
+    "archive_sha256": "7cfe470d91771f17feb26a17b737615b4623ce9843b49c31f38930906fb3f473"
+  },
+  {
+    "epoch": 1,
+    "exit": 0,
+    "passes": [
+      "1"
+    ],
+    "build": true,
+    "log": "/workspace/royal-decree/alpha-dev72-simulation-01-epoch1.log",
+    "sha256": "d04115406ce842aacd66255b25cafec8b73015d5eb7d064d2b77dc91e6056ced",
+    "jar_sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+    "metrics": [
+      "ROYAL_SIMULATION_EPOCH_PASS epoch=1 days=200 realms=10 cultures=5 personalities=5 evaluateCount=1000 evaluateP50us=26793 evaluateP95us=44894 evaluateMaxus=107555 runtimeP95us=114202 runtimeMaxus=227939 actualPhysicalCompletionsClaimed=0"
+    ],
+    "archive_log": "verification/1.2.0/rc8-alpha/final-regression/simulation/alpha-dev72-simulation-01-epoch1.log.gz",
+    "archive_sha256": "9577b6bc55f80b5e4bfbb87c33fc4817fc59753d3dfb5d64083c6a753047e7df"
+  },
+  {
+    "epoch": 2,
+    "exit": 0,
+    "passes": [
+      "1"
+    ],
+    "build": true,
+    "log": "/workspace/royal-decree/alpha-dev72-simulation-01-epoch2.log",
+    "sha256": "3dc08db8ec3d74446b788d02b03675b4ab5f3fdbfa1c84cf15709ee664a5a1bd",
+    "jar_sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+    "metrics": [
+      "ROYAL_SIMULATION_EPOCH_PASS epoch=2 days=300 realms=10 cultures=5 personalities=5 evaluateCount=1000 evaluateP50us=67364 evaluateP95us=181450 evaluateMaxus=906886 runtimeP95us=477723 runtimeMaxus=1363988 actualPhysicalCompletionsClaimed=0"
+    ],
+    "archive_log": "verification/1.2.0/rc8-alpha/final-regression/simulation/alpha-dev72-simulation-01-epoch2.log.gz",
+    "archive_sha256": "7dc6cc2b1e69026ab22d7d8ea2ffbaf69432565f3be07c4602bbe61f733d92ca"
+  },
+  {
+    "epoch": 3,
+    "exit": 0,
+    "passes": [
+      "1"
+    ],
+    "build": true,
+    "log": "/workspace/royal-decree/alpha-dev72-simulation-01-epoch3.log",
+    "sha256": "57bd63e6ab5127f46d2791948742886f46bcce83f8c7489c72043f0706240168",
+    "jar_sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+    "metrics": [
+      "ROYAL_SIMULATION_EPOCH_PASS epoch=3 days=400 realms=10 cultures=5 personalities=5 evaluateCount=1000 evaluateP50us=84324 evaluateP95us=173139 evaluateMaxus=845286 runtimeP95us=428712 runtimeMaxus=1007384 actualPhysicalCompletionsClaimed=0"
+    ],
+    "archive_log": "verification/1.2.0/rc8-alpha/final-regression/simulation/alpha-dev72-simulation-01-epoch3.log.gz",
+    "archive_sha256": "31fe752a5db9fa260b3ba976bc5c2b701aa6bad73cc8ad7b63452cdb5ac22d29"
+  }
+]

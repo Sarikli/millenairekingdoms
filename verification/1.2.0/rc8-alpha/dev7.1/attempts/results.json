@@ -13,5 +13,11 @@
     "log": "verification/1.2.0/rc8-alpha/dev7.1/attempts/alpha-dev71-chest-baseline-02-write.log.gz",
     "raw_sha256": "310fbe69d70ae1a298aa560e31e171eab5d31b60d1147189b1a912b37dead1d3",
     "archive_sha256": "9123a0b8d5f4eb51c913a29c5142160e787488c86e54b7f6bd7d4a254589c132"
+  },
+  {
+    "log": "verification/1.2.0/rc8-alpha/dev7.1/attempts/alpha-dev71-cut-before-order-01-prepare.log.gz",
+    "raw_sha256": "c015ad614d95f6ca8bcb765c8881420eb5676ca01864527010d2f16d6141a118",
+    "archive_sha256": "1b827fffbaff751511f02f33b98b4ce4cb4648cf479a6d3f0f6a96f4218c7b6a",
+    "note": "Successful preparation preceding the failed injected-lock diagnostic interrupt01; no recovery was launched for that failed attempt."
   }
 ]

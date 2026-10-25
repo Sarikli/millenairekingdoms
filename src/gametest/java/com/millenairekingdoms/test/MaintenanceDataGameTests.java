@@ -36,7 +36,7 @@ public final class MaintenanceDataGameTests {
             storage.set(FIXTURE_STORE,d); d.setDirty();
         }
         h.assertTrue(d!=null && canonical(original).equals(canonical(save(d,h))),"Every 1.1.0 field survives save/restart unchanged");
-        h.assertTrue(KingdomSavedData.FORMAT==7,"Maintenance requires no save-format bump");
+        h.assertTrue(KingdomSavedData.FORMAT==7,"Current maximum7 preserves the authentic format6 fixture without eager history migration");
         System.out.println("MAINTENANCE_110_"+(read()?"RESTART_READ_PASS":"WRITE_PASS"));
         h.succeed();
     }

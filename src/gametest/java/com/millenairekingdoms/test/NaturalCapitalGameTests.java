@@ -169,7 +169,7 @@ public final class NaturalCapitalGameTests {
         CompoundTag again = d.save(new CompoundTag(), reg);
         // Format 6 (1.0.0) keeps every 0.4.0 field and only adds the autonomy section (the fixture's war ended in peace: no clock).
         CompoundTag autonomy = again.getCompound("autonomy"); again.remove("autonomy");
-        CompoundTag expected = old.copy(); expected.putInt("format", KingdomSavedData.FORMAT);
+        CompoundTag expected = old.copy(); expected.putInt("format", 6);
         h.assertTrue(canonical(again).equals(canonical(expected)) && autonomy.getList("orders", Tag.TAG_COMPOUND).isEmpty()
                 && autonomy.getList("truces", Tag.TAG_COMPOUND).isEmpty(), "Loads and saves back identically apart from the format-6 additions");
         h.assertTrue(d.kingdoms().size() == 2 && d.kingdoms().stream().filter(k -> d.npcGoverned(k.id())).count() == 1,
@@ -413,23 +413,24 @@ public final class NaturalCapitalGameTests {
         int villages = manager(level).getAllVillages().size(), kingdoms = data.kingdoms().size();
         requeue(level, spawned);
         h.assertTrue(manager(level).getAllVillages().size() == villages && data.kingdoms().size() == kingdoms, "Re-queued spots create nothing");
-        // Income: a natural capital with no members earns nothing; with one it is paid into its own town hall chests.
+        // RC.8: the completed capital produces4 per displayed centre level, plus4 for a first-level member.
         UUID ka = data.owner(a.getId().uuid());
-        h.assertTrue(EconomyService.dailyIncome(level, data, ka) == 0, "No members, no income");
+        long capitalProduction = (long) (a.getTownhall().getLevel() + 1) * EconomyService.DENIERS_PER_LEVEL;
+        h.assertTrue(capitalProduction > 0 && EconomyService.dailyIncome(level, data, ka) == capitalProduction, "A real fully developed natural capital earns its RC.8 level-scaled production without other members");
         var copy = KingdomSavedData.load(data.save(new CompoundTag(), level.registryAccess()), level.registryAccess());
         Village member = synthetic(level, a.getCenter().offset(300, 0, 300), ModCultures.getVillageType(a.getVillageTypeId()), new ArrayList<>());
         member.addBuilding(new BuildingInstance(org.millenaire.building.BuildingId.random(), a.getTownhall().getPlanId(), member.getCenter(),
                 net.minecraft.world.level.block.Rotation.NONE, BuildingInstance.Status.COMPLETE, a.getTownhall().getPlanSetId(), a.getTownhall().getVariant(), 0));
         copy.attach(ka, member.getId().uuid());
-        int coins = a.getTownhall().getInventory().getCount(level, ModItems.DENIER.get());
+        long coins = com.millenairekingdoms.economy.TreasuryService.stored(level, copy.kingdom(ka)).value();
         // Other suites may already have advanced the persistent ledger. Never assume that its day can be reset to 0.
         long previousDay = Math.max(7, copy.day());
         copy.startDay(previousDay, Map.of());
         h.assertTrue(!EconomyService.runDay(level, copy, previousDay), "An already booked day is never taxed twice");
         boolean paid = EconomyService.runDay(level, copy, previousDay + 1);
-        int after = a.getTownhall().getInventory().getCount(level, ModItems.DENIER.get());
+        long after = com.millenairekingdoms.economy.TreasuryService.stored(level, copy.kingdom(ka)).value();
         manager(level).removeVillage(member.getId());
-        h.assertTrue(paid && after == coins + EconomyService.DENIERS_PER_LEVEL && copy.owed(ka) == 0, "Income paid into the natural capital's town hall (" + coins + " -> " + after + ")");
+        h.assertTrue(paid && after == coins + capitalProduction + EconomyService.DENIERS_PER_LEVEL && copy.owed(ka) == 0, "Income paid into the natural capital's town hall (" + coins + " -> " + after + ")");
         try { Files.writeString(file, toText(out)); } catch (java.io.IOException e) { throw new IllegalStateException(e); }
         data.setDirty(); VillageSavedData.get(level).setDirty();
         System.out.println("CAPITAL_NATURAL_WRITE_PASS " + out);
