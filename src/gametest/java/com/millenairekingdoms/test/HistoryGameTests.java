@@ -14,7 +14,7 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 @PrefixGameTestTemplate(false)
 public final class HistoryGameTests {
     private static final String NS="millenairekingdoms_history_tests";
-    static HistoryEvent sample(UUID realm,int n){return HistoryEvent.create(HistoryEvent.Kind.WAR,n/10,n,"minecraft:overworld","test/"+n,List.of(new HistoryEvent.Realm(realm,"Realm "+realm,"millenaire:norman","MILITARY")),List.of(),null,"","","ACTIVE",Map.of());}
+    static HistoryEvent sample(UUID realm,int n){return HistoryEvent.create(HistoryEvent.Kind.WAR,n/10,n,"minecraft:overworld","test/"+realm+"/"+n,List.of(new HistoryEvent.Realm(realm,"Realm "+realm,"millenaire:norman","MILITARY")),List.of(),null,"","","ACTIVE",Map.of());}
     static Path directory(GameTestHelper h){return h.getLevel().getServer().getWorldPath(LevelResource.ROOT).resolve("history-fixture-"+UUID.randomUUID());}
     static void refused(GameTestHelper h,Runnable action){boolean failed=false;try{action.run();}catch(IllegalArgumentException|IllegalStateException e){failed=true;}h.assertTrue(failed,"Invalid history must be refused");}
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)

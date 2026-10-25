@@ -91,6 +91,8 @@ public final class KingdomScreen extends Screen {
         }
         addRenderableWidget(Button.builder(Component.translatable("millenairekingdoms.gui.refresh"), x -> send(KingdomActionPayload.of("REFRESH")))
                 .bounds(left + panelWidth - 72, top + panelHeight - 22, 60, 16).build());
+        addRenderableWidget(Button.builder(Component.translatable("millenairekingdoms.history.title"),x->HistoryClient.open(this,view.hasUUID("focus")?view.getUUID("focus"):null))
+                .bounds(left+12,top+panelHeight-22,88,16).build());
         if (!view.contains("focus")) { noKingdom(); return; }
         switch (tab) {
             case KINGDOM -> kingdomTab();

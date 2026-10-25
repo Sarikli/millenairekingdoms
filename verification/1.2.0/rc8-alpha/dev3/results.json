@@ -1,0 +1,147 @@
+{
+  "artifact": {
+    "version": "1.2.0-rc8-alpha.dev3",
+    "bytes": 699175,
+    "sha256": "4d4da18a1220125145af592bd28748209beb6831cdf3f49ae306a1e946c02787",
+    "baseline_commit": "ec6ba85145ff3c80b3557f63ae3d30385030e015",
+    "source_parent": "fc21754a4dfa4d4d1d0353f583dc4deb231268e8"
+  },
+  "pairs": [
+    {
+      "suite": "verifyHistory",
+      "run": "alpha-dev3-history-02",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "20"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev3-history-02-write.log",
+          "sha256": "861a28d5227b651493112215f837256522b51a3e4e1285445919d9ae70a4d372",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev3.jar",
+          "jar_sha256": "4d4da18a1220125145af592bd28748209beb6831cdf3f49ae306a1e946c02787",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev3/alpha-dev3-history-02-write.log.gz",
+          "archive_sha256": "ebeecc736cc62774f32333a82d13dbbbdb83cfe96251a13e1a2f7af76303a4a4"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "20"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev3-history-02-reopen.log",
+          "sha256": "e1b7baeb4615a7ec022cded8fa5865ee4712fdb8e0c689db1a39569a712cb068",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev3.jar",
+          "jar_sha256": "4d4da18a1220125145af592bd28748209beb6831cdf3f49ae306a1e946c02787",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev3/alpha-dev3-history-02-reopen.log.gz",
+          "archive_sha256": "49534d7531259ac9ae381b79040b84d62e0390bbcfbcd131cf8806c41a33f0b3"
+        }
+      ]
+    },
+    {
+      "suite": "verifyGui",
+      "run": "alpha-dev3-gui-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "7"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev3-gui-01-write.log",
+          "sha256": "c8825486d517e9360be51def940b17b505f174571e001ff7dfe066c861267cbb",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev3.jar",
+          "jar_sha256": "4d4da18a1220125145af592bd28748209beb6831cdf3f49ae306a1e946c02787",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev3/alpha-dev3-gui-01-write.log.gz",
+          "archive_sha256": "11f82cab063e13451b1c5cc5c2560b866706df53f8244c58f574ef54e9a0b8c5"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "7"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev3-gui-01-reopen.log",
+          "sha256": "1ab49f65ead45d193e9eb2762e84288e8d791b4acd5743dea708b39d276b7c4d",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev3.jar",
+          "jar_sha256": "4d4da18a1220125145af592bd28748209beb6831cdf3f49ae306a1e946c02787",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev3/alpha-dev3-gui-01-reopen.log.gz",
+          "archive_sha256": "facfbb1572a708a60fe5efcebb9d64d73431b7c7092cb49fd4e5254ba52a7be1"
+        }
+      ]
+    },
+    {
+      "suite": "verifyRoyalGui",
+      "run": "alpha-dev3-royalgui-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "28"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev3-royalgui-01-write.log",
+          "sha256": "3742caa58458408d22bd871a151bb75744c4cbca2e2cd0b04208338f3971bc4e",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev3.jar",
+          "jar_sha256": "4d4da18a1220125145af592bd28748209beb6831cdf3f49ae306a1e946c02787",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev3/alpha-dev3-royalgui-01-write.log.gz",
+          "archive_sha256": "0633a4526001637d6504de85a16bb5eb0f938cd98d57d31666bf2fd9c22a849d"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "28"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev3-royalgui-01-reopen.log",
+          "sha256": "769380272e5c044e211c9697c787a5559baf01192b44433d8e2de9213b7fd741",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev3.jar",
+          "jar_sha256": "4d4da18a1220125145af592bd28748209beb6831cdf3f49ae306a1e946c02787",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev3/alpha-dev3-royalgui-01-reopen.log.gz",
+          "archive_sha256": "e88d2f92e54c4b9b3ced3bf8f1c1d4eebf3611aacdc222a1db9b95fbdc474f07"
+        }
+      ]
+    },
+    {
+      "suite": "verifyRoyalShipmentGui",
+      "run": "alpha-dev3-shipmentgui-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "18"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev3-shipmentgui-01-write.log",
+          "sha256": "24e37fe0e871d453f3295f27623812e943135d9ce28e0effc4faac44376e480a",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev3.jar",
+          "jar_sha256": "4d4da18a1220125145af592bd28748209beb6831cdf3f49ae306a1e946c02787",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev3/alpha-dev3-shipmentgui-01-write.log.gz",
+          "archive_sha256": "5a2208ac052172a874ae86f0fbb485c45e2c8f8a4accf019f9576673273bf49b"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "18"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev3-shipmentgui-01-reopen.log",
+          "sha256": "d3cdd03f87c08439aa5497d11059fc2211d9fd2237d22908c81d0185a28130f6",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev3.jar",
+          "jar_sha256": "4d4da18a1220125145af592bd28748209beb6831cdf3f49ae306a1e946c02787",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev3/alpha-dev3-shipmentgui-01-reopen.log.gz",
+          "archive_sha256": "05296fd776a66e133425a62715106988358c6c76952dcf398ff4b1a5a7ea8fd8"
+        }
+      ]
+    }
+  ]
+}

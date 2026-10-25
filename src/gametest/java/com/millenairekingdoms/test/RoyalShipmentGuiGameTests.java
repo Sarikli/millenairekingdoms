@@ -219,7 +219,7 @@ public final class RoyalShipmentGuiGameTests {
     public static void boundedShipmentPayloadAndEveryStateHaveEnglishAndTurkishLabels(GameTestHelper h) throws Exception {
         var buffer=new RegistryFriendlyByteBuf(Unpooled.buffer(),h.getLevel().registryAccess());
         try{var payload=new KingdomActionPayload("SHIPMENT_QUANTITY",Optional.of(UUID.randomUUID()),Optional.empty(),Long.MAX_VALUE,CHERRY.toString());KingdomActionPayload.CODEC.encode(buffer,payload);
-            h.assertTrue(KingdomActionPayload.CODEC.decode(buffer).equals(payload) && KingdomNetwork.VERSION.equals("4"),"Shared version4 bounded wire codec preserves shipment IDs/quantity with server-side validation");}
+            h.assertTrue(KingdomActionPayload.CODEC.decode(buffer).equals(payload) && KingdomNetwork.VERSION.equals("5"),"Shared version5 bounded wire codec preserves shipment IDs/quantity with server-side validation");}
         finally{buffer.release();}
         for(String language:List.of("en_us","tr_tr"))try(var input=RoyalShipmentGuiGameTests.class.getClassLoader().getResourceAsStream("assets/millenairekingdoms/lang/"+language+".json")){
             var json=com.google.gson.JsonParser.parseReader(new java.io.InputStreamReader(input,java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();

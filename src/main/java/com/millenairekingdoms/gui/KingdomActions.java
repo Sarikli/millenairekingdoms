@@ -33,6 +33,7 @@ public final class KingdomActions {
 
     public static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         LAST.remove(event.getEntity().getUUID());
+        com.millenairekingdoms.history.ChronicleViews.forget(event.getEntity().getUUID());
         KingdomScreens.forget(event.getEntity().getUUID());
         RoyalConstructionView.forget(event.getEntity().getUUID());
         RoyalShipmentView.forget(event.getEntity().getUUID());
