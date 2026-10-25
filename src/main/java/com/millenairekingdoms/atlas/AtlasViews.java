@@ -40,6 +40,19 @@ public final class AtlasViews {
         request.event().ifPresent(id->{var event=HistoryHooks.store(level).get(id);if(event==null || !event.dimension().equals(level.dimension().location().toString()))return;var filtered=HistoryVisibility.redact(event,known,false);var location=filtered.places().stream().filter(p->p.located() && (request.village().isEmpty() || request.village().get().equals(p.id()))).findFirst();location.ifPresent(p->{var pin=new CompoundTag();pin.putUUID("event",event.id());pin.putUUID("village",p.id());pin.putString("name",p.name());pin.putLong("day",event.day());pin.putInt("x",p.x());pin.putInt("z",p.z());view.put("historicalPin",pin);});});
         return view;
     }
+    /** Native container resolution may inspect a connected chest outside the declared storage positions.
+     * Defer this read until both halves are already loaded; the atlas must never load a chunk. */
+    private static boolean treasuryLoaded(net.minecraft.server.level.ServerLevel level,KingdomSavedData.Kingdom kingdom){
+        var storage=TreasuryService.storage(level,kingdom);
+        if(storage==null || !storage.getChestPositions().stream().allMatch(level::isLoaded))return false;
+        for(var position:storage.getChestPositions()){
+            var state=level.getBlockState(position);
+            if(state.getBlock() instanceof net.minecraft.world.level.block.ChestBlock
+                    && state.getValue(net.minecraft.world.level.block.ChestBlock.TYPE)!=net.minecraft.world.level.block.state.properties.ChestType.SINGLE
+                    && !level.isLoaded(position.relative(net.minecraft.world.level.block.ChestBlock.getConnectedDirection(state))))return false;
+        }
+        return true;
+    }
     private static net.minecraft.resources.ResourceLocation resourceLocation(String id){var parsed=net.minecraft.resources.ResourceLocation.tryParse(id);return parsed==null?net.minecraft.resources.ResourceLocation.parse("millenaire:unknown"):parsed;}
     private static CompoundTag info(ServerPlayer player,UUID id,Set<UUID> known,UUID cursor){
         var level=player.serverLevel();var data=KingdomSavedData.get(level);var k=data.kingdom(id);var out=new CompoundTag();out.putUUID("id",id);
@@ -51,7 +64,7 @@ public final class AtlasViews {
             out.putInt("memberCount",data.members(id).size());var visible=data.members(id).stream().filter(known::contains).map(v->PoliticsService.village(level,v)).filter(Objects::nonNull).sorted(Comparator.comparing(v->v.getId().uuid())).toList();var memberKey=new StringBuilder().append(data.members(id).size());for(var v:visible)memberKey.append('/').append(v.getId().uuid()).append('/').append(v.getCenter()).append('/').append(PoliticsService.name(v)).append('/').append(v.getVillageTypeId());out.putString("memberRevision",UUID.nameUUIDFromBytes(memberKey.toString().getBytes(StandardCharsets.UTF_8)).toString());int start=0;
             if(cursor!=null){while(start<visible.size() && !visible.get(start).getId().uuid().equals(cursor))start++;if(start==visible.size())throw new IllegalArgumentException("Stale member cursor");start++;}
             for(int n=start;n<Math.min(start+PAGE_SIZE,visible.size());n++){var v=visible.get(n);var t=new CompoundTag();t.putUUID("id",v.getId().uuid());t.putString("name",PoliticsService.name(v));t.putString("type",v.getVillageTypeId().toString());var type=org.millenaire.culture.ModCultures.getVillageType(v.getVillageTypeId());t.putString("typeName",type==null?"?":type.name());t.putInt("x",v.getCenter().getX());t.putInt("z",v.getCenter().getZ());members.add(t);}if(start+PAGE_SIZE<visible.size())out.putUUID("next",visible.get(start+PAGE_SIZE-1).getId().uuid());
-            if(id.equals(data.ruledBy(player.getUUID()))){out.putBoolean("economicRights",true);out.putLong("income",EconomyService.dailyIncome(level,data,id));out.putLong("owed",data.owed(id));out.putBoolean("storageLoaded",TreasuryService.loaded(level,k));if(out.getBoolean("storageLoaded"))out.putLong("treasury",TreasuryService.stored(level,k).value());}
+            if(id.equals(data.ruledBy(player.getUUID()))){out.putBoolean("economicRights",true);out.putLong("income",EconomyService.dailyIncome(level,data,id));out.putLong("owed",data.owed(id));out.putBoolean("storageLoaded",treasuryLoaded(level,k));if(out.getBoolean("storageLoaded"))out.putLong("treasury",TreasuryService.stored(level,k).value());}
         }
         return out;
     }

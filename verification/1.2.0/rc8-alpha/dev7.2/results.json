@@ -1,0 +1,45 @@
+{
+  "artifact": {
+    "version": "1.2.0-rc8-alpha.dev7.2",
+    "bytes": 760448,
+    "sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+    "baseline_commit": "ec6ba85145ff3c80b3557f63ae3d30385030e015",
+    "source_parent": "46f0f23fbe231cfa96fed37728135e385647ca94"
+  },
+  "pairs": [
+    {
+      "suite": "verifyAtlas",
+      "run": "alpha-dev72-atlas-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "19"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev72-atlas-01-write.log",
+          "sha256": "dbf93ff8acb53ab2e8993c27c543f23193f955e31723dfdd0cd22daccbe2a382",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.2.jar",
+          "jar_sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev7.2/alpha-dev72-atlas-01-write.log.gz",
+          "archive_sha256": "d74337a0a2f835670dfdbbd23a59fc0a70b6d77e1ad94f77d261edfe3b471c79"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "19"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev72-atlas-01-reopen.log",
+          "sha256": "0e3cf0e8eda9f94b64e99a43b96795e9213a68d3ac1e7ce6e6812433233fb43b",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.2.jar",
+          "jar_sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev7.2/alpha-dev72-atlas-01-reopen.log.gz",
+          "archive_sha256": "560b7b7d1995e1a85f9abe168a2659d777edbd649b02fd3456ee2a1976c3bed8"
+        }
+      ]
+    }
+  ]
+}
