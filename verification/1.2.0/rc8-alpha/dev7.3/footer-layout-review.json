@@ -1,0 +1,1762 @@
+{
+  "kind": "Source-coordinate arithmetic review; NOT a rendered or mouse-input test",
+  "panelWidths": [
+    {
+      "panelWidth": 304,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        224
+      ],
+      "refresh": [
+        232,
+        292
+      ]
+    },
+    {
+      "panelWidth": 305,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        225
+      ],
+      "refresh": [
+        233,
+        293
+      ]
+    },
+    {
+      "panelWidth": 306,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        226
+      ],
+      "refresh": [
+        234,
+        294
+      ]
+    },
+    {
+      "panelWidth": 307,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        227
+      ],
+      "refresh": [
+        235,
+        295
+      ]
+    },
+    {
+      "panelWidth": 308,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        228
+      ],
+      "refresh": [
+        236,
+        296
+      ]
+    },
+    {
+      "panelWidth": 309,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        229
+      ],
+      "refresh": [
+        237,
+        297
+      ]
+    },
+    {
+      "panelWidth": 310,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        230
+      ],
+      "refresh": [
+        238,
+        298
+      ]
+    },
+    {
+      "panelWidth": 311,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        231
+      ],
+      "refresh": [
+        239,
+        299
+      ]
+    },
+    {
+      "panelWidth": 312,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        232
+      ],
+      "refresh": [
+        240,
+        300
+      ]
+    },
+    {
+      "panelWidth": 313,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        233
+      ],
+      "refresh": [
+        241,
+        301
+      ]
+    },
+    {
+      "panelWidth": 314,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        234
+      ],
+      "refresh": [
+        242,
+        302
+      ]
+    },
+    {
+      "panelWidth": 315,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        235
+      ],
+      "refresh": [
+        243,
+        303
+      ]
+    },
+    {
+      "panelWidth": 316,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        236
+      ],
+      "refresh": [
+        244,
+        304
+      ]
+    },
+    {
+      "panelWidth": 317,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        237
+      ],
+      "refresh": [
+        245,
+        305
+      ]
+    },
+    {
+      "panelWidth": 318,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        238
+      ],
+      "refresh": [
+        246,
+        306
+      ]
+    },
+    {
+      "panelWidth": 319,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        239
+      ],
+      "refresh": [
+        247,
+        307
+      ]
+    },
+    {
+      "panelWidth": 320,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        240
+      ],
+      "refresh": [
+        248,
+        308
+      ]
+    },
+    {
+      "panelWidth": 321,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        241
+      ],
+      "refresh": [
+        249,
+        309
+      ]
+    },
+    {
+      "panelWidth": 322,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        242
+      ],
+      "refresh": [
+        250,
+        310
+      ]
+    },
+    {
+      "panelWidth": 323,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        243
+      ],
+      "refresh": [
+        251,
+        311
+      ]
+    },
+    {
+      "panelWidth": 324,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        244
+      ],
+      "refresh": [
+        252,
+        312
+      ]
+    },
+    {
+      "panelWidth": 325,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        245
+      ],
+      "refresh": [
+        253,
+        313
+      ]
+    },
+    {
+      "panelWidth": 326,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        246
+      ],
+      "refresh": [
+        254,
+        314
+      ]
+    },
+    {
+      "panelWidth": 327,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        247
+      ],
+      "refresh": [
+        255,
+        315
+      ]
+    },
+    {
+      "panelWidth": 328,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        248
+      ],
+      "refresh": [
+        256,
+        316
+      ]
+    },
+    {
+      "panelWidth": 329,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        249
+      ],
+      "refresh": [
+        257,
+        317
+      ]
+    },
+    {
+      "panelWidth": 330,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        250
+      ],
+      "refresh": [
+        258,
+        318
+      ]
+    },
+    {
+      "panelWidth": 331,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        251
+      ],
+      "refresh": [
+        259,
+        319
+      ]
+    },
+    {
+      "panelWidth": 332,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        252
+      ],
+      "refresh": [
+        260,
+        320
+      ]
+    },
+    {
+      "panelWidth": 333,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        253
+      ],
+      "refresh": [
+        261,
+        321
+      ]
+    },
+    {
+      "panelWidth": 334,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        254
+      ],
+      "refresh": [
+        262,
+        322
+      ]
+    },
+    {
+      "panelWidth": 335,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        255
+      ],
+      "refresh": [
+        263,
+        323
+      ]
+    },
+    {
+      "panelWidth": 336,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        256
+      ],
+      "refresh": [
+        264,
+        324
+      ]
+    },
+    {
+      "panelWidth": 337,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        257
+      ],
+      "refresh": [
+        265,
+        325
+      ]
+    },
+    {
+      "panelWidth": 338,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        258
+      ],
+      "refresh": [
+        266,
+        326
+      ]
+    },
+    {
+      "panelWidth": 339,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        259
+      ],
+      "refresh": [
+        267,
+        327
+      ]
+    },
+    {
+      "panelWidth": 340,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        260
+      ],
+      "refresh": [
+        268,
+        328
+      ]
+    },
+    {
+      "panelWidth": 341,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        261
+      ],
+      "refresh": [
+        269,
+        329
+      ]
+    },
+    {
+      "panelWidth": 342,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        262
+      ],
+      "refresh": [
+        270,
+        330
+      ]
+    },
+    {
+      "panelWidth": 343,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        263
+      ],
+      "refresh": [
+        271,
+        331
+      ]
+    },
+    {
+      "panelWidth": 344,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        264
+      ],
+      "refresh": [
+        272,
+        332
+      ]
+    },
+    {
+      "panelWidth": 345,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        265
+      ],
+      "refresh": [
+        273,
+        333
+      ]
+    },
+    {
+      "panelWidth": 346,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        266
+      ],
+      "refresh": [
+        274,
+        334
+      ]
+    },
+    {
+      "panelWidth": 347,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        267
+      ],
+      "refresh": [
+        275,
+        335
+      ]
+    },
+    {
+      "panelWidth": 348,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        268
+      ],
+      "refresh": [
+        276,
+        336
+      ]
+    },
+    {
+      "panelWidth": 349,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        269
+      ],
+      "refresh": [
+        277,
+        337
+      ]
+    },
+    {
+      "panelWidth": 350,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        270
+      ],
+      "refresh": [
+        278,
+        338
+      ]
+    },
+    {
+      "panelWidth": 351,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        271
+      ],
+      "refresh": [
+        279,
+        339
+      ]
+    },
+    {
+      "panelWidth": 352,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        272
+      ],
+      "refresh": [
+        280,
+        340
+      ]
+    },
+    {
+      "panelWidth": 353,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        273
+      ],
+      "refresh": [
+        281,
+        341
+      ]
+    },
+    {
+      "panelWidth": 354,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        274
+      ],
+      "refresh": [
+        282,
+        342
+      ]
+    },
+    {
+      "panelWidth": 355,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        275
+      ],
+      "refresh": [
+        283,
+        343
+      ]
+    },
+    {
+      "panelWidth": 356,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        276
+      ],
+      "refresh": [
+        284,
+        344
+      ]
+    },
+    {
+      "panelWidth": 357,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        277
+      ],
+      "refresh": [
+        285,
+        345
+      ]
+    },
+    {
+      "panelWidth": 358,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        278
+      ],
+      "refresh": [
+        286,
+        346
+      ]
+    },
+    {
+      "panelWidth": 359,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        279
+      ],
+      "refresh": [
+        287,
+        347
+      ]
+    },
+    {
+      "panelWidth": 360,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        280
+      ],
+      "refresh": [
+        288,
+        348
+      ]
+    },
+    {
+      "panelWidth": 361,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        281
+      ],
+      "refresh": [
+        289,
+        349
+      ]
+    },
+    {
+      "panelWidth": 362,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        282
+      ],
+      "refresh": [
+        290,
+        350
+      ]
+    },
+    {
+      "panelWidth": 363,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        283
+      ],
+      "refresh": [
+        291,
+        351
+      ]
+    },
+    {
+      "panelWidth": 364,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        284
+      ],
+      "refresh": [
+        292,
+        352
+      ]
+    },
+    {
+      "panelWidth": 365,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        285
+      ],
+      "refresh": [
+        293,
+        353
+      ]
+    },
+    {
+      "panelWidth": 366,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        286
+      ],
+      "refresh": [
+        294,
+        354
+      ]
+    },
+    {
+      "panelWidth": 367,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        287
+      ],
+      "refresh": [
+        295,
+        355
+      ]
+    },
+    {
+      "panelWidth": 368,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        288
+      ],
+      "refresh": [
+        296,
+        356
+      ]
+    },
+    {
+      "panelWidth": 369,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        289
+      ],
+      "refresh": [
+        297,
+        357
+      ]
+    },
+    {
+      "panelWidth": 370,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        290
+      ],
+      "refresh": [
+        298,
+        358
+      ]
+    },
+    {
+      "panelWidth": 371,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        291
+      ],
+      "refresh": [
+        299,
+        359
+      ]
+    },
+    {
+      "panelWidth": 372,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        292
+      ],
+      "refresh": [
+        300,
+        360
+      ]
+    },
+    {
+      "panelWidth": 373,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        293
+      ],
+      "refresh": [
+        301,
+        361
+      ]
+    },
+    {
+      "panelWidth": 374,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        294
+      ],
+      "refresh": [
+        302,
+        362
+      ]
+    },
+    {
+      "panelWidth": 375,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        295
+      ],
+      "refresh": [
+        303,
+        363
+      ]
+    },
+    {
+      "panelWidth": 376,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        296
+      ],
+      "refresh": [
+        304,
+        364
+      ]
+    },
+    {
+      "panelWidth": 377,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        297
+      ],
+      "refresh": [
+        305,
+        365
+      ]
+    },
+    {
+      "panelWidth": 378,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        298
+      ],
+      "refresh": [
+        306,
+        366
+      ]
+    },
+    {
+      "panelWidth": 379,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        299
+      ],
+      "refresh": [
+        307,
+        367
+      ]
+    },
+    {
+      "panelWidth": 380,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        300
+      ],
+      "refresh": [
+        308,
+        368
+      ]
+    },
+    {
+      "panelWidth": 381,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        301
+      ],
+      "refresh": [
+        309,
+        369
+      ]
+    },
+    {
+      "panelWidth": 382,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        302
+      ],
+      "refresh": [
+        310,
+        370
+      ]
+    },
+    {
+      "panelWidth": 383,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        303
+      ],
+      "refresh": [
+        311,
+        371
+      ]
+    },
+    {
+      "panelWidth": 384,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        304
+      ],
+      "refresh": [
+        312,
+        372
+      ]
+    },
+    {
+      "panelWidth": 385,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        305
+      ],
+      "refresh": [
+        313,
+        373
+      ]
+    },
+    {
+      "panelWidth": 386,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        306
+      ],
+      "refresh": [
+        314,
+        374
+      ]
+    },
+    {
+      "panelWidth": 387,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        307
+      ],
+      "refresh": [
+        315,
+        375
+      ]
+    },
+    {
+      "panelWidth": 388,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        308
+      ],
+      "refresh": [
+        316,
+        376
+      ]
+    },
+    {
+      "panelWidth": 389,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        309
+      ],
+      "refresh": [
+        317,
+        377
+      ]
+    },
+    {
+      "panelWidth": 390,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        310
+      ],
+      "refresh": [
+        318,
+        378
+      ]
+    },
+    {
+      "panelWidth": 391,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        311
+      ],
+      "refresh": [
+        319,
+        379
+      ]
+    },
+    {
+      "panelWidth": 392,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        312
+      ],
+      "refresh": [
+        320,
+        380
+      ]
+    },
+    {
+      "panelWidth": 393,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        313
+      ],
+      "refresh": [
+        321,
+        381
+      ]
+    },
+    {
+      "panelWidth": 394,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        314
+      ],
+      "refresh": [
+        322,
+        382
+      ]
+    },
+    {
+      "panelWidth": 395,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        315
+      ],
+      "refresh": [
+        323,
+        383
+      ]
+    },
+    {
+      "panelWidth": 396,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        316
+      ],
+      "refresh": [
+        324,
+        384
+      ]
+    },
+    {
+      "panelWidth": 397,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        317
+      ],
+      "refresh": [
+        325,
+        385
+      ]
+    },
+    {
+      "panelWidth": 398,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        318
+      ],
+      "refresh": [
+        326,
+        386
+      ]
+    },
+    {
+      "panelWidth": 399,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        319
+      ],
+      "refresh": [
+        327,
+        387
+      ]
+    },
+    {
+      "panelWidth": 400,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        320
+      ],
+      "refresh": [
+        328,
+        388
+      ]
+    },
+    {
+      "panelWidth": 401,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        321
+      ],
+      "refresh": [
+        329,
+        389
+      ]
+    },
+    {
+      "panelWidth": 402,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        322
+      ],
+      "refresh": [
+        330,
+        390
+      ]
+    },
+    {
+      "panelWidth": 403,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        323
+      ],
+      "refresh": [
+        331,
+        391
+      ]
+    },
+    {
+      "panelWidth": 404,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        324
+      ],
+      "refresh": [
+        332,
+        392
+      ]
+    },
+    {
+      "panelWidth": 405,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        325
+      ],
+      "refresh": [
+        333,
+        393
+      ]
+    },
+    {
+      "panelWidth": 406,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        326
+      ],
+      "refresh": [
+        334,
+        394
+      ]
+    },
+    {
+      "panelWidth": 407,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        327
+      ],
+      "refresh": [
+        335,
+        395
+      ]
+    },
+    {
+      "panelWidth": 408,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        328
+      ],
+      "refresh": [
+        336,
+        396
+      ]
+    },
+    {
+      "panelWidth": 409,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        329
+      ],
+      "refresh": [
+        337,
+        397
+      ]
+    },
+    {
+      "panelWidth": 410,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        330
+      ],
+      "refresh": [
+        338,
+        398
+      ]
+    },
+    {
+      "panelWidth": 411,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        331
+      ],
+      "refresh": [
+        339,
+        399
+      ]
+    },
+    {
+      "panelWidth": 412,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        332
+      ],
+      "refresh": [
+        340,
+        400
+      ]
+    },
+    {
+      "panelWidth": 413,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        333
+      ],
+      "refresh": [
+        341,
+        401
+      ]
+    },
+    {
+      "panelWidth": 414,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        334
+      ],
+      "refresh": [
+        342,
+        402
+      ]
+    },
+    {
+      "panelWidth": 415,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        335
+      ],
+      "refresh": [
+        343,
+        403
+      ]
+    },
+    {
+      "panelWidth": 416,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        336
+      ],
+      "refresh": [
+        344,
+        404
+      ]
+    },
+    {
+      "panelWidth": 417,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        337
+      ],
+      "refresh": [
+        345,
+        405
+      ]
+    },
+    {
+      "panelWidth": 418,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        338
+      ],
+      "refresh": [
+        346,
+        406
+      ]
+    },
+    {
+      "panelWidth": 419,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        339
+      ],
+      "refresh": [
+        347,
+        407
+      ]
+    },
+    {
+      "panelWidth": 420,
+      "history": [
+        12,
+        100
+      ],
+      "message": [
+        108,
+        340
+      ],
+      "refresh": [
+        348,
+        408
+      ]
+    }
+  ],
+  "minimum_horizontal_gap": 8,
+  "manual_graphical_scaling_required": true
+}
