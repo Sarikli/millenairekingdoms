@@ -20,6 +20,7 @@ public final class ConquestTestMod {
             event.register(NarrativeGameTests.class);
             event.register(LocalizationGameTests.class);
             event.register(GeographyGameTests.class);
+            event.register(GeographyAsyncGameTests.class);
             event.register(ChronicleViewGameTests.class);
             event.register(AtlasGameTests.class);
             event.register(AtlasViewGameTests.class);

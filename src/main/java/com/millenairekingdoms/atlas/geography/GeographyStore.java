@@ -92,6 +92,11 @@ public final class GeographyStore {
     private CompoundTag shardTag(Shard part,Map<GeographyTile.Position,Meta> members){
         var tag=base();tag.putUUID("file",part.file());tag.putInt("slot",part.slot());tag.putLong("revision",part.revision());var list=new ListTag();members.values().stream().sorted(Comparator.comparingLong(Meta::revision)).forEach(meta->{var raw=new CompoundTag();raw.putInt("x",meta.position().x());raw.putInt("z",meta.position().z());raw.putLong("revision",meta.revision());raw.putUUID("file",meta.file());list.add(raw);});tag.put("tiles",list);return tag;
     }
+    /** Read-only dirty check; service holds exclusive ownership until the asynchronous commit completes. */
+    public boolean wouldChange(Map<GeographyTile.Position,byte[]> observations){
+        if(observations.size()>MAX_BATCH)throw new IllegalArgumentException("Geography write batch exceeded");
+        boolean changed=false;for(var entry:observations.entrySet()){if(entry.getKey()==null || entry.getValue()==null || entry.getValue().length!=GeographyTile.BYTES)throw new IllegalArgumentException("Invalid geography mask");if(!Arrays.equals(cells(entry.getKey()),entry.getValue()))changed=true;}return changed;
+    }
     /** Already observed masks only. At most eight tile/shard versions and one small root are written per commit. */
     public int commit(Map<GeographyTile.Position,byte[]> observations){
         if(observations.size()>MAX_BATCH)throw new IllegalArgumentException("Geography write batch exceeded");var changed=new LinkedHashMap<GeographyTile.Position,byte[]>();var expected=new HashMap<GeographyTile.Position,byte[]>();

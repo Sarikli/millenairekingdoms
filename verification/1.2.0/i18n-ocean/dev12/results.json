@@ -1,0 +1,147 @@
+{
+  "artifact": {
+    "version": "1.2.0-rc8-alpha.dev12",
+    "bytes": 1858467,
+    "sha256": "b393189b3c5cada3e7521ebff6d09bb26a8392509f4f0ca1d40c3700c707564a",
+    "baseline_commit": "1fb9e5f04e19e0c9ed7c21bee171800f55e5d747",
+    "source_parent": "f397b5dcc2ad2c67b14c09447d7de9398431e160"
+  },
+  "pairs": [
+    {
+      "suite": "verifyGeography",
+      "run": "i18n-dev12-geography-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "16"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/i18n-dev12-geography-01-write.log",
+          "sha256": "1e07fa3f6e79cdb427d142afe1caae5312deadaeaf6a5ab3dc3d231d8a3d1646",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev12.jar",
+          "jar_sha256": "b393189b3c5cada3e7521ebff6d09bb26a8392509f4f0ca1d40c3700c707564a",
+          "archive_log": "verification/1.2.0/i18n-ocean/dev12/i18n-dev12-geography-01-write.log.gz",
+          "archive_sha256": "bd928edc3b065d88a335d28a9b4424b6f30a81ae0752a807cfcb717db5ce7d51"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "16"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/i18n-dev12-geography-01-reopen.log",
+          "sha256": "a7bd269d4185cc7c6394e4e0af7e1f03aaca889eabefd94e69f409204521b9fb",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev12.jar",
+          "jar_sha256": "b393189b3c5cada3e7521ebff6d09bb26a8392509f4f0ca1d40c3700c707564a",
+          "archive_log": "verification/1.2.0/i18n-ocean/dev12/i18n-dev12-geography-01-reopen.log.gz",
+          "archive_sha256": "2f8f9b8fbcb0cfbf825d0f44e35fc0135f57c36074f10d75746f02c1c3e974cb"
+        }
+      ]
+    },
+    {
+      "suite": "verifyWars",
+      "run": "i18n-dev12-wars-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "30"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/i18n-dev12-wars-01-write.log",
+          "sha256": "de35c70a6cd01b0ccb7bd0c5e47d3809ca690e9e4dc55d7e9eea501834057801",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev12.jar",
+          "jar_sha256": "b393189b3c5cada3e7521ebff6d09bb26a8392509f4f0ca1d40c3700c707564a",
+          "archive_log": "verification/1.2.0/i18n-ocean/dev12/i18n-dev12-wars-01-write.log.gz",
+          "archive_sha256": "f6f5d24ae3bfca1b3d5cfc524a0e737853fc8e104a6597eeab65fd8ae4584187"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "30"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/i18n-dev12-wars-01-reopen.log",
+          "sha256": "702841a91f304844e8d737144830ca2af0dd99da81d4633790d0e0d7b2e1dc93",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev12.jar",
+          "jar_sha256": "b393189b3c5cada3e7521ebff6d09bb26a8392509f4f0ca1d40c3700c707564a",
+          "archive_log": "verification/1.2.0/i18n-ocean/dev12/i18n-dev12-wars-01-reopen.log.gz",
+          "archive_sha256": "f6bb8ad3293cc153790faf3874a50772fd7d1006cecc6d20a2632bc30cd223f9"
+        }
+      ]
+    },
+    {
+      "suite": "verifyAutonomy",
+      "run": "i18n-dev12-autonomy-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "22"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/i18n-dev12-autonomy-01-write.log",
+          "sha256": "65938a4a9bbed0aa7ba490dd05c91d0cba4df9daa282101e18b8a495e377f3fb",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev12.jar",
+          "jar_sha256": "b393189b3c5cada3e7521ebff6d09bb26a8392509f4f0ca1d40c3700c707564a",
+          "archive_log": "verification/1.2.0/i18n-ocean/dev12/i18n-dev12-autonomy-01-write.log.gz",
+          "archive_sha256": "8588f0ab1d819c261a15dfc899a4bc032e81e44a5a847e67e372197077255c86"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "22"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/i18n-dev12-autonomy-01-reopen.log",
+          "sha256": "013bb3ae7cc4cad358815e03b2cf28a155ab5c68934a23de5b0bbee58d9651d1",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev12.jar",
+          "jar_sha256": "b393189b3c5cada3e7521ebff6d09bb26a8392509f4f0ca1d40c3700c707564a",
+          "archive_log": "verification/1.2.0/i18n-ocean/dev12/i18n-dev12-autonomy-01-reopen.log.gz",
+          "archive_sha256": "f5bf1cee38380ee44da9b7b727a0de7569b909ee50f112f7f21f8c1197971886"
+        }
+      ]
+    },
+    {
+      "suite": "verifyStage5",
+      "run": "i18n-dev12-stage5-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "26"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/i18n-dev12-stage5-01-write.log",
+          "sha256": "1b51ece45e5ef214fe021f60e64baeb91b2d3638b0cef2c247536e4c7b13ec13",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev12.jar",
+          "jar_sha256": "b393189b3c5cada3e7521ebff6d09bb26a8392509f4f0ca1d40c3700c707564a",
+          "archive_log": "verification/1.2.0/i18n-ocean/dev12/i18n-dev12-stage5-01-write.log.gz",
+          "archive_sha256": "2b7c04596c9a2052515a248677cc722458b44a923ab6327cbeeeaef76ece9619"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "26"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/i18n-dev12-stage5-01-reopen.log",
+          "sha256": "27a244c70aa71fb3d9b5c317749c647eca7ea1366722e52841657b126982618c",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev12.jar",
+          "jar_sha256": "b393189b3c5cada3e7521ebff6d09bb26a8392509f4f0ca1d40c3700c707564a",
+          "archive_log": "verification/1.2.0/i18n-ocean/dev12/i18n-dev12-stage5-01-reopen.log.gz",
+          "archive_sha256": "cbc8bdc84a8f1334c0f642d06e0887bf5c35b941e78560fa763d0686b9235c7c"
+        }
+      ]
+    }
+  ]
+}

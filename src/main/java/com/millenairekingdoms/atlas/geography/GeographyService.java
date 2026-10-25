@@ -23,14 +23,17 @@ public final class GeographyService {
     public static final long SOFT_INTERVAL_NANOS=10_000_000L;
     public static final int COAST_PROBE_DISTANCE=32,COASTAL_CANDIDATE=4; // transient only; never a persisted mask value
     public static final class Loading extends RuntimeException {private Loading(){super("Observed geography index is loading; retry later");}}
+    public static final int MAX_PENDING_WRITES=4;
+    private static final java.util.concurrent.atomic.AtomicInteger PENDING_WRITES=new java.util.concurrent.atomic.AtomicInteger();
+    private static final ExecutorService MASK_IO=Executors.newSingleThreadExecutor(task->{var thread=new Thread(task,"Kingdoms geography writer");thread.setDaemon(true);return thread;});
     private static final AtomicBoolean COLD_LOADING=new AtomicBoolean();
     private static final ExecutorService INDEX_IO=Executors.newSingleThreadExecutor(task->{var thread=new Thread(task,"Kingdoms geography index reader");thread.setDaemon(true);return thread;});
     private record Owner(UUID player,String dimension){}
     private static final class Session {
-        final GeographyStore direct;final CompletableFuture<GeographyStore> loading;int cursor;long warned=Long.MIN_VALUE;
+        final GeographyStore direct;final CompletableFuture<GeographyStore> loading;CompletableFuture<Integer> saving;volatile String writer="";int cursor;long warned=Long.MIN_VALUE;
         Session(GeographyStore store){direct=store;loading=null;}
         Session(CompletableFuture<GeographyStore> future){direct=null;loading=future;}
-        GeographyStore store(){if(direct!=null)return direct;if(!loading.isDone())throw new Loading();return loading.getNow(null);}
+        GeographyStore store(){if(saving!=null){if(!saving.isDone())throw new Loading();saving.getNow(0);saving=null;}if(direct!=null)return direct;if(!loading.isDone())throw new Loading();return loading.getNow(null);}
     }
     private static final class State {
         int rotation;long samplingSequence;
@@ -61,7 +64,7 @@ public final class GeographyService {
                 long seed=owner.player().getMostSignificantBits()^owner.player().getLeastSignificantBits()^(++state.samplingSequence*0x9e3779b97f4a7c15L);seed^=seed>>>33;seed*=0xff51afd7ed558ccdL;seed^=seed>>>33;
                 result.cursor=(int)Math.floorMod(seed,(long)(RADIUS*2+1)*(RADIUS*2+1));
                 state.sessions.put(owner,result);
-                while(state.sessions.size()>MAX_SESSIONS){var iterator=state.sessions.entrySet().iterator();while(iterator.hasNext()){var entry=iterator.next();if(entry.getValue().loading==null || entry.getValue().loading.isDone()){iterator.remove();break;}}}
+                while(state.sessions.size()>MAX_SESSIONS){var iterator=state.sessions.entrySet().iterator();while(iterator.hasNext()){var entry=iterator.next();if((entry.getValue().loading==null || entry.getValue().loading.isDone()) && (entry.getValue().saving==null || entry.getValue().saving.isDone())){iterator.remove();break;}}}
             }
             result.store();state.retry.remove(owner);return result;
         }catch(Loading expected){throw expected;}
@@ -69,7 +72,14 @@ public final class GeographyService {
     }
     public static GeographyStore store(ServerPlayer player){return session(player.serverLevel(),player.getUUID()).store();}
     public static boolean ready(ServerPlayer player){try{store(player);return true;}catch(Loading expected){return false;}}
-    public static void clear(MinecraftServer server){STATES.remove(server);}
+    public static void clear(MinecraftServer server){
+        var state=STATES.remove(server);if(state==null)return;long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(5);
+        for(var session:state.sessions.values())if(session.saving!=null)try{session.saving.get(Math.max(1,deadline-System.nanoTime()),TimeUnit.NANOSECONDS);}catch(Exception failure){com.mojang.logging.LogUtils.getLogger().warn("[Kingdoms] Geography shutdown acknowledgement unavailable; prior cache/evidence preserved",failure);}
+    }
+    public static int pendingWrites(){return PENDING_WRITES.get();}
+    public static String lastWriteThread(ServerPlayer player){var state=STATES.get(player.serverLevel().getServer());if(state==null)return "";var session=state.sessions.get(new Owner(player.getUUID(),player.serverLevel().dimension().location().toString()));return session==null?"":session.writer;}
+    private static boolean reserveWrite(){for(;;){int pending=PENDING_WRITES.get();if(pending>=MAX_PENDING_WRITES)return false;if(PENDING_WRITES.compareAndSet(pending,pending+1))return true;}}
+
     public static int activeSessions(MinecraftServer server){var state=STATES.get(server);return state==null?0:state.sessions.size();}
     public static void onTick(ServerTickEvent.Post event){
         var server=event.getServer();if(server.getTickCount()%INTERVAL!=0)return;
@@ -80,10 +90,10 @@ public final class GeographyService {
         if(!server.isSameThread())throw new IllegalStateException("Geography observations require server thread");if(players.isEmpty())return 0;
         var state=STATES.computeIfAbsent(server,unused->new State());int count=Math.min(players.size(),COLUMNS_PER_INTERVAL/COLUMNS_PER_PLAYER),processed=0,considered=0;long started=System.nanoTime();
         for(int n=0;n<count;n++){
-            if(n>0 && System.nanoTime()-started>=SOFT_INTERVAL_NANOS)break;processed++;
+            if(PENDING_WRITES.get()>=MAX_PENDING_WRITES || n>0 && System.nanoTime()-started>=SOFT_INTERVAL_NANOS)break;processed++;
             var player=players.get(Math.floorMod(state.rotation+n,players.size()));
             var identity=new Owner(player.getUUID(),player.serverLevel().dimension().location().toString());var retry=state.retry.get(identity);if(retry!=null && server.getTickCount()<retry)continue;
-            try{considered+=capture(player);}catch(Loading expected){/* One bounded background index reader; retry on a later observation round. */}catch(RuntimeException failure){
+            try{considered+=captureAsync(player);}catch(Loading expected){/* One bounded background index reader; retry on a later observation round. */}catch(RuntimeException failure){
                 // Geography failure never changes political, native, coin or shipment state.
                 var owner=new Owner(player.getUUID(),player.serverLevel().dimension().location().toString());var session=state.sessions.get(owner);
                 state.retry.put(owner,(long)server.getTickCount()+1200);
@@ -95,12 +105,15 @@ public final class GeographyService {
         state.rotation=Math.floorMod(state.rotation+processed,players.size());return considered;
     }
     /** Returns considered columns, including skipped unknown chunks. At most eight tile writes per invocation. */
-    public static int capture(ServerPlayer player){
+    /** Direct synchronous validation entry point; live ticks use the same acquisition with bounded async persistence. */
+    public static int capture(ServerPlayer player){return capture(player,false);}
+    public static int captureAsync(ServerPlayer player){return capture(player,true);}
+    private static int capture(ServerPlayer player,boolean asynchronous){
         var level=player.serverLevel();var current=level.getChunkSource().getChunkNow(player.getBlockX()>>4,player.getBlockZ()>>4);
         if(current==null || !current.hasPrimedHeightmap(Heightmap.Types.WORLD_SURFACE))return 0;
         // Underground players cannot discover the surface through the atlas. Can-see-sky is conservative under trees.
         if(!level.canSeeSky(player.blockPosition()))return 0;
-        var session=session(level,player.getUUID());var store=session.store();var observed=new LinkedHashMap<GeographyTile.Position,byte[]>();int width=RADIUS*2+1,total=width*width;
+        var session=session(level,player.getUUID());var store=session.store();int initialCursor=session.cursor;if(asynchronous && PENDING_WRITES.get()>=MAX_PENDING_WRITES)throw new Loading();var observed=new LinkedHashMap<GeographyTile.Position,byte[]>();int width=RADIUS*2+1,total=width*width;
         for(int n=0;n<COLUMNS_PER_PLAYER;n++){
             int cursor=session.cursor++%total,dx=cursor%width-RADIUS,dz=cursor/width-RADIUS;if(session.cursor==total)session.cursor=0;
             if(dx*dx+dz*dz>RADIUS*RADIUS)continue;
@@ -109,7 +122,13 @@ public final class GeographyService {
             var position=GeographyTile.Position.at(x,z);if(!observed.containsKey(position) && observed.size()>=GeographyStore.MAX_BATCH)continue;
             var cells=observed.computeIfAbsent(position,store::cells);GeographyTile.set(cells,x&31,z&31,value);
         }
-        store.commit(observed);return COLUMNS_PER_PLAYER;
+        if(!asynchronous)store.commit(observed);
+        else if(store.wouldChange(observed)){
+            if(!reserveWrite()){session.cursor=initialCursor;throw new Loading();}
+            try{session.saving=CompletableFuture.supplyAsync(()->{try{session.writer=Thread.currentThread().getName();return store.commit(observed);}finally{PENDING_WRITES.decrementAndGet();}},MASK_IO);}
+            catch(RuntimeException rejected){PENDING_WRITES.decrementAndGet();throw rejected;}
+        }
+        return COLUMNS_PER_PLAYER;
     }
     /** Never creates a chunk or primes a heightmap. Ocean requires real surface water AND an ocean biome at sea level. */
     public static int classifyLoadedColumn(ServerLevel level,int x,int z){
