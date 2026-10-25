@@ -16,6 +16,7 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.slf4j.Logger;
+import org.millenaire.village.Village;
 
 /** Bounded round-robin existing-order recovery. Never invents a new NPC commission or forces remote chunks. */
 public final class RoyalConstructionRuntime {
@@ -25,6 +26,12 @@ public final class RoyalConstructionRuntime {
         UUID cursor;
         long nextTick;
         final Map<UUID,Long> diagnostics=new HashMap<>();
+        final Map<UUID,Waiting> waiting=new HashMap<>();
+    }
+    private static final class Waiting {
+        final UUID order,actor;
+        boolean armed=true;
+        Waiting(RoyalConstructionStore.Entry entry) { order=entry.intent().id();actor=entry.intent().actor(); }
     }
     private RoyalConstructionRuntime() {}
 
@@ -33,6 +40,8 @@ public final class RoyalConstructionRuntime {
             if(!Files.exists(directory(level).resolve("orders.dat"))) continue;
             try {
                 int count=new RoyalConstructionService(level).quarantineInterruptedPublications();
+                for(var entry:new RoyalConstructionStore(directory(level)).entries())
+                    if(entry.intent().dimension().equals(level.dimension().location().toString())) watchWaiting(level,entry);
                 if(count>0) LOGGER.warn("[Kingdoms] Preserved {} interrupted royal publications in {} for explicit recovery; no refund/reissue or engine deletion.",count,level.dimension().location());
             } catch(RuntimeException failure) {
                 // No economic work is allowed when the original index cannot be inspected. Preserve it and diagnose.
@@ -54,6 +63,39 @@ public final class RoyalConstructionRuntime {
         }
     }
 
+    /** Cache only persisted player waiting mandates. No disk or village scan in the native growth hook's idle path. */
+    static void watchWaiting(ServerLevel level,RoyalConstructionStore.Entry entry) {
+        var session=SESSIONS.computeIfAbsent(level,key->new Session());var village=entry.intent().village();
+        if(entry.stage()==Stage.WAITING) session.waiting.compute(village,(key,old)->old!=null && old.order.equals(entry.intent().id()) ? old : new Waiting(entry));
+        else {var old=session.waiting.get(village);if(old!=null && old.order.equals(entry.intent().id()))session.waiting.remove(village);}
+    }
+
+    /** The pinned native engine evaluates each village on its own 20-tick counter. A 100-tick global poll can
+     * miss the empty slot. Retry once at that village's busy->ready boundary, before its next natural selection.
+     * No native call is cancelled, no project replaced, and failure leaves native growth free to continue. */
+    public static void beforeNativeGrowth(ServerLevel level,Village village) {
+        if(!RoyalConstructionConfig.TRACKING.get()) return;
+        var session=SESSIONS.get(level);if(session==null)return;
+        var waiting=session.waiting.get(village.getId().uuid());if(waiting==null)return;
+        if(RoyalConstructionCatalog.naturalWorkPending(village)) {waiting.armed=true;return;}
+        if(!waiting.armed)return;
+        var player=level.getServer().getPlayerList().getPlayer(waiting.actor);
+        if(player==null || player.serverLevel()!=level)return;
+        waiting.armed=false;
+        try {
+            var service=new RoyalConstructionService(level);var entry=service.observe(waiting.order);
+            if(entry.stage()==Stage.CANCELLING && entry.blocked()==Blocked.AUTHORITY)entry=service.settleRetired(waiting.order);
+            else if(entry.stage()==Stage.WAITING)entry=service.retryPlayer(player,waiting.order);
+            watchWaiting(level,entry);
+        } catch(RuntimeException failure) {
+            long now=level.getGameTime();Long last=session.diagnostics.get(waiting.order);
+            if(last==null || now-last>=1200) {
+                session.diagnostics.put(waiting.order,now);
+                LOGGER.warn("[Kingdoms] Waiting construction {} deferred at native handoff: {}",waiting.order,failure.getMessage());
+            }
+        }
+    }
+
     /** Immediate bounded step for the same server scheduler, also exercised directly by integration tests. */
     public static int step(ServerLevel level,int limit) {
         if(!level.getServer().isSameThread() || limit<1 || limit>16) throw new IllegalArgumentException("Invalid server construction tracking budget");
@@ -71,6 +113,9 @@ public final class RoyalConstructionRuntime {
                         && (decisions.containsKey(e.intent().id()) || !e.terminal() && e.stage()!=Stage.RECOVERY_REQUIRED))
                 .sorted(Comparator.comparing(e->e.intent().id())).toList();
         var session=SESSIONS.computeIfAbsent(level,key->new Session());
+        var waitingIds=entries.stream().filter(e->e.stage()==Stage.WAITING).map(e->e.intent().id()).collect(java.util.stream.Collectors.toSet());
+        session.waiting.values().removeIf(w->!waitingIds.contains(w.order));
+        for(var entry:entries)if(entry.stage()==Stage.WAITING)watchWaiting(level,entry);
         session.diagnostics.keySet().retainAll(entries.stream().map(e->e.intent().id()).collect(java.util.stream.Collectors.toSet()));
         if(entries.isEmpty()) return 0;
         int start=0;
@@ -86,15 +131,15 @@ public final class RoyalConstructionRuntime {
                     new RoyalRecoveryService(level).resumeAuthorized(decisions.get(id)); session.diagnostics.remove(id); continue;
                 }
                 entry=service.observe(id);
-                if(entry.stage()==Stage.CANCELLING && entry.blocked()==Blocked.AUTHORITY) service.settleRetired(id);
-                else if(entry.stage()==Stage.REQUESTED || entry.stage()==Stage.PAID || entry.stage()==Stage.QUEUING || entry.stage()==Stage.CANCELLING) {
-                    if(entry.intent().actor()==null) service.retryNpc(entry.intent().kingdom(),id);
+                if(entry.stage()==Stage.CANCELLING && entry.blocked()==Blocked.AUTHORITY) entry=service.settleRetired(id);
+                else if(entry.stage()==Stage.WAITING || entry.stage()==Stage.REQUESTED || entry.stage()==Stage.PAID || entry.stage()==Stage.QUEUING || entry.stage()==Stage.CANCELLING) {
+                    if(entry.intent().actor()==null) entry=service.retryNpc(entry.intent().kingdom(),id);
                     else {
                         var player=level.getServer().getPlayerList().getPlayer(entry.intent().actor());
-                        if(player!=null && player.serverLevel()==level) service.retryPlayer(player,id);
+                        if(player!=null && player.serverLevel()==level) entry=service.retryPlayer(player,id);
                     }
                 }
-                session.diagnostics.remove(id);
+                watchWaiting(level,entry);session.diagnostics.remove(id);
             } catch(RuntimeException failure) {
                 long now=level.getGameTime(); Long last=session.diagnostics.get(id);
                 if(last==null || now-last>=1200) {

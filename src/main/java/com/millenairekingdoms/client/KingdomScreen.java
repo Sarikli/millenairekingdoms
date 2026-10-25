@@ -141,10 +141,11 @@ public final class KingdomScreen extends Screen {
         }
         if(selected!=null) {
             var plan=selected;
-            var purchase=Button.builder(t("construction.order",coins(plan.getLong("fee"))),b->send(new KingdomActionPayload("CONSTRUCTION_ORDER",
+            var purchase=Button.builder(t(c.getBoolean("naturalPending") ? "construction.queue_order" : "construction.order",coins(plan.getLong("fee"))),b->send(new KingdomActionPayload("CONSTRUCTION_ORDER",
                     Optional.of(c.getUUID("village")),Optional.of(plan.getUUID("offer")),0,plan.getString("plan"))))
                     .bounds(x,y+listHeight+14,half-4,16).build();purchase.active=plan.getBoolean("canOrder");
             Component tip=Component.literal(plan.getString("name"));if(!purchase.active)tip=Component.empty().append(tip).append("\n").append(constructionReason(plan.getString("reason")));
+            else if(c.getBoolean("naturalPending"))tip=Component.empty().append(tip).append("\n").append(t("construction.waiting_note"));
             purchase.setTooltip(Tooltip.create(tip));addRenderableWidget(purchase);
         } else wrapped(x,y+listHeight+14,constructionReason(c.getString("reason")),half-4,MUTED,2);
         int ry=y+11;var order=c.getCompound("order");
@@ -163,7 +164,7 @@ public final class KingdomScreen extends Screen {
             ry=wrapped(rx,ry,t(c.getBoolean("stateKnown") ? "construction.no_order" : "construction.order_unknown"),rw,MUTED,2);
             if(c.contains("reason"))wrapped(rx,ry,constructionReason(c.getString("reason")),rw,BAD,4);
         }
-        wrapped(x,bottom()-25,t(order.getBoolean("refundable") ? "construction.refund_note" : "construction.patronage_note"),w,MUTED,2);
+        wrapped(x,bottom()-25,t(order.getString("stage").equals("WAITING") || !order.hasUUID("id") && c.getBoolean("naturalPending") ? "construction.waiting_note" : order.getBoolean("refundable") ? "construction.refund_note" : "construction.patronage_note"),w,MUTED,2);
     }
     private static Component constructionReason(String reason) {
         return t("construction.reason."+(reason.isEmpty() ? "NO_ELIGIBLE_PLAN" : reason));

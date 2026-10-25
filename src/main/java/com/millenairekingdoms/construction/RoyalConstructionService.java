@@ -7,6 +7,7 @@ import com.millenairekingdoms.construction.RoyalConstructionStore.Stage;
 import com.millenairekingdoms.economy.RoyalPaymentJournal.State;
 import com.millenairekingdoms.economy.RoyalPaymentService;
 import com.millenairekingdoms.economy.RoyalPaymentService.Purpose;
+import com.millenairekingdoms.economy.RoyalTreasurySnapshot;
 import com.millenairekingdoms.kingdom.KingdomSavedData;
 import com.millenairekingdoms.politics.PoliticsService;
 import java.util.HashSet;
@@ -74,6 +75,13 @@ public final class RoyalConstructionService {
             var current=orders.load(id);
             if(current.stage()==Stage.QUEUING && current.blocked()==Blocked.NO_SPACE) return retrySite(current);
             current=new RoyalConstructionMonitor(level,orders,persistence).observe(current);
+            if(current.stage()==Stage.WAITING) {
+                var waitingVillage=PoliticsService.village(level,current.intent().village());
+                if(!waitingVillage.isActive() || !level.isLoaded(waitingVillage.getCenter())) return blocked(current,Blocked.UNLOADED);
+                if(RoyalConstructionCatalog.naturalWorkPending(waitingVillage)) return blocked(current,Blocked.NATURAL_PROJECT);
+                var actor=level.getServer().getPlayerList().getPlayer(current.intent().actor());
+                if(actor==null || actor.serverLevel()!=level) return blocked(current,Blocked.RULER_UNAVAILABLE);
+            }
             return current.stage()==Stage.QUEUED && current.blocked()==Blocked.NO_SPACE ? retrySite(current) : current;
         });
     }
@@ -140,6 +148,12 @@ public final class RoyalConstructionService {
             if(current.terminal() || current.stage()==Stage.RECOVERY_REQUIRED) return current;
             if(current.stage()!=Stage.CANCELLING || current.blocked()!=Blocked.AUTHORITY) throw new IllegalArgumentException("Only a durable authority retirement can use historical settlement");
             var origin=current.cancellationFrom();
+            if(origin==Stage.WAITING) {
+                var i=current.intent();
+                try { if(payments.inspectConstruction(id,i.kingdom(),i.capital(),i.actor(),i.fee())!=null) return ambiguous(current); }
+                catch(IllegalArgumentException conflict) { return ambiguous(current); }
+                return orders.change(id,Stage.CANCELLING,Stage.CANCELLED,Blocked.AUTHORITY,null);
+            }
             boolean refund=origin==Stage.REQUESTED || origin==Stage.PAID;
             if(!refund && origin!=Stage.QUEUED && origin!=Stage.IN_PROGRESS) return ambiguous(current);
             var intent=current.intent(); RoyalPaymentService.Receipt receipt;
@@ -172,7 +186,7 @@ public final class RoyalConstructionService {
                 return advance(old,player);
             }
             if(!catalog.active() || !level.isLoaded(PoliticsService.village(level,villageId).getCenter())) throw new IllegalStateException("Village is unloaded; postpone royal construction");
-            if(catalog.naturalProjectPending()) throw new IllegalStateException("Village already has natural pending work; wait without replacing it");
+            if(catalog.naturalProjectPending() && player==null) throw new IllegalStateException("Village already has natural pending work; wait without replacing it");
             var choice=catalog.options().stream().filter(o->o.planSet().equals(selected)).findFirst().orElseThrow(()->new IllegalArgumentException("Building is not a current normal-growth choice"));
             if(expectedFee!=null && choice.patronageFee()!=expectedFee) throw new com.millenairekingdoms.util.KingdomException(
                     "millenairekingdoms.gui.msg.construction_price_changed","The patronage price changed. Refresh and review the new offer before ordering.");
@@ -182,7 +196,9 @@ public final class RoyalConstructionService {
                     player==null ? null : player.getUUID(),player==null ? 0 : data.ruler(kingdom).sinceGameTime(),village.getVillageTypeId(),
                     choice.planSet(),choice.plan(),choice.variant(),choice.patronageFee(),Math.max(0,level.getGameTime()),
                     village.getBuildings().stream().map(b->b.getId().uuid()).collect(Collectors.toSet()));
-            return advance(orders.reserve(intent),player);
+            var reserved=catalog.naturalProjectPending() ? orders.reserveWaiting(intent) : orders.reserve(intent);
+            if(reserved.stage()==Stage.WAITING)RoyalConstructionRuntime.watchWaiting(level,reserved);
+            return advance(reserved,player);
         });
     }
     private Entry retry(ServerPlayer player,UUID kingdom,UUID id) {
@@ -196,6 +212,19 @@ public final class RoyalConstructionService {
         var village=PoliticsService.village(level,intent.village());
         if(entry.terminal() || entry.stage()==Stage.RECOVERY_REQUIRED) return entry;
         if(entry.stage()==Stage.CANCELLING) return finishCancellation(entry,player);
+        if(entry.stage()==Stage.WAITING) {
+            var current=catalog(player,intent.kingdom(),intent.village());
+            if(!current.active() || !level.isLoaded(village.getCenter())) return blocked(entry,Blocked.UNLOADED);
+            if(current.naturalProjectPending()) return blocked(entry,Blocked.NATURAL_PROJECT);
+            if(!eligible(current,intent)) return blocked(entry,Blocked.MISSING_PLAN);
+            template(intent.plan());
+            // WAITING has never authorized a debit. Preserve an unexpected colliding receipt for explicit recovery.
+            if(payments.inspectPlayer(player,intent.id())!=null) return ambiguous(entry);
+            try {
+                if(RoyalTreasurySnapshot.forPlayer(player).spendableValue()<intent.fee()) return blocked(entry,Blocked.INSUFFICIENT_FUNDS);
+            } catch(IllegalStateException unavailable) { return blocked(entry,Blocked.TREASURY_UNAVAILABLE); }
+            entry=orders.change(intent.id(),Stage.WAITING,Stage.REQUESTED,Blocked.NONE,null);
+        }
         if(entry.stage()==Stage.REQUESTED) {
             var current=catalog(player,intent.kingdom(),intent.village());
             if(!current.active() || !level.isLoaded(village.getCenter())) return blocked(entry,Blocked.UNLOADED);
@@ -213,7 +242,8 @@ public final class RoyalConstructionService {
             if(!current.active() || !level.isLoaded(village.getCenter())) return blocked(entry,Blocked.UNLOADED);
             if(current.naturalProjectPending()) return blocked(entry,Blocked.NATURAL_PROJECT);
             if(!eligible(current,intent)) return blocked(entry,Blocked.MISSING_PLAN);
-            entry=orders.change(intent.id(),Stage.PAID,Stage.QUEUING,Blocked.NONE,null);
+            entry=orders.beginPublication(intent.id(),village.getBuildings().stream().map(b->b.getId().uuid()).collect(Collectors.toSet()));
+            intent=entry.intent();
             freshPublication=true;
         }
         if(entry.stage()==Stage.QUEUING) {
@@ -265,7 +295,9 @@ public final class RoyalConstructionService {
         try { receipt=player==null ? payments.inspectNpc(intent.kingdom(),intent.id()) : payments.inspectPlayer(player,intent.id()); }
         catch(IllegalArgumentException conflict) { return ambiguous(entry); }
         if(receipt!=null && !matches(receipt,intent)) return ambiguous(entry);
-        if(origin==Stage.REQUESTED || origin==Stage.PAID) {
+        if(origin==Stage.WAITING) {
+            if(receipt!=null) return ambiguous(entry);
+        } else if(origin==Stage.REQUESTED || origin==Stage.PAID) {
             if(receipt==null) {
                 if(origin!=Stage.REQUESTED) return ambiguous(entry);
             } else {

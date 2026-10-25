@@ -3,7 +3,7 @@
 > **1.2.0 development branch — By Royal Decree.** This branch targets Millénaire 9.0.3.
 > The release candidate includes real-coin payments, native construction, protected shipments and capital personalities; review and manual client checks remain open.
 > See [progress](docs/1.2.0_PROGRESS.md) and [development setup](docs/1.2.0_DEVELOPMENT.md).
-> [RC.6 JAR/checksum: Ethos / Karakter heading](releases/1.2.0-rc.6/) · [open stock investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md).
+> [RC.7 JAR/checksum: royal construction waiting queue](releases/1.2.0-rc.7/) · [open stock investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md).
 > [Preserved RC.1 technical report](docs/1.2.0_RELEASE_REPORT.md).
 > Historical 1.1.1 release artifacts and reports remain unchanged.
 
@@ -17,7 +17,7 @@ left untouched, and the original Millénaire JAR is never modified.
 
 | | |
 |---|---|
-| Development version | 1.2.0-rc.6 |
+| Development version | 1.2.0-rc.7 |
 | Minecraft | 1.21.1 |
 | Loader | NeoForge 21.1.259 |
 | Required dependency | Millénaire 9.0.3 |

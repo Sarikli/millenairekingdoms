@@ -1,0 +1,54 @@
+{
+  "version": "1.2.0-rc.7",
+  "bytes": 619980,
+  "sha256": "208f1290dad63c5c98b41af0fde6ca7bca31ed036d0220087d9f28c479b07743",
+  "original_millenaire_version": "9.0.3",
+  "original_millenaire_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "source_base_commit": "a8c47f04fd3edf5ccd7d9e47390fb8030d6837c5",
+  "source_commit_lookup": "git log -1 --format=%H -- src/main/java/com/millenairekingdoms/mixin/VillageGrowthQueueMixin.java",
+  "artifact_commit_lookup": "git log -1 --format=%H -- releases/1.2.0-rc.7/millenairekingdoms-1.2.0-rc.7.jar",
+  "network_protocol": 3,
+  "construction_format": 4,
+  "legacy_construction_reads": [
+    1,
+    2,
+    3
+  ],
+  "translation_keys_per_language": 320,
+  "normal_generated_config_identical_to_rc6": true,
+  "packed_comparison": {
+    "sha256": "208f1290dad63c5c98b41af0fde6ca7bca31ed036d0220087d9f28c479b07743",
+    "bytes": 619980,
+    "production_classes": 202,
+    "identical_to_rc6_classes": 184,
+    "changed": [
+      "META-INF/MANIFEST.MF",
+      "META-INF/neoforge.mods.toml",
+      "assets/millenairekingdoms/lang/en_us.json",
+      "assets/millenairekingdoms/lang/tr_tr.json",
+      "com/millenairekingdoms/MillenaireKingdoms.class",
+      "com/millenairekingdoms/client/KingdomScreen$RowList$Row.class",
+      "com/millenairekingdoms/client/KingdomScreen$RowList.class",
+      "com/millenairekingdoms/client/KingdomScreen.class",
+      "com/millenairekingdoms/construction/RoyalConstructionCatalog$Catalog.class",
+      "com/millenairekingdoms/construction/RoyalConstructionCatalog$Option.class",
+      "com/millenairekingdoms/construction/RoyalConstructionCatalog.class",
+      "com/millenairekingdoms/construction/RoyalConstructionRuntime$Session.class",
+      "com/millenairekingdoms/construction/RoyalConstructionRuntime.class",
+      "com/millenairekingdoms/construction/RoyalConstructionService$Publication.class",
+      "com/millenairekingdoms/construction/RoyalConstructionService.class",
+      "com/millenairekingdoms/construction/RoyalConstructionStore$Blocked.class",
+      "com/millenairekingdoms/construction/RoyalConstructionStore$Entry.class",
+      "com/millenairekingdoms/construction/RoyalConstructionStore$Stage.class",
+      "com/millenairekingdoms/construction/RoyalConstructionStore.class",
+      "com/millenairekingdoms/gui/RoyalConstructionView.class",
+      "millenairekingdoms.mixins.json"
+    ],
+    "added": [
+      "com/millenairekingdoms/construction/RoyalConstructionRuntime$Waiting.class",
+      "com/millenairekingdoms/mixin/VillageGrowthQueueMixin.class"
+    ],
+    "removed": [],
+    "lang_keys": 320
+  }
+}

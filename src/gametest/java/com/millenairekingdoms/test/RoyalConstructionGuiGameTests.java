@@ -2,6 +2,9 @@ package com.millenairekingdoms.test;
 
 import com.millenairekingdoms.construction.RoyalConstructionCatalog;
 import com.millenairekingdoms.construction.RoyalConstructionStore;
+import com.millenairekingdoms.construction.RoyalConstructionRuntime;
+import com.millenairekingdoms.construction.RoyalConstructionService;
+import com.millenairekingdoms.construction.RoyalConstructionStore.Blocked;
 import com.millenairekingdoms.construction.RoyalConstructionStore.Stage;
 import com.millenairekingdoms.economy.RoyalEconomyConfig;
 import com.millenairekingdoms.economy.RoyalPaymentService;
@@ -39,6 +42,10 @@ import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import org.millenaire.building.BuildingInstance;
 import org.millenaire.building.BuildingInventory;
+import org.millenaire.building.BuildingId;
+import org.millenaire.culture.ModCultures;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Rotation;
 import org.millenaire.item.ModItems;
 import org.millenaire.village.Village;
 import org.millenaire.village.VillageId;
@@ -129,11 +136,16 @@ public final class RoyalConstructionGuiGameTests {
     }
 
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
-    public static void existingNaturalProjectDisablesAndServerRejectsForgedOrder(GameTestHelper h) throws Exception {
+    public static void existingNaturalProjectAcceptsOneUnpaidWaitingOrderWithoutReplacingNativeWork(GameTestHelper h) throws Exception {
         try(var f=fixture(h,"gui-natural")) {
             var c=RoyalConstructionCatalog.forPlayer(f.player,f.f.village().getId().uuid()).options().getFirst();var pending=new Village.PendingProject(c.planSet(),c.variant(),0,false,null);f.f.village().setPendingProject(pending);
-            var frame=frame(f.player);var offer=first(frame);h.assertTrue(!offer.getBoolean("canOrder") && offer.getString("reason").equals("NATURAL_PROJECT"),"Screen gives a translatable actual unavailable reason");
-            send(f.player,order(f,offer,0));h.assertTrue(f.f.village().getPendingProject()==pending && f.f.value()==128,"Forged enabled-button request cannot replace natural work or debit coins");h.succeed();
+            var frame=frame(f.player);var offer=first(frame);h.assertTrue(offer.getBoolean("canOrder") && frame.getBoolean("naturalPending"),"Screen offers a waiting mandate behind actual native work");
+            var before=VillageSavedData.get(f.f.level()).save(new CompoundTag(),f.f.level().registryAccess()).copy();
+            send(f.player,order(f,offer,0));send(f.player,order(f,offer,0));var entry=store(f.f.level()).load(offer.getUUID("offer"));
+            h.assertTrue(entry.stage()==Stage.WAITING && entry.blocked()==Blocked.NATURAL_PROJECT && receipt(f,entry)==null
+                    && f.f.village().getPendingProject()==pending && f.f.value()==128 && before.equals(VillageSavedData.get(f.f.level()).save(new CompoundTag(),f.f.level().registryAccess())),"Waiting/replay retains one unpaid mandate and byte-equal native data, no project replacement or coins removed");
+            var another=first(frame(f.player));h.assertTrue(!another.getBoolean("canOrder") && another.getString("reason").equals("ORDER_PENDING"),"One active royal slot includes the waiting mandate");
+            send(f.player,order(f,another,0));h.assertTrue(store(f.f.level()).entries().stream().filter(e->e.intent().village().equals(f.f.village().getId().uuid()) && !e.terminal()).count()==1 && f.f.value()==128,"A forged second offer cannot allocate a second waiting order or debit money");h.succeed();
         }
     }
 
@@ -234,6 +246,106 @@ public final class RoyalConstructionGuiGameTests {
         }
         var f=fixture(h,"gui-restart");var offer=first(frame(f.player));send(f.player,order(f,offer,0));var tag=new CompoundTag();tag.putUUID("village",f.f.village().getId().uuid());tag.putUUID("player",f.player.getUUID());tag.putUUID("order",offer.getUUID("offer"));NbtIo.writeCompressed(tag,marker);
         f.f.village().setActive(false);VillageSavedData.get(level).setDirty();System.out.println("ROYAL_GUI_RESTART_WRITE_PASS order="+offer.getUUID("offer")+" remaining="+f.f.value());h.succeed();
+    }
+
+
+    @GameTest(templateNamespace=NS,template="empty",batch="royal_wait_cancel",timeoutTicks=1200)
+    public static void waitingCancelIsFreeAndReplaysCannotEraseNativeWorkOrReviveTheOrder(GameTestHelper h) throws Exception {
+        try(var f=fixture(h,"waiting-cancel")) {
+            var choice=RoyalConstructionCatalog.forPlayer(f.player,f.f.village().getId().uuid()).options().getFirst();var nativeWork=new Village.PendingProject(choice.planSet(),choice.variant(),0,false,null);f.f.village().setPendingProject(nativeWork);
+            var offer=first(frame(f.player));send(f.player,order(f,offer,0));var id=offer.getUUID("offer");
+            send(f.player,KingdomActionPayload.of("CONSTRUCTION_CANCEL",id));send(f.player,KingdomActionPayload.of("CONSTRUCTION_CANCEL",id));send(f.player,order(f,offer,0));
+            var entry=store(f.f.level()).load(id);h.assertTrue(entry.stage()==Stage.CANCELLED && entry.cancellationFrom()==Stage.WAITING && receipt(f,entry)==null && f.f.value()==128
+                    && f.f.village().getPendingProject()==nativeWork,"Unpaid waiting cancellation/replays neither debit/refund coins nor clear original native work, and the UUID stays cancelled");h.succeed();
+        }
+    }
+
+    @GameTest(templateNamespace=NS,template="empty",batch="royal_wait_active",timeoutTicks=1200)
+    public static void activeNativeTaskMustFinishBeforeTheSchedulerStartsTheRoyalOrder(GameTestHelper h) throws Exception {
+        try(var f=fixture(h,"waiting-active")) {
+            var choice=RoyalConstructionCatalog.forPlayer(f.player,f.f.village().getId().uuid()).options().getFirst();
+            var nativeWork=new Village.PendingProject(choice.planSet(),choice.variant(),0,false,null);f.f.village().setPendingProject(nativeWork);
+            var offers=frame(f.player).getList("plans",Tag.TAG_COMPOUND);CompoundTag offer=null;for(var raw:offers)if(((CompoundTag)raw).getString("plan").equals(choice.planSet().toString()))offer=(CompoundTag)raw;
+            h.assertTrue(offer!=null,"A repeatable legal native candidate is exposed");send(f.player,order(f,offer,0));var id=offer.getUUID("offer");
+            // Metadata-only boundary fixture; genuine resident/material completion is tested separately.
+            var nativeBuilding=f.f.village().getTownhall();nativeBuilding.setStatus(BuildingInstance.Status.UPGRADING);
+            f.f.village().setPendingProject(null);
+            runWaitingScheduler(f.player,id);h.assertTrue(store(f.f.level()).load(id).stage()==Stage.WAITING && f.f.value()==128 && nativeBuilding.isBeingBuilt(),"Empty pending slot does not preempt an existing ordinary construction task");
+            nativeBuilding.setStatus(BuildingInstance.Status.COMPLETE);runWaitingScheduler(f.player,id);var accepted=store(f.f.level()).load(id);
+            h.assertTrue(accepted.stage()==Stage.QUEUED && accepted.building()==null && accepted.intent().originalBuildings().contains(nativeBuilding.getId().uuid()) && f.f.value()==64
+                    && nativeBuilding.getStatus()==BuildingInstance.Status.COMPLETE && f.f.village().getPendingProject()!=null && receipt(f,accepted).state()==RoyalPaymentJournal.State.COMMITTED,"Actual bounded scheduler pays once only after the native upgrade finishes and publishes a new royal request: "+accepted+" funds="+f.f.value()+" baseline="+accepted.intent().originalBuildings()+" pending="+f.f.village().getPendingProject()+"");
+            new RoyalConstructionService(f.f.level()).observe(id);h.assertTrue(store(f.f.level()).load(id).stage()==Stage.QUEUED && store(f.f.level()).load(id).building()==null,"An existing native town hall never fulfills a new royal building order");h.succeed();
+        }
+    }
+
+    @GameTest(templateNamespace=NS,template="empty",batch="royal_wait_funds",timeoutTicks=1200)
+    public static void waitingNeedsLoadedVillageAndRealFundsAndRetainsTheOriginalQuote(GameTestHelper h) throws Exception {
+        try(var f=fixture(h,"waiting-funds")) {
+            var choice=RoyalConstructionCatalog.forPlayer(f.player,f.f.village().getId().uuid()).options().getFirst();f.f.village().setPendingProject(new Village.PendingProject(choice.planSet(),choice.variant(),0,false,null));f.f.chest().setItem(0,ItemStack.EMPTY);
+            var offer=first(frame(f.player));h.assertTrue(offer.getBoolean("canOrder"),"Future unpaid waiting mandate does not require money before the current native work finishes");send(f.player,order(f,offer,0));var id=offer.getUUID("offer");var service=new RoyalConstructionService(f.f.level());
+            f.f.village().setPendingProject(null);f.f.village().setActive(false);h.assertTrue(service.retryPlayer(f.player,id).blocked()==Blocked.UNLOADED && f.f.value()==0,"Inactive village defers without a debit");
+            f.f.village().setActive(true);h.assertTrue(service.retryPlayer(f.player,id).blocked()==Blocked.INSUFFICIENT_FUNDS && store(f.f.level()).load(id).stage()==Stage.WAITING && receipt(f,store(f.f.level()).load(id))==null,"No real coins leaves a visible unpaid waiting mandate");
+            var old=RoyalEconomyConfig.CONSTRUCTION_FEE.get();try {
+                RoyalEconomyConfig.CONSTRUCTION_FEE.set(128);f.f.chest().setItem(0,new ItemStack(ModItems.DENIER_ARGENT.get(),1));
+                var accepted=service.retryPlayer(f.player,id);service.retryPlayer(f.player,id);
+                h.assertTrue(accepted.stage()==Stage.QUEUED && accepted.intent().fee()==64 && f.f.value()==0 && receipt(f,accepted).amount()==64 && receipt(f,accepted).state()==RoyalPaymentJournal.State.COMMITTED,"Later funds pay exactly the reviewed64 quote once, even after config price rises to128");
+            } finally {RoyalEconomyConfig.CONSTRUCTION_FEE.set(old);}h.succeed();
+        }
+    }
+
+    @GameTest(templateNamespace=NS,template="empty",batch="royal_wait_retire",timeoutTicks=1200)
+    public static void waitingAuthorityRetiresBeforeReclaimWithoutFeesOrNativeChanges(GameTestHelper h) throws Exception {
+        try(var f=fixture(h,"waiting-retire")) {
+            var choice=RoyalConstructionCatalog.forPlayer(f.player,f.f.village().getId().uuid()).options().getFirst();var nativeWork=new Village.PendingProject(choice.planSet(),choice.variant(),0,false,null);f.f.village().setPendingProject(nativeWork);
+            var offer=first(frame(f.player));send(f.player,order(f,offer,0));var id=offer.getUUID("offer");var data=KingdomSavedData.get(f.f.level());data.clearRuler(f.f.kingdom());
+            var retired=store(f.f.level()).load(id);h.assertTrue(retired.stage()==Stage.CANCELLING && retired.cancellationFrom()==Stage.WAITING,"Governance publication retires the unpaid waiting mandate first");
+            new RoyalConstructionService(f.f.level()).settleRetired(id);data.claimRule(f.f.kingdom(),f.player.getUUID(),"Reclaimed builder ruler",43);send(f.player,order(f,offer,0));
+            h.assertTrue(store(f.f.level()).load(id).stage()==Stage.CANCELLED && f.f.value()==128 && f.f.village().getPendingProject()==nativeWork,"Reclaim cannot revive the old mandate, spend fees or erase original work");h.succeed();
+        }
+    }
+
+    @GameTest(templateNamespace=NS,template="empty",batch="royal_wait_invalid",timeoutTicks=1200)
+    public static void nativeCompletionThatExhaustsThePlanLimitLeavesRoyalWorkUnpaid(GameTestHelper h) throws Exception {
+        try(var f=fixture(h,"waiting-invalid")) {
+            var choice=RoyalConstructionCatalog.forPlayer(f.player,f.f.village().getId().uuid()).options().stream().filter(c->ModCultures.getBuildingPlanSet(c.planSet()).maxCount()>0).findFirst().orElseThrow();
+            f.f.village().setPendingProject(new Village.PendingProject(choice.planSet(),choice.variant(),0,false,null));CompoundTag offer=null;
+            for(var raw:frame(f.player).getList("plans",Tag.TAG_COMPOUND))if(((CompoundTag)raw).getString("plan").equals(choice.planSet().toString()))offer=(CompoundTag)raw;
+            send(f.player,order(f,offer,0));var id=offer.getUUID("offer");int limit=ModCultures.getBuildingPlanSet(choice.planSet()).maxCount();
+            for(int n=0;n<limit;n++)f.f.village().addBuilding(new BuildingInstance(BuildingId.random(),choice.plan(),f.f.village().getCenter().offset(n+8,0,8),Rotation.NONE,BuildingInstance.Status.COMPLETE,choice.planSet(),choice.variant(),0));
+            f.f.village().setPendingProject(null);var result=new RoyalConstructionService(f.f.level()).retryPlayer(f.player,id);
+            h.assertTrue(result.stage()==Stage.WAITING && result.blocked()==Blocked.MISSING_PLAN && receipt(f,result)==null && f.f.value()==128 && f.f.village().getPendingProject()==null,"Changed native eligibility is rechecked before money/publication; capped buildings are not duplicated");h.succeed();
+        }
+    }
+
+    @GameTest(templateNamespace=NS,template="empty",batch="royal_wait_restart",timeoutTicks=1200)
+    public static void unpaidWaitingSurvivesSeparateJvmAndAutomaticallyPublishesAfterNativeCompletion(GameTestHelper h) throws Exception {
+        var level=h.getLevel();var marker=root(level).resolve("royal-waiting-restart.dat");
+        if("read".equals(System.getProperty("kingdoms.tests.persistence"))) {
+            var tag=NbtIo.readCompressed(marker,NbtAccounter.create(1024*1024));var village=VillageSavedData.get(level).getVillageManager().getVillage(new VillageId(tag.getUUID("village")));var id=tag.getUUID("order");
+            var natural=new Village.PendingProject(ResourceLocation.parse(tag.getString("nativePlan")),tag.getString("nativeVariant"),0,false,null);
+            h.assertTrue(village!=null && natural.equals(village.getPendingProject()) && store(level).load(id).stage()==Stage.WAITING,"Original native pending and unpaid royal wait reopen without repairs");
+            for(var pos:village.getTownhall().getInventory().getChestPositions())level.getChunkAt(pos);village.setActive(true);var player=new FakePlayer(level,new GameProfile(tag.getUUID("player"),"Waiting ruler"));
+            h.assertTrue(RoyalTreasurySnapshot.forPlayer(player).spendableValue()==128 && new RoyalPaymentService(level).inspectPlayer(player,id)==null,"Restart cannot charge an unpaid queued mandate");
+            var set=ModCultures.getBuildingPlanSet(natural.planSetId());var def=set.getLevel(natural.variant(),0);var completed=new BuildingInstance(BuildingId.random(),def.planId(),village.getCenter().offset(24,0,24),Rotation.NONE,BuildingInstance.Status.COMPLETE,set.id(),natural.variant(),0);
+            village.addBuilding(completed);village.setPendingProject(null);h.assertTrue(new RoyalConstructionService(level).observe(id).blocked()==Blocked.RULER_UNAVAILABLE,"No offline actor is impersonated for a new debit");
+            runWaitingScheduler(player,id);var accepted=store(level).load(id);send(player,new KingdomActionPayload("CONSTRUCTION_ORDER",Optional.of(village.getId().uuid()),Optional.of(id),0,accepted.intent().planSet().toString()));
+            h.assertTrue(accepted.stage()==Stage.QUEUED && accepted.intent().originalBuildings().contains(completed.getId().uuid()) && RoyalTreasurySnapshot.forPlayer(player).spendableValue()==64
+                    && new RoyalPaymentService(level).inspectPlayer(player,id).state()==RoyalPaymentJournal.State.COMMITTED,"Original actor return automatically revalidates, publishes and pays once across JVMs, excluding prior native completion");
+            System.out.println("ROYAL_WAITING_RESTART_READ_PASS waiting->QUEUED one64fee remaining64");h.succeed();return;
+        }
+        var f=fixture(h,"waiting-restart");var choices=RoyalConstructionCatalog.forPlayer(f.player,f.f.village().getId().uuid()).options();h.assertTrue(choices.size()>1,"Two genuine native choices are available");
+        var natural=choices.get(1);f.f.village().setPendingProject(new Village.PendingProject(natural.planSet(),natural.variant(),0,false,null));var offer=first(frame(f.player));send(f.player,order(f,offer,0));var id=offer.getUUID("offer");
+        h.assertTrue(store(level).load(id).stage()==Stage.WAITING && f.f.value()==128 && receipt(f,store(level).load(id))==null,"Actual player action persists unpaid waiting before the original project finishes");
+        var tag=new CompoundTag();tag.putUUID("village",f.f.village().getId().uuid());tag.putUUID("player",f.player.getUUID());tag.putUUID("order",id);tag.putString("nativePlan",natural.planSet().toString());tag.putString("nativeVariant",natural.variant());NbtIo.writeCompressed(tag,marker);
+        f.f.village().setActive(false);VillageSavedData.get(level).setDirty();System.out.println("ROYAL_WAITING_RESTART_WRITE_PASS WAITING noFee remaining128 nativePendingPreserved");h.succeed();
+    }
+
+    /** Test-only online-player lookup; no NPCs, network login or fabricated financial receipts. */
+    private static void runWaitingScheduler(ServerPlayer player,UUID id) throws Exception {
+        var field=net.minecraft.server.players.PlayerList.class.getDeclaredField("playersByUUID");field.setAccessible(true);
+        @SuppressWarnings("unchecked") var online=(Map<UUID,ServerPlayer>)field.get(player.getServer().getPlayerList());var old=online.put(player.getUUID(),player);
+        try {for(int n=0;n<4;n++)RoyalConstructionRuntime.step(player.serverLevel(),16);}
+        finally {if(old==null)online.remove(player.getUUID());else online.put(player.getUUID(),old);}
     }
 
     private record Fixture(RoyalPaymentGameTests.Fixture f,Stage5Support.TestPlayer player) implements AutoCloseable {

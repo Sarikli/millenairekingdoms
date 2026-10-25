@@ -27,10 +27,10 @@ import net.minecraft.resources.ResourceLocation;
 /** Own atomic order intent/index, independent of political format 6 and Millenaire's building save.
  * States describe order coordination, not payment or proof of a finished building. Only the domain service may advance them. */
 public final class RoyalConstructionStore {
-    private static final int FORMAT=3, MAX_ORDERS=10_000;
+    private static final int FORMAT=4, MAX_ORDERS=10_000;
     private static final long MAX_BYTES=16L*1024*1024;
-    public enum Stage { REQUESTED, PAID, QUEUING, QUEUED, IN_PROGRESS, COMPLETED, CANCELLING, CANCELLED, FAILED, RECOVERY_REQUIRED }
-    public enum Blocked { NONE, NATURAL_PROJECT, UNLOADED, MATERIALS, NO_SPACE, AUTHORITY, MEMBERSHIP, MISSING_PLAN, AMBIGUOUS_ENGINE_STATE, BUILDER_BLOCKED, BUILDING_MISSING, OPERATOR_FORFEIT }
+    public enum Stage { WAITING, REQUESTED, PAID, QUEUING, QUEUED, IN_PROGRESS, COMPLETED, CANCELLING, CANCELLED, FAILED, RECOVERY_REQUIRED }
+    public enum Blocked { NONE, NATURAL_PROJECT, UNLOADED, MATERIALS, NO_SPACE, AUTHORITY, MEMBERSHIP, MISSING_PLAN, AMBIGUOUS_ENGINE_STATE, BUILDER_BLOCKED, BUILDING_MISSING, OPERATOR_FORFEIT, RULER_UNAVAILABLE, TREASURY_UNAVAILABLE, INSUFFICIENT_FUNDS }
 
     public record Intent(UUID id,String dimension,UUID kingdom,UUID capital,UUID village,UUID actor,long rulerSince,
                          ResourceLocation villageType,ResourceLocation planSet,ResourceLocation plan,String variant,
@@ -48,6 +48,7 @@ public final class RoyalConstructionStore {
     public record Entry(Intent intent,Stage stage,Blocked blocked,UUID building,Stage cancellationFrom,UUID recoveryDecision) {
         public Entry {
             Objects.requireNonNull(intent); Objects.requireNonNull(stage); Objects.requireNonNull(blocked);
+            if(stage==Stage.WAITING && (intent.actor()==null || building!=null)) throw new IllegalArgumentException("Only an unpaid player mandate can wait for native work");
             if((stage==Stage.IN_PROGRESS || stage==Stage.COMPLETED) && building==null) throw new IllegalArgumentException("Building identity required for construction progress");
             if(building!=null && intent.originalBuildings.contains(building)) throw new IllegalArgumentException("An existing building cannot fulfill a new royal construction order");
             if(stage==Stage.CANCELLING && cancellationFrom==null) throw new IllegalArgumentException("Cancellation must retain its origin before any refund");
@@ -74,6 +75,14 @@ public final class RoyalConstructionStore {
 
     /** Bind a full intent and reserve the village in the same atomic index update, before any charge. */
     public synchronized Entry reserve(Intent intent) {
+        return reserve(intent,false);
+    }
+    /** Player-approved unpaid waiting mandate; it still occupies the one royal slot for this village. */
+    public synchronized Entry reserveWaiting(Intent intent) {
+        if(intent.actor()==null) throw new IllegalArgumentException("Only player commissions may be scheduled behind native work");
+        return reserve(intent,true);
+    }
+    private Entry reserve(Intent intent,boolean waiting) {
         return locked(entries->{
             Entry old=entries.get(intent.id);
             if(old!=null) {
@@ -84,11 +93,27 @@ public final class RoyalConstructionStore {
                 throw new IllegalStateException("Village already has active royal order "+entry.intent.id+" ("+entry.stage+")");
             }
             if(entries.size()>=MAX_ORDERS) throw new IllegalStateException("Royal order history limit reached; preserve data for audited archival");
-            Entry entry=new Entry(intent,Stage.REQUESTED,Blocked.NONE,null); entries.put(intent.id,entry); write(entries); return entry;
+            Entry entry=new Entry(intent,waiting ? Stage.WAITING : Stage.REQUESTED,waiting ? Blocked.NATURAL_PROJECT : Blocked.NONE,null);
+            entries.put(intent.id,entry); write(entries); return entry;
         });
     }
     public synchronized Entry load(UUID id) { return locked(entries->entries.get(id)); }
     public synchronized List<Entry> entries() { return locked(entries->List.copyOf(entries.values())); }
+
+    /** Freeze the observation baseline at first engine publication, after any preceding native project finished.
+     * Financial identity/quote never change. No already-published or ambiguous order can rebase its evidence. */
+    synchronized Entry beginPublication(UUID id,Set<UUID> currentBuildings) {
+        return locked(entries->{
+            var old=entries.get(id);
+            if(old==null || old.stage()!=Stage.PAID || old.building()!=null || old.cancellationFrom()!=null || old.recoveryDecision()!=null)
+                throw new IllegalStateException("Only acknowledged paid, unpublished work can begin publication");
+            var i=old.intent();var baseline=new HashSet<>(i.originalBuildings());baseline.addAll(currentBuildings);
+            var intent=new Intent(i.id(),i.dimension(),i.kingdom(),i.capital(),i.village(),i.actor(),i.rulerSince(),i.villageType(),
+                    i.planSet(),i.plan(),i.variant(),i.fee(),i.issuedGameTime(),baseline);
+            var next=new Entry(intent,Stage.QUEUING,Blocked.NONE,null);
+            entries.put(id,next);write(entries);return next;
+        });
+    }
 
     /** Retire old mandates durably BEFORE a political authority/membership snapshot becomes visible. No money or engine mutation. */
     public synchronized int retire(Predicate<Intent> invalid) {
@@ -142,6 +167,7 @@ public final class RoyalConstructionStore {
     private static boolean allowed(Stage from,Stage to) {
         if(from==to) return from!=Stage.COMPLETED && from!=Stage.CANCELLED && from!=Stage.FAILED && from!=Stage.RECOVERY_REQUIRED;
         return switch(from) {
+            case WAITING -> to==Stage.REQUESTED || to==Stage.CANCELLING || to==Stage.FAILED || to==Stage.RECOVERY_REQUIRED;
             case REQUESTED -> to==Stage.PAID || to==Stage.CANCELLING || to==Stage.FAILED || to==Stage.RECOVERY_REQUIRED;
             case PAID -> to==Stage.QUEUING || to==Stage.CANCELLING || to==Stage.RECOVERY_REQUIRED;
             case QUEUING -> to==Stage.QUEUED || to==Stage.IN_PROGRESS || to==Stage.CANCELLING || to==Stage.RECOVERY_REQUIRED;
@@ -170,6 +196,9 @@ public final class RoyalConstructionStore {
                     || (item.contains("building") && !item.hasUUID("building")) || (item.contains("cancellationFrom") && !item.contains("cancellationFrom",Tag.TAG_STRING))
                     || (item.contains("recoveryDecision") && !item.hasUUID("recoveryDecision"))) throw new IllegalStateException("Incomplete royal order entry");
             var stage=Stage.valueOf(item.getString("stage"));
+            if(format<4 && (stage==Stage.WAITING || item.getString("cancellationFrom").equals("WAITING")
+                    || Set.of("RULER_UNAVAILABLE","TREASURY_UNAVAILABLE","INSUFFICIENT_FUNDS").contains(item.getString("blocked"))))
+                throw new IllegalStateException("Waiting mandate requires order format4; original file preserved");
             // v1 did not retain the origin. An unresolved legacy cancellation is explicitly ambiguous, never assumed refundable.
             Stage origin=format==1 && (stage==Stage.CANCELLING || stage==Stage.CANCELLED) ? Stage.CANCELLING
                     : item.contains("cancellationFrom") ? Stage.valueOf(item.getString("cancellationFrom")) : null;

@@ -58,7 +58,7 @@ public final class RoyalConstructionView {
             var village=PoliticsService.village(level,state.village);
             if(village==null) {out.putString("reason","MISSING_VILLAGE");return out;}
             out.putUUID("village",state.village); out.putBoolean("available",village.isActive() && level.isLoaded(village.getCenter()));
-            out.putBoolean("naturalPending",village.getPendingProject()!=null);
+            out.putBoolean("naturalPending",RoyalConstructionCatalog.naturalWorkPending(village));
             var type=ModCultures.getVillageType(village.getVillageTypeId());
             var path=level.getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-construction");
             var history=Files.exists(path.resolve("orders.dat")) ? new RoyalConstructionStore(path).entries() : List.<RoyalConstructionStore.Entry>of();
@@ -77,7 +77,7 @@ public final class RoyalConstructionView {
                 boolean own=player.getUUID().equals(i.actor()) && k.id().equals(i.kingdom()) && k.capital().equals(i.capital()) && state.tenure==i.rulerSince()
                         && type!=null && !type.playerControlled() && village.getOwnerUUID()==null && i.villageType().equals(village.getVillageTypeId());
                 order.putBoolean("canCancel",own && busy && current.stage()!=Stage.RECOVERY_REQUIRED);
-                order.putBoolean("canResume",own && (current.stage()==Stage.REQUESTED || current.stage()==Stage.PAID || current.stage()==Stage.QUEUING || current.stage()==Stage.CANCELLING));
+                order.putBoolean("canResume",own && (current.stage()==Stage.WAITING || current.stage()==Stage.REQUESTED || current.stage()==Stage.PAID || current.stage()==Stage.QUEUING || current.stage()==Stage.CANCELLING));
                 order.putBoolean("refundable",current.stage()==Stage.REQUESTED || current.stage()==Stage.PAID);
                 if(current.building()!=null) {
                     var building=village.getBuilding(new BuildingId(current.building()));
@@ -87,7 +87,7 @@ public final class RoyalConstructionView {
             }
             String reason=type==null || type.playerControlled() || village.getOwnerUUID()!=null ? "CONTROLLED"
                     : MillenaireServerConfig.SERVER.ignoreResourceCost.get() ? "RESOURCE_COSTS_DISABLED"
-                    : busy ? "ORDER_PENDING" : !out.getBoolean("available") ? "UNLOADED" : village.getPendingProject()!=null ? "NATURAL_PROJECT" : "";
+                    : busy ? "ORDER_PENDING" : !out.getBoolean("available") ? "UNLOADED" : "";
             long funds=0; boolean treasury=false;
             try {funds=RoyalTreasurySnapshot.forPlayer(player).spendableValue();treasury=true;}
             catch(IllegalArgumentException|IllegalStateException unavailable) { /* The read-only preview does not load storage. */ }
@@ -100,7 +100,7 @@ public final class RoyalConstructionView {
                     if(offer==null || usedIds.contains(offer.id()) || offer.fee()!=choice.patronageFee() || now>offer.expires()) {
                         offer=new Offer(UUID.randomUUID(),state.village,choice.planSet(),choice.patronageFee(),Math.max(0,now)+OFFER_TICKS);state.offers.put(choice.planSet(),offer);
                     }
-                    String denial=!reason.isEmpty() ? reason : !treasury ? "TREASURY_UNAVAILABLE" : funds<offer.fee() ? "INSUFFICIENT_FUNDS" : "";
+                    String denial=!reason.isEmpty() ? reason : catalog.naturalProjectPending() ? "" : !treasury ? "TREASURY_UNAVAILABLE" : funds<offer.fee() ? "INSUFFICIENT_FUNDS" : "";
                     var p=new CompoundTag();p.putUUID("offer",offer.id());p.putString("plan",choice.planSet().toString());p.putString("name",choice.nativeName());
                     p.putLong("fee",offer.fee());p.putBoolean("canOrder",denial.isEmpty());if(!denial.isEmpty())p.putString("reason",denial);plans.add(p);
                 }

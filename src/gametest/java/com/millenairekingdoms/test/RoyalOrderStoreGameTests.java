@@ -18,6 +18,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.LevelResource;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
@@ -32,6 +33,32 @@ public final class RoyalOrderStoreGameTests {
     private static Intent intent(UUID id,UUID village,long fee,String variant) {
         return new Intent(id,"minecraft:overworld",new UUID(80,1),new UUID(80,2),village,null,0,TYPE,SET,PLAN,variant,fee,100,Set.of(new UUID(80,3)));
     }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=200)
+    public static void versionThreeIntentMigratesOnlyOnMutationAndNewWaitingStateCannotMasqueradeAsLegacy(GameTestHelper h) throws Exception {
+        var path=directory(h);var store=new RoyalConstructionStore(path);var original=intent(UUID.randomUUID(),UUID.randomUUID(),64,"a");store.reserve(original);
+        var file=path.resolve("orders.dat");var tag=NbtIo.readCompressed(file,net.minecraft.nbt.NbtAccounter.unlimitedHeap());tag.putInt("format",3);NbtIo.writeCompressed(tag,file);var bytes=Files.readAllBytes(file);
+        h.assertTrue(store.load(original.id()).intent().equals(original) && Arrays.equals(bytes,Files.readAllBytes(file)),"Format3 reads preserve every bound field and original bytes");
+        store.reserve(intent(UUID.randomUUID(),UUID.randomUUID(),64,"a"));var migrated=NbtIo.readCompressed(file,net.minecraft.nbt.NbtAccounter.unlimitedHeap());
+        h.assertTrue(migrated.getInt("format")==4 && store.load(original.id()).intent().equals(original),"A locked mutation upgrades to4 without rebinding legacy intent");
+        tag.putInt("format",3);var entry=tag.getList("orders",Tag.TAG_COMPOUND).getCompound(0);entry.putString("stage","WAITING");entry.getCompound("intent").putUUID("actor",UUID.randomUUID());entry.getCompound("intent").putLong("rulerSince",1);
+        NbtIo.writeCompressed(tag,file);bytes=Files.readAllBytes(file);refused(h,()->store.load(original.id()));
+        h.assertTrue(Arrays.equals(bytes,Files.readAllBytes(file)),"A new waiting state marked as legacy is rejected without rewriting it");h.succeed();
+    }
+
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=200)
+    public static void firstPublicationExcludesPrecedingNativeBuildingsWithoutChangingFinancialIdentity(GameTestHelper h) throws Exception {
+        var store=new RoyalConstructionStore(directory(h));var original=intent(UUID.randomUUID(),UUID.randomUUID(),64,"a");store.reserve(original);
+        var method=RoyalConstructionStore.class.getDeclaredMethod("beginPublication",UUID.class,Set.class);method.setAccessible(true);
+        boolean refused=false;try{method.invoke(store,original.id(),Set.of());}catch(java.lang.reflect.InvocationTargetException expected){refused=expected.getCause() instanceof IllegalStateException;}
+        h.assertTrue(refused && store.load(original.id()).stage()==Stage.REQUESTED,"Unpaid requests cannot establish publication provenance");
+        store.change(original.id(),Stage.REQUESTED,Stage.PAID,Blocked.NONE,null);var nativeBuilding=UUID.randomUUID();
+        var published=(RoyalConstructionStore.Entry)method.invoke(store,original.id(),Set.of(nativeBuilding));var i=published.intent();
+        h.assertTrue(published.stage()==Stage.QUEUING && i.originalBuildings().containsAll(original.originalBuildings()) && i.originalBuildings().contains(nativeBuilding)
+                && i.id().equals(original.id()) && i.actor()==original.actor() && i.kingdom().equals(original.kingdom()) && i.capital().equals(original.capital()) && i.plan().equals(original.plan()) && i.variant().equals(original.variant()) && i.fee()==64 && i.issuedGameTime()==100,"The atomic pre-publication baseline includes old and newly completed native identities while preserving every payment/plan binding");
+        refused=false;try{method.invoke(store,original.id(),Set.of(UUID.randomUUID()));}catch(java.lang.reflect.InvocationTargetException expected){refused=expected.getCause() instanceof IllegalStateException;}
+        h.assertTrue(refused && store.load(original.id()).equals(published),"Published/uncertain work can never refresh its identity evidence again");h.succeed();
+    }
+
     private static Path directory(GameTestHelper h) { return h.getLevel().getServer().getWorldPath(LevelResource.ROOT).resolve("royal-order-tests").resolve(UUID.randomUUID().toString()); }
 
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=200)

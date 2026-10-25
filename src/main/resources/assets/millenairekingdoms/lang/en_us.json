@@ -312,5 +312,11 @@
   "millenairekingdoms.gui.shipment.stock_summary": "Stock: %s · Kept: %s",
   "millenairekingdoms.gui.shipment.stock_details": "Village stock target: %s\nActive/planned construction: %s\nResidents’ needs: %s\nMinimum stock: %s\nMillénaire protection: %s\nThe kept total uses the larger of target + construction + residents, Millénaire protection, and the minimum.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Requested: %s; sendable: %s; kept: %s. Hover over the product for the stock breakdown.",
-  "millenairekingdoms.gui.rulership_back": "Back to rulership"
+  "millenairekingdoms.gui.rulership_back": "Back to rulership",
+  "millenairekingdoms.gui.construction.stage.WAITING": "Queued; waiting for village work",
+  "millenairekingdoms.gui.construction.queue_order": "Queue (%s)",
+  "millenairekingdoms.gui.construction.waiting_note": "Charged once on acceptance after village work. Starts while the original ruler is online.",
+  "millenairekingdoms.gui.construction.blocked.RULER_UNAVAILABLE": "Waiting for the original ruler to return to this dimension",
+  "millenairekingdoms.gui.construction.blocked.TREASURY_UNAVAILABLE": "Waiting for the original capital treasury",
+  "millenairekingdoms.gui.construction.blocked.INSUFFICIENT_FUNDS": "Waiting for enough spendable deniers"
 }

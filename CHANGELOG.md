@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0-rc.7 — 2026-10-25 (construction waiting queue)
+
+- Let players queue one unpaid royal mandate behind ongoing ordinary native construction/upgrade. Preserve the current native project/task; revalidate current online ruler, original loaded target/treasury, eligibility and real funds before automatic single payment at the saved quote. Persist waiting across restart, cancel without fees/native deletion, retain one active royal slot per village.
+- Fix the observed native20-tick/royal100-tick handoff race with a pinned noncancelling per-village pre-growth hook. Extend the native-building observation baseline atomically only before first publication so preceding natural work cannot fulfill the royal order. Format4 lazily reads1–3 and preserves all earlier liabilities/recovery identities. Earlier candidates cannot read4; downgrade requires a matching whole-world backup.
+- Final paired JVMs each logged `All 2 required tests passed` (live), `All 20 required tests passed` (GUI), `All 55 required tests passed` (construction), `All 16 required tests passed` (recovery) and `All 10 required tests passed` (sites). Actual original villagers finish the prior1048-step upgrade then a distinct royal building at100% physical match, one64 fee. Two relevant abrupt publication cuts retain conservative recovery; normal production-JAR save/stop/reopen and packed EN/TR320-key checks passed. [Raw evidence/failed attempts/scope](verification/1.2.0/rc.7-construction-queue/README.md). Graphical/online checks remain unverified; unrelated successful suites/simulation were not repeated.
+
 ## 1.2.0-rc.6 — 2026-10-25 (Ethos / Karakter heading)
 
 - Rename the kingdom screen heading to **Ethos** in English and **Karakter** in Turkish. Keep all five temperament names and the existing translation key/format argument.

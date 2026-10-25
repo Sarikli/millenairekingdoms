@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import org.millenaire.culture.ModCultures;
+import org.millenaire.village.Village;
 
 /** Authorized immutable previews of real normal-growth choices. This is not an order or payment receipt.
  * No placement, ownership, pending-project, resource or chunk mutation. An order service must revalidate before paying. */
@@ -25,6 +26,11 @@ public final class RoyalConstructionCatalog {
         public Catalog { options=List.copyOf(options); }
     }
     private RoyalConstructionCatalog() {}
+
+    /** Mirrors the original ordinary-construction slot: native walls have their own independent slot. */
+    public static boolean naturalWorkPending(Village village) {
+        return village.getPendingProject()!=null || village.getBuildings().stream().anyMatch(b->b.isBeingBuilt() && !b.isWallSegment());
+    }
 
     public static Catalog forNpc(ServerLevel level,UUID kingdom,UUID village) { return read(level,kingdom,village,null); }
     public static Catalog forPlayer(ServerPlayer player,UUID village) {
@@ -57,7 +63,7 @@ public final class RoyalConstructionCatalog {
             if(def.requiredResources().values().stream().anyMatch(n->n<0)) continue;
             choices.putIfAbsent(set.id(),new Option(set.id(),plan.id(),candidate.variant(),set.nativeName(),fee,def.requiredResources()));
         }
-        return new Catalog(kingdom,id,village.isActive(),village.getPendingProject()!=null,
+        return new Catalog(kingdom,id,village.isActive(),naturalWorkPending(village),
                 choices.values().stream().sorted(Comparator.comparing(o->o.planSet.toString())).toList());
     }
     private static void thread(ServerLevel level) {
