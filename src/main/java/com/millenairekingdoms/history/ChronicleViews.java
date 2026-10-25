@@ -15,10 +15,14 @@ public final class ChronicleViews {
     private static final Map<UUID,Long> LAST=new HashMap<>();
     private ChronicleViews(){}
     public static void handle(ServerPlayer player,ChronicleRequestPayload request){
-        long now=player.serverLevel().getGameTime();var last=LAST.get(player.getUUID());if(last!=null && now>=last && now-last<4)return;LAST.put(player.getUUID(),now);
+        PacketDistributor.sendToPlayer(player,new ChronicleViewPayload(respond(player,request)));
+    }
+    public static CompoundTag respond(ServerPlayer player,ChronicleRequestPayload request){
+        long now=player.serverLevel().getGameTime();var last=LAST.get(player.getUUID());
+        if(last!=null && now>=last && now-last<4){var retry=header(player,request);retry.putInt("retryAfter",4);return retry;}LAST.put(player.getUUID(),now);
         CompoundTag view;
         try{view=build(player,request);}catch(RuntimeException failure){LogUtils.getLogger().warn("[Kingdoms] Read-only chronicle request unavailable: {}",failure.getMessage());view=header(player,request);view.putString("error","unavailable");}
-        PacketDistributor.sendToPlayer(player,new ChronicleViewPayload(view));
+        return view;
     }
     public static void forget(UUID player){LAST.remove(player);}
     public static CompoundTag header(ServerPlayer player,ChronicleRequestPayload request){var view=new CompoundTag();view.putUUID("session",request.session());view.putLong("serial",request.serial());view.putString("mode",request.mode());view.putString("dimension",player.serverLevel().dimension().location().toString());return view;}
@@ -39,6 +43,7 @@ public final class ChronicleViews {
         var list=new ListTag();for(var e:page.events())list.add(HistoryVisibility.redact(e,known,ruled!=null && e.realms().stream().anyMatch(r->r.id().equals(ruled))).save());view.put("events",list);if(page.next()!=null)view.putUUID("next",page.next());
         request.kingdom().ifPresent(id->{view.putUUID("focus",id);var k=data.kingdom(id);if(k!=null){view.putString("name",k.name());view.putBoolean("fallen",k.fallen());}else store.archives().stream().filter(r->r.id().equals(id)).findFirst().ifPresent(r->{view.putString("name",r.name());view.putBoolean("fallen",true);});
             var foundation=store.query(new HistoryStore.Query(id,HistoryEvent.Kind.FOUNDING,0,Long.MAX_VALUE,null,1));if(!foundation.events().isEmpty())view.putLong("founded",foundation.events().getFirst().day());});
+        request.village().ifPresent(id->{var v=com.millenairekingdoms.politics.PoliticsService.village(level,id);if(v!=null)view.putString("villageName",com.millenairekingdoms.politics.PoliticsService.name(v));else page.events().stream().flatMap(e->e.places().stream()).filter(p->p.id().equals(id)).findFirst().ifPresent(p->view.putString("villageName",p.name()));});
         view.putLong("today",Math.max(0,level.getDayTime()/24000));return view;
     }
 }

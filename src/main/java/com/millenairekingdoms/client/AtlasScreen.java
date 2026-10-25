@@ -23,7 +23,9 @@ final class AtlasScreen extends Screen {
     private final Screen parent;private final UUID session=UUID.randomUUID(),event,village;
     private final Map<UUID,CompoundTag> sites=new LinkedHashMap<>(),kingdoms=new LinkedHashMap<>(),wars=new LinkedHashMap<>();
     private final ArrayDeque<Pending> queue=new ArrayDeque<>();private final Map<Long,Pending> waiting=new HashMap<>();
-    private long serial,ticks,lastSent=-100;private int generation,restarts,radius=500;private String revision="",dimension="minecraft:overworld",status="loading";
+    private long serial,ticks,lastSent=-100,lastRefresh;private int generation,restarts,radius=500;private String revision="",dimension="minecraft:overworld",status="loading";
+    private final com.millenairekingdoms.atlas.AtlasSnapshotAssembler assembler=new com.millenairekingdoms.atlas.AtlasSnapshotAssembler();
+    private final Map<UUID,CompoundTag> capitals=new HashMap<>();
     private AtlasGeometry.Mesh mesh;private CompoundTag info=new CompoundTag(),pin=new CompoundTag();private UUID selectedKingdom,selectedVillage;
     private double centerX,centerZ,zoom=.09;private boolean centered,showPanel=true,showInfo,dragging;
     private KingdomScreen.RowList rows;private int mapLeft,mapTop,mapRight,mapBottom,panelX,panelWidth;
@@ -31,23 +33,28 @@ final class AtlasScreen extends Screen {
     static Component t(String key,Object...args){return Component.translatable("millenairekingdoms.atlas."+key,args);}
     void refresh(){generation++;queue.clear();waiting.clear();restarts=0;status="loading";queue.add(new Pending("ATLAS",null,null,generation));}
     @Override public void tick(){
-        ticks++;if(ticks-lastSent<5 || queue.isEmpty())return;lastSent=ticks;var p=queue.remove();if(p.generation!=generation)return;long id=++serial;waiting.put(id,p);
+        ticks++;if((status.equals("ready") || status.equals("empty")) && queue.isEmpty() && waiting.isEmpty() && ticks-lastRefresh>=100)refresh();if(ticks-lastSent<5 || queue.isEmpty())return;lastSent=ticks;var p=queue.remove();if(p.generation!=generation)return;long id=++serial;waiting.put(id,p);
         PacketDistributor.sendToServer(new ChronicleRequestPayload(session,id,p.mode,Optional.ofNullable(p.kingdom),"",0,Long.MAX_VALUE,Optional.ofNullable(p.cursor),"",Optional.ofNullable(event),Optional.ofNullable(village)));
     }
     void receive(CompoundTag view){
         if(!view.hasUUID("session") || !view.getUUID("session").equals(session))return;var pending=waiting.remove(view.getLong("serial"));if(pending==null || pending.generation!=generation)return;
-        if(view.contains("error")){status="unavailable";return;}
+        if(view.getInt("retryAfter")>0){queue.addFirst(pending);return;}if(view.contains("error")){status="unavailable";return;}
         if(pending.mode.equals("INFO")){if(pending.kingdom.equals(selectedKingdom)){var incoming=view.getCompound("info");if(pending.cursor!=null && info.hasUUID("id") && info.getUUID("id").equals(pending.kingdom)){var members=info.getList("members",10);for(var raw:incoming.getList("members",10))members.add(raw.copy());incoming.put("members",members);}info=incoming;showInfo=true;rebuildWidgets();}return;}
-        String nextRevision=view.getString("revision");
-        if(pending.cursor==null){sites.clear();kingdoms.clear();wars.clear();revision=nextRevision;dimension=view.getString("dimension");radius=view.getInt("radius");pin=view.getCompound("historicalPin");if(!centered){centerX=view.getInt("playerX");centerZ=view.getInt("playerZ");}}
-        else if(!nextRevision.equals(revision)){if(++restarts>3){status="changed";return;}generation++;queue.clear();waiting.clear();queue.add(new Pending("ATLAS",null,null,generation));return;}
-        collect(sites,view,"settlements");collect(kingdoms,view,"kingdoms");collect(wars,view,"wars");if(sites.size()>AtlasGeometry.MAX_SITES){status="unavailable";return;}
-        if(view.hasUUID("next")){queue.add(new Pending("ATLAS",null,view.getUUID("next"),generation));return;}
-        if(!centered){var focus=sites.values().stream().filter(s->selectedKingdom!=null && s.hasUUID("kingdom") && s.getUUID("kingdom").equals(selectedKingdom)).sorted(Comparator.comparing(s->!s.getBoolean("capital"))).findFirst().orElse(sites.values().stream().findFirst().orElse(null));if(focus!=null){centerX=focus.getInt("x");centerZ=focus.getInt("z");}if(!pin.isEmpty()){centerX=pin.getInt("x");centerZ=pin.getInt("z");}centered=true;}
-        var geometry=sites.values().stream().map(s->new AtlasGeometry.Site(s.getUUID("id"),s.hasUUID("kingdom")?s.getUUID("kingdom"):null,s.getInt("x"),s.getInt("z"))).toList();int epoch=generation;String dim=dimension;int influence=radius;
-        CompletableFuture.supplyAsync(()->AtlasGeometry.cached(dim,influence,geometry)).whenComplete((result,error)->minecraft.execute(()->{if(epoch!=generation)return;if(error!=null){status="geometry_unavailable";return;}mesh=result;status=sites.isEmpty()?"empty":"ready";rebuildWidgets();}));
-        if(selectedKingdom!=null)queue.add(new Pending("INFO",selectedKingdom,null,generation));
+        if(pending.cursor==null && mesh!=null && view.getString("revision").equals(revision)){pin=view.getCompound("historicalPin").copy();status=sites.isEmpty()?"empty":"ready";lastRefresh=ticks;if(selectedKingdom!=null)queue.add(new Pending("INFO",selectedKingdom,null,generation));return;}
+        com.millenairekingdoms.atlas.AtlasSnapshotAssembler.Frame frame;
+        try{frame=assembler.accept(view,pending.cursor);}catch(com.millenairekingdoms.atlas.AtlasSnapshotAssembler.Changed changed){if(++restarts>3){status="changed";return;}generation++;queue.clear();waiting.clear();queue.add(new Pending("ATLAS",null,null,generation));return;}catch(IllegalArgumentException malformed){status="unavailable";return;}
+        if(frame==null){queue.add(new Pending("ATLAS",null,view.getUUID("next"),generation));return;}
+        var newSites=frame.settlements();var newKingdoms=frame.kingdoms();var newWars=frame.wars();var newPin=frame.pin();
+        var geometry=newSites.stream().map(s->new AtlasGeometry.Site(s.getUUID("id"),s.hasUUID("kingdom")?s.getUUID("kingdom"):null,s.getInt("x"),s.getInt("z"))).toList();int epoch=generation;
+        CompletableFuture.supplyAsync(()->AtlasGeometry.cached(frame.dimension(),frame.radius(),geometry)).whenComplete((result,error)->minecraft.execute(()->{
+            if(epoch!=generation)return;if(error!=null){status="geometry_unavailable";return;}
+            sites.clear();kingdoms.clear();wars.clear();capitals.clear();newSites.forEach(s->{sites.put(s.getUUID("id"),s);if(s.getBoolean("capital") && s.hasUUID("kingdom"))capitals.put(s.getUUID("kingdom"),s);});newKingdoms.forEach(k->kingdoms.put(k.getUUID("id"),k));newWars.forEach(w->wars.put(w.getUUID("id"),w));pin=newPin;revision=frame.revision();dimension=frame.dimension();radius=frame.radius();mesh=result;
+            if(!centered){var focus=sites.values().stream().filter(site->selectedKingdom!=null && site.hasUUID("kingdom") && site.getUUID("kingdom").equals(selectedKingdom)).sorted(Comparator.comparing(site->!site.getBoolean("capital"))).findFirst().orElse(sites.values().stream().findFirst().orElse(null));if(focus!=null){centerX=focus.getInt("x");centerZ=focus.getInt("z");}else{centerX=view.getInt("playerX");centerZ=view.getInt("playerZ");}if(!pin.isEmpty()){centerX=pin.getInt("x");centerZ=pin.getInt("z");}centered=true;}
+            if(selectedVillage!=null && sites.containsKey(selectedVillage)){var selected=sites.get(selectedVillage);selectedKingdom=selected.hasUUID("kingdom")?selected.getUUID("kingdom"):null;}
+            status=sites.isEmpty()?"empty":"ready";lastRefresh=ticks;rebuildWidgets();if(selectedKingdom!=null)queue.add(new Pending("INFO",selectedKingdom,null,generation));
+        }));
     }
+
     private static void collect(Map<UUID,CompoundTag> map,CompoundTag view,String key){for(var raw:view.getList(key,10)){var tag=(CompoundTag)raw;if(tag.hasUUID("id"))map.put(tag.getUUID("id"),tag);}}
     @Override protected void init(){
         panelWidth=Math.min(210,Math.max(104,width/3));mapLeft=6;mapTop=46;mapRight=width-6-(showPanel?panelWidth+8:0);mapBottom=height-26;panelX=mapRight+8;
@@ -83,7 +90,7 @@ final class AtlasScreen extends Screen {
     @Override public void renderBackground(GuiGraphics g,int mx,int my,float tick){
         g.fill(0,0,width,height,0xFFF0DDB0);g.fill(mapLeft,mapTop,mapRight,mapBottom,0xFFCEC29E);g.enableScissor(mapLeft,mapTop,mapRight,mapBottom);
         if(mesh!=null){
-            for(var cell:mesh.cells())if(cell.polygon().size()>=3){int color=AtlasGeometry.color(cell.site().kingdom());if(selectedKingdom!=null && !selectedKingdom.equals(cell.site().kingdom()))color=shade(color,.68);float x=sx(cell.site().x()),y=sy(cell.site().z());var polygon=cell.polygon();for(int n=0;n<polygon.size();n++){var a=polygon.get(n);var b=polygon.get((n+1)%polygon.size());quad(g,x,y,sx(a.x()),sy(a.z()),sx(b.x()),sy(b.z()),x,y,color);}}
+            for(var cell:mesh.cells())if(cell.polygon().size()>=3 && sx(cell.site().x()+radius)>=mapLeft && sx(cell.site().x()-radius)<=mapRight && sy(cell.site().z()+radius)>=mapTop && sy(cell.site().z()-radius)<=mapBottom){int color=AtlasGeometry.color(cell.site().kingdom());if(selectedKingdom!=null && !selectedKingdom.equals(cell.site().kingdom()))color=shade(color,.68);float x=sx(cell.site().x()),y=sy(cell.site().z());var polygon=cell.polygon();for(int n=0;n<polygon.size();n++){var a=polygon.get(n);var b=polygon.get((n+1)%polygon.size());quad(g,x,y,sx(a.x()),sy(a.z()),sx(b.x()),sy(b.z()),x,y,color);}}
             for(var edge:mesh.borders())line(g,sx(edge.start().x()),sy(edge.start().z()),sx(edge.end().x()),sy(edge.end().z()),selectedKingdom!=null && selectedKingdom.equals(edge.kingdom())?2:1,0xFF493321);
         }
         for(var war:wars.values()){var a=capital(war.getUUID("attacker"));var b=capital(war.getUUID("defender"));if(a!=null && b!=null)line(g,sx(a.getInt("x")),sy(a.getInt("z")),sx(b.getInt("x")),sy(b.getInt("z")),1.5f,0xFF9C2921);}
@@ -99,7 +106,7 @@ final class AtlasScreen extends Screen {
         if(!pin.isEmpty()){int x=Math.round(sx(pin.getInt("x"))),y=Math.round(sy(pin.getInt("z")));g.renderOutline(x-12,y-12,24,24,0xFFFFFF66);g.drawCenteredString(font,t("historical_pin",pin.getString("name"),pin.getLong("day")),x,y+14,0xFFFFFF66);}
         g.disableScissor();g.renderOutline(mapLeft,mapTop,mapRight-mapLeft,mapBottom-mapTop,0xFF62442B);
     }
-    private CompoundTag capital(UUID kingdom){return sites.values().stream().filter(s->s.getBoolean("capital") && s.hasUUID("kingdom") && s.getUUID("kingdom").equals(kingdom)).findFirst().orElse(null);}
+    private CompoundTag capital(UUID kingdom){return capitals.get(kingdom);}
     private static int shade(int color,double multiplier){return 0xFF000000|((int)((color>>16&255)*multiplier)<<16)|((int)((color>>8&255)*multiplier)<<8)|(int)((color&255)*multiplier);}
     private static void quad(GuiGraphics g,float ax,float ay,float bx,float by,float cx,float cy,float dx,float dy,int color){var pose=g.pose().last().pose();VertexConsumer vertices=g.bufferSource().getBuffer(RenderType.gui());vertices.addVertex(pose,ax,ay,0).setColor(color);vertices.addVertex(pose,bx,by,0).setColor(color);vertices.addVertex(pose,cx,cy,0).setColor(color);vertices.addVertex(pose,dx,dy,0).setColor(color);}
     private static void line(GuiGraphics g,float ax,float ay,float bx,float by,float width,int color){double len=Math.hypot(bx-ax,by-ay);if(len<.01)return;float dx=(float)((by-ay)/len*width/2),dy=(float)(-(bx-ax)/len*width/2);quad(g,ax+dx,ay+dy,bx+dx,by+dy,bx-dx,by-dy,ax-dx,ay-dy,color);}

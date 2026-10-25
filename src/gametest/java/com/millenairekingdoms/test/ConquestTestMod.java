@@ -18,6 +18,8 @@ public final class ConquestTestMod {
             event.register(ChronicleViewGameTests.class);
             event.register(AtlasGameTests.class);
             event.register(AtlasViewGameTests.class);
+            event.register(AtlasSyncGameTests.class);
+            event.register(ChronicleIntegrationGameTests.class);
             event.register(KingdomGameTests.class);
             event.register(WarGameTests.class);
             event.register(CapitalGameTests.class);
