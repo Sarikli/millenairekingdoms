@@ -650,12 +650,16 @@ public final class KingdomScreen extends Screen {
         for (Text text : texts) g.drawString(font, font.plainSubstrByWidth(text.text.getString(), text.width), text.x, text.y, text.color, false);
         for (RowList list : lists) list.render(g, font, mouseX, mouseY);
         if (view.contains("message")) {
-            // The server's answer to the last request, on up to two lines left of the refresh button.
+            // History and Refresh own the footer edges; the reply wraps between them.
             Component message = json(view.getString("message"));
             int color = message.getStyle().getColor() == null ? TEXT : 0xFF000000 | message.getStyle().getColor().getValue();
-            var lines = font.split(message, panelWidth - 96);
+            int messageLeft = left + 108;
+            var lines = font.split(message, panelWidth - 188);
             int y = top + panelHeight - (lines.size() > 1 ? 24 : 18);
-            for (int i = 0; i < Math.min(2, lines.size()); i++) g.drawString(font, lines.get(i), left + 14, y + i * 10, color, false);
+            for (int i = 0; i < Math.min(2, lines.size()); i++) g.drawString(font, lines.get(i), messageLeft, y + i * 10, color, false);
+            if (mouseX >= messageLeft && mouseX < left + panelWidth - 80
+                    && mouseY >= top + panelHeight - 26 && mouseY < top + panelHeight - 4)
+                g.renderTooltip(font, List.of(message), Optional.empty(), mouseX, mouseY);
         }
     }
 
