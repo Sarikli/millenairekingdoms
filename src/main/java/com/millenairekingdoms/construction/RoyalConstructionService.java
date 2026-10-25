@@ -213,6 +213,7 @@ public final class RoyalConstructionService {
                     choice.planSet(),choice.plan(),choice.variant(),choice.patronageFee(),Math.max(0,level.getGameTime()),
                     village.getBuildings().stream().map(b->b.getId().uuid()).collect(Collectors.toSet()),choice.upgradeBuilding(),choice.targetLevel());
             var reserved=catalog.naturalProjectPending() ? orders.reserveWaiting(intent) : orders.reserve(intent);
+            com.millenairekingdoms.history.HistoryHooks.trackConstruction(level,intent.id());
             if(reserved.stage()==Stage.WAITING)RoyalConstructionRuntime.watchWaiting(level,reserved);
             return advance(reserved,player);
         });
@@ -297,6 +298,7 @@ public final class RoyalConstructionService {
             if(receipt.state()==State.PAID) {
                 if(player==null) payments.commitNpc(intent.kingdom(),intent.id()); else payments.commitPlayer(player,intent.id());
             }
+            com.millenairekingdoms.history.HistoryHooks.construction(level,entry,false);
             entry=new RoyalConstructionMonitor(level,orders,persistence).observe(entry);
         }
         return entry;

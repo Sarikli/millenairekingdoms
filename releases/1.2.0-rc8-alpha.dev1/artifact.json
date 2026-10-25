@@ -1,0 +1,7 @@
+{
+  "version": "1.2.0-rc8-alpha.dev1",
+  "bytes": 661737,
+  "sha256": "460b1fa084259cd7a0f68324ccddd15d37e01ba4fcc5caf2489b2a89a439ec33",
+  "baseline_commit": "ec6ba85145ff3c80b3557f63ae3d30385030e015",
+  "source_parent": "ec6ba85145ff3c80b3557f63ae3d30385030e015"
+}

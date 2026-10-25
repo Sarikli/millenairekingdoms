@@ -665,7 +665,15 @@ public final class KingdomSavedData extends SavedData {
                         || (ruler==null ? intent.actor()!=null : !ruler.player.equals(intent.actor()) || ruler.sinceGameTime!=intent.rulerSince());
             });
         }
+        java.nio.file.Path historyPending = null;
+        if (royalRuntimeLevel != null && (!state.kingdoms.equals(next.kingdoms) || !state.membership.equals(next.membership)
+                || !state.wars.equals(next.wars) || !state.rulers.equals(next.rulers))) {
+            var detached = new KingdomSavedData(); detached.state = next;
+            historyPending = com.millenairekingdoms.history.HistoryHooks.stagePolitical(royalRuntimeLevel,
+                    save(new CompoundTag(), royalRuntimeLevel.registryAccess()), detached.save(new CompoundTag(), royalRuntimeLevel.registryAccess()));
+        }
         state = next; setDirty();
+        if (royalRuntimeLevel != null) com.millenairekingdoms.history.HistoryHooks.afterPolitical(royalRuntimeLevel, this, historyPending);
     }
 
     /** Old target-only wins are archived, never credited to an arbitrary new kingdom.

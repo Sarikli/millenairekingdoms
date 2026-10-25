@@ -13,6 +13,7 @@ public final class ConquestTestMod {
     public ConquestTestMod(IEventBus bus) {
         bus.addListener((RegisterGameTestsEvent event) -> {
             event.register(ConquestGameTests.class);
+            event.register(HistoryGameTests.class);
             event.register(KingdomGameTests.class);
             event.register(WarGameTests.class);
             event.register(CapitalGameTests.class);

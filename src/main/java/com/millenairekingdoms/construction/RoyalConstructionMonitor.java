@@ -92,7 +92,9 @@ final class RoyalConstructionMonitor {
             try { persistence.building(level,intent.village(),building); }
             catch(RoyalConstructionPersistence.MissingStructure missing) { return ambiguous(entry,Blocked.BUILDING_MISSING); }
             catch(RoyalConstructionPersistence.Unloaded unloaded) { return unloaded(entry,unloaded); }
-            return orders.change(intent.id(),Stage.IN_PROGRESS,Stage.COMPLETED,Blocked.NONE,entry.building());
+            var completed=orders.change(intent.id(),Stage.IN_PROGRESS,Stage.COMPLETED,Blocked.NONE,entry.building());
+            com.millenairekingdoms.history.HistoryHooks.construction(level,completed,true);
+            return completed;
         }
         return blocked(entry,building.getConstructionTask()==null || building.getConstructionTask().isBlocked() ? Blocked.BUILDER_BLOCKED : Blocked.NONE);
     }

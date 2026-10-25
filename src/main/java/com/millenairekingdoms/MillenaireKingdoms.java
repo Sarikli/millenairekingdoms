@@ -40,6 +40,11 @@ public final class MillenaireKingdoms {
         NeoForge.EVENT_BUS.addListener(KingdomDay::onLevelTick);
         NeoForge.EVENT_BUS.addListener(RaidOrderService::onLevelTick);
         NeoForge.EVENT_BUS.addListener(KingdomActions::onLogout);
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStartedEvent event) -> {
+            for (var level : event.getServer().getAllLevels()) try { com.millenairekingdoms.history.HistoryHooks.recover(level); }
+            catch (RuntimeException failure) { LOGGER.error("Historical archive recovery unavailable; original files preserved", failure); }
+        });
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppedEvent event) -> com.millenairekingdoms.history.HistoryHooks.clear(event.getServer()));
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.construction.RoyalConstructionRuntime::onStarted);
         NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.HIGH, false, net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class, com.millenairekingdoms.construction.RoyalConstructionRuntime::onLevelTick);
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.construction.RoyalConstructionRuntime::onStopped);

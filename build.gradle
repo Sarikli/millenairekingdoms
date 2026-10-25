@@ -597,6 +597,24 @@ neoForge {
             systemProperty 'kingdoms.tests.liveConstruction', 'true'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        historyGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_history_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        historyGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_history_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
         configureEach {
             logLevel = org.slf4j.event.Level.INFO
             jvmArguments.addAll '-Xms512m', '-Xmx3G'
@@ -884,3 +902,6 @@ tasks.register('verifyRoyalSimulation') {
     description = 'Measure400 controlled economic days across10 realms and4 separate JVM saves; no simulated physical completion.'
     dependsOn tasks.named('runRoyalSimulationGameTestServerFourth')
 }
+
+ tasks.named('runHistoryGameTestServerReload') { dependsOn tasks.named('runHistoryGameTestServer') }
+ tasks.register('verifyHistory') { group = 'verification'; dependsOn tasks.named('runHistoryGameTestServerReload') }
