@@ -14,6 +14,7 @@ public final class ConquestTestMod {
         bus.addListener((RegisterGameTestsEvent event) -> {
             event.register(ConquestGameTests.class);
             event.register(HistoryGameTests.class);
+            event.register(HistoryCommitGameTests.class);
             event.register(NarrativeGameTests.class);
             event.register(ChronicleViewGameTests.class);
             event.register(AtlasGameTests.class);

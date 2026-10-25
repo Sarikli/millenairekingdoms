@@ -109,7 +109,7 @@ public final class PersonalityGameTests {
             h.assertTrue(current.category()==Category.MILITARY && unchanged.equals(data.save(new CompoundTag(),h.getLevel().registryAccess())),"Classification never rewrites political storage or invents a personality field");
             for(var raw:saved.getList("kingdoms",10)){var tag=(CompoundTag)raw;if(tag.getUUID("id").equals(kingdom.id()))tag.putUUID("capital",agricultural.getId().uuid());}
             var detached=KingdomSavedData.load(saved,h.getLevel().registryAccess());var changed=KingdomPersonality.forCapital(h.getLevel(),detached.kingdom(kingdom.id()));
-            h.assertTrue(changed.category()==Category.AGRICULTURAL && changed.capital().equals(agricultural.getId().uuid()) && KingdomSavedData.FORMAT==6
+            h.assertTrue(changed.category()==Category.AGRICULTURAL && changed.capital().equals(agricultural.getId().uuid()) && KingdomSavedData.FORMAT==7
                     && KingdomPersonality.forKingdom(h.getLevel(),kingdom.id()).equals(current),"A strictly deserialized changed-capital save uses its actual new type; live original record remains military, format6 preserved");h.succeed();
         }
     }

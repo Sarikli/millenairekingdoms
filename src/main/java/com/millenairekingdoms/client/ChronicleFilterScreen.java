@@ -43,5 +43,6 @@ final class ChronicleFilterScreen extends Screen {
     @Override public boolean mouseClicked(double x,double y,int b){return super.mouseClicked(x,y,b)||b==0&&rows.click(x,y);}
     @Override public boolean mouseScrolled(double x,double y,double dx,double dy){return rows.scroll(x,y,dy)||super.mouseScrolled(x,y,dx,dy);}
     @Override public void onClose(){minecraft.setScreen(parent);}
+    Screen previous(){return parent;}
     @Override public boolean isPauseScreen(){return false;}
 }

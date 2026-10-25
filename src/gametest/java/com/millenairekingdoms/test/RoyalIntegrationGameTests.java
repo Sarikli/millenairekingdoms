@@ -125,7 +125,7 @@ public final class RoyalIntegrationGameTests {
         var storage=h.getLevel().getDataStorage();String name="royal_120_legacy_"+version.replace('.','_');KingdomSavedData loaded;
         if(RoyalShipmentSupport.read())loaded=storage.get(KingdomSavedData.factory(),name);
         else{loaded=KingdomSavedData.load(original.copy(),h.getLevel().registryAccess());storage.set(name,loaded);loaded.setDirty();}
-        h.assertTrue(loaded!=null && KingdomSavedData.FORMAT==6 && canonical(original).equals(canonical(loaded.save(new CompoundTag(),h.getLevel().registryAccess()))),"Every original "+version+" political/economic field remains unchanged through the current serializer and JVM reopen; no guessed royal intents");
+        h.assertTrue(loaded!=null && KingdomSavedData.FORMAT==7 && canonical(original).equals(canonical(loaded.save(new CompoundTag(),h.getLevel().registryAccess()))),"Every original "+version+" political/economic field remains unchanged through the current serializer and JVM reopen; no guessed royal intents");
         if(version.equals("1.1.1"))h.assertTrue(loaded.day()==42 && loaded.nextDecisionDay()==70 && loaded.owed().values().stream().mapToLong(Long::longValue).sum()==177,"Original1.1.1 daily marker, NPC schedule and177 undelivered deniers remain ledger values, not spendable new currency");
         System.out.println("ROYAL_LEGACY_"+version+"_"+(RoyalShipmentSupport.read()?"RESTART_READ_PASS":"WRITE_PASS"));h.succeed();
     }

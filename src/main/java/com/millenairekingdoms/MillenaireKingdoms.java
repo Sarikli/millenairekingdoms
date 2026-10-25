@@ -45,6 +45,7 @@ public final class MillenaireKingdoms {
             catch (RuntimeException failure) { LOGGER.error("Historical archive recovery unavailable; original files preserved", failure); }
         });
         NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppedEvent event) -> com.millenairekingdoms.history.HistoryHooks.clear(event.getServer()));
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST,false,net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class,com.millenairekingdoms.history.HistoryRecovery::onTick);
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.construction.RoyalConstructionRuntime::onStarted);
         NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.HIGH, false, net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class, com.millenairekingdoms.construction.RoyalConstructionRuntime::onLevelTick);
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.construction.RoyalConstructionRuntime::onStopped);

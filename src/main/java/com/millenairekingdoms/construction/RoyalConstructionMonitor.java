@@ -47,6 +47,7 @@ final class RoyalConstructionMonitor {
             if(receipt==null || receipt.state()!=State.PAID && receipt.state()!=State.COMMITTED) return ambiguous(entry,Blocked.AMBIGUOUS_ENGINE_STATE);
             // Domain acceptance is already durable. An offline acknowledgment closes this existing debit, never pays again.
             if(receipt.state()==State.PAID) payments.acknowledgeConstruction(intent.id(),intent.kingdom(),intent.capital(),intent.actor(),intent.fee());
+            com.millenairekingdoms.history.HistoryDomain.finishConstruction(level,intent.id(),false);
         }
         if(!village.isActive() || !level.isLoaded(village.getCenter())) return blocked(entry,Blocked.UNLOADED);
         var set=ModCultures.getBuildingPlanSet(intent.planSet()); var definition=set==null ? null : set.getLevel(intent.variant(),intent.targetLevel());
@@ -92,6 +93,7 @@ final class RoyalConstructionMonitor {
             try { persistence.building(level,intent.village(),building); }
             catch(RoyalConstructionPersistence.MissingStructure missing) { return ambiguous(entry,Blocked.BUILDING_MISSING); }
             catch(RoyalConstructionPersistence.Unloaded unloaded) { return unloaded(entry,unloaded); }
+            com.millenairekingdoms.history.HistoryDomain.prepareConstruction(level,entry,true);
             var completed=orders.change(intent.id(),Stage.IN_PROGRESS,Stage.COMPLETED,Blocked.NONE,entry.building());
             com.millenairekingdoms.history.HistoryHooks.construction(level,completed,true);
             return completed;

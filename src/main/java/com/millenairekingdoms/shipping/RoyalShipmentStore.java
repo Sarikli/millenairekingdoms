@@ -234,7 +234,7 @@ public final class RoyalShipmentStore {
         var tag=new CompoundTag();tag.putUUID("id",intent.id);tag.putString("dimension",intent.dimension);tag.putUUID("kingdom",intent.kingdom);tag.putUUID("capital",intent.capital);if(intent.actor!=null)tag.putUUID("actor",intent.actor);tag.putLong("rulerSince",intent.rulerSince);
         tag.put("source",saveEndpoint(intent.source));tag.put("destination",saveEndpoint(intent.destination));tag.putString("product",intent.product.toString());tag.putInt("quantity",intent.quantity);tag.putLong("fee",intent.fee);tag.putLong("issued",intent.issued);tag.putLong("travelTicks",intent.travelTicks);return tag;
     }
-    private static Intent loadIntent(CompoundTag tag){
+    public static Intent loadIntent(CompoundTag tag){
         keys(tag,Set.of("id","dimension","kingdom","capital","actor","rulerSince","source","destination","product","quantity","fee","issued","travelTicks"));
         for(var key:List.of("id","kingdom","capital"))require(tag.hasUUID(key),"Incomplete shipment identity: "+key);
         for(var key:List.of("rulerSince","fee","issued","travelTicks"))require(tag.contains(key,Tag.TAG_LONG),"Incomplete shipment amount/time: "+key);

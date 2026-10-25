@@ -48,6 +48,7 @@ final class AtlasScreen extends Screen {
         var geometry=newSites.stream().map(s->new AtlasGeometry.Site(s.getUUID("id"),s.hasUUID("kingdom")?s.getUUID("kingdom"):null,s.getInt("x"),s.getInt("z"))).toList();int epoch=generation;
         CompletableFuture.supplyAsync(()->AtlasGeometry.cached(frame.dimension(),frame.radius(),geometry)).whenComplete((result,error)->minecraft.execute(()->{
             if(epoch!=generation)return;if(error!=null){status="geometry_unavailable";return;}
+            if(!dimension.equals(frame.dimension()))centered=false;
             sites.clear();kingdoms.clear();wars.clear();capitals.clear();newSites.forEach(s->{sites.put(s.getUUID("id"),s);if(s.getBoolean("capital") && s.hasUUID("kingdom"))capitals.put(s.getUUID("kingdom"),s);});newKingdoms.forEach(k->kingdoms.put(k.getUUID("id"),k));newWars.forEach(w->wars.put(w.getUUID("id"),w));pin=newPin;revision=frame.revision();dimension=frame.dimension();radius=frame.radius();mesh=result;
             if(!centered){var focus=sites.values().stream().filter(site->selectedKingdom!=null && site.hasUUID("kingdom") && site.getUUID("kingdom").equals(selectedKingdom)).sorted(Comparator.comparing(site->!site.getBoolean("capital"))).findFirst().orElse(sites.values().stream().findFirst().orElse(null));if(focus!=null){centerX=focus.getInt("x");centerZ=focus.getInt("z");}else{centerX=view.getInt("playerX");centerZ=view.getInt("playerZ");}if(!pin.isEmpty()){centerX=pin.getInt("x");centerZ=pin.getInt("z");}centered=true;}
             if(selectedVillage!=null && sites.containsKey(selectedVillage)){var selected=sites.get(selectedVillage);selectedKingdom=selected.hasUUID("kingdom")?selected.getUUID("kingdom"):null;}
@@ -121,5 +122,6 @@ final class AtlasScreen extends Screen {
     @Override public boolean mouseReleased(double x,double y,int button){dragging=false;return super.mouseReleased(x,y,button);}
     @Override public boolean mouseScrolled(double x,double y,double dx,double dy){if(rows!=null && rows.scroll(x,y,dy))return true;if(inside(x,y)){double beforeX=wx(x),beforeZ=wz(y);zoom=Math.max(.01,Math.min(4,zoom*Math.pow(1.2,dy)));centerX=beforeX-(x-(mapLeft+mapRight)/2.0)/zoom;centerZ=beforeZ-(y-(mapTop+mapBottom)/2.0)/zoom;return true;}return super.mouseScrolled(x,y,dx,dy);}
     @Override public void onClose(){minecraft.setScreen(parent);}
+    Screen previous(){return parent;}
     @Override public boolean isPauseScreen(){return false;}
 }

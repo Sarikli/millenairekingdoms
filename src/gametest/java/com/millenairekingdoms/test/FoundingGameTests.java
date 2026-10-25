@@ -280,7 +280,7 @@ public final class FoundingGameTests {
             var d = KingdomSavedData.load(old, reg);
             CompoundTag again = d.save(new CompoundTag(), reg);
             if (old.getInt("format") == 6) {
-                h.assertTrue(canonical(again).equals(canonical(old)) && KingdomSavedData.FORMAT == 6 && !d.kingdoms().isEmpty(),
+                h.assertTrue(canonical(again).equals(canonical(old)) && KingdomSavedData.FORMAT == 7 && !d.kingdoms().isEmpty(),
                         "27. The 1.0.1 save loads and saves back identically; the save format stays 6");
                 System.out.println("FOUNDING_SAVE 1.0.1 fixture: " + d.kingdoms().size() + " kingdoms, " + d.wars().size() + " wars, day " + d.day());
             } else h.assertTrue(again.getInt("format") == 6 && d.kingdoms().size() == 2, "27. The 0.4.0 save still migrates");

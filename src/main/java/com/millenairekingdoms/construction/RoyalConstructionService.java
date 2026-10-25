@@ -213,7 +213,6 @@ public final class RoyalConstructionService {
                     choice.planSet(),choice.plan(),choice.variant(),choice.patronageFee(),Math.max(0,level.getGameTime()),
                     village.getBuildings().stream().map(b->b.getId().uuid()).collect(Collectors.toSet()),choice.upgradeBuilding(),choice.targetLevel());
             var reserved=catalog.naturalProjectPending() ? orders.reserveWaiting(intent) : orders.reserve(intent);
-            com.millenairekingdoms.history.HistoryHooks.trackConstruction(level,intent.id());
             if(reserved.stage()==Stage.WAITING)RoyalConstructionRuntime.watchWaiting(level,reserved);
             return advance(reserved,player);
         });
@@ -271,6 +270,7 @@ public final class RoyalConstructionService {
             if(fresh.size()>1) return ambiguous(entry);
             if(!fresh.isEmpty()) {
                 persistence.building(level,intent.village(),fresh.getFirst());
+                com.millenairekingdoms.history.HistoryDomain.prepareConstruction(level,entry,false);
                 entry=orders.change(intent.id(),Stage.QUEUING,Stage.IN_PROGRESS,Blocked.NONE,fresh.getFirst().getId().uuid());
             } else {
                 var pending=pending(intent);
@@ -284,6 +284,7 @@ public final class RoyalConstructionService {
                 } else if(publication==null || publication.pending()!=village.getPendingProject() || !pending.equals(village.getPendingProject())) return ambiguous(entry);
                 // Original serializer, asynchronous worker acknowledgement and exact disk read-back before acceptance.
                 persistence.pending(level,intent.village(),pending);
+                com.millenairekingdoms.history.HistoryDomain.prepareConstruction(level,entry,false);
                 entry=orders.change(intent.id(),Stage.QUEUING,Stage.QUEUED,Blocked.NONE,null);
             }
             publications.remove(intent.id());

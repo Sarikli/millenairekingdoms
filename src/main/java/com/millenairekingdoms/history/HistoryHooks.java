@@ -31,14 +31,15 @@ public final class HistoryHooks {
     private HistoryHooks(){}
     public static Path directory(ServerLevel level){return DimensionType.getStorageFolder(level.dimension(),level.getServer().getWorldPath(LevelResource.ROOT)).resolve("data/millenairekingdoms/history");}
     public static HistoryStore store(ServerLevel level){if(!level.getServer().isSameThread())throw new IllegalStateException("History requires server thread");return STORES.computeIfAbsent(level,l->new HistoryStore(directory(l)));}
-    public static void clear(net.minecraft.server.MinecraftServer server){STORES.keySet().removeIf(level->level.getServer()==server);}
+    public static void clear(net.minecraft.server.MinecraftServer server){STORES.keySet().removeIf(level->level.getServer()==server);HistoryRecovery.clear(server);}
     public static Path stagePolitical(ServerLevel level,CompoundTag before,CompoundTag after){
         try {
-            recover(level);
+            HistoryRecovery.recover(level,8);
             var events=politicalEvents(level,before,after);if(events.isEmpty())return null;
             var pending=directory(level).resolve("pending");if(Files.exists(pending))try(var files=Files.list(pending)){if(files.filter(p->p.toString().endsWith(".dat")).count()>=128)throw new IllegalStateException("History pending limit; inspect unconfirmed transitions");}
-            var tag=new CompoundTag();tag.putInt("format",1);tag.put("expected",projection(after));var list=new ListTag();events.forEach(e->list.add(e.save()));tag.put("events",list);
-            var file=pending.resolve(UUID.randomUUID()+".dat");HistoryFiles.write(file,tag);return file;
+            if(!after.hasUUID("historyCommit"))throw new IllegalArgumentException("Historical transition requires its own political commit identity");
+            var tag=new CompoundTag();tag.putInt("format",2);tag.putUUID("commit",after.getUUID("historyCommit"));tag.putBoolean("confirmed",false);var list=new ListTag();events.forEach(e->list.add(e.save()));tag.put("events",list);
+            var file=pending.resolve(after.getUUID("historyCommit")+".dat");HistoryFiles.write(file,tag);return file;
         }catch(RuntimeException|IOException failure){LOG.error("[Kingdoms] History preparation unavailable; political simulation remains authoritative; no success invented",failure);return null;}
     }
     public static void afterPolitical(ServerLevel level,KingdomSavedData data,Path pending){
@@ -52,25 +53,36 @@ public final class HistoryHooks {
         }catch(RuntimeException failure){LOG.error("[Kingdoms] Historical transition remains pending until its political disk evidence can be verified",failure);}
     }
     public static void recover(ServerLevel level){
-        var domain=directory(level).resolve("domain-pending");
-        if(Files.exists(domain))try(var files=Files.list(domain)){for(var file:files.filter(p->p.toString().endsWith(".dat")).limit(129).sorted().toList()){
-            var event=HistoryEvent.load(HistoryFiles.read(file));store(level).append(event);Files.delete(file);
-        }}catch(IOException e){throw new IllegalStateException("Domain history recovery deferred",e);}
-        var path=directory(level).resolve("pending");if(!Files.exists(path) || !Files.exists(politicalFile(level)))return;
-        var disk=readPolitical(politicalFile(level));KingdomSavedData.load(disk,level.registryAccess());
-        try(var files=Files.list(path)){for(var file:files.filter(p->p.toString().endsWith(".dat")).limit(129).sorted().toList())confirm(level,file,disk);}
-        catch(IOException failure){throw new IllegalStateException("Cannot recover historical observations",failure);}
+        HistoryRecovery.recover(level,512);
     }
-    private static void confirm(ServerLevel level,Path pending,CompoundTag disk){
-        var tag=HistoryFiles.read(pending);HistoryFiles.keys(tag,Set.of("format","expected","events"));
-        if(!tag.contains("format",Tag.TAG_INT)||tag.getInt("format")!=1 || !tag.contains("expected",Tag.TAG_COMPOUND)||!tag.contains("events",Tag.TAG_LIST))throw new IllegalArgumentException("Unsupported pending history; bytes preserved");
+    static void recoverOne(ServerLevel level,Path path){
+        switch(path.getParent().getFileName().toString()){
+            case "candidates" -> HistoryDomain.confirm(level,path);
+            case "domain-pending" -> HistoryDomain.confirmLegacy(level,path);
+            case "pending" -> {
+                var candidate=HistoryFiles.read(path);
+                if(candidate.getInt("format")==2 && candidate.getBoolean("confirmed")){confirm(level,path,new CompoundTag());return;}
+                if(!Files.exists(politicalFile(level)))return;var disk=readPolitical(politicalFile(level));KingdomSavedData.load(disk,level.registryAccess());confirm(level,path,disk);
+            }
+            default -> throw new IllegalArgumentException("Unknown history outbox");
+        }
+    }
+    static void confirm(ServerLevel level,Path pending,CompoundTag disk){
+        var tag=HistoryFiles.read(pending);
+        if(tag.contains("format",Tag.TAG_INT) && tag.getInt("format")==1)throw new IllegalStateException("Legacy unconfirmed history candidate retained for review");
+        HistoryFiles.keys(tag,Set.of("format","commit","confirmed","events"));
+        if(!tag.contains("format",Tag.TAG_INT)||tag.getInt("format")!=2 || !tag.hasUUID("commit") || !tag.contains("confirmed",Tag.TAG_BYTE) || tag.getByte("confirmed")<0 || tag.getByte("confirmed")>1 || !tag.contains("events",Tag.TAG_LIST))throw new IllegalArgumentException("Unsupported pending history; bytes preserved");
+        if(!pending.getFileName().toString().equals(tag.getUUID("commit")+".dat"))throw new IllegalArgumentException("Political history filename/commit mismatch");
         var list=(ListTag)tag.get("events");if(list.isEmpty() || list.size()>16 || list.getElementType()!=Tag.TAG_COMPOUND)throw new IllegalArgumentException("Invalid pending history batch");
         var events=new ArrayList<HistoryEvent>();for(var raw:list)events.add(HistoryEvent.load((CompoundTag)raw));
-        if(!tag.getCompound("expected").equals(projection(disk)))return; // A prepared but unsaved transition is not history.
+        if(!tag.getBoolean("confirmed")){
+            if(!disk.hasUUID("historyCommit") || !disk.getUUID("historyCommit").equals(tag.getUUID("commit")))return;
+            // Keep durable proof before append so later political transitions do not invalidate a verified backlog.
+            tag.putBoolean("confirmed",true);HistoryFiles.write(pending,tag);
+        }
         for(var event:events)store(level).append(event);
         try{Files.delete(pending);}catch(IOException e){throw new IllegalStateException("History committed; pending cleanup deferred, replay is idempotent",e);}
     }
-    private static CompoundTag projection(CompoundTag tag){var p=new CompoundTag();for(var k:List.of("format","kingdoms","membership","revisions","wars","rulers","receipts")){if(tag.contains(k))p.put(k,tag.get(k).copy());}return p;}
     private static Path politicalFile(ServerLevel level){return DimensionType.getStorageFolder(level.dimension(),level.getServer().getWorldPath(LevelResource.ROOT)).resolve("data/"+KingdomSavedData.NAME+".dat");}
     private static CompoundTag readPolitical(Path file){try{var root=NbtIo.readCompressed(file,NbtAccounter.create(64L*1024*1024));if(!root.contains("data",Tag.TAG_COMPOUND))throw new IllegalStateException("Invalid political history evidence");return root.getCompound("data");}catch(IOException e){throw new IllegalStateException("Political commit cannot be confirmed",e);}}
     public static HistoryEvent.Realm realm(ServerLevel level,UUID id){
@@ -93,27 +105,8 @@ public final class HistoryHooks {
             store(level).append(event);Files.delete(file);
         }catch(RuntimeException|IOException failure){LOG.error("[Kingdoms] History append failed for original operation {}; gameplay will not be replayed",event.source(),failure);}
     }
-    /** New mandates only; an old accepted order must not be backfilled on an ordinary retry. */
-    public static void trackConstruction(ServerLevel level,UUID id){
-        try{var t=new CompoundTag();t.putInt("format",1);t.putUUID("id",id);HistoryFiles.write(directory(level).resolve("tracked-orders").resolve(id+".dat"),t);}
-        catch(RuntimeException failure){LOG.error("[Kingdoms] New order history enrollment failed for {}",id,failure);}
-    }
-    public static void construction(ServerLevel level,com.millenairekingdoms.construction.RoyalConstructionStore.Entry entry,boolean complete){
-        try{
-            var i=entry.intent();
-            var kind=complete?HistoryEvent.Kind.CONSTRUCTION_COMPLETE:HistoryEvent.Kind.CONSTRUCTION_ORDER;
-            if(store(level).contains(HistoryEvent.identity(i.dimension(),kind,i.id().toString())))return;
-            if(!complete && !Files.exists(directory(level).resolve("tracked-orders").resolve(i.id()+".dat")))return;
-            var facts=new HashMap<String,String>();facts.put("plan",i.planSet().toString());facts.put("fee",Long.toString(i.fee()));facts.put("upgrade",Boolean.toString(i.upgrade()));facts.put("level",Integer.toString(i.targetLevel()+1));if(entry.building()!=null)facts.put("building",entry.building().toString());
-            var event=event(level,complete?HistoryEvent.Kind.CONSTRUCTION_COMPLETE:HistoryEvent.Kind.CONSTRUCTION_ORDER,i.id().toString(),List.of(realm(level,i.kingdom())),List.of(place(level,i.village())),i.actor(),"","NATIVE_ACKNOWLEDGED",complete?"COMPLETED":"ACCEPTED",facts);record(level,event);
-            if(!complete && i.actor()==null)record(level,event(level,HistoryEvent.Kind.INVESTMENT,i.id().toString(),event.realms(),event.places(),null,"","AUTONOMOUS_INVESTMENT","COMMITTED",facts));
-        }catch(RuntimeException failure){LOG.error("[Kingdoms] Construction history unavailable for {}",entry.intent().id(),failure);}
-    }
-    public static void shipment(ServerLevel level,com.millenairekingdoms.shipping.RoyalShipmentStore.Entry entry){
-        var i=entry.intent();if(i.quantity()<64 && i.fee()<8)return;
-        try{record(level,event(level,HistoryEvent.Kind.SHIPMENT,i.id().toString(),List.of(realm(level,i.kingdom())),List.of(place(level,i.source().village()),place(level,i.destination().village())),i.actor(),"","DURABLE_DELIVERY","DELIVERED",Map.of("product",i.product().toString(),"quantity",Integer.toString(i.quantity()),"fee",Long.toString(i.fee()))));}
-        catch(RuntimeException failure){LOG.error("[Kingdoms] Shipment history unavailable for {}",i.id(),failure);}
-    }
+    public static void construction(ServerLevel level,com.millenairekingdoms.construction.RoyalConstructionStore.Entry entry,boolean complete){HistoryDomain.finishConstruction(level,entry.intent().id(),complete);}
+    public static void shipment(ServerLevel level,com.millenairekingdoms.shipping.RoyalShipmentStore.Entry entry){HistoryDomain.finishShipment(level,entry.intent().id());}
     public static List<HistoryEvent> politicalEvents(ServerLevel level,CompoundTag before,CompoundTag after){
         var oldKingdoms=index(before,"kingdoms","id");var newKingdoms=index(after,"kingdoms","id");
         var oldOwners=index(before,"membership","village");var owners=index(after,"membership","village");var revisions=index(after,"revisions","village");
@@ -137,7 +130,7 @@ public final class HistoryHooks {
         for(var k:newKingdoms.values())if(k.hasUUID("fallenInWar") && oldKingdoms.containsKey(k.getUUID("id")) && !oldKingdoms.get(k.getUUID("id")).hasUUID("fallenInWar"))out.add(event(level,HistoryEvent.Kind.COLLAPSE,k.getUUID("fallenInWar")+"/"+k.getUUID("id"),List.of(describe.apply(k.getUUID("id"))),List.of(place(level,k.getUUID("capital"))),null,"","CAPITAL_CONQUERED","FALLEN",Map.of()));
         var allRulers=new java.util.HashSet<>(oldRulers.keySet());allRulers.addAll(rulers.keySet());
         for(var id:allRulers)if(!java.util.Objects.equals(oldRulers.get(id),rulers.get(id))){
-            var old=oldRulers.get(id);var next=rulers.get(id);String operation=UUID.randomUUID().toString();
+            var old=oldRulers.get(id);var next=rulers.get(id);String operation=after.hasUUID("historyCommit")?after.getUUID("historyCommit").toString():UUID.randomUUID().toString();
             if(old!=null)out.add(event(level,HistoryEvent.Kind.RULER_RELEASE,operation+"/"+id,List.of(describe.apply(id)),List.of(),old.getUUID("player"),old.getString("lastKnownName"),"RECORDED_AUTHORITY_CHANGE","RELEASED",Map.of()));
             if(next!=null)out.add(event(level,HistoryEvent.Kind.RULER_CLAIM,operation+"/"+id,List.of(describe.apply(id)),List.of(),next.getUUID("player"),next.getString("lastKnownName"),"RECORDED_AUTHORITY_CHANGE","CLAIMED",Map.of()));
         }

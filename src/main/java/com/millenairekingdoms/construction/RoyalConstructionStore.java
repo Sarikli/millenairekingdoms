@@ -238,7 +238,7 @@ public final class RoyalConstructionStore {
         } catch(IOException e) { throw failure(e); }
     }
 
-    static CompoundTag saveIntent(Intent intent) {
+    public static CompoundTag saveIntent(Intent intent) {
         var tag=new CompoundTag(); tag.putUUID("id",intent.id); tag.putString("dimension",intent.dimension); tag.putUUID("kingdom",intent.kingdom);
         tag.putUUID("capital",intent.capital); tag.putUUID("village",intent.village); if(intent.actor!=null) tag.putUUID("actor",intent.actor);
         tag.putLong("rulerSince",intent.rulerSince); tag.putString("villageType",intent.villageType.toString()); tag.putString("planSet",intent.planSet.toString());
@@ -248,7 +248,7 @@ public final class RoyalConstructionStore {
         if(intent.upgrade()){tag.putUUID("upgradeBuilding",intent.upgradeBuilding());tag.putInt("targetLevel",intent.targetLevel());}
         return tag;
     }
-    static Intent loadIntent(CompoundTag tag) {return loadIntent(tag,true);}
+    public static Intent loadIntent(CompoundTag tag) {return loadIntent(tag,true);}
     static Intent loadIntent(CompoundTag tag,boolean upgradesAllowed) {
         keys(tag,Set.of("id","dimension","kingdom","capital","village","actor","rulerSince","villageType","planSet","plan","variant","fee","issued","originalBuildings","upgradeBuilding","targetLevel"));
         boolean upgrade=tag.contains("upgradeBuilding") || tag.contains("targetLevel");

@@ -93,7 +93,7 @@ public final class RoyalGovernanceGameTests {
         try(var f=fixture(h,"detached")) {
             var player=player(f); var intent=paidPlayer(f,player); var data=KingdomSavedData.get(f.level());
             var tag=data.save(new CompoundTag(),f.level().registryAccess()); var detached=KingdomSavedData.load(tag,f.level().registryAccess()); detached.abdicate(f.kingdom(),player.getUUID());
-            h.assertTrue(tag.getInt("format")==6 && data.ruler(f.kingdom())!=null && detached.ruler(f.kingdom())==null
+            h.assertTrue(tag.getInt("format")==7 && data.ruler(f.kingdom())!=null && detached.ruler(f.kingdom())==null
                     && store(f.level()).load(intent.id()).stage()==Stage.PAID && f.value()==64,"Detached migrations/simulations retain political format 6 and have no live order side effects");
             new RoyalConstructionService(f.level()).cancelPlayer(player,intent.id()); h.succeed();
         } finally { VillageSavedData.get(h.getLevel()).setDirty(); }

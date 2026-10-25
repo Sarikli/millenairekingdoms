@@ -34,7 +34,9 @@ public final class KingdomSavedData extends SavedData {
      * Format 6: adds the stage-6.2 "autonomy" compound (next political decision day, truces, last conquest raid day per
      * target, war clocks, pending raid orders) and allows NPC village join applications without a player.
      * Older files start with no truces or orders; every ACTIVE war gets a clock starting on the stored ledger day. */
-    public static final int FORMAT = 6;
+    /** Format7 adds only a causal history commit UUID; all history records remain in their separate archive.
+     * Format1–6 remain readable. Without a new live historical transition, compatible saves still write format6. */
+    public static final int FORMAT = 7;
     /** Marks pre-4.2A two-win campaigns. Never produced by campaign(), so their progress stays historical. */
     public static final UUID STAGE3_WAR = new UUID(0L, 0L);
 
@@ -186,6 +188,7 @@ public final class KingdomSavedData extends SavedData {
     private CompoundTag legacyArchive = new CompoundTag();
     // Only get(level) binds a live registry. Detached readers/tests never publish economic side effects.
     private ServerLevel royalRuntimeLevel;
+    private UUID historyCommit;
 
     public static Factory<KingdomSavedData> factory() {
         return new Factory<>(KingdomSavedData::new, KingdomSavedData::load, null);
@@ -401,10 +404,11 @@ public final class KingdomSavedData extends SavedData {
      * Ownership, development and distance checks belong to the caller. */
     public Kingdom found(String name, UUID capital, UUID player, String playerName, long gameTime) {
         check(ruledBy(player) == null, "A player can rule only one kingdom.");
-        var before = state;
-        Kingdom kingdom = create(name, capital);
-        try { claimRule(kingdom.id, player, playerName, gameTime); }
-        catch (IllegalArgumentException invalid) { state = before; throw invalid; }
+        // Validate the complete composite on a detached registry before publishing any live/economic/history effect.
+        var proposal = new KingdomSavedData(); proposal.state = state;
+        Kingdom kingdom = proposal.create(name, capital);
+        proposal.claimRule(kingdom.id, player, playerName, gameTime);
+        publish(proposal.state);
         return kingdom;
     }
 
@@ -668,9 +672,11 @@ public final class KingdomSavedData extends SavedData {
         java.nio.file.Path historyPending = null;
         if (royalRuntimeLevel != null && (!state.kingdoms.equals(next.kingdoms) || !state.membership.equals(next.membership)
                 || !state.wars.equals(next.wars) || !state.rulers.equals(next.rulers))) {
-            var detached = new KingdomSavedData(); detached.state = next;
+            var detached = new KingdomSavedData(); detached.state = next; detached.historyCommit = UUID.randomUUID();
             historyPending = com.millenairekingdoms.history.HistoryHooks.stagePolitical(royalRuntimeLevel,
                     save(new CompoundTag(), royalRuntimeLevel.registryAccess()), detached.save(new CompoundTag(), royalRuntimeLevel.registryAccess()));
+            // Even when history I/O is unavailable, a later transition cannot reuse an earlier pending marker.
+            historyCommit = detached.historyCommit;
         }
         state = next; setDirty();
         if (royalRuntimeLevel != null) com.millenairekingdoms.history.HistoryHooks.afterPolitical(royalRuntimeLevel, this, historyPending);
@@ -701,7 +707,8 @@ public final class KingdomSavedData extends SavedData {
     }
 
     @Override public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
-        tag.putInt("format", FORMAT);
+        tag.putInt("format", historyCommit == null ? 6 : FORMAT);
+        if (historyCommit != null) tag.putUUID("historyCommit", historyCommit);
         tag.put("legacyArchive", legacyArchive.copy());
         ListTag kingdoms = new ListTag();
         state.kingdoms.values().forEach(k -> {
@@ -796,6 +803,7 @@ public final class KingdomSavedData extends SavedData {
     public static KingdomSavedData load(CompoundTag tag, HolderLookup.Provider registries) {
         int format = tag.getInt("format");
         check(format >= 1 && format <= FORMAT, "Unsupported kingdom data format.");
+        check(format >= 7 ? tag.hasUUID("historyCommit") : !tag.contains("historyCommit"), "Invalid or disguised historical commit marker.");
         boolean stage3 = format < 3;
         // A format-1 file must not hide format-2 war records during migration.
         check(format != 1 || !tag.contains("wars"), "Unexpected wars in legacy kingdom data.");
@@ -888,7 +896,8 @@ public final class KingdomSavedData extends SavedData {
         // Older formats had no war clocks: every ACTIVE war starts its clock on the stored ledger day.
         Ledger expected = format < 6 ? ledger.withClocks(data.state.ledger.warClocks) : ledger;
         check(data.state.ledger.equals(expected), "Ledger refers to ended wars, fallen kingdoms or member villages.");
-        if (format < FORMAT) data.setDirty();
+        data.historyCommit = format >= 7 ? tag.getUUID("historyCommit") : null;
+        if (format < 6) data.setDirty();
         data.legacyArchive = tag.getCompound("legacyArchive").copy();
         if (!data.legacyArchive.isEmpty()) ConquestSavedData.load(data.legacyArchive, registries);
         return data;

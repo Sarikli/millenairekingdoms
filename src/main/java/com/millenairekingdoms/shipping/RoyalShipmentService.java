@@ -215,6 +215,7 @@ public final class RoyalShipmentService {
     }
     private Entry finishDelivery(Entry entry){
         var receipt=receipt(entry);if(receipt==null || receipt.state()!=State.COMMITTED)return orders.quarantine(entry.intent().id(),"Completed delivery lacks its committed original transport fee");
+        com.millenairekingdoms.history.HistoryDomain.prepareShipment(level,entry);
         var delivered=orders.finish(entry.intent().id());com.millenairekingdoms.history.HistoryHooks.shipment(level,delivered);return delivered;
     }
     private void commit(Entry entry){
