@@ -1,0 +1,45 @@
+{
+  "artifact": {
+    "version": "1.2.0-rc8-alpha.dev2",
+    "bytes": 673217,
+    "sha256": "fc3fabd2e79f41a8ad53cdf2dc7b1bb59dbce37af523dbc39d64234694ce6416",
+    "baseline_commit": "ec6ba85145ff3c80b3557f63ae3d30385030e015",
+    "source_parent": "0b83409347ca2b02340ab3950b0648596c69dc24"
+  },
+  "pairs": [
+    {
+      "suite": "verifyHistory",
+      "run": "alpha-dev2-history-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "14"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev2-history-01-write.log",
+          "sha256": "cf7f319d83e13ec32b822703929715a29cb7f1e49a8821ccc56685a65b962c78",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev2.jar",
+          "jar_sha256": "fc3fabd2e79f41a8ad53cdf2dc7b1bb59dbce37af523dbc39d64234694ce6416",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev2/alpha-dev2-history-01-write.log.gz",
+          "archive_sha256": "c7c5ab141c3c7422df06ddf51875020eb20e49ce246535655151262e3a71524d"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "14"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev2-history-01-reopen.log",
+          "sha256": "317f0066b208b9e73ea0000892a542b2fb756cc27ff49a168a043bea32184ece",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev2.jar",
+          "jar_sha256": "fc3fabd2e79f41a8ad53cdf2dc7b1bb59dbce37af523dbc39d64234694ce6416",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev2/alpha-dev2-history-01-reopen.log.gz",
+          "archive_sha256": "2c82c981e361fc0bcff882bf40dd416a7fbcc443014bb9208a6bbfb6568c0ed9"
+        }
+      ]
+    }
+  ]
+}
