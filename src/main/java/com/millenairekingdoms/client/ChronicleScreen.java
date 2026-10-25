@@ -14,7 +14,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 final class ChronicleScreen extends Screen {
     final Screen parent;
     final UUID session=UUID.randomUUID();
-    UUID scope,selected,next;
+    UUID scope,selected,next,villageScope;
     String kind="";long from=0,to=Long.MAX_VALUE,serial;
     private CompoundTag view=new CompoundTag();
     private List<HistoryEvent> events=List.of();
@@ -22,16 +22,16 @@ final class ChronicleScreen extends Screen {
     private UUID cursor;
     private KingdomScreen.RowList entries,prose;
     private int left,top,pw,ph;
-    ChronicleScreen(Screen parent,UUID scope){super(t("title"));this.parent=parent;this.scope=scope;}
+    ChronicleScreen(Screen parent,UUID scope,UUID village){super(t("title"));this.parent=parent;this.scope=scope;this.villageScope=village;}
     static Component t(String key,Object...args){return Component.translatable("millenairekingdoms.history."+key,args);}
-    void request(UUID cursor){this.cursor=cursor;serial++;PacketDistributor.sendToServer(new ChronicleRequestPayload(session,serial,"CHRONICLE",Optional.ofNullable(scope),kind,from,to,Optional.ofNullable(cursor),"",Optional.empty()));}
+    void request(UUID cursor){this.cursor=cursor;serial++;PacketDistributor.sendToServer(new ChronicleRequestPayload(session,serial,"CHRONICLE",Optional.ofNullable(scope),kind,from,to,Optional.ofNullable(cursor),"",Optional.empty(),Optional.ofNullable(villageScope)));}
     void refresh(){previous.clear();request(null);}
     void receive(CompoundTag incoming){if(!incoming.getUUID("session").equals(session)||incoming.getLong("serial")!=serial)return;view=incoming;events=incoming.getList("events",10).stream().map(t->HistoryEvent.load((CompoundTag)t)).toList();next=incoming.hasUUID("next")?incoming.getUUID("next"):null;if(events.stream().noneMatch(e->e.id().equals(selected)))selected=events.isEmpty()?null:events.getFirst().id();rebuildWidgets();}
     @Override protected void init(){
         pw=Math.min(740,width-16);ph=Math.min(420,height-16);left=(width-pw)/2;top=(height-ph)/2;int third=(pw-24)/3;
         button(left+8,top+25,third,t("kingdom"),()->{minecraft.setScreen(new ChronicleFilterScreen(this,true));});
-        button(left+10+third,top+25,third,t("world"),()->{scope=null;refresh();});
-        var atlas=button(left+12+2*third,top+25,third,t("atlas"),()->{});atlas.active=false;
+        button(left+10+third,top+25,third,t("world"),()->{scope=null;villageScope=null;refresh();});
+        button(left+12+2*third,top+25,third,t("atlas"),()->HistoryClient.openAtlas(this,scope,null,null));
         button(left+8,top+47,74,t("filters"),()->minecraft.setScreen(new ChronicleFilterScreen(this,false)));
         int mainTop=top+70,bottom=top+ph-48,listWidth=Math.max(96,(pw-24)*2/5);
         entries=new KingdomScreen.RowList(left+8,mainTop,listWidth,Math.max(22,bottom-mainTop),22);

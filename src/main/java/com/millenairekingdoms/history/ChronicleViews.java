@@ -25,6 +25,7 @@ public final class ChronicleViews {
     public static CompoundTag build(ServerPlayer player,ChronicleRequestPayload request){
         if(!player.serverLevel().getServer().isSameThread())throw new IllegalStateException("Chronicles require server thread");
         var view=header(player,request);var level=player.serverLevel();var data=KingdomSavedData.get(level);var store=HistoryHooks.store(level);
+        if(request.mode().equals("ATLAS") || request.mode().equals("INFO"))return com.millenairekingdoms.atlas.AtlasViews.build(player,request);
         if(request.mode().equals("REALMS")){
             var names=new HashMap<UUID,HistoryEvent.Realm>();for(var r:store.archives())names.put(r.id(),r);for(var k:data.kingdoms())names.put(k.id(),HistoryHooks.realm(level,k.id()));
             var realms=names.values().stream().filter(r->r.name().toLowerCase(Locale.ROOT).contains(request.search().strip().toLowerCase(Locale.ROOT))).sorted(Comparator.comparing(HistoryEvent.Realm::name).thenComparing(HistoryEvent.Realm::id)).toList();
@@ -34,7 +35,7 @@ public final class ChronicleViews {
         }
         if(!request.mode().equals("CHRONICLE"))throw new IllegalArgumentException("Unsupported archive mode");
         var known=HistoryVisibility.known(player);UUID ruled=data.ruledBy(player.getUUID());
-        var page=store.query(new HistoryStore.Query(request.kingdom().orElse(null),request.kind().isEmpty()?null:HistoryEvent.Kind.valueOf(request.kind()),request.fromDay(),request.toDay(),request.cursor().orElse(null),HistoryStore.PAGE_SIZE));
+        var page=store.query(new HistoryStore.Query(request.kingdom().orElse(null),request.kind().isEmpty()?null:HistoryEvent.Kind.valueOf(request.kind()),request.fromDay(),request.toDay(),request.cursor().orElse(null),HistoryStore.PAGE_SIZE,request.village().orElse(null)));
         var list=new ListTag();for(var e:page.events())list.add(HistoryVisibility.redact(e,known,ruled!=null && e.realms().stream().anyMatch(r->r.id().equals(ruled))).save());view.put("events",list);if(page.next()!=null)view.putUUID("next",page.next());
         request.kingdom().ifPresent(id->{view.putUUID("focus",id);var k=data.kingdom(id);if(k!=null){view.putString("name",k.name());view.putBoolean("fallen",k.fallen());}else store.archives().stream().filter(r->r.id().equals(id)).findFirst().ifPresent(r->{view.putString("name",r.name());view.putBoolean("fallen",true);});
             var foundation=store.query(new HistoryStore.Query(id,HistoryEvent.Kind.FOUNDING,0,Long.MAX_VALUE,null,1));if(!foundation.events().isEmpty())view.putLong("founded",foundation.events().getFirst().day());});

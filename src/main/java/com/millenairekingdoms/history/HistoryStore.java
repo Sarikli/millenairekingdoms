@@ -24,8 +24,9 @@ public final class HistoryStore {
     private record Key(long day,long time,UUID id) implements Comparable<Key>{
         public int compareTo(Key other){int c=Long.compare(day,other.day);if(c==0)c=Long.compare(time,other.time);return c==0?id.compareTo(other.id):c;}
     }
-    public record Query(UUID kingdom,HistoryEvent.Kind kind,long fromDay,long toDay,UUID before,int limit){
+    public record Query(UUID kingdom,HistoryEvent.Kind kind,long fromDay,long toDay,UUID before,int limit,UUID village){
         public Query {if(fromDay<0 || toDay<fromDay || limit<1 || limit>PAGE_SIZE)throw new IllegalArgumentException("Invalid historical query bounds");}
+        public Query(UUID kingdom,HistoryEvent.Kind kind,long fromDay,long toDay,UUID before,int limit){this(kingdom,kind,fromDay,toDay,before,limit,null);}
     }
     public record Page(List<HistoryEvent> events,UUID next,int examined){public Page{events=List.copyOf(events);}}
     private final Path root;
@@ -33,6 +34,7 @@ public final class HistoryStore {
     private final Map<UUID,Key> identities=new HashMap<>();
     private final Map<UUID,NavigableSet<Key>> kingdoms=new HashMap<>();
     private final Map<HistoryEvent.Kind,NavigableSet<Key>> kinds=new HashMap<>();
+    private final Map<UUID,NavigableSet<Key>> villages=new HashMap<>();
     private final Map<UUID,HistoryEvent.Realm> archives=new HashMap<>();
     public HistoryStore(Path root){
         this.root=root.toAbsolutePath().normalize();
@@ -67,6 +69,7 @@ public final class HistoryStore {
         NavigableSet<Key> candidates=timeline;
         if(query.kingdom()!=null)candidates=kingdoms.getOrDefault(query.kingdom(),new TreeSet<>());
         if(query.kind()!=null){var byKind=kinds.getOrDefault(query.kind(),new TreeSet<>());if(byKind.size()<candidates.size())candidates=byKind;}
+        if(query.village()!=null){var byVillage=villages.getOrDefault(query.village(),new TreeSet<>());if(byVillage.size()<candidates.size())candidates=byVillage;}
         var key=query.before()==null?null:identities.get(query.before());if(query.before()!=null && key==null)throw new IllegalArgumentException("Unknown historical page cursor");
         var from=new Key(query.fromDay(),0,new UUID(Long.MIN_VALUE,Long.MIN_VALUE));
         var to=new Key(query.toDay(),Long.MAX_VALUE,new UUID(Long.MAX_VALUE,Long.MAX_VALUE));
@@ -77,6 +80,7 @@ public final class HistoryStore {
             examined++;
             if(query.kingdom()!=null && !kingdoms.getOrDefault(query.kingdom(),new TreeSet<>()).contains(candidate))continue;
             if(query.kind()!=null && !kinds.getOrDefault(query.kind(),new TreeSet<>()).contains(candidate))continue;
+            if(query.village()!=null && !villages.getOrDefault(query.village(),new TreeSet<>()).contains(candidate))continue;
             if(found.size()==query.limit()){next=found.getLast().id();break;}found.add(get(candidate.id()));
         }
         return new Page(found,next,examined);
@@ -85,6 +89,7 @@ public final class HistoryStore {
     private void index(HistoryEvent event){
         var key=new Key(event.day(),event.gameTime(),event.id());if(identities.putIfAbsent(event.id(),key)!=null)throw new IllegalStateException("Duplicate history ID");timeline.add(key);kinds.computeIfAbsent(event.kind(),k->new TreeSet<>()).add(key);
         for(var realm:event.realms()){kingdoms.computeIfAbsent(realm.id(),k->new TreeSet<>()).add(key);archives.putIfAbsent(realm.id(),realm);}
+        for(var place:event.places())villages.computeIfAbsent(place.id(),k->new TreeSet<>()).add(key);
     }
     private void validateSchema(){var t=HistoryFiles.read(root.resolve("schema.dat"));HistoryFiles.keys(t,Set.of("format"));if(!t.contains("format",3)||t.getInt("format")!=1)throw new IllegalStateException("Unsupported historical archive; original bytes preserved");}
 }
