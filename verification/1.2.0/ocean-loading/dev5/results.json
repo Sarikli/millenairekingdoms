@@ -1,0 +1,114 @@
+{
+  "artifact": {
+    "version": "1.2.0-rc8-alpha.3.dev5",
+    "bytes": 1838049,
+    "sha256": "3149ed28e55a2899f3e2d27ba41f04ceb9857e58430879d8a44597ab6d8ff5de",
+    "source_parent": "3224c79e17c8490c602539af4f3a1df597c99a8b",
+    "baseline_alpha2_sha256": "4101f637a2a3a65f2e8b73c2f2606b30a4e8293a4f3bd72d725a564f1a9c6b94",
+    "ocean_scanning": "disabled"
+  },
+  "pairs": [
+    {
+      "suite": "verifyGeography",
+      "run": "ocean-disabled-dev5-geography-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "4"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/ocean-disabled-dev5-geography-01-write.log",
+          "sha256": "a33463ff3dfa6744104c6568afba87cdd71845086ce5200decefb92c209e7057",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.3.dev5.jar",
+          "jar_sha256": "3149ed28e55a2899f3e2d27ba41f04ceb9857e58430879d8a44597ab6d8ff5de",
+          "archive_log": "verification/1.2.0/ocean-loading/dev5/ocean-disabled-dev5-geography-01-write.log.gz",
+          "archive_sha256": "ac65705aeca47492ca06306af6d3e4e525b5bf44d6152f85aa20fee741712132"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "4"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/ocean-disabled-dev5-geography-01-reopen.log",
+          "sha256": "f42ecc9e75d9e8d61a8ac2ce2767f9e2d35117a4aebd319912158ff67982134d",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.3.dev5.jar",
+          "jar_sha256": "3149ed28e55a2899f3e2d27ba41f04ceb9857e58430879d8a44597ab6d8ff5de",
+          "archive_log": "verification/1.2.0/ocean-loading/dev5/ocean-disabled-dev5-geography-01-reopen.log.gz",
+          "archive_sha256": "ca83a3dd9707507ddbc46b508dce67253e056e175e02859263af0b4e02b54be5"
+        }
+      ]
+    },
+    {
+      "suite": "verifyAtlas",
+      "run": "ocean-disabled-dev5-atlas-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "19"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/ocean-disabled-dev5-atlas-01-write.log",
+          "sha256": "249dc69e553ba83c25e146b8cdae675c866463ea6cb0ae72b30263e5909725d2",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.3.dev5.jar",
+          "jar_sha256": "3149ed28e55a2899f3e2d27ba41f04ceb9857e58430879d8a44597ab6d8ff5de",
+          "archive_log": "verification/1.2.0/ocean-loading/dev5/ocean-disabled-dev5-atlas-01-write.log.gz",
+          "archive_sha256": "1263b3d5179a2db804b229ed6f54481d9fb71a1c8aecc77c84fd7584be35b5f6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "19"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/ocean-disabled-dev5-atlas-01-reopen.log",
+          "sha256": "45f8a4b44a534728cc663ddc745a05bf8c7651967c78f8a4c1c459d35ad20167",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.3.dev5.jar",
+          "jar_sha256": "3149ed28e55a2899f3e2d27ba41f04ceb9857e58430879d8a44597ab6d8ff5de",
+          "archive_log": "verification/1.2.0/ocean-loading/dev5/ocean-disabled-dev5-atlas-01-reopen.log.gz",
+          "archive_sha256": "f5a006ded064fa05be39f4395b7f50f274247ca384f4253a74cad0c7bac261f8"
+        }
+      ]
+    },
+    {
+      "suite": "verifyHistory",
+      "run": "ocean-disabled-dev5-history-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "36"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/ocean-disabled-dev5-history-01-write.log",
+          "sha256": "829dcd2bb85c9f6acb45fd9d9c5422114d56334cecb7132aa36ac450ebbba6f0",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.3.dev5.jar",
+          "jar_sha256": "3149ed28e55a2899f3e2d27ba41f04ceb9857e58430879d8a44597ab6d8ff5de",
+          "archive_log": "verification/1.2.0/ocean-loading/dev5/ocean-disabled-dev5-history-01-write.log.gz",
+          "archive_sha256": "a2782d6165c51462f335027798e7301d45592dfbc1a002f624780be69363f47d"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "36"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/ocean-disabled-dev5-history-01-reopen.log",
+          "sha256": "e0b812df67809eacb2154ae2cb7ca1915d83254cc5584eea3ddf68f4817eaea9",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.3.dev5.jar",
+          "jar_sha256": "3149ed28e55a2899f3e2d27ba41f04ceb9857e58430879d8a44597ab6d8ff5de",
+          "archive_log": "verification/1.2.0/ocean-loading/dev5/ocean-disabled-dev5-history-01-reopen.log.gz",
+          "archive_sha256": "536c5de8ebb711caa7b09a4d2e8c1564280448613b96fd142c33048076927562"
+        }
+      ]
+    }
+  ]
+}

@@ -18,6 +18,8 @@ public final class ChronicleViews {
         PacketDistributor.sendToPlayer(player,new ChronicleViewPayload(respond(player,request)));
     }
     public static CompoundTag respond(ServerPlayer player,ChronicleRequestPayload request){
+        // Disabled legacy requests must neither open geography files nor consume the political/history request budget.
+        if(request.mode().equals("GEOGRAPHY"))return com.millenairekingdoms.atlas.geography.GeographyView.build(player,request);
         long now=player.serverLevel().getGameTime();var last=LAST.get(player.getUUID());
         if(last!=null && now>=last && now-last<4){var retry=header(player,request);retry.putInt("retryAfter",4);return retry;}LAST.put(player.getUUID(),now);
         CompoundTag view;

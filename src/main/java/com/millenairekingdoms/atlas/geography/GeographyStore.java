@@ -23,6 +23,7 @@ public final class GeographyStore {
     private final Map<UUID,GeographyTile> hot=new LinkedHashMap<>(16,.75f,true){protected boolean removeEldestEntry(Map.Entry<UUID,GeographyTile> e){return size()>HOT_TILES;}};
 
     public GeographyStore(Path root,UUID player,String dimension){
+        if(!GeographyService.ENABLED)throw new UnsupportedOperationException("Ocean geography cache access is disabled; existing files are preserved");
         if(player==null || dimension==null || dimension.length()>256 || ResourceLocation.tryParse(dimension)==null)throw new IllegalArgumentException("Invalid geography owner/dimension");
         this.root=root.toAbsolutePath().normalize();this.player=player;this.dimension=dimension;
         if(Files.exists(index())){acknowledged=GeographyFiles.read(index(),65536);loadIndex(acknowledged);}

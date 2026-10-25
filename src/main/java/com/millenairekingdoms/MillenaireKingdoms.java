@@ -40,8 +40,6 @@ public final class MillenaireKingdoms {
         NeoForge.EVENT_BUS.addListener(KingdomDay::onLevelTick);
         NeoForge.EVENT_BUS.addListener(RaidOrderService::onLevelTick);
         NeoForge.EVENT_BUS.addListener(KingdomActions::onLogout);
-        NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.atlas.geography.GeographyService::onTick);
-        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppedEvent event) -> com.millenairekingdoms.atlas.geography.GeographyService.clear(event.getServer()));
         NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStartedEvent event) -> {
             for (var level : event.getServer().getAllLevels()) try { com.millenairekingdoms.history.HistoryHooks.recover(level); }
             catch (RuntimeException failure) { LOGGER.error("Historical archive recovery unavailable; original files preserved", failure); }
