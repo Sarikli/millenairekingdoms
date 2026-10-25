@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0-rc8-alpha —2026-10-25 (Chronicles & Political Atlas, experimental)
+
+- Fold the chronicles/atlas expansion into1.2.0: bottom-left History/Tarihçe, paginated kingdom/world chronicles and fallen archives, deterministic EN/TR medieval perspectives/culture/ethos, direct known-place/history links and independent full-screen political atlas with cached clipped regions, native icons, capitals/war/info and server discovery/privacy. Turkish heading becomes Töre; five ethos names/weights preserved.
+- Add separate strict event/archive1, political pending2 and domain candidate1 storage. Political maximum7 adds one causal nonce with lazy legacy1–6 compatibility; payment1/order5/audit2/shipment1/native formats remain. Record only verified actual accepted/completed/delivered transitions, no backfill/duplicate/fake incidents or gameplay replay. Correct reproduced intermediate-founding publication and atlas double-chest chunk-load issues; separate footer replies from History.
+- Thirty current/focused fresh package pairs retain exact per-JVM All-lines/hashes. Actual native automatic commission/completion/default-timer delivery,30-resident accelerated political-history comparison,400 controlled model days/four All1 epochs and three actual history cuts are separately scoped. Final production JAR startup/save/stop/reopen passed without the test mod. [Full report/raw evidence/limits](docs/1.2.0_RC8_ALPHA_REPORT.md).
+- Final JAR 760562 bytes, SHA256 `d6a6975c5c4abe7d2090298ce0492bae20d14b3196d7f546014ce352a5e07df9`; [artifact/checksum](releases/1.2.0-rc8-alpha/). Graphics/input/scaling/authenticated login manual/unverified; user1047/0 stock cause remains open. Same Draft PR3; no stable tag/Release/merge/main/setup/start changes.
+
+
 ## 1.2.0-rc.8 — 2026-10-25 (upgrades, product picker, capital production)
 
 - Add player royal upgrades for original eligible completed non-centre buildings, binding exact UUID/next level/quote. Charge construction base × target display level:128/192/256 with64 base, material costs separate. Retain unpaid queue, one village slot, authority/fee/recovery safeguards and original NPC work. Order5 lazily reads1–4, audit2 reads1; network4 prevents old clients misreading the new upgrade offers.
