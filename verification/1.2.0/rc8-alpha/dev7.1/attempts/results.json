@@ -1,0 +1,17 @@
+[
+  {
+    "log": "verification/1.2.0/rc8-alpha/dev7.1/attempts/alpha-dev71-cut-before-order-01-interrupt.log.gz",
+    "raw_sha256": "701b0715acda00e00b8d33ddfd47189d3a0e42990073542b8ed013282e9fe3aa",
+    "archive_sha256": "d4feedd1e71d0dded175cc413ef403bda713fb14f4282fb0e56631236cb4a6d4"
+  },
+  {
+    "log": "verification/1.2.0/rc8-alpha/dev7.1/attempts/alpha-dev71-chest-baseline-01-write.log.gz",
+    "raw_sha256": "899fde84672b86ffe4e1d1a0891aeacf8b306a0d4560e0dcdaeda69cd41b0ff1",
+    "archive_sha256": "d5fe3799a4318654805ff85a95a3a8138bb058eb4ad9a2c4ef91e6c100279677"
+  },
+  {
+    "log": "verification/1.2.0/rc8-alpha/dev7.1/attempts/alpha-dev71-chest-baseline-02-write.log.gz",
+    "raw_sha256": "310fbe69d70ae1a298aa560e31e171eab5d31b60d1147189b1a912b37dead1d3",
+    "archive_sha256": "9123a0b8d5f4eb51c913a29c5142160e787488c86e54b7f6bd7d4a254589c132"
+  }
+]

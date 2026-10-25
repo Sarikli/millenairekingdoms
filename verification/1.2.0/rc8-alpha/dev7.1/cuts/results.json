@@ -1,0 +1,149 @@
+[
+  {
+    "boundary": "before-order",
+    "run": "alpha-dev71-cut-before-order-02",
+    "stages": [
+      {
+        "phase": "prepare",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build_successful": true,
+        "log": "verification/1.2.0/rc8-alpha/dev7.1/cuts/alpha-dev71-cut-before-order-02-prepare.log.gz",
+        "sha256": "659fd0a8bc4923f73deb31b49d3d110ef2a37c5779af5c9f406cb06f408655bf",
+        "jar_sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+        "halt70": false,
+        "halt_marker": false,
+        "raw_sha256": "659fd0a8bc4923f73deb31b49d3d110ef2a37c5779af5c9f406cb06f408655bf",
+        "archive_sha256": "0964a68e5c4b4cd6167baeae6045d451188a97f8b98d452371d152be8c28f22c"
+      },
+      {
+        "phase": "interrupt",
+        "exit": 1,
+        "passes": [],
+        "build_successful": false,
+        "log": "verification/1.2.0/rc8-alpha/dev7.1/cuts/alpha-dev71-cut-before-order-02-interrupt.log.gz",
+        "sha256": "8082afafbe3f860919b2d9e8fe8ccc218bb63b7040802ec9dc636fff4debe475",
+        "jar_sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+        "halt70": true,
+        "halt_marker": true,
+        "raw_sha256": "8082afafbe3f860919b2d9e8fe8ccc218bb63b7040802ec9dc636fff4debe475",
+        "archive_sha256": "594ff103c738d9cfd9b1d0424f2c6434b78bf0c8cb64056f2dc7fb652ea47034"
+      },
+      {
+        "phase": "recover",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build_successful": true,
+        "log": "verification/1.2.0/rc8-alpha/dev7.1/cuts/alpha-dev71-cut-before-order-02-recover.log.gz",
+        "sha256": "c7fa813cb6b2da420c4657bd191354aba5dda75dbcddda6f421f9f24f0d65492",
+        "jar_sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+        "halt70": false,
+        "halt_marker": false,
+        "raw_sha256": "c7fa813cb6b2da420c4657bd191354aba5dda75dbcddda6f421f9f24f0d65492",
+        "archive_sha256": "b157af476133bdb015b02db1a4d4559951cf1d3cd3577732d2e2c94ba7d430f3"
+      }
+    ]
+  },
+  {
+    "boundary": "after-order",
+    "run": "alpha-dev71-cut-after-order-01",
+    "stages": [
+      {
+        "phase": "prepare",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build_successful": true,
+        "log": "verification/1.2.0/rc8-alpha/dev7.1/cuts/alpha-dev71-cut-after-order-01-prepare.log.gz",
+        "sha256": "a2b4778621b500fdac13ae58206527b398e1ed37cb870785b70cb2bda3c14759",
+        "jar_sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+        "halt70": false,
+        "halt_marker": false,
+        "raw_sha256": "a2b4778621b500fdac13ae58206527b398e1ed37cb870785b70cb2bda3c14759",
+        "archive_sha256": "c31f7b83c72e3ca0bc108176d016f0f7f44972161e8c3aa558ac889f3adfc593"
+      },
+      {
+        "phase": "interrupt",
+        "exit": 1,
+        "passes": [],
+        "build_successful": false,
+        "log": "verification/1.2.0/rc8-alpha/dev7.1/cuts/alpha-dev71-cut-after-order-01-interrupt.log.gz",
+        "sha256": "20669ed7eedfbef457ba0cefe8f1d7b7d77d85bc112f10ab88ae8b57a7b9c5a6",
+        "jar_sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+        "halt70": true,
+        "halt_marker": true,
+        "raw_sha256": "20669ed7eedfbef457ba0cefe8f1d7b7d77d85bc112f10ab88ae8b57a7b9c5a6",
+        "archive_sha256": "ae3353dff906cb2162849bd20b739a4c8f92bbb8ebbb2e1915ec1053b82be148"
+      },
+      {
+        "phase": "recover",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build_successful": true,
+        "log": "verification/1.2.0/rc8-alpha/dev7.1/cuts/alpha-dev71-cut-after-order-01-recover.log.gz",
+        "sha256": "7fded9c15f358e004ff127ab96e0c3fde56c0dbb0668ccbcf9e6a363a50a961a",
+        "jar_sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+        "halt70": false,
+        "halt_marker": false,
+        "raw_sha256": "7fded9c15f358e004ff127ab96e0c3fde56c0dbb0668ccbcf9e6a363a50a961a",
+        "archive_sha256": "7ad2b0cd037cbc1d43e4074e93134d7170cefaeef2c867060717a08da5ae9deb"
+      }
+    ]
+  },
+  {
+    "boundary": "after-political",
+    "run": "alpha-dev71-cut-after-political-01",
+    "stages": [
+      {
+        "phase": "prepare",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build_successful": true,
+        "log": "verification/1.2.0/rc8-alpha/dev7.1/cuts/alpha-dev71-cut-after-political-01-prepare.log.gz",
+        "sha256": "fa40af8452e8efabe024e43764c9f28fa6f47827a4412271889b79eb91185bc3",
+        "jar_sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+        "halt70": false,
+        "halt_marker": false,
+        "raw_sha256": "fa40af8452e8efabe024e43764c9f28fa6f47827a4412271889b79eb91185bc3",
+        "archive_sha256": "7bc673576e3a9d08b3ef7c45205be06722ae8e8b0dd858b06130ac472fcffa9d"
+      },
+      {
+        "phase": "interrupt",
+        "exit": 1,
+        "passes": [],
+        "build_successful": false,
+        "log": "verification/1.2.0/rc8-alpha/dev7.1/cuts/alpha-dev71-cut-after-political-01-interrupt.log.gz",
+        "sha256": "3da553ae82c62534b1ce27f632b2b9651f3f7ab33ad328db44b6872e318681c0",
+        "jar_sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+        "halt70": true,
+        "halt_marker": true,
+        "raw_sha256": "3da553ae82c62534b1ce27f632b2b9651f3f7ab33ad328db44b6872e318681c0",
+        "archive_sha256": "915ccbb69fefb6706919ce9c498859d8b466d9f9f0fe41fec1565ed1353e691b"
+      },
+      {
+        "phase": "recover",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build_successful": true,
+        "log": "verification/1.2.0/rc8-alpha/dev7.1/cuts/alpha-dev71-cut-after-political-01-recover.log.gz",
+        "sha256": "5189cc5cf470da42b637edc670e7fbfdb541ef25cc03d725fa332b4cd3191f71",
+        "jar_sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+        "halt70": false,
+        "halt_marker": false,
+        "raw_sha256": "5189cc5cf470da42b637edc670e7fbfdb541ef25cc03d725fa332b4cd3191f71",
+        "archive_sha256": "43ed5b66a2fff5d0bed4c00e16a6ef271a34e2a3bd11e92f0718f27894972439"
+      }
+    ]
+  }
+]

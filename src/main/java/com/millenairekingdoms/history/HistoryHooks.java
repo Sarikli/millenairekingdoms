@@ -84,7 +84,8 @@ public final class HistoryHooks {
         try{Files.delete(pending);}catch(IOException e){throw new IllegalStateException("History committed; pending cleanup deferred, replay is idempotent",e);}
     }
     private static Path politicalFile(ServerLevel level){return DimensionType.getStorageFolder(level.dimension(),level.getServer().getWorldPath(LevelResource.ROOT)).resolve("data/"+KingdomSavedData.NAME+".dat");}
-    private static CompoundTag readPolitical(Path file){try{var root=NbtIo.readCompressed(file,NbtAccounter.create(64L*1024*1024));if(!root.contains("data",Tag.TAG_COMPOUND))throw new IllegalStateException("Invalid political history evidence");return root.getCompound("data");}catch(IOException e){throw new IllegalStateException("Political commit cannot be confirmed",e);}}
+    private static CompoundTag readPolitical(Path file){try{var root=NbtIo.readCompressed(file,NbtAccounter.create(64L*1024*1024));if(!root.contains("data",Tag.TAG_COMPOUND)
+                || root.contains("DataVersion") && (!root.contains("DataVersion",Tag.TAG_INT) || root.getInt("DataVersion")>net.minecraft.SharedConstants.getCurrentVersion().getDataVersion().getVersion()))throw new IllegalStateException("Invalid/future political history container; preserve original bytes");return root.getCompound("data");}catch(IOException e){throw new IllegalStateException("Political commit cannot be confirmed",e);}}
     public static HistoryEvent.Realm realm(ServerLevel level,UUID id){
         var k=KingdomSavedData.get(level).kingdom(id);if(k==null)throw new IllegalArgumentException("Unknown historical kingdom");return realm(level,k.id(),k.name(),k.capital());
     }

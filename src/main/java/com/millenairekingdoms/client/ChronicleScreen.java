@@ -19,7 +19,7 @@ final class ChronicleScreen extends Screen {
     private CompoundTag view=new CompoundTag();
     private List<HistoryEvent> events=List.of();
     private final List<UUID> previous=new ArrayList<>();
-    private UUID cursor;
+    private UUID cursor,shownCursor,lastShown;
     private ChronicleRequestPayload pending;private int retryTicks;
     private KingdomScreen.RowList entries,prose;
     private int left,top,pw,ph;
@@ -30,6 +30,7 @@ final class ChronicleScreen extends Screen {
     void refresh(){previous.clear();request(null);}
     void receive(CompoundTag incoming){if(!incoming.getUUID("session").equals(session)||incoming.getLong("serial")!=serial)return;if(incoming.getInt("retryAfter")>0){retryTicks=Math.min(20,incoming.getInt("retryAfter"));return;}pending=null;retryTicks=0;view=incoming;events=incoming.getList("events",10).stream().map(t->HistoryEvent.load((CompoundTag)t)).toList();next=incoming.hasUUID("next")?incoming.getUUID("next"):null;if(events.stream().noneMatch(e->e.id().equals(selected)))selected=events.isEmpty()?null:events.getFirst().id();rebuildWidgets();}
     @Override protected void init(){
+        int entryScroll=entries!=null && Objects.equals(shownCursor,cursor)?entries.scroll:0;int proseScroll=prose!=null && Objects.equals(lastShown,selected)?prose.scroll:0;shownCursor=cursor;lastShown=selected;
         pw=Math.min(740,width-16);ph=Math.min(420,height-16);left=(width-pw)/2;top=(height-ph)/2;int third=(pw-24)/3;
         button(left+8,top+25,third,t("kingdom"),()->{minecraft.setScreen(new ChronicleFilterScreen(this,true));});
         button(left+10+third,top+25,third,t("world"),()->{scope=null;villageScope=null;refresh();});
@@ -45,6 +46,7 @@ final class ChronicleScreen extends Screen {
             for(var realm:chosen.realms())prose.add(Component.literal(realm.name()),0xFF62442B,false,()->HistoryClient.openAtlas(this,realm.id(),chosen.id(),null));
             for(var place:chosen.places())prose.add(t(place.located()?"place":"place_hidden",place.name(),place.x(),place.z()),0xFF705237,false,place.located()?()->HistoryClient.openAtlas(this,scope,chosen.id(),place.id()):null);
         }else prose.addWrapped(font,t(view.contains("error")?"unavailable":"empty"),0xFF493321);
+        entries.scroll=entryScroll;prose.scroll=proseScroll;
         int fy=top+ph-43,half=(pw-20)/2;button(left+8,fy,half,t("previous"),()->{var back=previous.removeLast();request(back);}).active=!previous.isEmpty();
         button(left+12+half,fy,half,t("next"),()->{previous.add(cursor);request(next);}).active=next!=null;
         int by=top+ph-22;button(left+8,by,74,Component.translatable("gui.back"),this::onClose);button(left+pw-82,by,74,t("refresh"),()->request(cursor));

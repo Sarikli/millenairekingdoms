@@ -216,6 +216,7 @@ public final class RoyalRealConstructionGameTests {
                         tag.putString("watched",BuiltInRegistries.ITEM.getKey(watched).toString()); tag.putInt("needed",needed);
                         tag.putInt("carried",((MillVillager)level.getEntity(builder)).getInventory().getCount(watched));
                         NbtIo.writeCompressed(tag,marker);
+                        assertHistory(false);
                         System.out.println("ROYAL_REAL_BUILD_RESTART_WRITE_PASS "+diagnostic()+" match="+match()+" materialsFetched="+fetched);
                         close(); h.succeed(); return;
                     }
@@ -226,6 +227,7 @@ public final class RoyalRealConstructionGameTests {
                                 "Actual saved resident must resume and complete original construction; final match="+placed+" builderLoaded="+builderLoaded);
                         h.assertTrue(level.getEntity(builder) instanceof MillVillager actual && actual.getInventory().getCount(watched)<=carriedAtRestart-needed,
                                 "Original builder consumes the real carried construction materials after completion");
+                        assertHistory(true);
                         System.out.println("ROYAL_REAL_BUILD_RESTART_READ_PASS "+diagnostic()+" finalMatch="+placed);
                         close(); h.succeed(); return;
                     }
@@ -265,6 +267,16 @@ public final class RoyalRealConstructionGameTests {
             var watch=materials.entrySet().stream().filter(e->e.getValue()>0).sorted(Comparator.comparing(e->e.getKey().toString())).findFirst().orElseThrow();
             anywoodWatched=AnywoodHelper.isAnywood(watch.getKey());watched=anywoodWatched ? Items.OAK_LOG : ItemHelper.resolve(watch.getKey());needed=watch.getValue();stock=economicStocks.getOrDefault(watched,inventory.getCount(level,watched));
             System.out.println("ROYAL_NPC_BUILDER_SELECTED id="+id+" plan="+order.intent().planSet()+" fee="+order.intent().fee()+" remaining="+remaining+" materials="+materials+" reason="+selected.reason());phase=4;
+        }
+
+        void assertHistory(boolean finished){
+            if(!economic)return;var history=com.millenairekingdoms.history.HistoryHooks.store(level);String dimension=level.dimension().location().toString();
+            var accepted=history.get(com.millenairekingdoms.history.HistoryEvent.identity(dimension,com.millenairekingdoms.history.HistoryEvent.Kind.CONSTRUCTION_ORDER,id.toString()));
+            var investment=history.get(com.millenairekingdoms.history.HistoryEvent.identity(dimension,com.millenairekingdoms.history.HistoryEvent.Kind.INVESTMENT,id.toString()));
+            var complete=history.get(com.millenairekingdoms.history.HistoryEvent.identity(dimension,com.millenairekingdoms.history.HistoryEvent.Kind.CONSTRUCTION_COMPLETE,id.toString()));
+            h.assertTrue(accepted!=null && investment!=null && (finished?complete!=null:complete==null),"Actual automatic native order/investment are separate from physical completion, exactly across partial-build JVM restart");
+            if(finished)h.assertTrue(complete.facts().get("building").equals(building.getId().uuid().toString()) && complete.source().equals(accepted.source()),"Completed chronicle binds the SAME original genuinely built structure and paid operation");
+            System.out.println("HISTORY_NATIVE_BUILD phase="+(finished?"read-complete":"write-partial")+" order="+id+" building="+building.getId().uuid()+" accepted="+accepted.id()+" completion="+(complete==null?"absent":complete.id())+" investment="+investment.id());
         }
 
         Map<BlockPos,Block> expected(BuildingInstance b) {

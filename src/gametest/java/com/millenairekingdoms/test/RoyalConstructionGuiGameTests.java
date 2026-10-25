@@ -218,7 +218,7 @@ public final class RoyalConstructionGuiGameTests {
         var buffer=new RegistryFriendlyByteBuf(Unpooled.buffer(),h.getLevel().registryAccess());
         try {
             var payload=new KingdomActionPayload("CONSTRUCTION_ORDER",Optional.of(UUID.randomUUID()),Optional.of(UUID.randomUUID()),Long.MIN_VALUE,"millenaire:"+"a".repeat(100));
-            KingdomActionPayload.CODEC.encode(buffer,payload);h.assertTrue(KingdomActionPayload.CODEC.decode(buffer).equals(payload) && KingdomNetwork.VERSION.equals("6"),"Actual bounded wire codec preserves server offer IDs and longer real registry identifiers");
+            KingdomActionPayload.CODEC.encode(buffer,payload);h.assertTrue(KingdomActionPayload.CODEC.decode(buffer).equals(payload) && KingdomNetwork.VERSION.equals("7"),"Actual bounded wire codec preserves server offer IDs and longer real registry identifiers");
             boolean rejected=false;try{KingdomActionPayload.CODEC.encode(buffer,new KingdomActionPayload("CONSTRUCTION_ORDER",Optional.empty(),Optional.empty(),0,"a".repeat(129)));}catch(RuntimeException expected){rejected=true;}
             h.assertTrue(rejected,"Oversized wire identifiers are rejected");
         } finally {buffer.release();}

@@ -51,6 +51,7 @@ public final class RoyalNpcLiveGameTests {
                             && RoyalNpcEconomyGameTests.count(realm,realm.target(),product)==0,"Production events alone found native deficit, paid9, collected actual cargo and froze future default3600-tick route");
                     var tag=realm.marker();tag.putUUID("order",row.intent().id());tag.putInt("quantity",quantity);tag.putInt("sourceCount",RoyalNpcEconomyGameTests.count(realm,realm.source(),product));realm.save();
                     try{NbtIo.writeCompressed(tag,marker);}catch(java.io.IOException failure){throw new IllegalStateException(failure);}FIXTURES.remove(h.getLevel());
+                    h.assertTrue(!com.millenairekingdoms.history.HistoryHooks.store(realm.level()).contains(com.millenairekingdoms.history.HistoryEvent.identity(row.intent().dimension(),com.millenairekingdoms.history.HistoryEvent.Kind.SHIPMENT,row.intent().id().toString())),"Actual in-transit default-timer goods have no successful delivery chronicle yet");
                     System.out.println("ROYAL_NPC_AUTOMATIC_WRITE ticks="+ticks+" issued="+row.intent().issued()+" due="+row.due()+" held="+row.escrow()+" treasury=247");h.succeed();return;
                 }
                 if(RoyalShipmentSupport.read() && row!=null && row.terminal()){
@@ -59,7 +60,8 @@ public final class RoyalNpcLiveGameTests {
                         h.assertTrue(row.stage()==Stage.DELIVERED && row.escrow()==0 && realm.level().getGameTime()>=row.due() && realm.coins()==247 && realm.payments().load(row.intent().id()).state()==State.COMMITTED
                                 && RoyalNpcEconomyGameTests.count(realm,realm.source(),product)==tag.getInt("sourceCount") && RoyalNpcEconomyGameTests.count(realm,realm.target(),product)==tag.getInt("quantity"),"Production events alone deliver exact original default-timed cargo after JVM reopen with one9 fee and no second policy attempt");
                     }catch(java.io.IOException failure){throw new IllegalStateException(failure);}FIXTURES.remove(h.getLevel());
-                    System.out.println("ROYAL_NPC_AUTOMATIC_READ ticks="+ticks+" due="+row.due()+" now="+realm.level().getGameTime()+" delivered="+row.delivered()+" treasury=247 attempts=1");realm.close();h.succeed();return;
+                    var recorded=com.millenairekingdoms.history.HistoryHooks.store(realm.level()).get(com.millenairekingdoms.history.HistoryEvent.identity(row.intent().dimension(),com.millenairekingdoms.history.HistoryEvent.Kind.SHIPMENT,row.intent().id().toString()));h.assertTrue(recorded!=null && recorded.outcome().equals("DELIVERED") && recorded.facts().get("quantity").equals(Integer.toString(row.delivered())),"Actual production timer/native credit commits exactly the factual delivery chronicle after reopen");
+                    System.out.println("ROYAL_NPC_AUTOMATIC_READ ticks="+ticks+" due="+row.due()+" now="+realm.level().getGameTime()+" delivered="+row.delivered()+" treasury=247 attempts=1 history="+recorded.id());realm.close();h.succeed();return;
                 }
             }
             probe(h,realm,marker,ticks+1);

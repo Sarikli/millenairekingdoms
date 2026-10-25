@@ -15,6 +15,8 @@ public final class ConquestTestMod {
             event.register(ConquestGameTests.class);
             event.register(HistoryGameTests.class);
             event.register(HistoryCommitGameTests.class);
+            event.register(HistoryWorldLiveGameTests.class);
+            event.register(HistoryCrashGameTests.class);
             event.register(NarrativeGameTests.class);
             event.register(ChronicleViewGameTests.class);
             event.register(AtlasGameTests.class);
@@ -96,7 +98,7 @@ public final class ConquestTestMod {
         // Tests share one world: the scheduled NPC politics and founding must not decide for other tests' villages. The
         // stage-6.2 and 1.1.0 tests call the same code directly, with explicit settings.
         NeoForge.EVENT_BUS.addListener((ServerStartedEvent event) -> {
-            AutonomyConfig.ENABLED.set(Boolean.getBoolean("kingdoms.tests.liveNpcEconomy"));
+            AutonomyConfig.ENABLED.set(Boolean.getBoolean("kingdoms.tests.liveNpcEconomy") || Boolean.getBoolean("kingdoms.tests.historyWorld"));
             FoundingConfig.ENABLED.set(false);
             boolean liveConstruction=Boolean.getBoolean("kingdoms.tests.liveConstruction");
             com.millenairekingdoms.construction.RoyalConstructionConfig.TRACKING.set(liveConstruction);

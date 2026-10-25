@@ -28,8 +28,9 @@ final class AtlasScreen extends Screen {
     private final Map<UUID,CompoundTag> capitals=new HashMap<>();
     private AtlasGeometry.Mesh mesh;private CompoundTag info=new CompoundTag(),pin=new CompoundTag();private UUID selectedKingdom,selectedVillage;
     private double centerX,centerZ,zoom=.09;private boolean centered,showPanel=true,showInfo,dragging;
+    private UUID paneRealm;private boolean paneInfo;
     private KingdomScreen.RowList rows;private int mapLeft,mapTop,mapRight,mapBottom,panelX,panelWidth;
-    AtlasScreen(Screen parent,UUID kingdom,UUID event,UUID village){super(t("title"));this.parent=parent;this.selectedKingdom=kingdom;this.event=event;this.village=village;}
+    AtlasScreen(Screen parent,UUID kingdom,UUID event,UUID village){super(t("title"));this.parent=parent;this.selectedKingdom=kingdom;this.event=event;this.village=village;this.showInfo=kingdom!=null;}
     static Component t(String key,Object...args){return Component.translatable("millenairekingdoms.atlas."+key,args);}
     void refresh(){generation++;queue.clear();waiting.clear();restarts=0;status="loading";queue.add(new Pending("ATLAS",null,null,generation));}
     @Override public void tick(){
@@ -39,7 +40,13 @@ final class AtlasScreen extends Screen {
     void receive(CompoundTag view){
         if(!view.hasUUID("session") || !view.getUUID("session").equals(session))return;var pending=waiting.remove(view.getLong("serial"));if(pending==null || pending.generation!=generation)return;
         if(view.getInt("retryAfter")>0){queue.addFirst(pending);return;}if(view.contains("error")){status="unavailable";return;}
-        if(pending.mode.equals("INFO")){if(pending.kingdom.equals(selectedKingdom)){var incoming=view.getCompound("info");if(pending.cursor!=null && info.hasUUID("id") && info.getUUID("id").equals(pending.kingdom)){var members=info.getList("members",10);for(var raw:incoming.getList("members",10))members.add(raw.copy());incoming.put("members",members);}info=incoming;showInfo=true;rebuildWidgets();}return;}
+        if(pending.mode.equals("INFO")){
+            if(!pending.kingdom.equals(selectedKingdom))return;var incoming=view.getCompound("info");boolean same=info.hasUUID("id") && info.getUUID("id").equals(pending.kingdom) && incoming.getString("memberRevision").equals(info.getString("memberRevision"));
+            if(pending.cursor!=null && !same){queue.add(new Pending("INFO",selectedKingdom,null,generation));return;}
+            if(same){var oldMembers=info.getList("members",10);var fresh=incoming.getList("members",10);if(pending.cursor!=null){var ids=new HashSet<UUID>();for(var raw:oldMembers)ids.add(((CompoundTag)raw).getUUID("id"));for(var raw:fresh)if(ids.add(((CompoundTag)raw).getUUID("id")))oldMembers.add(raw.copy());if(oldMembers.size()>com.millenairekingdoms.atlas.AtlasDiscovery.LIMIT){status="unavailable";return;}incoming.put("members",oldMembers);}else if(oldMembers.size()>fresh.size()){incoming.put("members",oldMembers);if(info.hasUUID("next"))incoming.putUUID("next",info.getUUID("next"));else incoming.remove("next");}}
+            info=incoming;rebuildWidgets();return;
+        }
+
         if(pending.cursor==null && mesh!=null && view.getString("revision").equals(revision)){pin=view.getCompound("historicalPin").copy();status=sites.isEmpty()?"empty":"ready";lastRefresh=ticks;if(selectedKingdom!=null)queue.add(new Pending("INFO",selectedKingdom,null,generation));return;}
         com.millenairekingdoms.atlas.AtlasSnapshotAssembler.Frame frame;
         try{frame=assembler.accept(view,pending.cursor);}catch(com.millenairekingdoms.atlas.AtlasSnapshotAssembler.Changed changed){if(++restarts>3){status="changed";return;}generation++;queue.clear();waiting.clear();queue.add(new Pending("ATLAS",null,null,generation));return;}catch(IllegalArgumentException malformed){status="unavailable";return;}
@@ -58,12 +65,14 @@ final class AtlasScreen extends Screen {
 
     private static void collect(Map<UUID,CompoundTag> map,CompoundTag view,String key){for(var raw:view.getList(key,10)){var tag=(CompoundTag)raw;if(tag.hasUUID("id"))map.put(tag.getUUID("id"),tag);}}
     @Override protected void init(){
+        int retainedScroll=rows!=null && Objects.equals(paneRealm,selectedKingdom) && paneInfo==showInfo?rows.scroll:0;paneRealm=selectedKingdom;paneInfo=showInfo;
         panelWidth=Math.min(210,Math.max(104,width/3));mapLeft=6;mapTop=46;mapRight=width-6-(showPanel?panelWidth+8:0);mapBottom=height-26;panelX=mapRight+8;
         button(6,6,54,Component.translatable("gui.back"),this::onClose);button(64,6,84,ChronicleScreen.t("title"),()->HistoryClient.open(this,selectedKingdom));button(152,6,64,ChronicleScreen.t("refresh"),this::refresh);button(220,6,Math.min(94,width-226),t(showPanel?"hide_panel":"show_panel"),()->{showPanel=!showPanel;rebuildWidgets();});
         rows=null;if(!showPanel)return;int half=(panelWidth-4)/2;button(panelX,mapTop,half,t("kingdoms"),()->{showInfo=false;rebuildWidgets();});button(panelX+half+4,mapTop,half,t("information"),()->{showInfo=true;rebuildWidgets();});
         rows=new KingdomScreen.RowList(panelX,mapTop+23,panelWidth,Math.max(22,mapBottom-mapTop-69),showInfo?11:20);
         if(showInfo)buildInfo();else for(var k:kingdoms.values().stream().sorted(Comparator.comparing(k->k.getString("name"))).toList())rows.add(Component.literal(k.getString("name")),k.getInt("color"),k.getUUID("id").equals(selectedKingdom),()->selectKingdom(k.getUUID("id"),true));
         if(!showInfo)rows.add(t("independent"),0xFF625E51,selectedKingdom==null,()->{selectedKingdom=null;selectedVillage=null;info=new CompoundTag();rebuildWidgets();});
+        rows.scroll=retainedScroll;
         button(panelX,mapBottom-41,panelWidth,t(selectedVillage==null?"chronicle":"village_history"),()->HistoryClient.open(this,selectedKingdom,selectedVillage));
         if(showInfo && info.hasUUID("next"))button(panelX,mapBottom-20,panelWidth,t("more_members"),()->queue.add(new Pending("INFO",selectedKingdom,info.getUUID("next"),generation)));
     }

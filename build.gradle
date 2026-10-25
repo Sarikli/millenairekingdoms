@@ -633,6 +633,60 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_atlas_tests'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        historyWorldGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_history_world_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+            systemProperty 'kingdoms.tests.historyWorld', 'true'
+            systemProperty 'kingdoms.tests.liveConstruction', 'true'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+        }
+        historyWorldGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_history_world_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+            systemProperty 'kingdoms.tests.historyWorld', 'true'
+            systemProperty 'kingdoms.tests.liveConstruction', 'true'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+        }
+        historyCrashPrepareGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_history_cut_prepare'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+            systemProperty 'kingdoms.tests.historyBoundary', System.getProperty('kingdoms.historyBoundary','')
+        }
+        historyCrashInterruptGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_history_cut_interrupt'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+            systemProperty 'kingdoms.tests.historyBoundary', System.getProperty('kingdoms.historyBoundary','')
+        }
+        historyCrashRecoverGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_history_cut_recover'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+            systemProperty 'kingdoms.tests.historyBoundary', System.getProperty('kingdoms.historyBoundary','')
+        }
         configureEach {
             logLevel = org.slf4j.event.Level.INFO
             jvmArguments.addAll '-Xms512m', '-Xmx3G'
@@ -926,3 +980,6 @@ tasks.register('verifyRoyalSimulation') {
 
  tasks.named('runAtlasGameTestServerReload') { dependsOn tasks.named('runAtlasGameTestServer') }
  tasks.register('verifyAtlas') { group = 'verification'; dependsOn tasks.named('runAtlasGameTestServerReload') }
+
+ tasks.named('runHistoryWorldGameTestServerReload') { dependsOn tasks.named('runHistoryWorldGameTestServer') }
+ tasks.register('verifyHistoryWorld') { group = 'verification'; dependsOn tasks.named('runHistoryWorldGameTestServerReload') }

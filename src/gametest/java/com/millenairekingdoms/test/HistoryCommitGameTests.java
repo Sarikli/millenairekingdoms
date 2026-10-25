@@ -73,4 +73,10 @@ public final class HistoryCommitGameTests {
         var path=HistoryGameTests.directory(h);var store=new HistoryStore(path);var a=UUID.randomUUID();var b=UUID.randomUUID();for(int n=0;n<2000;n++)store.append(HistoryGameTests.sample(n%10==0?a:b,n));long start=System.nanoTime();var cold=new HistoryStore(path);long reload=System.nanoTime()-start;start=System.nanoTime();var page=cold.query(new HistoryStore.Query(a,HistoryEvent.Kind.WAR,100,150,null,24));long query=System.nanoTime()-start;
         h.assertTrue(cold.size()==2000 && page.events().size()==24 && page.examined()==25 && page.next()!=null,"Cold startup indices are reused; a24-row dated kingdom page examines25 metadata keys instead of reading2000 event bodies");System.out.println("HISTORY_PERF events=2000 reloadMicros="+reload/1000+" queryMicros="+query/1000+" examined="+page.examined());h.succeed();
     }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=200)
+    public static void futureMinecraftContainerCannotAuthenticateOrOverwritePoliticalHistory(GameTestHelper h)throws Exception{
+        var file=HistoryGameTests.directory(h).resolve("future-political.dat");var root=new CompoundTag();root.putInt("DataVersion",Integer.MAX_VALUE);root.put("data",new KingdomSavedData().save(new CompoundTag(),h.getLevel().registryAccess()));HistoryFiles.write(file,root);var bytes=Files.readAllBytes(file);
+        var read=HistoryHooks.class.getDeclaredMethod("readPolitical",Path.class);read.setAccessible(true);boolean refused=false;try{read.invoke(null,file);}catch(java.lang.reflect.InvocationTargetException e){refused=e.getCause() instanceof IllegalStateException;}
+        h.assertTrue(refused && Arrays.equals(bytes,Files.readAllBytes(file)),"A newer Minecraft container remains untouched and cannot prove a history commit");h.succeed();
+    }
 }
