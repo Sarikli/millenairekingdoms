@@ -106,7 +106,7 @@ public final class RoyalWaitingLiveGameTests {
                 for(var entry:bank.entrySet()){int missing=Math.max(0,entry.getValue()-inventory.getCount(level,entry.getKey()));h.assertTrue(inventory.add(level,entry.getKey(),missing)==missing,"Known fixture materials enter actual native storage: "+entry.getKey());}
                 var pending=new Village.PendingProject(set.id(),first.getVariant(),next.level(),true,first.getId());village.setPendingProject(pending);village.setNoProjectsLeftUntil(0);
                 RoyalConstructionView.select(ruler,village.getId().uuid());var frame=RoyalConstructionView.build(ruler,kingdom);CompoundTag offer=null;
-                for(var raw:frame.getList("plans",Tag.TAG_COMPOUND))if(((CompoundTag)raw).getString("plan").equals(choice.planSet().toString()))offer=(CompoundTag)raw;
+                for(var raw:frame.getList("plans",Tag.TAG_COMPOUND))if(!((CompoundTag)raw).getBoolean("upgrade") && ((CompoundTag)raw).getString("plan").equals(choice.planSet().toString()))offer=(CompoundTag)raw;
                 h.assertTrue(offer!=null && offer.getBoolean("canOrder") && frame.getBoolean("naturalPending"),"Original native upgrade can have a reviewed royal plan waiting behind it");id=offer.getUUID("offer");
                 KingdomActions.handle(ruler,new KingdomActionPayload("CONSTRUCTION_ORDER",Optional.of(village.getId().uuid()),Optional.of(id),0,choice.planSet().toString()));
                 h.assertTrue(store().load(id).stage()==Stage.WAITING && treasury()==128 && village.getPendingProject()==pending,"Actual GUI action preserves the exact original pending project and all coins");

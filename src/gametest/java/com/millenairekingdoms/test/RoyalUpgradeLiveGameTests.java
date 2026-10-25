@@ -55,8 +55,8 @@ import org.millenaire.village.VillageChunkLoader;
 import org.millenaire.village.VillageSavedData;
 import org.millenaire.world.VillageSpawner;
 
-/** A real pre-existing native upgrade crosses the JVM boundary with unpaid royal work waiting behind it.
- * Only original NPC goals finish both tasks; after setup no observe/retry/step drives the royal scheduler. */
+/** Genuine original NPCs build a non-centre structure, persist its first paid upgrade, then finish it
+ * and a second more expensive upgrade in the read JVM. Test-only supply/clock fixtures are explicit. */
 @PrefixGameTestTemplate(false)
 public final class RoyalUpgradeLiveGameTests {
     @GameTest(templateNamespace="millenairekingdoms_royal_live_tests",template="empty",batch="royal_player_upgrade",timeoutTicks=120_000)
