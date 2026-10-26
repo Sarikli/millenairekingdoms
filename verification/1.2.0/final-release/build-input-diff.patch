@@ -1,0 +1,7 @@
+diff --git a/gradle.properties b/gradle.properties
+index bf40816..19efba2 100644
+--- a/gradle.properties
++++ b/gradle.properties
+@@ -14 +14 @@ mod_name=Mill\u00e9naire Kingdoms
+-mod_version=1.2.0-rc.10
++mod_version=1.2.0

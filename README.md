@@ -1,12 +1,7 @@
 # Millénaire Kingdoms
 
-> **RC.10 chronicle revision:** event-first EN/TR prose, occasional word-level Ethos cues, no repeated preambles or closing mottos. [New JAR/checksum](releases/1.2.0-rc.10/) · [actual examples](docs/1.2.0_NARRATIVE_EXAMPLES.md) · [scope and exact verification](docs/1.2.0_NARRATIVE_REWRITE.md).
-
-> **1.2.0 release preparation complete:** political villages only on the Atlas, fully developed generated capitals and a50-unit shipment protection ceiling. [Current changes and validation](docs/1.2.0_RELEASE_PREPARATION.md).
-
-> **By Royal Decree, final stabilization.** Targets original Millénaire9.0.3; RC.9 passed40paired packages; its preserved evidence remains historical. [Prepared1.2.0 JAR/checksum/release notes](releases/1.2.0/) · [complete verification/source/hash/remaining review limits](docs/1.2.0_RC9_REPORT.md).
-> Settlement-only Atlas, persistent shared kingdom colors, conditional unloaded NPC planning, native/strategic warfare and conserving real-coin maintenance are implemented. [Current status, exact evidence and remaining limits](docs/1.2.0_FINAL_STABILIZATION.md) · [complete accepted requirements](docs/1.2.0_FINAL_STABILIZATION_REQUIREMENTS.md).
-> Same feature branch/Draft PR3; no stable release or main merge. [Progress](docs/1.2.0_PROGRESS.md) · [preserved RC.8](releases/1.2.0-rc.8/) · [original alpha.3](releases/1.2.0-rc8-alpha.3/). Historical artifacts and verification evidence remain preserved.
+> **1.2.0 — By Royal Decree.** [Stable release](https://github.com/Sarikli/millenairekingdoms/releases/tag/1.2.0) · [JAR, checksum and bilingual release notes](releases/1.2.0-final/) · [final verification](docs/1.2.0_FINAL_RELEASE.md).
+> Royal construction and upgrades, paid shipments, autonomous kingdoms, village-only political atlas and revised chronicles. [Actual EN/TR examples](docs/1.2.0_NARRATIVE_EXAMPLES.md) · [player guide](docs/1.2.0_USER_GUIDE.md) · [progress](docs/1.2.0_PROGRESS.md). Previous artifacts and their verification remain preserved. PR3 continues separately; `main` is not merged.
 
 A medieval kingdom layer for [Millénaire](https://millenaire.org) villages: NPC kingdoms with their own capitals,
 player rulers, diplomacy, war and peace, conquest through native raids and persistent unattended strategic engagements, daily taxes paid into a capital
@@ -18,7 +13,7 @@ left untouched, and the original Millénaire JAR is never modified.
 
 | | |
 |---|---|
-| Development version |1.2.0-rc.10 (chronicle revision; manual client/online gates open) |
+| Stable version | 1.2.0 — By Royal Decree |
 | Minecraft | 1.21.1 |
 | Loader | NeoForge 21.1.259 |
 | Required dependency | Millénaire 9.0.3 |
@@ -26,10 +21,7 @@ left untouched, and the original Millénaire JAR is never modified.
 | Mod ID | `millenairekingdoms` |
 | Languages | All26 original Millénaire9.0.3 locales; new translations are AI/machine-assisted drafts pending native review |
 
-1.1.1 is a maintenance build: expired raid orders, ruler-transition cleanup and conquest diplomacy are fixed;
-name-based commands and save-compatibility tests are strengthened. No new gameplay system is added.
-A stable tag and GitHub Release have not been published. See the [maintenance report](TEST_RAPORU_1_1_1.md)
-and [changelog](CHANGELOG.md).
+See the [bilingual release notes](releases/1.2.0-final/RELEASE_NOTES.md) and [changelog](CHANGELOG.md). The final package includes the RC.10 prose revision; the earlier staged `releases/1.2.0/` image is retained only as historical evidence.
 
 ## Features
 
@@ -67,7 +59,7 @@ and [changelog](CHANGELOG.md).
 
 ## Installation
 
-For this **1.2.0 development branch**, use the matching addon build and original **Millénaire 9.0.3** with the versions above; see the [current player guide](docs/1.2.0_USER_GUIDE.md). There is no stable 1.2.0 publication. Keep a whole-world pre-upgrade backup.
+Download **[millenairekingdoms-1.2.0.jar](https://github.com/Sarikli/millenairekingdoms/releases/download/1.2.0/millenairekingdoms-1.2.0.jar)** and install it alongside the original **Millénaire 9.0.3** with the versions above. Use the same addon/dependency versions on the server and all clients, removing older addon copies. See the [current player guide](docs/1.2.0_USER_GUIDE.md). Keep a whole-world pre-upgrade backup.
 
 ### Historical 1.1.1 installation
 
@@ -126,12 +118,12 @@ Village targets and operator kingdom targets accept exact names or UUIDs. Quote 
 
 ## Save format
 
-Kingdom data is stored per dimension in `data/millenairekingdoms_kingdoms.dat`, currently using save format 6.
+Kingdom data is stored per dimension in `data/millenairekingdoms_kingdoms.dat`, currently using save format 7. Financial, construction, shipment and history stores are versioned separately; see the [current compatibility policy](docs/1.2.0_SAVE_COMPATIBILITY.md).
 
-- Worlds from older versions (formats 1 to 5) load without losing data and are upgraded to format 6 on the next save.
-- The upgrade cannot be undone: versions before 1.0.0 cannot open a format 6 file.
+- Political registry formats 1–6 remain readable and migrate lazily; format 7 retains causal publication identity.
+- Downgrading requires a matching whole-world backup. Older addons do not understand all new records or pending paid work.
 - A damaged file, or one written by a newer version, is never overwritten with empty data.
-- 1.1.1 keeps format 6 and preserves valid pending orders on load. Changing a ruler cancels waiting orders
+- Historical 1.1.1 used format 6. Changing a ruler cancels waiting orders
   from the old tenure; active raids finish normally. Unresolved applications to kingdoms returning to NPC rule
   are withdrawn so villages can apply again. Legacy orphan applications are released on the next kingdom day.
 

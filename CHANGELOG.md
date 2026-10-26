@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0 — 2026-10-27 — By Royal Decree
+
+- Finalize the verified RC.10 gameplay and language payload as stable 1.2.0; only JAR version metadata changes.
+- Include paid royal construction, persistent queues, non-centre upgrades, icon-based shipment selection, level-scaled capital income and Ethos-aware NPC investment.
+- Include native/strategic warfare, conserving treasury maintenance, village-only political atlas, fully developed generated capitals and a 50-unit shipment protection ceiling.
+- Include concise revised EN/TR chronicles with occasional word-level Ethos cues and no repeated preambles or closing mottos; retain all 26 locales and saved event facts.
+- Preserve previous artifacts and image-specific test evidence. Final-JAR lifecycle and packed-resource results are in the [final report](docs/1.2.0_FINAL_RELEASE.md); graphical/authenticated-client and linguistic limits remain explicit.
+
 ## 1.2.0-rc.10 — Chronicle prose
 
 - Remove repeated chronicler introductions and Ethos closing sentences.

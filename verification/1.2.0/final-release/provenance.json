@@ -1,0 +1,8 @@
+{
+  "source_baseline": "bbfbc608a7ceed46c8b8ac865c4b84b2e263ca91",
+  "source_change": "gradle.properties mod_version=1.2.0 only",
+  "artifact_sha256": "b7ae9fc2f208588962bac8739021b4e4169322443d475b65c672791a53a3e8dd",
+  "release_commit": "Resolve the immutable tag 1.2.0, or git log -1 --format=%H -- releases/1.2.0-final/millenairekingdoms-1.2.0.jar",
+  "prior_gameplay_proof": "../narrative-rc10/ and ../release-preparation/ and ../stabilization/rc.9/",
+  "new_gametest_runs": 0
+}

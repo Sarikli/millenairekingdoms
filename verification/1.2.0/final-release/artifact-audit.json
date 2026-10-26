@@ -1,0 +1,18 @@
+{
+  "artifact": "build/libs/millenairekingdoms-1.2.0.jar",
+  "sha256": "b7ae9fc2f208588962bac8739021b4e4169322443d475b65c672791a53a3e8dd",
+  "bytes": 1939382,
+  "baseline_rc10_sha256": "07a596e2d156b73fe70ad39f231d71366ce1ad32c0947f144a61415ccbdcbb0f",
+  "identical_production_classes": 271,
+  "identical_resources": 31,
+  "only_changed_entries": [
+    "META-INF/MANIFEST.MF",
+    "META-INF/neoforge.mods.toml"
+  ],
+  "java_class_major": 65,
+  "gameplay_and_language_payload_identical": true,
+  "no_test_or_dependency_classes": true,
+  "earlier_release_jars_unchanged": 37,
+  "protected_inputs_unchanged": true,
+  "native_dependency_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62"
+}

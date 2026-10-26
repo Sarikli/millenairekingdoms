@@ -1,0 +1,3 @@
+# Final stable1.2.0 evidence
+
+This gate changes only version metadata from RC.10. `artifact-audit.json` proves all271 production classes and all resources byte-identical. `build.log.gz`, `localization.json` and `final-production-results.json` record actual final-JAR checks. Two normal JVMs started, saved and reopened the same copied world without the test mod. No new GameTest run is claimed. Earlier exact required-test pass lines belong to the retained RC.10/staged1.2.0/RC.9 images. The copied source fixture has0 kingdoms and remains untouched; graphical/authenticated-client checks are unverified.37 prior JARs and protected inputs remain unchanged. See the final release report for complete provenance and limits.
