@@ -1,0 +1,54 @@
+name: Upload verified 1.2.0 release assets
+
+on:
+  push:
+    branches: [feature/1.2.0-by-royal-decree]
+    paths: [.github/workflows/publish-1.2.0.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-1.2.0-assets
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    if: github.repository == 'Sarikli/millenairekingdoms' && github.ref == 'refs/heads/feature/1.2.0-by-royal-decree'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refs/tags/1.2.0
+          persist-credentials: false
+          sparse-checkout: releases/1.2.0-final
+      - name: Verify the immutable release commit and artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = f31801644b724c58581c69f73b1cd0a23a3d785f
+          cd releases/1.2.0-final
+          test "$(sha256sum millenairekingdoms-1.2.0.jar | cut -d ' ' -f 1)" = b7ae9fc2f208588962bac8739021b4e4169322443d475b65c672791a53a3e8dd
+          sha256sum --check SHA256SUMS
+      - name: Upload exact assets to the existing draft without replacing files
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: Sarikli/millenairekingdoms
+        run: |
+          set -euo pipefail
+          test "$(gh api repos/$GH_REPO/releases/424794890 --jq '.tag_name + " " + (.draft | tostring)')" = '1.2.0 true'
+          cd releases/1.2.0-final
+          for file in millenairekingdoms-1.2.0.jar SHA256SUMS RELEASE_NOTES.md; do
+            expected="sha256:$(sha256sum "$file" | cut -d ' ' -f 1)"
+            existing="$(gh api repos/$GH_REPO/releases/424794890/assets --jq ".[] | select(.name == \"$file\") | .digest")"
+            if test -n "$existing"; then
+              test "$existing" = "$expected"
+            else
+              gh release upload 1.2.0 "$file"
+            fi
+            actual="$(gh api repos/$GH_REPO/releases/424794890/assets --jq ".[] | select(.name == \"$file\") | .digest")"
+            test "$actual" = "$expected"
+          done
