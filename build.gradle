@@ -427,6 +427,28 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_npc_runtime_tests'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        royalStrategyGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_strategy_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+        }
+        royalStrategyGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_strategy_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+        }
         royalNpcLiveGameTestServer {
             type = 'gameTestServer'
             sourceSet = sourceSets.gametest
@@ -1025,3 +1047,6 @@ tasks.register('verifyLocalization') { group = 'verification'; dependsOn tasks.n
 
 tasks.named('runGeographyGameTestServerReload') { dependsOn tasks.named('runGeographyGameTestServer') }
 tasks.register('verifyGeography') { group = 'verification'; dependsOn tasks.named('runGeographyGameTestServerReload') }
+
+tasks.named('runRoyalStrategyGameTestServerReload') { dependsOn tasks.named('runRoyalStrategyGameTestServer') }
+tasks.register('verifyRoyalStrategy') { group = 'verification'; dependsOn tasks.named('runRoyalStrategyGameTestServerReload') }

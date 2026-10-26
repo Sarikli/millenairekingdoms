@@ -1,0 +1,1 @@
+Persistent strategic economy development checkpoint. Atlas/NPC scheduling/planning implemented; unattended military resolution, denomination consolidation and final appropriate regression are pending. Not release-candidate approval.

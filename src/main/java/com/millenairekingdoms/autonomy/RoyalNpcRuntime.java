@@ -56,13 +56,13 @@ public final class RoyalNpcRuntime {
         session.errors.keySet().retainAll(kingdoms.stream().map(KingdomSavedData.Kingdom::id).collect(java.util.stream.Collectors.toSet()));
         if(kingdoms.isEmpty())return session.last=new Report(0,0,System.nanoTime()-started);
         var dimension=level.dimension().location().toString();long day=Math.max(0,level.getDayTime())/EconomyService.DAY_TICKS;
-        var due=new HashMap<UUID,Long>();var path=RoyalNpcDecisionStore.directory(level);
-        if(Files.exists(path.resolve("decisions.dat")))for(var d:new RoyalNpcDecisionStore(path).entries())if(d.dimension().equals(dimension))due.merge(d.kingdom(),d.nextDay(),Math::max);
+        // Validate the old financial authorization history even when every kingdom is unloaded.
+        var path=RoyalNpcDecisionStore.directory(level);if(Files.exists(path.resolve("decisions.dat")))new RoyalNpcDecisionStore(path).entries();
         int start=0;if(session.cursor!=null){while(start<kingdoms.size() && kingdoms.get(start).id().compareTo(session.cursor)<=0)start++;start%=kingdoms.size();}
-        int inspected=Math.min(limit,kingdoms.size()),attempts=0;var service=RoyalNpcEconomyService.automatic(level);
+        int inspected=Math.min(limit,kingdoms.size()),attempts=0;var service=new RoyalStrategyService(level);
         for(int offset=0;offset<inspected;offset++){
-            var kingdom=kingdoms.get((start+offset)%kingdoms.size());var id=kingdom.id();session.cursor=id;if(day<due.getOrDefault(id,0L))continue;
-            try{var result=service.evaluate(id,day,level.getRandom());if(result.attempt()!=null)attempts++;session.errors.remove(id);}
+            var kingdom=kingdoms.get((start+offset)%kingdoms.size());var id=kingdom.id();session.cursor=id;
+            try{var result=service.step(id,day,level.getRandom());if(result!=null && result.attempt()!=null)attempts++;session.errors.remove(id);}
             catch(RuntimeException failure){long now=level.getGameTime();var last=session.errors.get(id);if(last==null || now-last>=1200){session.errors.put(id,now);LOGGER.warn("[Kingdoms] NPC economy {} remains deferred: {}",id,failure.getMessage());}}
         }
         return session.last=new Report(inspected,attempts,System.nanoTime()-started);

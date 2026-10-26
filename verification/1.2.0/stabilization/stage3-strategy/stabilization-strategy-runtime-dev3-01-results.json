@@ -1,0 +1,62 @@
+[
+  {
+    "suite": "verifyRoyalStrategy",
+    "run": "stabilization-strategy-dev3-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "6"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-strategy-dev3-01-write.log",
+        "sha256": "3f10872aa74b4c2e7a5f89380368f373af0e40b79c68282d6676ae6e513ba28f",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev3.jar",
+        "jar_sha256": "b59641853404503284f3200d6c605078b3c0f7731073d6ae2e4718cece625eee"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "6"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-strategy-dev3-01-reopen.log",
+        "sha256": "29ee13820016009e4f72d86fee7f5ce28d418439773bf23d563d6d9d2c884f57",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev3.jar",
+        "jar_sha256": "b59641853404503284f3200d6c605078b3c0f7731073d6ae2e4718cece625eee"
+      }
+    ]
+  },
+  {
+    "suite": "verifyRoyalNpcRuntime",
+    "run": "stabilization-strategy-runtime-dev3-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "4"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-strategy-runtime-dev3-01-write.log",
+        "sha256": "a62525e7b2859bb25f0b438bf8f564a00d846bb74ac0cdbb8a08da31f69cf8f7",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev3.jar",
+        "jar_sha256": "b59641853404503284f3200d6c605078b3c0f7731073d6ae2e4718cece625eee"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "4"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-strategy-runtime-dev3-01-reopen.log",
+        "sha256": "5f81d86f0f74f24f0b90ebcc3627d9748e4afc761daf81f35c4fc80dc987025d",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev3.jar",
+        "jar_sha256": "b59641853404503284f3200d6c605078b3c0f7731073d6ae2e4718cece625eee"
+      }
+    ]
+  }
+]

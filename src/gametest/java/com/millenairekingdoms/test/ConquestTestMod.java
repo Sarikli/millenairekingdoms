@@ -83,6 +83,7 @@ public final class ConquestTestMod {
             event.register(RoyalNpcBudgetGameTests.class);
             event.register(RoyalNpcEconomyGameTests.class);
             event.register(RoyalNpcRuntimeGameTests.class);
+            event.register(RoyalStrategyGameTests.class);
             event.register(RoyalNpcLiveGameTests.class);
             event.register(RoyalNpcBuilderLiveGameTests.class);
             event.register(RoyalIntegrationGameTests.class);

@@ -69,13 +69,18 @@ public final class RoyalNpcEconomyService {
         return discover(data,k,day,history,limits,RoyalNpcConfig.cadence());
     }
     public Result evaluate(UUID kingdom,long day,RandomSource random){
+        return evaluateConditional(kingdom,day,random,UUID.randomUUID(),proposal->true);
+    }
+    /** A strategic intention selects a conditional need, never bypasses current domain/budget/native discovery. */
+    Result evaluateConditional(UUID kingdom,long day,RandomSource random,UUID attempt,java.util.function.Predicate<Proposal> eligible){
         thread();if(day<0)throw new IllegalArgumentException("Invalid NPC decision day");
+        var existing=decisions.load(attempt);if(existing!=null){if(!existing.kingdom().equals(kingdom) || !existing.dimension().equals(level.dimension().location().toString()) || !eligible.test(new Proposal(existing.choice(),1,existing.reason())))throw new IllegalArgumentException("Conditional identity belongs to another economic authorization");return result(existing);}
         var data=KingdomSavedData.get(level);var k=data.kingdom(kingdom);var limits=RoyalNpcConfig.budgets();
         if(!constructionEnabled() && !shippingEnabled())return new Result(null,Kind.NONE,Outcome.SKIPPED,"Both automatic economic domain trackers are paused");
         if(!limits.enabled() || k==null || !k.active() || k.fallen() || !data.npcGoverned(kingdom))return new Result(null,Kind.NONE,Outcome.SKIPPED,"New decisions disabled or not an active NPC kingdom");
         var history=history(kingdom);if(history.stream().anyMatch(d->d.nextDay()>day))return new Result(null,Kind.NONE,Outcome.SKIPPED,"Persistent economic cooldown");
-        var cadence=RoyalNpcConfig.cadence();var preview=discover(data,k,day,history,limits,cadence);var chosen=choose(preview.candidates(),random);
-        var capital=PoliticsService.village(level,k.capital());var choice=chosen==null ? Choice.none() : chosen.choice();var attempt=UUID.randomUUID();
+        var cadence=RoyalNpcConfig.cadence();var preview=discover(data,k,day,history,limits,cadence);var chosen=choose(preview.candidates().stream().filter(eligible).toList(),random);
+        var capital=PoliticsService.village(level,k.capital());var choice=chosen==null ? Choice.none() : chosen.choice();
         var decision=new Decision(attempt,level.dimension().location().toString(),kingdom,day,Math.addExact(day,cadence.attemptDays()),
                 new Budget(k.capital(),capital==null ? null : capital.getVillageTypeId(),limits.reserve(),limits.sharePermille()),choice,
                 chosen==null ? Outcome.SKIPPED : Outcome.ISSUING,bounded(chosen==null ? preview.reason() : chosen.reason()));

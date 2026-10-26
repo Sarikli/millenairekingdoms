@@ -25,10 +25,11 @@ public final class RoyalNpcRuntimeGameTests {
             var village=f.add("norman/ecclesiastique");var kingdom=f.kingdom(village);var level=h.getLevel();
             h.assertTrue(!village.isActive() && !level.isLoaded(village.getCenter()),"Reproduce a registered legitimate NPC capital with genuinely unavailable native objects");
             var report=RoyalNpcRuntime.step(level,16);var entries=new RoyalNpcDecisionStore(RoyalNpcDecisionStore.directory(level)).entries().stream().filter(d->d.kingdom().equals(kingdom.id())).toList();
-            h.assertTrue(report.inspected()>0 && entries.size()==1,"Inactive capitals cannot be filtered out before the economic scheduler records an evaluation");
-            h.assertTrue(entries.getFirst().choice().kind()==RoyalNpcDecisionStore.Kind.NONE && entries.getFirst().reason().contains("inactive/unloaded") && !level.isLoaded(village.getCenter()),"Unknown physical treasury/builders/materials defer with the real reason, no forced load or fabricated spending");
-            var diagnostics=com.millenairekingdoms.autonomy.RoyalNpcDiagnostics.inspect(level,kingdom.id(),entries.getFirst().day(),RoyalNpcEconomyService.automatic(level).inspect(kingdom.id(),entries.getFirst().day()));
-            h.assertTrue(diagnostics.government().equals("NPC") && !diagnostics.capitalLoaded() && diagnostics.lastEvaluationDay()==entries.getFirst().day() && diagnostics.nextEvaluationDay()==entries.getFirst().nextDay() && diagnostics.physicalInformation().startsWith("UNKNOWN"),"Diagnostics distinguish scheduling, persistent cooldown and unavailable physical resources");h.succeed();
+            var plan=new com.millenairekingdoms.autonomy.RoyalStrategyStore(level).read(kingdom.id());
+            h.assertTrue(report.inspected()>0 && plan!=null,"Inactive capitals cannot be filtered out before the economic scheduler records an evaluation");
+            h.assertTrue(entries.isEmpty() && plan.reason().contains("UNKNOWN") && !level.isLoaded(village.getCenter()),"Metadata planning creates no physical authorization, forced load or fabricated spending");
+            var diagnostics=com.millenairekingdoms.autonomy.RoyalNpcDiagnostics.inspect(level,kingdom.id(),plan.evaluatedDay(),RoyalNpcEconomyService.automatic(level).inspect(kingdom.id(),plan.evaluatedDay()));
+            h.assertTrue(diagnostics.government().equals("NPC") && !diagnostics.capitalLoaded() && diagnostics.lastEvaluationDay()==plan.evaluatedDay() && diagnostics.nextEvaluationDay()==plan.nextDay() && diagnostics.physicalInformation().startsWith("UNKNOWN"),"Diagnostics distinguish strategic scheduling and unavailable physical resources");h.succeed();
         }finally{com.millenairekingdoms.shipping.RoyalShipmentConfig.TRACKING.set(tracking);RoyalNpcRuntime.onStopped(new ServerStoppedEvent(h.getLevel().getServer()));}
     }
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
