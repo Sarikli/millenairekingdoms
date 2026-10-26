@@ -503,6 +503,8 @@ neoForge {
             systemProperty 'kingdoms.tests.persistence', 'write'
             systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
             systemProperty 'kingdoms.tests.liveShipments', 'true'
+            systemProperty 'kingdoms.tests.liveConstruction', 'true'
+            systemProperty 'kingdoms.tests.liveConsolidation', 'true'
         }
         nativeBattleGameTestServerReload {
             type = 'gameTestServer'
@@ -514,6 +516,8 @@ neoForge {
             systemProperty 'kingdoms.tests.persistence', 'read'
             systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
             systemProperty 'kingdoms.tests.liveShipments', 'true'
+            systemProperty 'kingdoms.tests.liveConstruction', 'true'
+            systemProperty 'kingdoms.tests.liveConsolidation', 'true'
         }
         nativeWarGameTestServer {
             type = 'gameTestServer'
@@ -525,6 +529,8 @@ neoForge {
             systemProperty 'kingdoms.tests.persistence', 'write'
             systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
             systemProperty 'kingdoms.tests.liveShipments', 'true'
+            systemProperty 'kingdoms.tests.liveConstruction', 'true'
+            systemProperty 'kingdoms.tests.liveConsolidation', 'true'
         }
         nativeWarGameTestServerReload {
             type = 'gameTestServer'
@@ -536,6 +542,8 @@ neoForge {
             systemProperty 'kingdoms.tests.persistence', 'read'
             systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
             systemProperty 'kingdoms.tests.liveShipments', 'true'
+            systemProperty 'kingdoms.tests.liveConstruction', 'true'
+            systemProperty 'kingdoms.tests.liveConsolidation', 'true'
         }
         royalNpcLiveGameTestServer {
             type = 'gameTestServer'

@@ -1,15 +1,11 @@
 # Millénaire Kingdoms
 
-> **1.2.0 development branch — By Royal Decree.** This branch targets Millénaire 9.0.3.
-> The experimental alpha adds persistent literary chronicles and a standalone political atlas to real-coin payments, native construction/upgrades and protected shipments. Manual client/online gates remain open.
-> **Current alpha.3:** ocean scanning and its client layer are completely disabled at the user's request; the political atlas and26-language chronicles remain. [Current JAR/checksum](releases/1.2.0-rc8-alpha.3/) · [deactivation report](docs/1.2.0_OCEAN_DISABLED.md).
-> See [progress](docs/1.2.0_PROGRESS.md) and [development setup](docs/1.2.0_DEVELOPMENT.md).
-> [RC8 alpha JAR/checksum and report](releases/1.2.0-rc8-alpha/) · [preserved RC.8](releases/1.2.0-rc.8/) · [open stock investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md).
-> [Preserved RC.1 technical report](docs/1.2.0_RELEASE_REPORT.md).
-> Historical 1.1.1 release artifacts and reports remain unchanged.
+> **1.2.0 — By Royal Decree, final stabilization.** Targets original Millénaire9.0.3; current RC.9 source is undergoing the final40-package write/reopen and production-server gates. Latest focused verified [dev6 JAR/checksum](releases/1.2.0-rc8-alpha.4.dev6/).
+> Settlement-only Atlas, persistent shared kingdom colors, conditional unloaded NPC planning, native/strategic warfare and conserving real-coin maintenance are implemented. [Current status, exact evidence and remaining limits](docs/1.2.0_FINAL_STABILIZATION.md) · [complete accepted requirements](docs/1.2.0_FINAL_STABILIZATION_REQUIREMENTS.md).
+> Same feature branch/Draft PR3; no stable release or main merge. [Progress](docs/1.2.0_PROGRESS.md) · [preserved RC.8](releases/1.2.0-rc.8/) · [original alpha.3](releases/1.2.0-rc8-alpha.3/) · [open old-world stock investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md). Historical artifacts/reports remain unchanged.
 
 A medieval kingdom layer for [Millénaire](https://millenaire.org) villages: NPC kingdoms with their own capitals,
-player rulers, diplomacy, war and peace, conquest through **real Millénaire raids**, daily taxes paid into a capital
+player rulers, diplomacy, war and peace, conquest through native raids and persistent unattended strategic engagements, daily taxes paid into a capital
 treasury, and independent villages that grow into kingdoms of their own. Everything is managed from an in-game
 kingdom screen, so no commands need to be memorised.
 
@@ -18,7 +14,7 @@ left untouched, and the original Millénaire JAR is never modified.
 
 | | |
 |---|---|
-| Development version | 1.2.0-rc8-alpha.3 (experimental; ocean surveying disabled) |
+| Development version | 1.2.0-rc.9 (final verification in progress) |
 | Minecraft | 1.21.1 |
 | Loader | NeoForge 21.1.259 |
 | Required dependency | Millénaire 9.0.3 |
@@ -36,10 +32,10 @@ and [changelog](CHANGELOG.md).
 - **Kingdom screen.** Press **K** (rebindable under Controls → Key Binds → Millénaire Kingdoms) or run `/kingdom`.
   Five main tabs: My Kingdom, Military, Diplomacy, Treasury and Rulership. Open Construction and Shipping using the two buttons inside Rulership; click Rulership or press Esc to return. Greyed-out buttons explain why they are disabled,
   and every action is checked again on the server.
-- **Chronicles and political atlas.** Open History/Tarihçe at the kingdom screen's bottom-left. Read kingdom/world events, search fallen archives, filter dates/types and locate known historical places on a separate full-screen political atlas. Stable realm colors, native village icons, capitals, borders, zoom/pan and information connect to village/kingdom history. Old founding dates stay unknown; original NPC work and real financial/cargo rules remain. See [usage, privacy and verified scope](docs/1.2.0_RC8_ALPHA_REPORT.md).
+- **Chronicles and political atlas.** Open History/Tarihçe at the kingdom screen's bottom-left. Read kingdom/world events, search fallen archives, filter dates/types and locate known historical places on a separate full-screen political atlas. All settlements of one kingdom share a persistent color/name; native village icons, capital crowns, zoom/pan and information connect to village/kingdom history. Ocean scanning and territorial polygon rendering are removed. Old founding dates stay unknown; original NPC work and real financial/cargo rules remain. See [usage, privacy and verified scope](docs/1.2.0_RC8_ALPHA_REPORT.md).
 - **Player rulership.** Claim an unruled kingdom at its capital with a combined Millénaire reputation of 32768 or more.
   Political decisions need 8192. A kingdom has at most one ruler, and a player rules at most one kingdom.
-- **Conquest.** Villages change hands only through real Millénaire raids, without looting. An independent village falls
+- **Conquest.** Active regions use original native raids; genuinely unloaded NPC war regions can resolve a persistent opposed-dice engagement using actual native military records. Existing political conquest requirements remain, without invented physical deaths or loot. An independent village falls
   after one victory and a rival kingdom's village after two victories during an active war. A capital can be attacked
   once the attacker holds 60% of the villages the defender had when the war began; two victories there end that kingdom.
 - **Raid orders.** Rulers pick the target and the village that sends the soldiers. Military readiness, a one-day
@@ -52,6 +48,7 @@ and [changelog](CHANGELOG.md).
   relation with its capital reaches +50.
 - **Income and treasury.** Each member village produces its town hall level × 4 deniers per day. Real coins go into the
   capital town hall's storage, and the ruler can withdraw them from the kingdom screen while at the capital.
+- **Conserving treasury maintenance.** Useful bounded maintenance converts64bronze→1silver→(64silver)1gold in one verified physical chest, conserving exact value and preserving payment/cargo recovery. Unavailable storage is deferred.
 - **Natural capitals.** About 10% of newly generated natural villages, at least 1,000 blocks from any living capital,
   start as NPC capitals with a fully upgraded town hall.
 - **Kingdoms founded by development.** An independent NPC village that completes town hall level 3 through
