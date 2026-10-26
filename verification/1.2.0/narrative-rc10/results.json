@@ -1,0 +1,140 @@
+{
+  "version": "1.2.0-rc.10",
+  "source_commit": "b4c234679ebae452dfbac5f16ec3187043a1f23b",
+  "final_jar_sha256": "07a596e2d156b73fe70ad39f231d71366ce1ad32c0947f144a61415ccbdcbb0f",
+  "final_packages": 2,
+  "final_gametest_jvms": 4,
+  "required_per_overall_pass": 46,
+  "final_results": [
+    {
+      "suite": "verifyHistory",
+      "run": "narrative-rc10-history-02",
+      "required_per_phase": 38,
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "38"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/narrative-rc10-history-02-write.log",
+          "sha256": "2d2aa7aaaf3fafb9df2adba7652da03de28b94d92d2d09ebe27011ae1f12c1a1",
+          "jar": "millenairekingdoms-1.2.0-rc.10.jar",
+          "jar_sha256": "07a596e2d156b73fe70ad39f231d71366ce1ad32c0947f144a61415ccbdcbb0f"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "38"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/narrative-rc10-history-02-reopen.log",
+          "sha256": "ca793dd9046f596a2af22ad5e011086a06d7d12c9ae1767c7e0ea585dff53d00",
+          "jar": "millenairekingdoms-1.2.0-rc.10.jar",
+          "jar_sha256": "07a596e2d156b73fe70ad39f231d71366ce1ad32c0947f144a61415ccbdcbb0f"
+        }
+      ]
+    },
+    {
+      "suite": "verifyLocalization",
+      "run": "narrative-rc10-localization-02",
+      "required_per_phase": 8,
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "8"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/narrative-rc10-localization-02-write.log",
+          "sha256": "242ff404aba0e9893d05c88debf1efc403d28f289c04a95a81ecc2f6a91fbc21",
+          "jar": "millenairekingdoms-1.2.0-rc.10.jar",
+          "jar_sha256": "07a596e2d156b73fe70ad39f231d71366ce1ad32c0947f144a61415ccbdcbb0f"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "8"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/narrative-rc10-localization-02-reopen.log",
+          "sha256": "a4949384a65e3049b79c6b8112eee39030fda646b2e3d0d9420f70ab9e3a1df3",
+          "jar": "millenairekingdoms-1.2.0-rc.10.jar",
+          "jar_sha256": "07a596e2d156b73fe70ad39f231d71366ce1ad32c0947f144a61415ccbdcbb0f"
+        }
+      ]
+    }
+  ],
+  "first_candidate_results": [
+    {
+      "suite": "verifyHistory",
+      "run": "narrative-rc10-history-01",
+      "required_per_phase": 38,
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "38"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/narrative-rc10-history-01-write.log",
+          "sha256": "8ff315a65657af43e3c32c28e42a4da418608d783cf208932fafad04ec693337",
+          "jar": "millenairekingdoms-1.2.0-rc.10.jar",
+          "jar_sha256": "23a41208914f5ab577da88085db2d9185b63f647f042a6ae3e6827a0e2a82a33"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "38"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/narrative-rc10-history-01-reopen.log",
+          "sha256": "adb1de81c5a68f2a3dfd32f88b36b48e87e94ee46efa4a6ee4f18a515f0e80e9",
+          "jar": "millenairekingdoms-1.2.0-rc.10.jar",
+          "jar_sha256": "23a41208914f5ab577da88085db2d9185b63f647f042a6ae3e6827a0e2a82a33"
+        }
+      ]
+    },
+    {
+      "suite": "verifyLocalization",
+      "run": "narrative-rc10-localization-01",
+      "required_per_phase": 8,
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "8"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/narrative-rc10-localization-01-write.log",
+          "sha256": "8f8f0c48b6d1149dc366eb9971e78941d1ecebdafa65c994d6ba21a96e563d6f",
+          "jar": "millenairekingdoms-1.2.0-rc.10.jar",
+          "jar_sha256": "23a41208914f5ab577da88085db2d9185b63f647f042a6ae3e6827a0e2a82a33"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "8"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/narrative-rc10-localization-01-reopen.log",
+          "sha256": "c923040919b2f8ea6e98a91823ec9e5948cbb326067bfa3bd880d5f54f503994",
+          "jar": "millenairekingdoms-1.2.0-rc.10.jar",
+          "jar_sha256": "23a41208914f5ab577da88085db2d9185b63f647f042a6ae3e6827a0e2a82a33"
+        }
+      ]
+    }
+  ],
+  "final_production_jvms": 2,
+  "earlier_production_jvms": 2,
+  "failed_attempts": 0,
+  "graphical_acceptance": "manual/unverified"
+}

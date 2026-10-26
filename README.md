@@ -1,5 +1,7 @@
 # Millénaire Kingdoms
 
+> **RC.10 chronicle revision:** event-first EN/TR prose, occasional word-level Ethos cues, no repeated preambles or closing mottos. [New JAR/checksum](releases/1.2.0-rc.10/) · [actual examples](docs/1.2.0_NARRATIVE_EXAMPLES.md) · [scope and exact verification](docs/1.2.0_NARRATIVE_REWRITE.md).
+
 > **1.2.0 release preparation complete:** political villages only on the Atlas, fully developed generated capitals and a50-unit shipment protection ceiling. [Current changes and validation](docs/1.2.0_RELEASE_PREPARATION.md).
 
 > **By Royal Decree, final stabilization.** Targets original Millénaire9.0.3; RC.9 passed40paired packages; its preserved evidence remains historical. [Prepared1.2.0 JAR/checksum/release notes](releases/1.2.0/) · [complete verification/source/hash/remaining review limits](docs/1.2.0_RC9_REPORT.md).
@@ -16,7 +18,7 @@ left untouched, and the original Millénaire JAR is never modified.
 
 | | |
 |---|---|
-| Development version |1.2.0 (release preparation; manual client/online gates open) |
+| Development version |1.2.0-rc.10 (chronicle revision; manual client/online gates open) |
 | Minecraft | 1.21.1 |
 | Loader | NeoForge 21.1.259 |
 | Required dependency | Millénaire 9.0.3 |
