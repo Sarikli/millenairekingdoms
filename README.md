@@ -1,8 +1,10 @@
 # Millénaire Kingdoms
 
+> **1.2.0 release preparation:** political villages only on the Atlas, fully developed generated capitals and a50-unit shipment protection ceiling. [Current changes and validation](docs/1.2.0_RELEASE_PREPARATION.md).
+
 > **1.2.0 — By Royal Decree, final stabilization.** Targets original Millénaire9.0.3; RC.9 passed40paired packages and normal new/legacy production-server gates. [Current JAR/checksum](releases/1.2.0-rc.9/) · [complete verification/source/hash/remaining review limits](docs/1.2.0_RC9_REPORT.md).
 > Settlement-only Atlas, persistent shared kingdom colors, conditional unloaded NPC planning, native/strategic warfare and conserving real-coin maintenance are implemented. [Current status, exact evidence and remaining limits](docs/1.2.0_FINAL_STABILIZATION.md) · [complete accepted requirements](docs/1.2.0_FINAL_STABILIZATION_REQUIREMENTS.md).
-> Same feature branch/Draft PR3; no stable release or main merge. [Progress](docs/1.2.0_PROGRESS.md) · [preserved RC.8](releases/1.2.0-rc.8/) · [original alpha.3](releases/1.2.0-rc8-alpha.3/) · [open old-world stock investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md). Historical artifacts/reports remain unchanged.
+> Same feature branch/Draft PR3; no stable release or main merge. [Progress](docs/1.2.0_PROGRESS.md) · [preserved RC.8](releases/1.2.0-rc.8/) · [original alpha.3](releases/1.2.0-rc8-alpha.3/). Historical artifacts and verification evidence remain preserved.
 
 A medieval kingdom layer for [Millénaire](https://millenaire.org) villages: NPC kingdoms with their own capitals,
 player rulers, diplomacy, war and peace, conquest through native raids and persistent unattended strategic engagements, daily taxes paid into a capital
@@ -14,7 +16,7 @@ left untouched, and the original Millénaire JAR is never modified.
 
 | | |
 |---|---|
-| Development version | 1.2.0-rc.9 (review candidate; manual client/online gates open) |
+| Development version |1.2.0 (release preparation; manual client/online gates open) |
 | Minecraft | 1.21.1 |
 | Loader | NeoForge 21.1.259 |
 | Required dependency | Millénaire 9.0.3 |
@@ -50,14 +52,14 @@ and [changelog](CHANGELOG.md).
   capital town hall's storage, and the ruler can withdraw them from the kingdom screen while at the capital.
 - **Conserving treasury maintenance.** Useful bounded maintenance converts64bronze→1silver→(64silver)1gold in one verified physical chest, conserving exact value and preserving payment/cargo recovery. Unavailable storage is deferred.
 - **Natural capitals.** About 10% of newly generated natural villages, at least 1,000 blocks from any living capital,
-  start as NPC capitals with a fully upgraded town hall.
+  start as NPC capitals with all generated buildings at their final native levels.
 - **Kingdoms founded by development.** An independent NPC village that completes town hall level 3 through
   Millénaire's normal construction gets a chance to found its own kingdom every three in-game days. The chance starts
   at 5% and rises by 5 points per further completed level, up to 100%. The village itself is not changed in any way.
 
 - **Royal commissions.** Pay real capital coins for one culturally eligible autonomous-village construction request. The original village chooses the site and its own builders use real materials; saved progress and explicit cancellation/recovery preserve natural projects.
-- **Royal shipments.** Pay normal logistics costs to transfer protected actual surplus between member villages over server-tick travel time. Full/unloaded destinations retain held cargo; normal Millénaire trade stays unrestricted.
-- **Capital ethos.** Exact native capital types give a Warlike, Peaceful, Traditionalist, Industrious or Pragmatic ethos (Töre in Turkish). Bounded NPC decisions use the same paid services, actual needs/reserves and persistent cooldowns. War increases military preference for every type; player rule excludes new NPC economics.
+- **Royal shipments.** Pay normal logistics costs to transfer actual surplus with at most50 protected units per product between member villages over server-tick travel time. Full/unloaded destinations retain held cargo; normal Millénaire trade stays unrestricted.
+- **Capital ethos.** Exact native capital types give a Warlike, Peaceful, Traditionalist, Industrious or Pragmatic ethos (Karakter in Turkish). Bounded NPC decisions use the same paid services, actual needs/reserves and persistent cooldowns. War increases military preference for every type; player rule excludes new NPC economics.
 
 [RC.5 balance changes and existing-world settings](docs/1.2.0_RC5_TIMINGS.md) describe the new defaults. Existing per-world configuration values remain in effect until edited. Configurable chances, distances and intervals can be adjusted per world. See the bilingual [1.2.0 player/operator guide](docs/1.2.0_USER_GUIDE.md), [save/downgrade policy](docs/1.2.0_SAVE_COMPATIBILITY.md), and [separate unverified graphical/online checks](docs/1.2.0_MANUAL_TESTS.md).
 

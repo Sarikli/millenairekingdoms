@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0 — release preparation
+
+- Exclude native lone structures and ruins from political atlas pages, member lists and current-structure history pins.
+- Develop every generated natural-capital building to its final native level using original rush upgrades.
+- Cap combined shipment protection at50 ordinary units per product, including older larger configured floors.
+- Remove individual save reports and conversational attribution from documentation.
+
 ## 1.2.0-rc.9 — 2026-10-26 (final stabilization review candidate)
 
 - Replace experimental ocean/territory rendering with authorized settlement markers, persistent shared kingdom colors and same-color capital crowns. Remove geography/geometry workers; preserve old caches and discovery/history. Bound exact color allocation and support8192 identities without the old size/performance failure.
