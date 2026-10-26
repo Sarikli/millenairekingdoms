@@ -16,7 +16,7 @@ public final class RoyalNpcBuilderLiveGameTests {
         h.assertTrue(AutonomyConfig.current().autonomy() && RoyalNpcConfig.cadence().intervalTicks()==600 && RoyalNpcConfig.cadence().maximumKingdoms()==2
                 && RoyalConstructionConfig.TRACKING.get() && RoyalConstructionConfig.INTERVAL.get()==100 && RoyalConstructionConfig.MAX_PER_STEP.get()==2,"Original automatic NPC and construction tracking defaults are enabled");
         var probe=new RoyalRealConstructionGameTests.Probe(h,RoyalShipmentSupport.read(),new RoyalConstructionService(h.getLevel()),true,true);probe.kingdomName="Automatic NPC builders";
-        h.onEachTick(()->{try{probe.tick();}catch(Exception failure){probe.close();throw new IllegalStateException("Automatic economic/native builder fixture: "+probe.diagnostic(),failure);}});
+        GameTestTicks.each(h,()->{try{probe.tick();}catch(Exception failure){probe.close();throw new IllegalStateException("Automatic economic/native builder fixture: "+probe.diagnostic(),failure);}});
     }
     private RoyalNpcBuilderLiveGameTests(){}
 }

@@ -29,7 +29,7 @@ import org.millenaire.world.VillageSpawner;
 public final class HistoryWorldLiveGameTests {
     @GameTest(templateNamespace="millenairekingdoms_history_world_tests",template="empty",timeoutTicks=120000)
     public static void livingNativeWorldRecordsItsOwnPoliticalTransitionsAcrossCalendarAndJvmRestart(GameTestHelper h){
-        var p=new Probe(h);h.onEachTick(()->{try{p.tick();}catch(Exception e){p.close();throw new IllegalStateException("Living historical world: "+p.diagnostic(),e);}});
+        var p=new Probe(h);GameTestTicks.each(h,()->{try{p.tick();}catch(Exception e){p.close();throw new IllegalStateException("Living historical world: "+p.diagnostic(),e);}});
     }
     private static final class Probe {
         final GameTestHelper h;final ServerLevel level;final boolean read,daylight,campaigns;final Path marker;

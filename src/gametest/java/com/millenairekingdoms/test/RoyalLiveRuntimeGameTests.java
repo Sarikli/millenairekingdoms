@@ -15,7 +15,7 @@ public final class RoyalLiveRuntimeGameTests {
                 && RoyalConstructionConfig.MAX_PER_STEP.get()==2,"Isolated event gameplay uses actual enabled production default tracking settings");
         System.out.println("ROYAL_LIVE_RUNTIME_SETTINGS enabled="+RoyalConstructionConfig.TRACKING.get()+" interval="+RoyalConstructionConfig.INTERVAL.get()+" budget="+RoyalConstructionConfig.MAX_PER_STEP.get());
         var probe=new RoyalRealConstructionGameTests.Probe(h,"read".equals(System.getProperty("kingdoms.tests.persistence")),new RoyalConstructionService(h.getLevel()),true);
-        h.onEachTick(()->{
+        GameTestTicks.each(h,()->{
             try {probe.tick();}
             catch(Exception failure) {probe.close();throw new IllegalStateException("Actual scheduled runtime fixture: "+probe.diagnostic(),failure);}
         });

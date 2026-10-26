@@ -61,7 +61,7 @@ import org.millenaire.world.VillageSpawner;
 public final class RoyalUpgradeLiveGameTests {
     @GameTest(templateNamespace="millenairekingdoms_royal_live_tests",template="empty",batch="royal_player_upgrade",timeoutTicks=120_000)
     public static void originalNpcUpgradesPersistAndChargeIncreasingFees(GameTestHelper h) {
-        var probe=new Probe(h);h.onEachTick(()->{try{probe.tick();}catch(Exception failure){probe.close();throw new IllegalStateException("Real upgrade: "+probe.describe(),failure);}});
+        var probe=new Probe(h);GameTestTicks.each(h,()->{try{probe.tick();}catch(Exception failure){probe.close();throw new IllegalStateException("Real upgrade: "+probe.describe(),failure);}});
     }
     private static final class Probe {
         final GameTestHelper h;final ServerLevel level;final boolean read,daylight;final Path marker;
