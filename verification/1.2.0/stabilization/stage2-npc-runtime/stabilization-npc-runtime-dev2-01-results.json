@@ -1,0 +1,18 @@
+[
+  {
+    "suite": "verifyRoyalNpcRuntime",
+    "run": "stabilization-npc-runtime-dev2-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 1,
+        "passes": [],
+        "build": false,
+        "log": "/workspace/royal-decree/stabilization-npc-runtime-dev2-01-write.log",
+        "sha256": "faef58d95cf21f7a24222cf10c973cf103b96e9ef94a65cff8caf1a6e98ff2f6",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev2.jar",
+        "jar_sha256": "8d4e72e481868d0d05f80a55eda93544694ae8e723b754d801654f18bd3e785b"
+      }
+    ]
+  }
+]

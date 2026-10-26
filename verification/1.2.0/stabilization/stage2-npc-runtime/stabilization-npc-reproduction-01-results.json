@@ -1,0 +1,18 @@
+[
+  {
+    "suite": "verifyRoyalNpcRuntime",
+    "run": "stabilization-npc-reproduction-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 1,
+        "passes": [],
+        "build": false,
+        "log": "/workspace/royal-decree/stabilization-npc-reproduction-01-write.log",
+        "sha256": "7ed3d4e764d537404030ea03f3b320a23f680909622033da21102667ea9c7e1d",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev1.jar",
+        "jar_sha256": "fc6cb644bbf8641eee0dd4e30d54d6d96b08306ce958078541a953376d9a9511"
+      }
+    ]
+  }
+]

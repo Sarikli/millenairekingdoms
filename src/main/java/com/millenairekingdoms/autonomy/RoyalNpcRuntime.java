@@ -18,7 +18,7 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.slf4j.Logger;
 
-/** Bounded active-NPC round robin; no remote chunks, startup purchases or replayed unissued proposals. */
+/** Bounded NPC round robin, including unloaded capitals; no forced chunks or startup purchases. */
 public final class RoyalNpcRuntime {
     private static final Logger LOGGER=LogUtils.getLogger();
     private static final Map<ServerLevel,Session> SESSIONS=new WeakHashMap<>();
@@ -51,7 +51,7 @@ public final class RoyalNpcRuntime {
     public static Report step(ServerLevel level,int limit){
         if(!level.getServer().isSameThread() || limit<1 || limit>16)throw new IllegalArgumentException("Invalid NPC economic server-thread budget");long started=System.nanoTime();var session=SESSIONS.computeIfAbsent(level,key->new Session());
         var data=KingdomSavedData.get(level);var kingdoms=data.kingdoms().stream().filter(k->k.active() && !k.fallen() && data.npcGoverned(k.id()))
-                .filter(k->{var capital=PoliticsService.village(level,k.capital());return capital!=null && capital.getTownhall()!=null && capital.getOwnerUUID()==null && capital.isActive() && level.isLoaded(capital.getCenter()) && KingdomPersonality.forCapital(level,k).specialized();})
+                .filter(k->{var capital=PoliticsService.village(level,k.capital());return capital!=null && capital.getTownhall()!=null && capital.getOwnerUUID()==null && KingdomPersonality.forCapital(level,k).specialized();})
                 .sorted(Comparator.comparing(KingdomSavedData.Kingdom::id)).toList();
         session.errors.keySet().retainAll(kingdoms.stream().map(KingdomSavedData.Kingdom::id).collect(java.util.stream.Collectors.toSet()));
         if(kingdoms.isEmpty())return session.last=new Report(0,0,System.nanoTime()-started);

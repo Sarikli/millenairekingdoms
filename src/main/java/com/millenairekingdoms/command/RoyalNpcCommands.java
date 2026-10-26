@@ -22,8 +22,9 @@ public final class RoyalNpcCommands {
                 .then(Commands.literal("explain").then(PoliticalArguments.kingdomArgument("kingdom").executes(c->guarded(c,()->{
                     var level=c.getSource().getLevel();var id=PoliticalArguments.kingdom(c,"kingdom");long day=Math.max(0,level.getDayTime())/EconomyService.DAY_TICKS;
                     var preview=RoyalNpcEconomyService.automatic(level).inspect(id,day);var budget=RoyalNpcConfig.budgets();
-                    reply(c,com.millenairekingdoms.localization.PublicText.of("NPC economics | masterAutonomy=%s | enabled=%s | reserve=%s | maxFeePermille=%s | actualFunds=%s | %s", AutonomyConfig.current().autonomy(), budget.enabled(), budget.reserve(), budget.sharePermille(), preview.funds(), preview.reason()));
+                    reply(c,com.millenairekingdoms.localization.PublicText.of("NPC economics | masterAutonomy=%s | enabled=%s | reserve=%s | maxFeePermille=%s | actualFunds=%s | %s", AutonomyConfig.current().autonomy(), budget.enabled(), budget.reserve(), budget.sharePermille(), preview.funds()<0?"UNKNOWN":Long.toString(preview.funds()), preview.reason()));
                     reply(c,com.millenairekingdoms.localization.PublicText.of("Justified candidates=%s | runtimeLast=%s", preview.candidates().size(), RoyalNpcRuntime.last(level)));
+                    reply(c,com.millenairekingdoms.localization.PublicText.of("%s",com.millenairekingdoms.autonomy.RoyalNpcDiagnostics.inspect(level,id,day,preview)));
                     preview.candidates().stream().sorted(Comparator.comparingInt(RoyalNpcEconomyService.Proposal::weight).reversed()).limit(8).forEach(p->reply(c,com.millenairekingdoms.localization.PublicText.of("%s | weight=%s | fee=%s | %s", p.choice().kind(), p.weight(), p.choice().fee(), p.reason())));
                 }))))
                 .then(Commands.literal("status").then(PoliticalArguments.kingdomArgument("kingdom").executes(c->guarded(c,()->{

@@ -203,7 +203,7 @@ public final class RoyalNpcEconomyService {
     private static boolean routeRecent(List<Decision> history,UUID a,UUID b,long day,int days){return history.stream().anyMatch(d->d.choice().kind()==Kind.SHIPMENT && day-d.day()<days
             && (a.equals(d.choice().source()) && b.equals(d.choice().target()) || b.equals(d.choice().source()) && a.equals(d.choice().target())));}
     private static Proposal choose(List<Proposal> candidates,RandomSource random){int total=0;for(var p:candidates)total=Math.addExact(total,p.weight());if(total==0)return null;int draw=random.nextInt(total);for(var p:candidates){draw-=p.weight();if(draw<0)return p;}throw new IllegalStateException("Invalid NPC candidate weights");}
-    private static Preview none(String reason){return new Preview(List.of(),0,bounded(reason));}
+    private static Preview none(String reason){return new Preview(List.of(),-1,bounded(reason));}
     private static void note(Map<String,Integer> diagnostics,String reason){diagnostics.merge(reason,1,Integer::sum);}
     private static Result result(Decision d){return new Result(d.id(),d.choice().kind(),d.outcome(),d.reason());}
     private static String bounded(String value){return value.substring(0,Math.min(512,value.length()));}
