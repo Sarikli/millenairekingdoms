@@ -1,0 +1,10 @@
+gradle.projectsEvaluated {
+    def p = gradle.rootProject
+    def directory = p.file('/workspace/millenairekingdoms/run/natural-300-world-03')
+    p.neoForge.runs.named('serverJar') {
+        gameDirectory = directory
+        systemProperty 'kingdoms.observation.mode', System.getProperty('kingdoms.observation.mode', 'write')
+        jvmArgument '-Xmx6G'
+    }
+    p.tasks.named('stageServerJar') { enabled = false }
+}
