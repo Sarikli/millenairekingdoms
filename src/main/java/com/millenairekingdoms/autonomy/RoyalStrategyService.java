@@ -30,11 +30,16 @@ public final class RoyalStrategyService {
         if(capital==null || capital.getTownhall()==null || capital.getOwnerUUID()!=null || !KingdomPersonality.forCapital(level,k).specialized()){
             invalidate(old,"Registered autonomous native capital/type unavailable; physical facts unknown");return null;
         }
-        // Already-issued domain IDs are never issued again. Their own runtimes own acceptance/completion/recovery.
+        // Existing domain work owns its recovery. Proven unperformed intentions can be reconsidered, never replayed.
         if(old!=null && (old.status()==Status.ISSUING || old.status()==Status.LINKED)){
             var decision=decisions().load(old.id());
+            if(decision!=null && (!decision.kingdom().equals(old.kingdom()) || !decision.dimension().equals(old.dimension()) || !decision.budget().capital().equals(old.capital())))throw new IllegalStateException("Strategic decision binding changed; retain original recovery owner");
             if(decision!=null && old.status()==Status.ISSUING){var linked=old.status(Status.LINKED,"Existing economic authorization "+decision.id()+"; domain runtime owns completion/recovery");store.write(old,linked);old=linked;}
-            if(old.status()==Status.ISSUING || day<old.nextDay() || !domainTerminal(old))return null;
+            if(day<Math.max(old.nextDay(),decision==null?old.nextDay():decision.nextDay()))return null;
+            if(unperformed(old)){
+                var retired=old.status(Status.INVALIDATED,"Interrupted intention "+old.id()+" has no construction, shipment or payment record after cooldown; retire without replay, then evaluate a fresh need");store.write(old,retired);return null;
+            }
+            if(old.status()==Status.ISSUING || !domainTerminal(old))return null;
         }
         if(old!=null && old.status()!=Status.INVALIDATED && (!old.capital().equals(k.capital()) || !old.capitalType().equals(capital.getVillageTypeId()) || old.target()!=null && !kingdom.equals(data.owner(old.target())))){
             invalidate(old,"Capital/type/membership changed before execution; conditional plan cancelled without payment");return null;
@@ -88,6 +93,14 @@ public final class RoyalStrategyService {
         return out.stream().anyMatch(Need::logistics)?out.stream().filter(Need::logistics).toList():out;
     }
     private String fingerprint(KingdomSavedData data,KingdomSavedData.Kingdom k,UUID target){var war=data.activeWar(k.id());var s=new StringBuilder().append(k.capital()).append('/').append(war==null?"PEACE":war.id());if(target!=null){var v=PoliticsService.village(level,target);s.append('/').append(target).append('/').append(data.owner(target));if(v!=null)s.append('/').append(v.getVillageTypeId()).append('/').append(v.getPendingProject()).append('/').append(v.getBuildings().stream().map(b->b.getId()+":"+b.getPlanSetId()+":"+b.getLevel()+":"+b.getStatus()).sorted().toList());}return UUID.nameUUIDFromBytes(s.toString().getBytes(StandardCharsets.UTF_8)).toString();}
+    /** Domain intents precede payments and physical effects. All three strict stores must prove absence.
+     * Any existing/unknown record keeps the original recovery owner; this never resets a decision or payment. */
+    private boolean unperformed(Plan plan){
+        var root=level.getServer().getWorldPath(net.minecraft.world.level.storage.LevelResource.ROOT).resolve("data/millenairekingdoms");
+        var construction=root.resolve("royal-construction");if(Files.exists(construction.resolve("orders.dat")) && new RoyalConstructionStore(construction).load(plan.id())!=null)return false;
+        var shipments=com.millenairekingdoms.shipping.RoyalShipmentService.directory(level);if(Files.exists(shipments.resolve("shipments.dat")) && new com.millenairekingdoms.shipping.RoyalShipmentStore(shipments).load(plan.id())!=null)return false;
+        var payments=root.resolve("royal-payments");return !Files.exists(payments) || new RoyalPaymentJournal(payments).load(plan.id())==null;
+    }
     private boolean domainTerminal(Plan plan){
         var d=decisions().load(plan.id());if(d==null)return false;
         if(d.choice().kind()==RoyalNpcDecisionStore.Kind.CONSTRUCTION){var path=level.getServer().getWorldPath(net.minecraft.world.level.storage.LevelResource.ROOT).resolve("data/millenairekingdoms/royal-construction");if(!Files.exists(path.resolve("orders.dat")))return false;var entry=new RoyalConstructionStore(path).load(plan.id());return entry!=null && entry.terminal();}

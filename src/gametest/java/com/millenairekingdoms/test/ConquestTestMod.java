@@ -21,6 +21,7 @@ public final class ConquestTestMod {
             event.register(LocalizationGameTests.class);
             event.register(GeographyDisabledGameTests.class);
             event.register(ChronicleViewGameTests.class);
+            event.register(AtlasPerformanceGameTests.class);
             event.register(AtlasGameTests.class);
             event.register(AtlasViewGameTests.class);
             event.register(AtlasSyncGameTests.class);
@@ -86,6 +87,8 @@ public final class ConquestTestMod {
             event.register(RoyalNpcBudgetGameTests.class);
             event.register(RoyalNpcEconomyGameTests.class);
             event.register(RoyalNpcRuntimeGameTests.class);
+            event.register(RoyalStrategyCrashGameTests.class);
+            event.register(RoyalStrategyRecoveryGameTests.class);
             event.register(RoyalStrategyGameTests.class);
             event.register(StrategicMilitaryGameTests.class);
             event.register(StrategicCrashGameTests.class);

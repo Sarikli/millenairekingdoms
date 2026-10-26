@@ -75,15 +75,16 @@ public final class RoyalStrategyGameTests {
         h.assertTrue(AutonomyConfig.current().autonomy(),"Actual production economic events are enabled");var r=RoyalShipmentSupport.realm(h,"unattended-strategy");RoyalNpcEconomyGameTests.shortage(h,r);
         r.chest(r.source()).clearContent();r.source().getTownhall().getInventory().invalidateCache();r.save();long startDay=day(h);long[] cold={-1};
         h.getLevel().getServer().tickRateManager().requestGameToSprint(38000);
-        h.onEachTick(()->{
+        class Probe implements Runnable{public void run(){
             boolean unloaded=!r.level().isLoaded(r.capital().getCenter()) && !r.level().isLoaded(r.source().getCenter()) && !r.level().isLoaded(r.target().getCenter());
             if(unloaded && cold[0]<0)cold[0]=r.level().getGameTime();
             var plan=new RoyalStrategyStore(r.level()).read(r.kingdom());
             if(unloaded && cold[0]>=0 && plan!=null && plan.evaluatedDay()>startDay && plan.metadataObservedTick()>cold[0]){
                 h.assertTrue(plan.status()==RoyalStrategyStore.Status.CONDITIONAL && plan.logistics() && r.level().getServer().getPlayerList().getPlayers().isEmpty(),"Normal events reevaluate a justified conditional native need after actual natural chunk unloading and a real day, with no nearby player");
                 h.assertTrue(new RoyalNpcDecisionStore(RoyalNpcDecisionStore.directory(r.level())).entries().stream().noneMatch(d->d.kingdom().equals(r.kingdom())),"No physical spending authorization or imaginary stock transaction is created while the villages are unavailable");
-                System.out.println("STRATEGY_UNATTENDED coldTick="+cold[0]+" evaluatedDay="+plan.evaluatedDay()+" observedTick="+plan.metadataObservedTick()+" status="+plan.status()+" players=0 physicalAuthorizations=0");r.close();h.succeed();
+                System.out.println("STRATEGY_UNATTENDED coldTick="+cold[0]+" evaluatedDay="+plan.evaluatedDay()+" observedTick="+plan.metadataObservedTick()+" status="+plan.status()+" players=0 physicalAuthorizations=0");r.close();h.succeed();return;
             }
-        });
+            h.runAfterDelay(1,()->run());
+        }}h.runAfterDelay(1,new Probe());
     }
 }

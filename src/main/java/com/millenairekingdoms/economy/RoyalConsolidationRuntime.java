@@ -23,7 +23,7 @@ public final class RoyalConsolidationRuntime {
     public static Report step(ServerLevel level,int limit){
         thread(level);if(limit<1 || limit>16)throw new IllegalArgumentException("Invalid consolidation budget");long start=System.nanoTime();var s=SESSIONS.computeIfAbsent(level,l->new Session());var data=KingdomSavedData.get(level);var capitals=data.kingdoms().stream().filter(k->k.active() && !k.fallen()).sorted(Comparator.comparing(KingdomSavedData.Kingdom::id)).toList();int inspected=Math.min(limit,capitals.size()),done=0;
         if(!capitals.isEmpty()){int offset=0;if(s.capitalCursor!=null){while(offset<capitals.size() && capitals.get(offset).id().compareTo(s.capitalCursor)<=0)offset++;offset%=capitals.size();}var service=new RoyalConsolidationService(level);
-            for(int n=0;n<inspected;n++){var k=capitals.get((offset+n)%capitals.size());s.capitalCursor=k.id();try{var result=service.consolidate(k.id());if(result.status()==RoyalConsolidationService.Status.COMMITTED)done++;s.warnings.remove("capital/"+k.id());}catch(RuntimeException failure){warn(level,s,"capital/"+k.id(),failure);}}
+            for(int n=0;n<inspected;n++){var k=capitals.get((offset+n)%capitals.size());s.capitalCursor=k.id();try{var result=service.consolidate(k.id());if(result.status()==RoyalConsolidationService.Status.COMMITTED)done++;if(result.status()==RoyalConsolidationService.Status.RECOVERY_REQUIRED)warn(level,s,"capital/"+k.id(),new IllegalStateException(result.reason()));else s.warnings.remove("capital/"+k.id());}catch(RuntimeException failure){warn(level,s,"capital/"+k.id(),failure);}}
         }
         return s.last=new Report(inspected,done,System.nanoTime()-start);
     }

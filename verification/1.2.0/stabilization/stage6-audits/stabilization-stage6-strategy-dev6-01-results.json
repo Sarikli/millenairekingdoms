@@ -1,0 +1,122 @@
+[
+  {
+    "suite": "verifyAtlas",
+    "run": "stabilization-stage6-atlas-dev6-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "21"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-stage6-atlas-dev6-01-write.log",
+        "sha256": "266655ea84ea94c065aa0f6532a21372467c96745e5445c7c76df9af52d3064e",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev6.jar",
+        "jar_sha256": "8811819418f05d61aa00445cfdf307d0589ec447eac0797ee69e504f890d55f9"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "21"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-stage6-atlas-dev6-01-reopen.log",
+        "sha256": "46634b2a9a6785db4b6193cf26902fececc55a17a6307efdb852d9f1674da97a",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev6.jar",
+        "jar_sha256": "8811819418f05d61aa00445cfdf307d0589ec447eac0797ee69e504f890d55f9"
+      }
+    ]
+  },
+  {
+    "suite": "verifyStrategyRecovery",
+    "run": "stabilization-stage6-recovery-dev6-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "3"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-stage6-recovery-dev6-01-write.log",
+        "sha256": "57dc4a4157bfe7190267ed773ba4b1f586ef61a32180bceaebf3068bbfdebf7e",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev6.jar",
+        "jar_sha256": "8811819418f05d61aa00445cfdf307d0589ec447eac0797ee69e504f890d55f9"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "3"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-stage6-recovery-dev6-01-reopen.log",
+        "sha256": "96c4b8398166ed1b637ffe5aba57d7185357a402533472bbf8dd340845e693ed",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev6.jar",
+        "jar_sha256": "8811819418f05d61aa00445cfdf307d0589ec447eac0797ee69e504f890d55f9"
+      }
+    ]
+  },
+  {
+    "suite": "verifyConsolidation",
+    "run": "stabilization-stage6-double-dev6-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "22"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-stage6-double-dev6-01-write.log",
+        "sha256": "a5f43169401e76b878017c6180cba469ffb117c901a924e81aafb3387c73c4f9",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev6.jar",
+        "jar_sha256": "8811819418f05d61aa00445cfdf307d0589ec447eac0797ee69e504f890d55f9"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "22"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-stage6-double-dev6-01-reopen.log",
+        "sha256": "bc0715d9ce33e33299b8df62d158c41c5c09cf64b5bc321f2d82eadce969e893",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev6.jar",
+        "jar_sha256": "8811819418f05d61aa00445cfdf307d0589ec447eac0797ee69e504f890d55f9"
+      }
+    ]
+  },
+  {
+    "suite": "verifyRoyalStrategy",
+    "run": "stabilization-stage6-strategy-dev6-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "7"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-stage6-strategy-dev6-01-write.log",
+        "sha256": "b4a930719c7dbcf00fe05b348f940539d7f44c67c6ae80be9b3bba9030840598",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev6.jar",
+        "jar_sha256": "8811819418f05d61aa00445cfdf307d0589ec447eac0797ee69e504f890d55f9"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "7"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-stage6-strategy-dev6-01-reopen.log",
+        "sha256": "7ec23768543f6f4f913d6bbbac9a98c6037b8c9f9949fc93088e0b2fff4312da",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev6.jar",
+        "jar_sha256": "8811819418f05d61aa00445cfdf307d0589ec447eac0797ee69e504f890d55f9"
+      }
+    ]
+  }
+]

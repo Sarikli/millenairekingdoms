@@ -16,9 +16,7 @@ runner = sys.argv[1:]
 if runner[:1] == ['--']:
     runner = runner[1:]
 runner = runner or ['bash', str(project / 'gradlew')]
-suites = {'verifyWars': 30, 'verifyConquest': 25, 'verifyStage5': 24,
-          'verifyCapitals': 5, 'verifyAutonomy': 22, 'verifyGui': 7, 'verifyFounding': 12,
-          'verifyRoyalEconomy': 46, 'verifyRoyalConstruction': 53, 'verifyRoyalRecovery': 16, 'verifyRoyalSites': 10, 'verifyRoyalLive': 1, 'verifyRoyalGui': 14, 'verifyRoyalGoods': 20, 'verifyRoyalReceipts': 12, 'verifyRoyalShipments': 49, 'verifyRoyalShipmentRuntime': 1, 'verifyRoyalShipmentLive': 1, 'verifyRoyalShipmentGui': 18, 'verifyPersonalities': 9, 'verifyRoyalPolicy': 7, 'verifyRoyalNpcBudget': 13, 'verifyRoyalNpcEconomy': 12, 'verifyRoyalNpcRuntime': 3, 'verifyRoyalNpcLive': 1, 'verifyRoyalNpcBuilders': 1, 'verifyRoyalIntegration': 9}
+suites = {'verifyWars': 30, 'verifyConquest': 25, 'verifyStage5': 26, 'verifyCapitals': 5, 'verifyAutonomy': 22, 'verifyGui': 7, 'verifyFounding': 12, 'verifyRoyalEconomy': 46, 'verifyRoyalConstruction': 55, 'verifyRoyalRecovery': 16, 'verifyRoyalSites': 10, 'verifyRoyalLive': 3, 'verifyRoyalGui': 28, 'verifyRoyalGoods': 20, 'verifyRoyalReceipts': 12, 'verifyRoyalShipments': 49, 'verifyRoyalShipmentRuntime': 1, 'verifyRoyalShipmentLive': 1, 'verifyRoyalShipmentGui': 18, 'verifyPersonalities': 9, 'verifyRoyalPolicy': 7, 'verifyRoyalNpcBudget': 13, 'verifyRoyalNpcEconomy': 12, 'verifyRoyalNpcRuntime': 4, 'verifyRoyalNpcLive': 1, 'verifyRoyalNpcBuilders': 1, 'verifyRoyalIntegration': 9, 'verifyHistory': 36, 'verifyHistoryWorld': 1, 'verifyAtlas': 21, 'verifyGeography': 4, 'verifyLocalization': 8, 'verifyRoyalStrategy': 7, 'verifyStrategyRecovery': 3, 'verifyStrategicMilitary': 11, 'verifyStrategicRestart': 1, 'verifyNativeBattle': 1, 'verifyNativeWar': 1, 'verifyConsolidation': 22, 'verifyConsolidationLive': 1}
 if runner[:1] == ['--resume-from']:
     if len(runner)<2 or runner[1] not in suites:
         raise SystemExit('--resume-from requires a known suite name')

@@ -607,6 +607,36 @@ neoForge {
             systemProperty 'kingdoms.tests.consolidationPhase', System.getProperty('kingdoms.consolidationPhase', 'prepare')
             systemProperty 'kingdoms.tests.consolidationCut', System.getProperty('kingdoms.consolidationCut', 'before-write')
         }
+        strategyRecoveryGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_strategy_recovery_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+        }
+        strategyRecoveryGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_strategy_recovery_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+        }
+        strategyEconomyCrashGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_strategy_economy_crash_tests'
+            systemProperty 'kingdoms.tests.strategyEconomyPhase', System.getProperty('kingdoms.strategyEconomyPhase', 'prepare')
+            systemProperty 'kingdoms.tests.strategyEconomyCut', System.getProperty('kingdoms.strategyEconomyCut', 'before-decision')
+        }
         strategicCrashGameTestServer {
             type = 'gameTestServer'
             sourceSet = sourceSets.gametest
@@ -1214,3 +1244,6 @@ tasks.register('verifyConsolidation') { group = 'verification'; dependsOn tasks.
 
 tasks.named('runConsolidationLiveGameTestServerReload') { dependsOn tasks.named('runConsolidationLiveGameTestServer') }
 tasks.register('verifyConsolidationLive') { group = 'verification'; dependsOn tasks.named('runConsolidationLiveGameTestServerReload') }
+
+tasks.named('runStrategyRecoveryGameTestServerReload') { dependsOn tasks.named('runStrategyRecoveryGameTestServer') }
+tasks.register('verifyStrategyRecovery') { group = 'verification'; dependsOn tasks.named('runStrategyRecoveryGameTestServerReload') }
