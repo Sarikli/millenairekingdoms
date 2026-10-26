@@ -40,6 +40,9 @@ public final class ConquestTestMod {
             event.register(TreasuryGameTests.class);
             event.register(GuiGameTests.class);
             event.register(FoundingGameTests.class);
+            event.register(RoyalConsolidationGameTests.class);
+            event.register(RoyalConsolidationLiveGameTests.class);
+            event.register(RoyalConsolidationCrashGameTests.class);
             event.register(RoyalCoinGameTests.class);
             event.register(RoyalJournalGameTests.class);
             event.register(RoyalSnapshotGameTests.class);
@@ -110,6 +113,7 @@ public final class ConquestTestMod {
             boolean liveConstruction=Boolean.getBoolean("kingdoms.tests.liveConstruction");
             com.millenairekingdoms.construction.RoyalConstructionConfig.TRACKING.set(liveConstruction);
             com.millenairekingdoms.shipping.RoyalShipmentConfig.TRACKING.set(Boolean.getBoolean("kingdoms.tests.liveShipments"));
+            com.millenairekingdoms.economy.RoyalConsolidationConfig.ENABLED.set(Boolean.getBoolean("kingdoms.tests.liveConsolidation"));
             System.out.println("KINGDOMS_TESTS: scheduled NPC autonomy="+AutonomyConfig.current().autonomy()+", founding disabled for the isolated test world");
             System.out.println("KINGDOMS_TESTS: scheduled existing construction tracking="+liveConstruction);
         });

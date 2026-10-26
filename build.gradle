@@ -559,6 +559,54 @@ neoForge {
             systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
             systemProperty 'kingdoms.tests.liveShipments', 'true'
         }
+        consolidationGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_consolidation_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        consolidationGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_consolidation_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
+        consolidationLiveGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_consolidation_live_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+            systemProperty 'kingdoms.tests.liveConsolidation', 'true'
+        }
+        consolidationLiveGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_consolidation_live_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+            systemProperty 'kingdoms.tests.liveConsolidation', 'true'
+        }
+        consolidationCrashGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_consolidation_crash_tests'
+            systemProperty 'kingdoms.tests.consolidationPhase', System.getProperty('kingdoms.consolidationPhase', 'prepare')
+            systemProperty 'kingdoms.tests.consolidationCut', System.getProperty('kingdoms.consolidationCut', 'before-write')
+        }
         strategicCrashGameTestServer {
             type = 'gameTestServer'
             sourceSet = sourceSets.gametest
@@ -1160,3 +1208,9 @@ tasks.register('verifyNativeWar') { group = 'verification'; dependsOn tasks.name
 
 tasks.named('runNativeBattleGameTestServerReload') { dependsOn tasks.named('runNativeBattleGameTestServer') }
 tasks.register('verifyNativeBattle') { group = 'verification'; dependsOn tasks.named('runNativeBattleGameTestServerReload') }
+
+tasks.named('runConsolidationGameTestServerReload') { dependsOn tasks.named('runConsolidationGameTestServer') }
+tasks.register('verifyConsolidation') { group = 'verification'; dependsOn tasks.named('runConsolidationGameTestServerReload') }
+
+tasks.named('runConsolidationLiveGameTestServerReload') { dependsOn tasks.named('runConsolidationLiveGameTestServer') }
+tasks.register('verifyConsolidationLive') { group = 'verification'; dependsOn tasks.named('runConsolidationLiveGameTestServerReload') }

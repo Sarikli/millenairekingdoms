@@ -1,0 +1,130 @@
+package com.millenairekingdoms.test;
+
+import com.millenairekingdoms.economy.*;
+import com.millenairekingdoms.economy.RoyalPaymentJournal.State;
+import com.millenairekingdoms.history.HistoryFiles;
+import com.millenairekingdoms.kingdom.KingdomSavedData;
+import java.nio.file.*;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.gametest.framework.*;
+import net.minecraft.nbt.*;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.world.level.storage.LevelResource;
+import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+import org.millenaire.building.*;
+import org.millenaire.item.*;
+
+/** Physical native storage, acknowledged chunk read-back, financial interference and separate-JVM recovery.
+ * Storage fixtures are explicitly loaded/activated, not a claim of naturally generated NPC construction. */
+@PrefixGameTestTemplate(false)
+public final class RoyalConsolidationGameTests {
+    private static final String NS="millenairekingdoms_consolidation_tests";
+    static final String PROOF="millenairekingdoms:royal_operations";
+
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void bronzeConvertsToActualNativeSilver(GameTestHelper h){conversion(h,"bronze",List.of(new ItemStack(ModItems.DENIER.get(),64)),64,0,1,0);}
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void silverConvertsToActualNativeGold(GameTestHelper h){conversion(h,"silver",List.of(new ItemStack(ModItems.DENIER_ARGENT.get(),64)),4096,1,0,0);}
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void mixedDenominationsRetainExactLeftovers(GameTestHelper h){conversion(h,"mixed",List.of(new ItemStack(ModItems.DENIER.get(),64),new ItemStack(ModItems.DENIER.get(),64),new ItemStack(ModItems.DENIER.get(),2),new ItemStack(ModItems.DENIER_ARGENT.get(),64),new ItemStack(ModItems.DENIER_ARGENT.get(),3),new ItemStack(ModItems.DENIER_OR.get(),2)),12610,3,5,2);}
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void largeFullCurrencyInventoryConserves110592(GameTestHelper h){var stacks=new ArrayList<ItemStack>();for(int n=0;n<27;n++)stacks.add(new ItemStack(ModItems.DENIER_ARGENT.get(),64));conversion(h,"large",stacks,110592,27,0,0);}
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void completelyFullInventoryNeedsNoSpareSlot(GameTestHelper h){
+        try(var f=RoyalShipmentSupport.realm(h,"consol-full")){var c=f.chest(f.capital());clear(c);c.setItem(0,new ItemStack(ModItems.DENIER.get(),64));for(int n=1;n<27;n++)c.setItem(n,new ItemStack(Items.DIAMOND,64));var r=new RoyalConsolidationService(f.level()).consolidate(f.kingdom());committed(h,r,64);h.assertTrue(c.getItem(0).is(ModItems.DENIER_ARGENT.get()) && c.getItem(0).getCount()==1,"One occupied currency slot becomes one silver without deleting goods");for(int n=1;n<27;n++)h.assertTrue(c.getItem(n).is(Items.DIAMOND) && c.getItem(n).getCount()==64,"Every full noncurrency stack is unchanged");h.succeed();}
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void protectedCoinsAndUnrelatedItemsRemainByteEquivalent(GameTestHelper h){
+        try(var f=RoyalShipmentSupport.realm(h,"consol-custom")){var c=f.chest(f.capital());clear(c);var protectedCoin=new ItemStack(ModItems.DENIER_OR.get(),3);protectedCoin.set(DataComponents.CUSTOM_NAME,Component.literal("Royal heirloom"));c.setItem(4,protectedCoin.copy());c.setItem(12,new ItemStack(Items.EMERALD,23));c.setItem(20,new ItemStack(ModItems.DENIER.get(),64));var before=slots(c);committed(h,new RoyalConsolidationService(f.level()).consolidate(f.kingdom()),64);h.assertTrue(ItemStack.matches(before.get(4),c.getItem(4)) && ItemStack.matches(before.get(12),c.getItem(12)) && f.coins()==64,"Only ordinary currency converts; protected real gold and unrelated items keep exact slots/components/counts");h.succeed();}
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void separatePhysicalChestsConserveEachContainerIndependently(GameTestHelper h){
+        try(var f=RoyalPaymentGameTests.persistentFixture(h,"consol-separate")){var positions=f.village().getTownhall().getInventory().getChestPositions();var a=f.chest();var b=chest(f.level(),positions.stream().filter(p->!p.equals(f.position())).findFirst().orElseThrow());a.setItem(0,new ItemStack(ModItems.DENIER.get(),64));b.setItem(0,new ItemStack(ModItems.DENIER_ARGENT.get(),64));var old=slots(b);var service=new RoyalConsolidationService(f.level());var r=service.consolidate(f.kingdom());committed(h,r,4160);h.assertTrue(value(a)==64 && value(b)==4096 && equal(old,slots(b)),"First operation changes one independently saved chest; other chest has exact same slots");committed(h,service.consolidate(f.kingdom()),4160);h.assertTrue(value(a)==64 && value(b)==4096 && service.consolidate(f.kingdom()).status()==RoyalConsolidationService.Status.NO_CHANGE,"Second operation independently converts the other chest; repeats never move or mint value");h.succeed();}
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void connectedDoubleChestUsesBothIdentitiesAndOneChangedHalf(GameTestHelper h)throws Exception{
+        try(var f=RoyalShipmentSupport.realm(h,"consol-double")){var level=f.level();var pos=f.capital().getCenter();var state=Blocks.CHEST.defaultBlockState().setValue(ChestBlock.TYPE,ChestType.LEFT);var partner=pos.relative(ChestBlock.getConnectedDirection(state));level.getChunkAt(partner);level.setBlock(pos,state,2);level.setBlock(partner,state.setValue(ChestBlock.TYPE,ChestType.RIGHT),2);inventory(f.capital(),List.of(pos));var a=chest(level,pos);var b=chest(level,partner);a.setItem(0,new ItemStack(ModItems.DENIER.get(),64));b.setItem(0,new ItemStack(ModItems.DENIER_ARGENT.get(),64));var service=new RoyalConsolidationService(level);committed(h,service.consolidate(f.kingdom()),4160);h.assertTrue(value(a)==64 && value(b)==4096 && b.getItem(0).is(ModItems.DENIER_ARGENT.get()),"Connected partner is counted once, persisted and unchanged in the first operation");committed(h,service.consolidate(f.kingdom()),4160);h.assertTrue(b.getItem(0).is(ModItems.DENIER_OR.get()) && value(a)+value(b)==4160,"Second half converts only its own4096, using stable native double-chest identities");h.succeed();}
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void unloadedStorageIsNeverForcedForMaintenance(GameTestHelper h)throws Exception{
+        try(var f=RoyalShipmentSupport.realm(h,"consol-unloaded")){var c=f.chest(f.capital());clear(c);c.setItem(0,new ItemStack(ModItems.DENIER.get(),64));var far=new BlockPos(8_000_000,64,8_000_000);var positions=new ArrayList<>(f.capital().getTownhall().getInventory().getChestPositions());positions.add(far);inventory(f.capital(),positions);var forced=f.level().getForcedChunks().size();refused(h,()->new RoyalConsolidationService(f.level()).consolidate(f.kingdom()));h.assertTrue(!f.level().isLoaded(far) && f.level().getForcedChunks().size()==forced && value(c)==64 && c.getItem(0).is(ModItems.DENIER.get()),"Missing storage postpones the entire physical quote without chunk access or coin conversion");h.succeed();}
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void changedAuthorityDuringPreimageFlushCannotPrepareOrConvert(GameTestHelper h){
+        try(var f=RoyalShipmentSupport.realm(h,"consol-authority")){var c=f.chest(f.capital());clear(c);c.setItem(0,new ItemStack(ModItems.DENIER.get(),64));var faulty=new RoyalTreasuryPersistence(){@Override public void flush(ServerLevel level,List<BlockPos> positions){super.flush(level,positions);KingdomSavedData.get(level).setActive(f.kingdom(),false);}};refused(h,()->service(f.level(),faulty).consolidate(f.kingdom()));h.assertTrue(c.getItem(0).is(ModItems.DENIER.get()) && pending(f.level(),f.kingdom())==null,"Capital authority is rechecked before preparing or mutating financial evidence");h.succeed();}
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void failedPhysicalFlushHasNoSuccessAndExactRetry(GameTestHelper h){
+        try(var f=RoyalShipmentSupport.realm(h,"consol-fail-before")){var c=f.chest(f.capital());clear(c);c.setItem(0,new ItemStack(ModItems.DENIER.get(),64));refused(h,()->service(f.level(),failSecond(false)).consolidate(f.kingdom()));var e=pending(f.level(),f.kingdom());h.assertTrue(e!=null && e.state()==State.PREPARED && c.getPersistentData().contains(PROOF),"An unacknowledged in-memory change is never reported successful");var s=new RoyalConsolidationService(f.level());committed(h,s.recover(e.id()),64);committed(h,s.recover(e.id()),64);h.assertTrue(value(c)==64 && s.current().stream().noneMatch(x->x.id().equals(e.id())) && s.inspect(e.id()).state()==State.COMMITTED,"Exact retry acknowledges one conversion and archives its immutable receipt");h.succeed();}
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void nativeDepositAfterLostAcknowledgementIsRetained(GameTestHelper h){interference(h,true);}
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void nativeWithdrawalAfterLostAcknowledgementIsNotReplayed(GameTestHelper h){interference(h,false);}
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void unreceiptedThirdImageIsQuarantinedButOtherTreasuryWorks(GameTestHelper h){
+        try(var f=RoyalShipmentSupport.realm(h,"consol-ambiguous");var other=RoyalShipmentSupport.realm(h,"consol-unrelated")){var c=f.chest(f.capital());clear(c);c.setItem(0,new ItemStack(ModItems.DENIER.get(),64));refused(h,()->service(f.level(),failSecond(false)).consolidate(f.kingdom()));var e=pending(f.level(),f.kingdom());c.getPersistentData().remove(PROOF);clear(c);c.setItem(0,new ItemStack(ModItems.DENIER.get(),32));new RoyalTreasuryPersistence().flush(f.level(),f.capital().getTownhall().getInventory().getChestPositions());var s=new RoyalConsolidationService(f.level());h.assertTrue(s.recover(e.id()).status()==RoyalConsolidationService.Status.RECOVERY_REQUIRED && value(c)==32,"Unreceipted third image is preserved without guessed debit/credit");refused(h,()->RoyalEconomicReservations.requireCargoAvailable(f.level(),c.getBlockPos()));refused(h,()->RoyalEconomicReservations.requireWithdrawalAvailable(f.level(),List.of(c.getBlockPos())));var oc=other.chest(other.capital());clear(oc);oc.setItem(0,new ItemStack(ModItems.DENIER.get(),64));committed(h,s.consolidate(other.kingdom()),64);h.assertTrue(value(c)==32,"Ambiguous operation guards its physical storage while unrelated legitimate maintenance continues");h.succeed();}
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void replacedPendingContainerNeverReceivesHistoricalCoins(GameTestHelper h){
+        try(var f=RoyalShipmentSupport.realm(h,"consol-replaced")){var c=f.chest(f.capital());clear(c);c.setItem(0,new ItemStack(ModItems.DENIER.get(),64));refused(h,()->service(f.level(),failSecond(false)).consolidate(f.kingdom()));var e=pending(f.level(),f.kingdom());var pos=c.getBlockPos();f.level().setBlock(pos,Blocks.AIR.defaultBlockState(),2);f.level().setBlock(pos,Blocks.CHEST.defaultBlockState(),2);var replacement=chest(f.level(),pos);replacement.setItem(0,new ItemStack(ModItems.DENIER.get(),9));h.assertTrue(new RoyalConsolidationService(f.level()).recover(e.id()).status()==RoyalConsolidationService.Status.RECOVERY_REQUIRED && value(replacement)==9,"Replacement at old coordinates has a different identity and never receives historical money");h.succeed();}
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void paidReservationsBlockMaintenanceUntilDomainCommit(GameTestHelper h){
+        try(var f=RoyalShipmentSupport.realm(h,"consol-paid")){var c=f.chest(f.capital());clear(c);c.setItem(0,new ItemStack(ModItems.DENIER.get(),64));c.setItem(1,new ItemStack(ModItems.DENIER.get(),64));var id=UUID.randomUUID();var payments=new RoyalPaymentService(f.level());payments.payNpc(f.kingdom(),id,RoyalPaymentService.Purpose.CONSTRUCTION,id,64);c.setItem(3,new ItemStack(ModItems.DENIER.get(),64));var before=slots(c);refused(h,()->new RoyalConsolidationService(f.level()).consolidate(f.kingdom()));h.assertTrue(equal(before,slots(c)),"Actual PAID but unfinished construction payment reserves its native treasury");payments.commitNpc(f.kingdom(),id);committed(h,new RoyalConsolidationService(f.level()).consolidate(f.kingdom()),128);h.succeed();}
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void preparedRefundAndRecoveryPaymentsRemainProtected(GameTestHelper h){
+        try(var f=RoyalShipmentSupport.realm(h,"consol-refund")){var c=f.chest(f.capital());clear(c);c.setItem(0,new ItemStack(ModItems.DENIER_ARGENT.get(),3));var id=UUID.randomUUID();var payments=new RoyalPaymentService(f.level());var fault=RoyalPaymentGameTests.service(f.level(),f.level().getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-payments"),failSecond(true));refused(h,()->fault.payNpc(f.kingdom(),id,RoyalPaymentService.Purpose.CONSTRUCTION,id,64));h.assertTrue(f.payments().load(id).state()==State.PREPARED,"Actual interrupted debit stays PREPARED");refused(h,()->new RoyalConsolidationService(f.level()).consolidate(f.kingdom()));payments.payNpc(f.kingdom(),id,RoyalPaymentService.Purpose.CONSTRUCTION,id,64);var refundFault=RoyalPaymentGameTests.service(f.level(),f.level().getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-payments"),failSecond(true));refused(h,()->refundFault.refundNpc(f.kingdom(),id));h.assertTrue(f.payments().load(id).state()==State.REFUND_PREPARED,"Real interrupted refund retains its lifecycle");c.setItem(4,new ItemStack(ModItems.DENIER.get(),64));var before=slots(c);refused(h,()->new RoyalConsolidationService(f.level()).consolidate(f.kingdom()));h.assertTrue(equal(before,slots(c)),"REFUND_PREPARED cannot be reformatted by maintenance");f.payments().transition(id,State.REFUND_PREPARED,State.RECOVERY_REQUIRED,f.payments().load(id).recovery());refused(h,()->new RoyalConsolidationService(f.level()).consolidate(f.kingdom()));h.assertTrue(equal(before,slots(c)),"RECOVERY_REQUIRED remains untouched");h.succeed();}
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void pendingMaintenanceBlocksNewPaymentsCargoAndWithdrawal(GameTestHelper h){
+        try(var f=RoyalShipmentSupport.realm(h,"consol-crossguard")){var c=f.chest(f.capital());clear(c);c.setItem(0,new ItemStack(ModItems.DENIER.get(),64));refused(h,()->service(f.level(),failSecond(true)).consolidate(f.kingdom()));var e=pending(f.level(),f.kingdom());refused(h,()->new RoyalPaymentService(f.level()).payNpc(f.kingdom(),UUID.randomUUID(),RoyalPaymentService.Purpose.CONSTRUCTION,UUID.randomUUID(),1));refused(h,()->RoyalEconomicReservations.requireCargoAvailable(f.level(),c.getBlockPos()));refused(h,()->RoyalEconomicReservations.requireWithdrawalAvailable(f.level(),List.of(c.getBlockPos())));committed(h,new RoyalConsolidationService(f.level()).recover(e.id()),64);RoyalEconomicReservations.requireCargoAvailable(f.level(),c.getBlockPos());var id=UUID.randomUUID();new RoyalPaymentService(f.level()).payNpc(f.kingdom(),id,RoyalPaymentService.Purpose.CONSTRUCTION,id,1);h.assertTrue(value(c)==63,"Existing acknowledgement releases all cross-protocol guards; legal payment resumes");h.succeed();}
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void futureJournalBytesArePreservedAndNeverConverted(GameTestHelper h)throws Exception{
+        try(var f=RoyalShipmentSupport.realm(h,"consol-future")){var c=f.chest(f.capital());clear(c);c.setItem(0,new ItemStack(ModItems.DENIER.get(),64));refused(h,()->service(f.level(),failSecond(true)).consolidate(f.kingdom()));var e=pending(f.level(),f.kingdom());var path=RoyalConsolidationService.directory(f.level()).resolve(e.id()+".dat");var tag=HistoryFiles.read(path);tag.putInt("format",999);HistoryFiles.write(path,tag);var bytes=Files.readAllBytes(path);try{refused(h,()->new RoyalConsolidationService(f.level()).recover(e.id()));h.assertTrue(Arrays.equals(bytes,Files.readAllBytes(path)) && value(c)==64,"Unsupported financial format is refused with identical original bytes/items");}finally{tag.putInt("format",1);HistoryFiles.write(path,tag);}committed(h,new RoyalConsolidationService(f.level()).recover(e.id()),64);h.succeed();}
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void playerTreasuryMaintenanceDoesNotGrantNpcSpendingAuthority(GameTestHelper h){
+        try(var f=RoyalShipmentSupport.realm(h,"consol-player")){f.ruler();var c=f.chest(f.capital());clear(c);c.setItem(0,new ItemStack(ModItems.DENIER.get(),64));committed(h,new RoyalConsolidationService(f.level()).consolidate(f.kingdom()),64);refused(h,()->RoyalTreasurySnapshot.forNpc(f.level(),f.kingdom()));h.assertTrue(value(c)==64,"Zero-value player maintenance does not authorize NPC spending");h.succeed();}
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void maintenanceCannotAccessInventoryOffTheServerThread(GameTestHelper h){
+        try(var f=RoyalShipmentSupport.realm(h,"consol-thread")){boolean rejected=CompletableFuture.supplyAsync(()->{try{new RoyalConsolidationService(f.level()).consolidate(f.kingdom());return false;}catch(IllegalStateException expected){return true;}}).join();h.assertTrue(rejected,"Background threads cannot quote, mutate or acknowledge physical money");h.succeed();}
+    }
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void acknowledgedAndUnacknowledgedNativeStorageReopenWithoutDuplication(GameTestHelper h){
+        var level=h.getLevel();var marker=level.getServer().getWorldPath(LevelResource.ROOT).resolve("consolidation-pair.dat");
+        if(RoyalShipmentSupport.read()){var tag=HistoryFiles.read(marker);var f=RoyalShipmentSupport.restore(h,tag.getCompound("realm"),false);var c=f.chest(f.capital());var s=new RoyalConsolidationService(level);var id=tag.getUUID("id");h.assertTrue(s.inspect(id).state()==State.PREPARED && value(c)==12642,"Real native storage reopens mixed12610 + later32 deposit with unacknowledged operation proof");committed(h,s.recover(id),12610);h.assertTrue(value(c)==12642,"Reopen keeps legitimate native deposit before further useful maintenance");committed(h,s.consolidate(f.kingdom()),12642);h.assertTrue(value(c)==12642 && s.consolidate(f.kingdom()).status()==RoyalConsolidationService.Status.NO_CHANGE,"Later32 bronze merge with the original2 without minting; canonical repeats do no work");committed(h,s.recover(id),12610);System.out.println("CONSOLIDATION_REOPEN before=12610 nativeDeposit=32 after=12642 exactOnce=true");h.succeed();return;}
+        var f=RoyalShipmentSupport.realm(h,"consol-restart");var c=f.chest(f.capital());clear(c);mixed(c);refused(h,()->service(level,failSecond(true)).consolidate(f.kingdom()));var e=pending(level,f.kingdom());c.setItem(5,new ItemStack(ModItems.DENIER.get(),32));new RoyalTreasuryPersistence().flush(level,f.capital().getTownhall().getInventory().getChestPositions());var tag=new CompoundTag();tag.put("realm",f.marker());tag.putUUID("id",e.id());HistoryFiles.write(marker,tag);f.save();h.assertTrue(value(c)==12642 && e.state()==State.PREPARED,"Persist before separate-JVM reopen without claiming consolidation success yet");h.succeed();
+    }
+
+    private static void conversion(GameTestHelper h,String name,List<ItemStack> input,long expected,int gold,int silver,int bronze){
+        try(var f=RoyalShipmentSupport.realm(h,"consol-"+name)){var c=f.chest(f.capital());clear(c);for(int n=0;n<input.size();n++)c.setItem(n,input.get(n));h.assertTrue(value(c)==expected && MoneyHelper.ARGENT_VALUE==64 && MoneyHelper.OR_VALUE==4096,"Expected value uses original native exchange constants and valid physical stack counts");var s=new RoyalConsolidationService(f.level());var result=s.consolidate(f.kingdom());committed(h,result,expected);h.assertTrue(count(c,ModItems.DENIER_OR.get())==gold && count(c,ModItems.DENIER_ARGENT.get())==silver && count(c,ModItems.DENIER.get())==bronze && value(c)==expected,"Actual saved/read-back currency matches canonical denominations and exact leftover change");h.assertTrue(s.consolidate(f.kingdom()).status()==RoyalConsolidationService.Status.NO_CHANGE,"Canonical inventory never creates additional money or journals");System.out.println("CONSOLIDATION_VALUE case="+name+" before="+expected+" after="+value(c)+" gold="+gold+" silver="+silver+" bronze="+bronze+" diskReadBack=true");h.succeed();}
+    }
+    private static void interference(GameTestHelper h,boolean deposit){
+        try(var f=RoyalShipmentSupport.realm(h,"consol-interference")){var c=f.chest(f.capital());clear(c);c.setItem(0,new ItemStack(ModItems.DENIER.get(),64));refused(h,()->service(f.level(),failSecond(true)).consolidate(f.kingdom()));var e=pending(f.level(),f.kingdom());var inventory=f.capital().getTownhall().getInventory();if(deposit)h.assertTrue(inventory.add(f.level(),ModItems.DENIER.get(),32)==32,"Original native API adds actual32 bronze");else h.assertTrue(inventory.remove(f.level(),ModItems.DENIER_ARGENT.get(),1)==1,"Original native API removes actual64 value");new RoyalTreasuryPersistence().flush(f.level(),inventory.getChestPositions());committed(h,new RoyalConsolidationService(f.level()).recover(e.id()),64);h.assertTrue(value(c)==(deposit?96:0),"Bound receipt preserves all legitimate native changes, even empty former after-image");System.out.println("CONSOLIDATION_NATIVE_INTERFERENCE deposit="+deposit+" original=64 after="+value(c)+" replay=false");h.succeed();}
+    }
+    static RoyalConsolidationService service(ServerLevel level,RoyalTreasuryPersistence persistence){try{var ctor=RoyalConsolidationService.class.getDeclaredConstructor(ServerLevel.class,RoyalTreasuryPersistence.class);ctor.setAccessible(true);return ctor.newInstance(level,persistence);}catch(ReflectiveOperationException e){throw new IllegalStateException(e);}}
+    static RoyalTreasuryPersistence failSecond(boolean save){return new RoyalTreasuryPersistence(){int n;@Override public void flush(ServerLevel level,List<BlockPos> positions){if(++n==2){if(save)super.flush(level,positions);throw new IllegalStateException("TEST lost consolidation acknowledgement at physical write boundary");}super.flush(level,positions);}};}
+    static RoyalPaymentJournal.Entry pending(ServerLevel level,UUID kingdom){return new RoyalConsolidationService(level).current().stream().filter(e->e.intent().getUUID("kingdom").equals(kingdom)).findFirst().orElse(null);}
+    static void committed(GameTestHelper h,RoyalConsolidationService.Result r,long value){h.assertTrue(r.status()==RoyalConsolidationService.Status.COMMITTED && r.beforeValue()==value && r.afterValue()==value,"Only acknowledged saved-chunk read-back may confirm exact conserving operation: "+r);}
+    static void refused(GameTestHelper h,Runnable action){boolean rejected=false;try{action.run();}catch(IllegalArgumentException|IllegalStateException expected){rejected=true;}h.assertTrue(rejected,"Unsafe/failed operation has no success receipt");}
+    static ChestBlockEntity chest(ServerLevel level,BlockPos pos){return (ChestBlockEntity)level.getBlockEntity(pos);}
+    static void clear(ChestBlockEntity c){for(int n=0;n<27;n++)c.setItem(n,ItemStack.EMPTY);}
+    static List<ItemStack> slots(ChestBlockEntity c){var result=new ArrayList<ItemStack>();for(int n=0;n<27;n++)result.add(c.getItem(n).copy());return result;}
+    static long value(ChestBlockEntity c){return RoyalCoinPlan.spendableValue(slots(c));}
+    static int count(ChestBlockEntity c,Item item){return slots(c).stream().filter(s->s.is(item)).mapToInt(ItemStack::getCount).sum();}
+    static boolean equal(List<ItemStack> a,List<ItemStack> b){if(a.size()!=b.size())return false;for(int n=0;n<a.size();n++)if(!ItemStack.matches(a.get(n),b.get(n)))return false;return true;}
+    static void mixed(ChestBlockEntity c){c.setItem(0,new ItemStack(ModItems.DENIER.get(),64));c.setItem(1,new ItemStack(ModItems.DENIER.get(),64));c.setItem(2,new ItemStack(ModItems.DENIER.get(),2));c.setItem(3,new ItemStack(ModItems.DENIER_ARGENT.get(),64));c.setItem(4,new ItemStack(ModItems.DENIER_ARGENT.get(),3));c.setItem(5,new ItemStack(ModItems.DENIER_OR.get(),2));}
+    static void inventory(org.millenaire.village.Village village,List<BlockPos> positions)throws Exception{var field=BuildingInstance.class.getDeclaredField("inventory");field.setAccessible(true);field.set(village.getTownhall(),new BuildingInventory(positions));}
+}

@@ -1,0 +1,227 @@
+{
+  "version": "1.2.0-rc8-alpha.4.dev5",
+  "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868",
+  "core": {
+    "suite": "verifyConsolidation",
+    "run": "stabilization-consolidation-dev5-02",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "22"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-consolidation-dev5-02-write.log",
+        "sha256": "e65c7be7d153da7657040b3c75b61cecec8b5a07cb8fd602b3a587b3558a76d6",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev5.jar",
+        "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "22"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-consolidation-dev5-02-reopen.log",
+        "sha256": "487871a1b1f22dddb5085ba3dca7948012c5b5f0255683b74eaae476799a0fe6",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev5.jar",
+        "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+      }
+    ]
+  },
+  "automatic": {
+    "suite": "verifyConsolidationLive",
+    "run": "stabilization-consolidation-live-dev5-04",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-consolidation-live-dev5-04-write.log",
+        "sha256": "adda41ea96cd48b2f60734877b8326a1fa0eafa753ff1793bb9ccc22df471b3d",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev5.jar",
+        "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-consolidation-live-dev5-04-reopen.log",
+        "sha256": "1f9be935e68bb377e1752c73b89858e638441128344848477d4d9919ebb17f4f",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev5.jar",
+        "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+      }
+    ]
+  },
+  "actual_process_cuts": [
+    {
+      "cut": "before-write",
+      "run": "stabilization-consolidation-cut-before-write-01",
+      "stages": [
+        {
+          "phase": "prepare",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "expected_halt": false,
+          "log": "/workspace/royal-decree/stabilization/stabilization-consolidation-cut-before-write-01-prepare.log",
+          "sha256": "55a815220a23e5db245916236540f91238266b85084f9f7fa698bc346058bd97",
+          "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+        },
+        {
+          "phase": "cut",
+          "exit": 1,
+          "passes": [],
+          "build": false,
+          "expected_halt": true,
+          "log": "/workspace/royal-decree/stabilization/stabilization-consolidation-cut-before-write-01-cut.log",
+          "sha256": "7c773718397dac03fc5d178bb161947b685c496d526f79ea533693c9a5908ce7",
+          "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+        },
+        {
+          "phase": "read",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "expected_halt": false,
+          "log": "/workspace/royal-decree/stabilization/stabilization-consolidation-cut-before-write-01-read.log",
+          "sha256": "95da0eed5ef034f7067ddeadd924af1eee2561cd6a4c4b1918142b7e55c2c8b8",
+          "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+        }
+      ]
+    },
+    {
+      "cut": "changed-chunk-only",
+      "run": "stabilization-consolidation-cut-changed-chunk-only-01",
+      "stages": [
+        {
+          "phase": "prepare",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "expected_halt": false,
+          "log": "/workspace/royal-decree/stabilization/stabilization-consolidation-cut-changed-chunk-only-01-prepare.log",
+          "sha256": "29f06d2367673ff14b228c8c3b986ccefbe998d934d32b30816f42c39f23e72b",
+          "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+        },
+        {
+          "phase": "cut",
+          "exit": 1,
+          "passes": [],
+          "build": false,
+          "expected_halt": true,
+          "log": "/workspace/royal-decree/stabilization/stabilization-consolidation-cut-changed-chunk-only-01-cut.log",
+          "sha256": "e0cb5cacc325f2e30504efa9e4236194bc1c58b50428293a273fba7c4a813857",
+          "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+        },
+        {
+          "phase": "read",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "expected_halt": false,
+          "log": "/workspace/royal-decree/stabilization/stabilization-consolidation-cut-changed-chunk-only-01-read.log",
+          "sha256": "19ea1f9a8090fb108774d9fc1e8ba8ed0bf54bd993e1e7e04162f58acb3d881b",
+          "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+        }
+      ]
+    },
+    {
+      "cut": "after-write",
+      "run": "stabilization-consolidation-cut-after-write-01",
+      "stages": [
+        {
+          "phase": "prepare",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "expected_halt": false,
+          "log": "/workspace/royal-decree/stabilization/stabilization-consolidation-cut-after-write-01-prepare.log",
+          "sha256": "1f13fa3c2125005f90bded85e4c13dffb0843bee723d0274cee8f7d518864ab3",
+          "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+        },
+        {
+          "phase": "cut",
+          "exit": 1,
+          "passes": [],
+          "build": false,
+          "expected_halt": true,
+          "log": "/workspace/royal-decree/stabilization/stabilization-consolidation-cut-after-write-01-cut.log",
+          "sha256": "ede16315dfacd7967810251ea8050316cbb3b8d6123bfdb8c3e046ffd12ddc05",
+          "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+        },
+        {
+          "phase": "read",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "expected_halt": false,
+          "log": "/workspace/royal-decree/stabilization/stabilization-consolidation-cut-after-write-01-read.log",
+          "sha256": "481c9be48c87e67416cca93a3163889ace56dd4fdc645547b47153902b1da491",
+          "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+        }
+      ]
+    },
+    {
+      "cut": "after-ack",
+      "run": "stabilization-consolidation-cut-after-ack-01",
+      "stages": [
+        {
+          "phase": "prepare",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "expected_halt": false,
+          "log": "/workspace/royal-decree/stabilization/stabilization-consolidation-cut-after-ack-01-prepare.log",
+          "sha256": "57343c83fbd29d05e7e06b9aee1e98fc0a601cf2ae1c83c4a5c599096d22dd82",
+          "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+        },
+        {
+          "phase": "cut",
+          "exit": 1,
+          "passes": [],
+          "build": false,
+          "expected_halt": true,
+          "log": "/workspace/royal-decree/stabilization/stabilization-consolidation-cut-after-ack-01-cut.log",
+          "sha256": "bb53d1f8ab360131ee99be4ef660000ea7a307c15991bef9aa74adb47a15a441",
+          "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+        },
+        {
+          "phase": "read",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "expected_halt": false,
+          "log": "/workspace/royal-decree/stabilization/stabilization-consolidation-cut-after-ack-01-read.log",
+          "sha256": "c90c7b2c0944be8b9482c1a57dbce47b2465630853645cccfe774bbff01c8e9c",
+          "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+        }
+      ]
+    }
+  ],
+  "success_policy": "Exact All N required tests passed plus exit0/BUILD SUCCESSFUL. Expected halt70 JVMs are intentional failures and not passing tests."
+}

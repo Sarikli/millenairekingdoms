@@ -16,6 +16,10 @@ public final class RoyalEconomicReservations {
     private RoyalEconomicReservations() {}
 
     public static void requireTreasuryAvailable(ServerLevel level,List<BlockPos> positions) {
+        requireTreasuryAvailable(level,positions,null);
+    }
+    static void requireTreasuryAvailable(ServerLevel level,List<BlockPos> positions,java.util.UUID ownConsolidation) {
+        RoyalConsolidationService.requireAvailable(level,positions,ownConsolidation);
         thread(level);var directory=level.getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-shipments");
         if(!Files.exists(directory.resolve("shipments.dat")))return;
         var requested=new HashSet<>(positions);var dimension=level.dimension().location().toString();
@@ -34,6 +38,7 @@ public final class RoyalEconomicReservations {
         requireTreasuryAvailable(level,positions);requireMoneyImagesAvailable(level,positions);
     }
     private static void requireMoneyImagesAvailable(ServerLevel level,List<BlockPos> positions) {
+        RoyalConsolidationService.requireAvailable(level,positions,null);
         thread(level);var requested=new HashSet<>(positions);var directory=level.getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-payments");
         if(!Files.exists(directory))return;var dimension=level.dimension().location().toString();
         for(var entry:new RoyalPaymentJournal(directory).entries()) {

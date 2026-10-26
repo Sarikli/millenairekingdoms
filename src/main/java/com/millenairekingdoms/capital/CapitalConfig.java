@@ -26,6 +26,7 @@ public final class CapitalConfig {
         com.millenairekingdoms.autonomy.RoyalNpcConfig.define(b);
         FoundingConfig.define(b);
         RoyalEconomyConfig.define(b);
+        com.millenairekingdoms.economy.RoyalConsolidationConfig.define(b);
         com.millenairekingdoms.construction.RoyalConstructionConfig.define(b);
         com.millenairekingdoms.shipping.RoyalShipmentConfig.define(b);
         com.millenairekingdoms.atlas.AtlasConfig.define(b);

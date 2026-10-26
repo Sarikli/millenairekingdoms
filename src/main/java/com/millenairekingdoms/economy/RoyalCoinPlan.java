@@ -36,6 +36,8 @@ public final class RoyalCoinPlan {
         if (amount <= 0) throw new IllegalArgumentException("A refund must be positive");
         return plan(slots, amount);
     }
+    /** Conserving denomination conversion/stack merge; authorization and physical durability belong to maintenance. */
+    public static Plan consolidate(List<ItemStack> slots) { return plan(slots,0); }
 
     /** Payment-only allocation: never move value between separately saved physical containers.
      * A full container which cannot make exact change is skipped; no partial mutation escapes planning. */

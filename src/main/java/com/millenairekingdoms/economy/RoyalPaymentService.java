@@ -273,6 +273,10 @@ public final class RoyalPaymentService {
     }
 
     private <T> T exclusive(UUID capital,Supplier<T> action) {
+        return withCapitalLock(level,capital,action);
+    }
+    /** Shared server-thread exclusion for conserving maintenance and existing spending/refunds. */
+    static <T> T withCapitalLock(ServerLevel level,UUID capital,Supplier<T> action) {
         if(!level.getServer().isSameThread()) throw new IllegalStateException("Royal payments require the server thread");
         Set<UUID> busy=BUSY.computeIfAbsent(level.getServer(),key->new HashSet<>());
         if(!busy.add(capital)) throw new IllegalStateException("Capital payment is already in progress");

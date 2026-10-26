@@ -1,0 +1,32 @@
+[
+  {
+    "suite": "verifyConsolidation",
+    "run": "stabilization-consolidation-dev5-02",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "22"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-consolidation-dev5-02-write.log",
+        "sha256": "e65c7be7d153da7657040b3c75b61cecec8b5a07cb8fd602b3a587b3558a76d6",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev5.jar",
+        "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "22"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-consolidation-dev5-02-reopen.log",
+        "sha256": "487871a1b1f22dddb5085ba3dca7948012c5b5f0255683b74eaae476799a0fe6",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev5.jar",
+        "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+      }
+    ]
+  }
+]

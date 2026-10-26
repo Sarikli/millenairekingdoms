@@ -23,6 +23,7 @@ public final class RoyalTreasurySnapshot {
     private final ServerPlayer player;
     private final UUID kingdom, capital;
     private final UUID recoveryCapital;
+    private final boolean maintenance;
     private final BuildingInventory storage;
     private final List<BlockPos> declaredChests;
     private final List<Chest> chests;
@@ -31,6 +32,8 @@ public final class RoyalTreasurySnapshot {
     public static RoyalTreasurySnapshot forNpc(ServerLevel level, UUID kingdom) {
         return new RoyalTreasurySnapshot(level,null,kingdom);
     }
+    /** No spending agency: only the package-private exactly conserving mutation accepts this snapshot. */
+    static RoyalTreasurySnapshot forMaintenance(ServerLevel level,UUID kingdom) {return new RoyalTreasurySnapshot(level,null,kingdom,null,true);}
     public static RoyalTreasurySnapshot forPlayer(ServerPlayer player) {
         thread(player.serverLevel());
         return new RoyalTreasurySnapshot(player.serverLevel(),player,PoliticsService.ruledKingdom(player).id());
@@ -44,7 +47,11 @@ public final class RoyalTreasurySnapshot {
         return new RoyalTreasurySnapshot(level,null,kingdom,java.util.Objects.requireNonNull(capital));
     }
     private RoyalTreasurySnapshot(ServerLevel level, ServerPlayer player, UUID kingdom,UUID recoveryCapital) {
+        this(level,player,kingdom,recoveryCapital,false);
+    }
+    private RoyalTreasurySnapshot(ServerLevel level, ServerPlayer player, UUID kingdom,UUID recoveryCapital,boolean maintenance) {
         thread(level);
+        this.maintenance=maintenance;
         this.level=level; this.player=player; this.kingdom=kingdom; this.recoveryCapital=recoveryCapital;
         var current=authority(); this.capital=current.capital();
         this.storage=EconomyService.storage(level,current);
@@ -77,6 +84,7 @@ public final class RoyalTreasurySnapshot {
 
     // Package-private: never expose an unjournaled mutation to GUI/network callers.
     void apply(List<ItemStack> after) {
+        if(maintenance)throw new IllegalStateException("Maintenance snapshot cannot apply a payment");
         requireUnchanged();
         if(after.size()!=slots.size()) throw new IllegalArgumentException("Invalid treasury slot image");
         int index=0;
@@ -85,6 +93,15 @@ public final class RoyalTreasurySnapshot {
             chest.entity.setChanged();
         }
         storage.invalidateCache();
+    }
+    /** A full quote is checked, but only changed slots in one physical BE may receive a mutation. */
+    void applyConservingSingle(List<ItemStack> after) {
+        if(!maintenance)throw new IllegalStateException("Conserving maintenance snapshot required");requireUnchanged();if(after.size()!=slots.size())throw new IllegalArgumentException("Invalid conserving slot image");int changed=0;
+        for(int start=0;start<after.size();start+=27){var before=slots.subList(start,start+27);var replacement=after.subList(start,start+27);if(RoyalCoinPlan.spendableValue(before)!=RoyalCoinPlan.spendableValue(replacement))throw new IllegalArgumentException("Consolidation cannot move value between physical chests");boolean different=false;
+            for(int n=0;n<27;n++){var a=before.get(n);var b=replacement.get(n);boolean same=ItemStack.matches(a,b);if(!same && (!a.isEmpty() && RoyalCoinPlan.spendableValue(List.of(a))==0 || !b.isEmpty() && RoyalCoinPlan.spendableValue(List.of(b))==0))throw new IllegalArgumentException("Protected/noncurrency inventory cannot change during consolidation");different|=!same;}if(different)changed++;
+        }
+        if(changed>1)throw new IllegalArgumentException("Only one independent physical chest may consolidate per operation");int offset=0;
+        for(var chest:chests){boolean touched=false;for(int n=0;n<27;n++){var replacement=after.get(offset++);if(!ItemStack.matches(chest.entity.getItem(n),replacement)){chest.entity.setItem(n,replacement.copy());touched=true;}}if(touched)chest.entity.setChanged();}if(changed>0)storage.invalidateCache();
     }
 
     public void requireUnchanged() {
@@ -108,6 +125,7 @@ public final class RoyalTreasurySnapshot {
     private KingdomSavedData.Kingdom authority() {
         if(player!=null && player.serverLevel()!=level) throw new IllegalArgumentException("Ruler moved to another dimension; obtain a new quote");
         var data=KingdomSavedData.get(level); var current=data.kingdom(kingdom);
+        if(maintenance){if(current==null || !current.active() || current.fallen() || !kingdom.equals(data.owner(current.capital())))throw new IllegalStateException("Current active capital identity is required for conserving maintenance");return current;}
         if(recoveryCapital!=null) {
             if(current==null || !current.active() || current.fallen() || !recoveryCapital.equals(current.capital()) || !kingdom.equals(data.owner(recoveryCapital))) {
                 throw new IllegalStateException("Original capital no longer belongs to the active kingdom; preserve retired receipt for explicit recovery");

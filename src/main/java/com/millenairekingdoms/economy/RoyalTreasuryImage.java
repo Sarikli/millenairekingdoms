@@ -189,6 +189,15 @@ final class RoyalTreasuryImage {
             if(refund ? delta<0 : delta>0) throw new IllegalStateException("Payment image transfers value between independently saved chests; preserve journal");
         }
     }
+    /** A different invariant from spending/refund direction; the existing payment guard above stays unchanged. */
+    void requireConservation() {
+        if(payment==null || refund)throw new IllegalStateException("Bound conserving operation proof required");int changed=0;
+        for(var chest:chests){if(RoyalCoinPlan.spendableValue(chest.before)!=RoyalCoinPlan.spendableValue(chest.after))throw new IllegalStateException("Consolidation moves value between physical containers");
+            for(int n=0;n<chest.before.size();n++){var a=chest.before.get(n);var b=chest.after.get(n);if(!ItemStack.matches(a,b) && (!a.isEmpty() && RoyalCoinPlan.spendableValue(List.of(a))==0 || !b.isEmpty() && RoyalCoinPlan.spendableValue(List.of(b))==0))throw new IllegalStateException("Consolidation changed unrelated/protected contents");}if(changed(chest))changed++;
+        }
+        if(changed!=1)throw new IllegalStateException("Consolidation requires exactly one independent changed container");
+    }
+    BlockPos changedPosition(){requireConservation();return chests.stream().filter(RoyalTreasuryImage::changed).findFirst().orElseThrow().position();}
 
     RoyalCoinPlan.Plan refundPlan(RoyalTreasurySnapshot quote) {
         var before=quote.slots(); var after=new ArrayList<ItemStack>(); int offset=0;

@@ -32,6 +32,7 @@ public final class RoyalReservationGameTests {
         try(var f=root(h,"reserve-expense")){
             silver(f);var op=RoyalCargoGameTests.plan(f,Role.COLLECT,f.from(),40);f.store().prepare(f.id(),op);var id=UUID.randomUUID();var payment=new RoyalPaymentService(f.level());
             refused(h,()->payment.payNpc(f.nativeFixture().kingdom(),id,RoyalPaymentService.Purpose.ADMINISTRATIVE,id,64));
+            refused(h,()->new RoyalConsolidationService(f.level()).consolidate(f.nativeFixture().kingdom()));
             h.assertTrue(coins(f)==128 && journal(f).load(id)==null && f.sourceCount()==96,"Unresolved actual cargo container blocks before any monetary intent or debit");
             f.store().returning(f.id());RoyalCargoGameTests.settle(f,op,new RoyalTreasuryPersistence());f.store().finish(f.id());
             h.assertTrue(payment.payNpc(f.nativeFixture().kingdom(),id,RoyalPaymentService.Purpose.ADMINISTRATIVE,id,64).state()==RoyalPaymentJournal.State.PAID && coins(f)==64,"Proved-unperformed cargo cancellation releases physical expense reservation");payment.commitNpc(f.nativeFixture().kingdom(),id);h.succeed();
