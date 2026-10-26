@@ -236,6 +236,14 @@ public final class NaturalCapitalGameTests {
             String problem = NaturalCapitals.spaceProblem(level, village, hall);
             if (problem != null) failures.add(type.id() + ": no space: " + problem);
             boolean developed = NaturalCapitals.develop(level, village, hall);
+            for(var building:village.getBuildings()) {
+                if(building.isSubBuilding() || building.isWallSegment())continue;
+                int end=NaturalCapitals.finalLevel(building);
+                Check physical=structure(level,village,building,building.getLevel());
+                System.out.println("CAPITAL_ALL_BUILDINGS type="+type.id()+" plan="+building.getPlanId()+" level="+building.getLevel()+"/"+end+" physical="+physical);
+                if(building.getLevel()!=end || building.getStatus()!=BuildingInstance.Status.COMPLETE || end>0 && physical.match<MIN_MATCH)
+                    failures.add(type.id()+": non-centre building "+building.getPlanId()+" level="+building.getLevel()+"/"+end+" physical="+physical);
+            }
             Check after = structure(level, village, hall, hall.getLevel());
             List<BuildingInstance> subs = village.getBuildings().stream().filter(b -> hall.getId().equals(b.getParentBuildingId())).toList();
             boolean subsDone = subs.stream().allMatch(b -> b.getStatus() == BuildingInstance.Status.COMPLETE);
@@ -377,6 +385,7 @@ public final class NaturalCapitalGameTests {
                 continue;
             }
             // 2, 7, 8, 9: kingdom record and the physical final-level town hall.
+            h.assertTrue(k!=null,c.key+": natural generation must publish a fully developed capital");
             Kingdom kingdom = data.kingdom(k);
             int last = NaturalCapitals.finalLevel(hall);
             h.assertTrue(k != null && data.isCapital(id) && kingdom.active() && !kingdom.fallen() && data.ruler(k) == null
@@ -455,6 +464,12 @@ public final class NaturalCapitalGameTests {
                     c.key + ": town hall level kept");
             Check check = structure(level, v, hall, hall.getLevel());
             h.assertTrue(check.match >= MIN_MATCH && check.added >= MIN_MATCH, c.key + ": buildings kept after restart, " + check);
+            for(var building:v.getBuildings()) {
+                if(building.isSubBuilding() || building.isWallSegment())continue;
+                var physical=structure(level,v,building,building.getLevel());
+                h.assertTrue(building.getStatus()==BuildingInstance.Status.COMPLETE && building.getLevel()==NaturalCapitals.finalLevel(building)
+                        && (building.getLevel()==0 || physical.match>=MIN_MATCH),c.key+": every generated building remains at its physical final level after a separate JVM: "+building.getPlanId()+" "+physical);
+            }
             System.out.println("CAPITAL_RESTART " + c.key + " " + v.getVillageName() + " level " + hall.getLevel() + " " + check);
         }
         int villages = manager(level).getAllVillages().size(), kingdoms = data.kingdoms().size();
@@ -505,11 +520,11 @@ public final class NaturalCapitalGameTests {
         manager(level).addVillage(v); made.add(v);
         return v;
     }
-    /** Lowest plan ground level of the type's town hall and its sub-buildings (cellars). */
+    /** Lowest ground level of every generated centre/start building; side-building cellars need real ground too. */
     private static int deepestGround(VillageType type) {
         int min = 0;
         for (VillageType.LayoutSlot slot : type.layout()) {
-            if (!"centre".equals(slot.role()) && !"townhall".equals(slot.role())) continue;
+            if (!"centre".equals(slot.role()) && !"townhall".equals(slot.role()) && !"start".equals(slot.role())) continue;
             BuildingPlanSet set = ModCultures.getBuildingPlanSet(slot.plan());
             for (var levels : set.variants().values()) for (var l : levels) min = Math.min(min, ModCultures.getBuildingPlan(l.planId()).groundLevel());
         }
@@ -519,14 +534,15 @@ public final class NaturalCapitalGameTests {
      * level down to -8). A walkable 14-block mound gives the town hall at this centre real ground below it, as normal terrain does. */
     private static void mound(ServerLevel level, BlockPos center) {
         int surface = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, center.getX(), center.getZ());
-        int height = 14, low = -75, high = 75; // a wide plateau: Millénaire wants level ground for the start buildings too
+        int height = 14, low = -125, high = 125; // Full starter layouts, including large groves/quarries, need level ground.
         var dirt = net.minecraft.world.level.block.Blocks.DIRT.defaultBlockState();
         var grass = net.minecraft.world.level.block.Blocks.GRASS_BLOCK.defaultBlockState();
         for (int dx = low - height; dx <= high + height; dx++) for (int dz = low - height; dz <= high + height; dz++) {
             int outside = Math.max(Math.max(low - dx, dx - high), Math.max(low - dz, dz - high));
             int top = height - Math.max(0, outside);
             for (int y = 0; y < top; y++)
-                level.setBlock(new BlockPos(center.getX() + dx, surface + y, center.getZ() + dz), y == top - 1 ? grass : dirt, 2);
+                level.setBlock(new BlockPos(center.getX() + dx, surface + y, center.getZ() + dz), y == top - 1 ? grass
+                        : y<top-3 ? net.minecraft.world.level.block.Blocks.STONE.defaultBlockState() : dirt, 2);
             if (top > 0) level.setBlock(new BlockPos(center.getX() + dx, surface - 1, center.getZ() + dz), dirt, 2);
         }
     }

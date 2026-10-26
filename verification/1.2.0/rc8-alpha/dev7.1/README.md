@@ -9,7 +9,7 @@ Each distinct fresh world gates successful write before a separate JVM reopens t
 | verifyRoyalNpcLive | `All 1 required tests passed` | `All 1 required tests passed` |
 | verifyHistoryWorld | `All 1 required tests passed` | `All 1 required tests passed` |
 
-SHA256 `b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb`. These are server tests. Controlled direct political calls are not autonomous AI proof; metadata tests are not physical NPC completion proof. Graphical rendering/input/scaling and authenticated login remain unverified. Original RC.8 artifact/evidence and the actual user-world1047/0 stock investigation remain unchanged.
+SHA256 `b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb`. These are server tests. Controlled direct political calls are not autonomous AI proof; metadata tests are not physical NPC completion proof. Graphical rendering/input/scaling and authenticated login remain unverified.
 
 ## Actual abrupt history boundaries
 

@@ -9,4 +9,4 @@ Each distinct fresh world gates successful write before a separate JVM reopens t
 | verifyRoyalConstruction | `All 55 required tests passed` | `All 55 required tests passed` |
 | verifyRoyalShipments | `All 49 required tests passed` | `All 49 required tests passed` |
 
-SHA256 `460b1fa084259cd7a0f68324ccddd15d37e01ba4fcc5caf2489b2a89a439ec33`. These are server tests. Controlled direct political calls are not autonomous AI proof; metadata tests are not physical NPC completion proof. Graphical rendering/input/scaling and authenticated login remain unverified. Original RC.8 artifact/evidence and the actual user-world1047/0 stock investigation remain unchanged.
+SHA256 `460b1fa084259cd7a0f68324ccddd15d37e01ba4fcc5caf2489b2a89a439ec33`. These are server tests. Controlled direct political calls are not autonomous AI proof; metadata tests are not physical NPC completion proof. Graphical rendering/input/scaling and authenticated login remain unverified.

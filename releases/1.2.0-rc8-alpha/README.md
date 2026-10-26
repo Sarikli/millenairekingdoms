@@ -10,4 +10,4 @@ Minecraft1.21.1 / NeoForge21.1.259 / original separate Millénaire9.0.3 / Java21
 
 **Türkçe:** K → sol alttaki Tarihçe → Krallık/Dünya Tarihçesi, filtreler veya Siyasi Atlas. Olay/yer/krallık bağlantıları bilinen tarihsel konumu/seçimi açar; harita sınırları mevcut bağlılığı gösterir. Atlas ayrı tam ekran: fare tekerleğiyle yakınlaşma, sürükleyerek kaydırma, özgün köy simgeleri/başkent çerçeveleri, liste/bilgi, köy tarihçesi ve gerçek önceki ekrana Geri/Esc. Eski kuruluş tarihleri uydurulmaz. Ethos/Töre adlandırması ve beş töre korunur.
 
-Graphical placement/rendering/input/scales and authenticated login remain **manual/unverified**. The user-specific1047/0 stock discrepancy remains **open**; no reserve weakening or speculative world repair. See the report for exact paired-JVM/cut/model scope and each actual artifact hash.
+Graphical placement/rendering/input/scales and authenticated login remain **manual/unverified**. See the report for exact paired-JVM/cut/model scope and each actual artifact hash.

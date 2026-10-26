@@ -58,10 +58,10 @@ public final class RoyalStockGameTests {
                     .filter(e->e.getValue()>0 && e.getValue()<=128 && e.getKey().getDefaultMaxStackSize()==64 && !coin(e.getKey()))
                     .sorted(java.util.Comparator.comparing(e->net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(e.getKey()).toString())).findFirst().orElseThrow();
             int amount=entry.getValue()+80;put(f,entry.getKey(),amount);var quote=stock(f);var slots=quote.slots();var available=quote.availability(entry.getKey());
-            h.assertTrue(available.physical()==amount && available.target()==entry.getValue() && available.available()==amount-Math.max(entry.getValue(),16)
+            h.assertTrue(available.physical()==amount && available.target()==entry.getValue() && available.available()==amount-Math.min(50,Math.max(entry.getValue(),16))
                     && available.nativeExport()==amount-entry.getValue(),"Original native target stock and configured minimum guard real ordinary chest units");
             var previous=RoyalShipmentConfig.MINIMUM_REMAINDER.get();
-            try {RoyalShipmentConfig.MINIMUM_REMAINDER.set(amount+1);h.assertTrue(quote.availability(entry.getKey()).available()==0,"Increased server reserve is rechecked without a withdrawal");}
+            try {RoyalShipmentConfig.MINIMUM_REMAINDER.set(amount+1);h.assertTrue(quote.availability(entry.getKey()).available()==amount-50,"Older excessive server floors are capped at50 without a withdrawal");}
             finally {RoyalShipmentConfig.MINIMUM_REMAINDER.set(previous);}
             quote.requireUnchanged();h.assertTrue(equal(slots,quote.slots()),"Reserve inspection never alters real goods");h.succeed();
         }
@@ -157,9 +157,9 @@ public final class RoyalStockGameTests {
             int specific=choice.definition.requiredResources().getOrDefault(key,0);put(f,item,target+need+specific+32);
             var pending=new Village.PendingProject(choice.set,choice.variant,0,false,null);f.village().setPendingProject(pending);
             var result=stock(f).availability(item);
-            h.assertTrue(new ItemStack(item).is(AnywoodHelper.LOGS_TAG) && result.construction()>=need+specific && result.available()<=32
-                    && result.nativeExport()-result.available()>=need && f.village().getPendingProject()==pending,
-                    "Actual original anywood cost is protected for a real log species even when the native per-item export helper omits generic timber needs");h.succeed();
+            h.assertTrue(new ItemStack(item).is(AnywoodHelper.LOGS_TAG) && result.construction()>=need+specific && result.retained()<=50
+                    && result.retained()>=Math.min(50,need+specific) && result.available()==Math.max(0,result.physical()-result.retained()) && f.village().getPendingProject()==pending,
+                    "Actual original anywood needs remain visible while their total shipment protection obeys the50-unit ceiling");h.succeed();
         }
     }
 
@@ -183,7 +183,7 @@ public final class RoyalStockGameTests {
                         && building.getConstructionTask().getReservedBuilder()==null,"Original finder/compiler genuinely starts nonempty native work before a builder reserves it");
                 var result=stock(f).availability(watched);
                 h.assertTrue(result.construction()>=needed && GoodAvailabilityHelper.getConstructionReservedQuantity(watched,f.level(),f.village(),null)==0
-                        && result.available()<=Math.max(0,result.physical()-needed),"Full original material cost remains protected while native builder-dependent reservation is zero");
+                        && result.retained()>=Math.min(50,needed) && result.retained()<=50,"Native work remains intact and observed while shipment protection is bounded at50");
             } finally {for(var e:original.entrySet())f.level().setBlock(e.getKey(),e.getValue(),2);}
             h.succeed();
         }
@@ -205,8 +205,8 @@ public final class RoyalStockGameTests {
                     int added=probe.village.getTownhall().getInventory().add(probe.level,Items.OAK_LOG,256);h.assertTrue(added>0,"Known test goods enter real original townhall storage");
                     var quote=RoyalVillageStock.forNpc(probe.level,probe.kingdom,probe.village.getId().uuid());var stock=quote.availability(Items.OAK_LOG);
                     long living=probe.village.getVillagerUuids().stream().filter(id->probe.level.getEntity(id) instanceof org.millenaire.entity.MillVillager).count();
-                    h.assertTrue(living>0 && stock.residents()>=required && stock.residents()>0 && stock.retained()>=stock.residents()
-                            && stock.available()<=Math.max(0,stock.physical()-stock.residents()),"Actual original spawner inhabitants retain recorded goods needs throughout the village, not only the townhall household");
+                    h.assertTrue(living>0 && stock.residents()>=required && stock.residents()>0 && stock.retained()>=Math.min(50,stock.residents())
+                            && stock.retained()<=50 && stock.available()==Math.max(0,stock.physical()-stock.retained()),"All original households contribute to diagnostics but combined shipment protection never exceeds50");
                     quote.requireUnchanged();System.out.println("ROYAL_STOCK_REAL_RESIDENTS living="+living+" residentsReserve="+stock.residents()+" physical="+stock.physical()+" retained="+stock.retained()+" available="+stock.available());
                     probe.close();h.succeed();return;
                 }

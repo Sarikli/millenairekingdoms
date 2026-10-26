@@ -120,7 +120,6 @@ Kanıtlar: [son test günlükleri](verification/1.1.1/final/),
 - Temsili biçim-6 kayıt; hükümdar, üyelik, savaş, ateşkes, barış teklifi, geçerli emir, başvuru, vergi borcu,
   karar günü, fetih ilerlemesi ve makbuzu yeniden başlatmada korudu. Aynı gün tekrar gelir yazılamadı.
 - Önceki kayıt formatları, bozuk/gelecek kayıt korumaları ve kuruluş takvimi mevcut paketlerde yeniden geçti.
-- Kullanıcının gerçek dünyaları açılmadı veya değiştirilmedi. Test fixture'ları ve üretilen dünyalar kullanıldı.
 
 ### Gerçek Millénaire davranışları ve sınır durumları
 

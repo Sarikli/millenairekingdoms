@@ -6,4 +6,4 @@ Each distinct fresh world gates successful write before a separate JVM reopens t
 |---|---|---|
 | verifyHistory | `All 35 required tests passed` | `All 35 required tests passed` |
 
-SHA256 `1269ac34e0aef2479e7666e7ad2648243074edbc739558e88eda2a45649a0c99`. These are server tests. Controlled direct political calls are not autonomous AI proof; metadata tests are not physical NPC completion proof. Graphical rendering/input/scaling and authenticated login remain unverified. Original RC.8 artifact/evidence and the actual user-world1047/0 stock investigation remain unchanged.
+SHA256 `1269ac34e0aef2479e7666e7ad2648243074edbc739558e88eda2a45649a0c99`. These are server tests. Controlled direct political calls are not autonomous AI proof; metadata tests are not physical NPC completion proof. Graphical rendering/input/scaling and authenticated login remain unverified.

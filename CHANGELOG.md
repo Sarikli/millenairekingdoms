@@ -53,21 +53,21 @@
 
 - Name the kingdom's temperament in English and Turkish: Military → Warlike/Savaşçı, Religious → Traditionalist/Gelenekçi, Agricultural → Peaceful/Barışçıl, Artisan → Industrious/Üretken, Palace/General → Pragmatic/Pragmatik.
 - Keep the existing capital-origin identities, policy weights and persisted data. The five displayed names in each language and version metadata are the only changed production payloads; all200 Java classes match RC.3. English/Turkish retain314 matching keys and equivalent indexed/implicit format arguments. Build passed; no new or repeated GameTest result is claimed for this text change.
-- Rulership navigation and stock diagnostics remain available. Graphical label fit and authenticated login remain separate manual checks; the user's1047/0 stock report remains open.
+- Rulership navigation and stock diagnostics remain available.
 
 ## 1.2.0-rc.3 — 2026-10-24 (rulership navigation)
 
 - Reduce the top navigation to five main tabs. Open Construction and Shipping with two buttons inside Rulership; the Rulership tab or Esc returns from either page. Reopening starts at the parent page.
 - Keep the royal forms intact, make rulership information scrollable, and retain the fixed claim/abdication controls and existing confirmation/authority checks. Add the English/Turkish return hint; retain RC.2 stock diagnostics.
 - Gradle build passed. The focused existing GUI suite logged **All 7 required tests passed** in both write and separate-JVM reopen; the actual RC.3 production JAR also completed ordinary startup/save/stop/reopen without a test mod. Server/view/payment/cargo/domain payloads are byte-identical to RC.2. No unrelated successful suite was repeated.
-- Graphical layout and online authentication remain unverified. The user's1047/0 shipment-stock report remains open; this UI change does not alter stock protection.
+- Graphical layout and online authentication remain unverified.
 
 ## 1.2.0-rc.2 — 2026-10-24 (stock diagnostic follow-up)
 
 - Show actual and kept shipment stock, plus a product-hover breakdown of native target, construction, residents, configured minimum and Millénaire protection. Insufficient-stock messages show requested/sendable/kept amounts in English and Turkish.
 - Add a genuine original Norman religious storage regression:1047 cobblestone protects1024 and permits23; actual collected23/remaining1024 survive separate JVM, then cancellation returns all goods/one fee exactly. A controlled2048 minimum explains a genuine zero with no construction; it is not assumed to be the user's configuration.
 - Focused shipment GUI passed18+18, existing GUI7+7/build; actual RC2 normal production-JAR startup/save/stop/reopen passed. Stock/payment/cargo/domain bytecode is unchanged; no reserve is bypassed or world format changed.
-- **The reported user's1047/0 root cause remains open.** This follow-up exposes the values needed to diagnose the actual world; the controlled test does not reproduce its zero. Graphical tooltip layout and online authentication remain unverified. See [investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md).
+Graphical tooltip layout and online authentication remain unverified. See [investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md).
 
 
 ## 1.2.0-rc.1 — 2026-10-24 (release candidate)

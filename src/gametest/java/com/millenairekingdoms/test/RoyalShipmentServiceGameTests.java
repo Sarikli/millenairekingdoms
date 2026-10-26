@@ -86,9 +86,9 @@ public final class RoyalShipmentServiceGameTests {
     public static void currentMemberSurplusAndAgencyChecksPrecedeAnyFeeOrIntent(GameTestHelper h){
         try(var r=RoyalShipmentSupport.realm(h,"Shipping eligibility")){
             r.chest(r.source()).setItem(2,new ItemStack(Items.SPRUCE_LOG,64));r.chest(r.source()).setItem(3,new ItemStack(Items.SPRUCE_LOG,32));var id=UUID.randomUUID();
-            refused(h,()->r.service().requestNpc(r.kingdom(),r.from(),r.to(),ResourceLocation.parse("minecraft:spruce_log"),40,id));
+            refused(h,()->r.service().requestNpc(r.kingdom(),r.from(),r.to(),ResourceLocation.parse("minecraft:spruce_log"),47,id));
             refused(h,()->r.service().requestNpc(r.kingdom(),r.from(),UUID.randomUUID(),CHERRY,40,id));refused(h,()->r.service().requestNpc(r.kingdom(),r.from(),r.from(),CHERRY,40,id));
-            h.assertTrue(r.store().load(id)==null && r.payments().load(id)==null && r.coins()==128 && r.goods(r.source())==96,"Native spruce target1028 and invalid route prevent all intent/fee mutations");
+            h.assertTrue(r.store().load(id)==null && r.payments().load(id)==null && r.coins()==128 && r.goods(r.source())==96,"Requesting47 exceeds the46 capped spruce surplus; invalid routes also prevent all intent/fee mutations");
             var player=r.ruler();refused(h,()->r.service().requestNpc(r.kingdom(),r.from(),r.to(),CHERRY,40,id));h.assertTrue(r.coins()==128 && r.store().load(id)==null,"NPC cannot issue shipping for an actually player-ruled kingdom");h.succeed();
         }
     }

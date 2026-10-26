@@ -22,8 +22,8 @@ public final class RoyalShipmentConfig {
     public static ModConfigSpec.BooleanValue TRACKING;
     private RoyalShipmentConfig() {}
     public static void define(ModConfigSpec.Builder b) {
-        b.comment("Additional royal-shipment stock safeguards. Native construction, target and resident needs are always protected.").push("royalShipments");
-        MINIMUM_REMAINDER=b.comment("Minimum ordinary units of each product retained in the sending town hall, in addition to enforcing native needs.")
+        b.comment("Royal-shipment stock policy. Combined native needs and configured floor retain at most50 units per product.").push("royalShipments");
+        MINIMUM_REMAINDER=b.comment("Ordinary units retained per product, combined with native needs. Total protection is capped at50, including older larger settings.")
                 .defineInRange("minimumStockRemaining",16,0,65536);
         MAXIMUM_QUANTITY=b.comment("Maximum real items in one future shipment; does not enable shipments by itself.")
                 .defineInRange("maximumQuantity",4096,1,65536);

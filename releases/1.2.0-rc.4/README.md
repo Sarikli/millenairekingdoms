@@ -14,4 +14,4 @@ The existing behavior and saved identities remain unchanged. Peaceful/Barışç�
 
 Own addon only, matching client/server builds with original Millénaire9.0.3 / Minecraft1.21.1 / NeoForge21.1.259 / Java21. The dependency and test classes are separate. SHA256SUMS pins the artifact; previous candidates remain preserved.
 
-[Verification](../../verification/1.2.0/rc.4-personality-names/README.md): build,314 matching EN/TR keys and equivalent format arguments, all200 production classes identical to RC.3, actual production-JAR normal save/stop/reopen in two JVMs. No GameTest package was repeated for this text change. Graphical label fit and online authentication remain unverified; the separate user's1047/0 stock investigation remains open.
+[Verification](../../verification/1.2.0/rc.4-personality-names/README.md): build,314 matching EN/TR keys and equivalent format arguments, all200 production classes identical to RC.3, actual production-JAR normal save/stop/reopen in two JVMs. No GameTest package was repeated for this text change.

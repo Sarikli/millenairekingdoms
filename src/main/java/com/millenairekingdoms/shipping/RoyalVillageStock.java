@@ -31,6 +31,8 @@ import org.millenaire.village.Village;
 
 /** Authorized loaded physical townhall snapshot; no withdrawal, reservation, escrow or forced loading. */
 public final class RoyalVillageStock {
+    /** Total retained ordinary units per product, including every native need and configured floor. */
+    public static final int MAXIMUM_RETAINED=50;
     public record Availability(ResourceLocation product,int physical,int nativeCount,int nativeExport,int construction,
                                int target,int residents,int retained,int available) {}
     private record Chest(BlockPos position,ChestBlockEntity entity,BlockState state) {}
@@ -123,7 +125,7 @@ public final class RoyalVillageStock {
         requireUnchanged();return java.util.Map.copyOf(missing);
     }
 
-    /** Native export policy plus conservative full construction/household needs against removable ordinary stock.
+    /** Native construction/household/target needs with a total ceiling of50 ordinary units per product.
      * Furnace/firepit/custom counts are never credited as transferable or as backing those protected ordinary goods. */
     public Availability availability(Item item) {
         if(item==null || item==Items.AIR || !ordinary(new ItemStack(item)))throw new IllegalArgumentException("Only ordinary noncurrency goods may be offered as royal cargo");
@@ -137,7 +139,7 @@ public final class RoyalVillageStock {
         for(var building:village.getBuildings())residents=Math.addExact(residents,GoodAvailabilityHelper.getSinkRequiredGoods(building,item,village));
         if(target<0 || residents<0)throw new IllegalStateException("Unknown native reserve data; preserve stock");
         long needs=Math.max((long)nativeCount-nativeExport,(long)construction+target+residents);
-        int retained=Math.toIntExact(Math.max(needs,RoyalShipmentConfig.current().minimumRemainder()));
+        int retained=(int)Math.min(MAXIMUM_RETAINED,Math.max(needs,RoyalShipmentConfig.current().minimumRemainder()));
         return new Availability(BuiltInRegistries.ITEM.getKey(item),physical,nativeCount,nativeExport,construction,target,residents,retained,Math.max(0,physical-retained));
     }
 
