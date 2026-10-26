@@ -1,0 +1,67 @@
+{
+  "id": 40406241102,
+  "status": "completed",
+  "conclusion": "success",
+  "url": "https://github.com/Sarikli/millenairekingdoms/actions/runs/40406241102",
+  "head_sha": "2ea38186f762b37813287301c3e1479005c54388",
+  "jobs": [
+    {
+      "id": 121864613697,
+      "name": "upload",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify the immutable release commit and artifact",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload exact assets to the existing draft without replacing files",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "name": "millenairekingdoms-1.2.0.jar",
+      "size": 1939382,
+      "digest": "sha256:b7ae9fc2f208588962bac8739021b4e4169322443d475b65c672791a53a3e8dd",
+      "state": "uploaded"
+    },
+    {
+      "name": "RELEASE_NOTES.md",
+      "size": 4927,
+      "digest": "sha256:a94e9993bf7be51d603ec3d7278c47942bebed1a2ce5d17b5374bca3cd9dc657",
+      "state": "uploaded"
+    },
+    {
+      "name": "SHA256SUMS",
+      "size": 95,
+      "digest": "sha256:33a93f88c6ae619f48462ed5ef8e3b9f259e7c3130f0a70d99c1bfd1527d4c02",
+      "state": "uploaded"
+    }
+  ]
+}

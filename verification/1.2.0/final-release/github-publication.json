@@ -1,0 +1,36 @@
+{
+  "release_url": "https://github.com/Sarikli/millenairekingdoms/releases/tag/1.2.0",
+  "tag": "1.2.0",
+  "tag_commit": "f31801644b724c58581c69f73b1cd0a23a3d785f",
+  "feature_commit": "2ea38186f762b37813287301c3e1479005c54388",
+  "published_at": "2026-10-26T21:40:53Z",
+  "latest": true,
+  "draft": false,
+  "prerelease": false,
+  "pr_url": "https://github.com/Sarikli/millenairekingdoms/pull/3",
+  "pr_draft": false,
+  "pr_state": "open",
+  "pr_merged": false,
+  "main_unchanged": true,
+  "main_sha": "52a6bc3a4ca4b717775dbd319bbe1df6f733ee0b",
+  "downloaded_assets": [
+    {
+      "name": "millenairekingdoms-1.2.0.jar",
+      "bytes": 1939382,
+      "downloaded_sha256": "b7ae9fc2f208588962bac8739021b4e4169322443d475b65c672791a53a3e8dd",
+      "url": "https://github.com/Sarikli/millenairekingdoms/releases/download/1.2.0/millenairekingdoms-1.2.0.jar"
+    },
+    {
+      "name": "RELEASE_NOTES.md",
+      "bytes": 4927,
+      "downloaded_sha256": "a94e9993bf7be51d603ec3d7278c47942bebed1a2ce5d17b5374bca3cd9dc657",
+      "url": "https://github.com/Sarikli/millenairekingdoms/releases/download/1.2.0/RELEASE_NOTES.md"
+    },
+    {
+      "name": "SHA256SUMS",
+      "bytes": 95,
+      "downloaded_sha256": "33a93f88c6ae619f48462ed5ef8e3b9f259e7c3130f0a70d99c1bfd1527d4c02",
+      "url": "https://github.com/Sarikli/millenairekingdoms/releases/download/1.2.0/SHA256SUMS"
+    }
+  ]
+}
