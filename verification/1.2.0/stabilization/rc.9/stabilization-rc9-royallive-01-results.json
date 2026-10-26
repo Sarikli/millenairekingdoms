@@ -1,0 +1,20 @@
+[
+  {
+    "suite": "verifyRoyalLive",
+    "run": "stabilization-rc9-royallive-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "3"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-rc9-royallive-01-write.log",
+        "sha256": "d90c7fe28497ec86058b448ad8af290a31c41ec145451382225f23027cfdb15b",
+        "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+        "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+      }
+    ]
+  }
+]

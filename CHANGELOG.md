@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0-rc.9 — 2026-10-26 (final stabilization review candidate)
+
+- Replace experimental ocean/territory rendering with authorized settlement markers, persistent shared kingdom colors and same-color capital crowns. Remove geography/geometry workers; preserve old caches and discovery/history. Bound exact color allocation and support8192 identities without the old size/performance failure.
+- Continue conditional NPC investment planning when native villages are unloaded; revalidate actual funds/materials/builders through existing paid services when available. Safely reconsider only proven unperformed interrupted intentions after cooldown, under new IDs.
+- Resolve legitimate unattended NPC wars using canonical native military records and persisted opposed dice. Keep active native physical raids, original conquest constraints and exactly-once political/Chronicle receipts.
+- Consolidate original64bronze/64silver denominations within one verified physical chest with exact conservation, saved read-back, native-interference proofs and financial/cargo guards. Keep bounded periodic maintenance; disclose synchronous disk-barrier latency.
+- Exact candidate JAR passed40 paired packages/80JVMs and4 normal new/legacy production lifecycle JVMs.26-locale coverage and34 prior artifact checksums preserved. All raw source/image evidence, actual process cuts, retained failed/interrupted attempts and manual/latency/old-stock limits are in [the final report](docs/1.2.0_RC9_REPORT.md). Same Draft PR3; no stable release/tag/main merge.
+
 ## 1.2.0-rc8-alpha —2026-10-25 (Chronicles & Political Atlas, experimental)
 
 - Fold the chronicles/atlas expansion into1.2.0: bottom-left History/Tarihçe, paginated kingdom/world chronicles and fallen archives, deterministic EN/TR medieval perspectives/culture/ethos, direct known-place/history links and independent full-screen political atlas with cached clipped regions, native icons, capitals/war/info and server discovery/privacy. Turkish heading becomes Töre; five ethos names/weights preserved.
