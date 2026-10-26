@@ -1,0 +1,30 @@
+[
+  {
+    "phase": "write",
+    "exit_code": 0,
+    "ready": true,
+    "saved": true,
+    "stopped": true,
+    "build_successful": true,
+    "rc_initialized": true,
+    "dependency_verified": true,
+    "test_mod_loaded": false,
+    "staged_jar_sha256": "17db082c52f7c6708ab3a4aaa143dbd2568d7f69244d2ecdfdb92fd7dbbff40f",
+    "log_sha256": "5c33d2ee568e700ef4197488ed661e740ac404006a14d118f6b5736d0824143a",
+    "authentication": "Unverified: unchanged existing smoke fixture is offline-mode on127.0.0.1:25579."
+  },
+  {
+    "phase": "reopen",
+    "exit_code": 0,
+    "ready": true,
+    "saved": true,
+    "stopped": true,
+    "build_successful": true,
+    "rc_initialized": true,
+    "dependency_verified": true,
+    "test_mod_loaded": false,
+    "staged_jar_sha256": "17db082c52f7c6708ab3a4aaa143dbd2568d7f69244d2ecdfdb92fd7dbbff40f",
+    "log_sha256": "1270e20237557e865fb1f83321cfd8fa01a5f84df57fe20efc0615c9d034077a",
+    "authentication": "Unverified: unchanged existing smoke fixture is offline-mode on127.0.0.1:25579."
+  }
+]

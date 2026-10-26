@@ -31,9 +31,9 @@ import org.slf4j.Logger;
  * same snapshot that records the started raid, so a restart can never launch it twice. No chunk is ever force-loaded. */
 public final class RaidOrderService {
     private static final Logger LOGGER = LogUtils.getLogger();
-    /** An NPC kingdom's preparation before its raid may leave (a quarter day), and every order's lifetime (two days). */
-    public static final long NPC_PREPARATION = 6000L, ORDER_LIFETIME = 48000L, CHECK_INTERVAL = 100L;
-    public enum Status { STARTED, WAITING, DROPPED }
+    /** An NPC kingdom's preparation before its raid may leave (an eighth day), and every order's lifetime (one day). */
+    public static final long NPC_PREPARATION = 3000L, ORDER_LIFETIME = 24000L, CHECK_INTERVAL = 50L;
+    public enum Status { STARTED, RESOLVED, WAITING, DROPPED }
     public record Attempt(Status status, String reason, KingdomSavedData.Raid raid) {
         static Attempt waiting(String reason) { return new Attempt(Status.WAITING, reason, null); }
         static Attempt dropped(String reason) { return new Attempt(Status.DROPPED, reason, null); }
@@ -59,20 +59,20 @@ public final class RaidOrderService {
         for (RaidOrder order : data.orders().stream().sorted(Comparator.comparingLong(RaidOrder::issuedGameTime)).toList()) {
             if (data.order(order.id()) == null || now < order.dueGameTime()) continue;
             Attempt attempt;
-            try { attempt = attempt(level, data, order, s); }
+            try { attempt = StrategicBattleService.attempt(level,data,order);if(attempt==null)attempt = attempt(level, data, order, s); }
             catch (RuntimeException e) {
-                // Never let one order stop the world tick; it is dropped instead of being retried every 100 ticks.
+                // Never let one order stop the world tick; it is dropped instead of being retried every 50 ticks.
                 LOGGER.error("[Kingdoms] Conquest order {} failed unexpectedly; it is dropped.", order.id(), e);
                 attempt = Attempt.dropped("an unexpected error (see the server log)");
             }
-            if (attempt.status() == Status.STARTED) { started++; WAITING.remove(order.id()); continue; }
+            if (attempt.status() == Status.STARTED || attempt.status()==Status.RESOLVED) { started++; WAITING.remove(order.id()); continue; }
             if (attempt.status() == Status.DROPPED || now >= order.expiresGameTime()) {
                 data.removeOrder(order.id());
                 WAITING.remove(order.id());
                 String why = attempt.status() == Status.DROPPED ? attempt.reason() : "expired while waiting: " + attempt.reason();
                 LOGGER.info("[Kingdoms] Conquest order {} of {} on {} dropped ({}).", order.id(), data.kingdom(order.kingdom()) == null ? order.kingdom()
                         : data.kingdom(order.kingdom()).name(), order.target(), why);
-                tell(level, data, order, Component.literal("[Kingdoms] The conquest raid on " + targetName(level, order) + " was called off: " + why + ".")
+                tell(level, data, order, com.millenairekingdoms.localization.PublicText.of("[Kingdoms] The conquest raid on %s was called off: %s.", targetName(level, order), attempt.status()==Status.DROPPED?com.millenairekingdoms.localization.PublicText.error(why):com.millenairekingdoms.localization.PublicText.of("expired while waiting: %s",com.millenairekingdoms.localization.PublicText.error(attempt.reason())))
                         .withStyle(ChatFormatting.GRAY));
             } else WAITING.put(order.id(), attempt.reason());
         }
@@ -121,8 +121,7 @@ public final class RaidOrderService {
         try {
             var raid = ConquestService.launch(level, source.getId().uuid(), order.target(), order.issuer(), order.id());
             LOGGER.info("[Kingdoms] Conquest order {} started raid {}: {} -> {}.", order.id(), raid.id(), PoliticsService.name(source), PoliticsService.name(target));
-            tell(level, data, order, Component.literal("[Kingdoms] " + PoliticsService.name(source) + " sent its soldiers against "
-                    + PoliticsService.name(target) + ".").withStyle(ChatFormatting.GOLD));
+            tell(level, data, order, com.millenairekingdoms.localization.PublicText.of("[Kingdoms] %s sent its soldiers against %s.", PoliticsService.name(source), PoliticsService.name(target)).withStyle(ChatFormatting.GOLD));
             return new Attempt(Status.STARTED, "", raid);
         } catch (IllegalArgumentException notNow) {
             return Attempt.waiting(notNow.getMessage());
@@ -148,7 +147,7 @@ public final class RaidOrderService {
         Attempt attempt = attempt(level, data, order, AutonomyConfig.current());
         if (attempt.status() == Status.DROPPED) {
             data.removeOrder(order.id());
-            throw new KingdomException("millenairekingdoms.raid.refused", "The raid cannot start: %s.", attempt.reason());
+            throw new KingdomException("millenairekingdoms.raid.refused", "The raid cannot start: %s.", com.millenairekingdoms.localization.PublicText.error(attempt.reason()));
         }
         if (attempt.status() == Status.WAITING) WAITING.put(order.id(), attempt.reason());
         return attempt;
@@ -203,7 +202,7 @@ public final class RaidOrderService {
     private static void tell(ServerLevel level, KingdomSavedData data, RaidOrder order, Component message) {
         if (order.issuer() == null) return;
         var player = level.getServer().getPlayerList().getPlayer(order.issuer());
-        if (player != null) player.sendSystemMessage(message);
+        if (player != null) com.millenairekingdoms.localization.PublicText.send(player,message);
     }
     static List<RaidOrder> of(KingdomSavedData data, UUID kingdom) {
         return data.orders().stream().filter(o -> o.kingdom().equals(kingdom)).toList();

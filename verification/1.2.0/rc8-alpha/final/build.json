@@ -1,0 +1,8 @@
+{
+  "exit_code": 0,
+  "build_successful": true,
+  "raw_sha256": "2b634b279567e31bee34c5897896a47a18d9e21fdd3495fa514be7a03e55bb83",
+  "archive_sha256": "fedfcc8cf8491a810ef7d02f98e88dfb2e4882815014913268f41a7216eb04ea",
+  "archive_log": "verification/1.2.0/rc8-alpha/final/alpha-final-build.log.gz",
+  "conventional_test_task": "NO-SOURCE; not a GameTest pass"
+}

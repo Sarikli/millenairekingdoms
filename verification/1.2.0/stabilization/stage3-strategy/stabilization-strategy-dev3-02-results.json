@@ -1,0 +1,18 @@
+[
+  {
+    "suite": "verifyRoyalStrategy",
+    "run": "stabilization-strategy-dev3-02",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 1,
+        "passes": [],
+        "build": false,
+        "log": "/workspace/royal-decree/stabilization-strategy-dev3-02-write.log",
+        "sha256": "08bcab90b48b8dd4c010338ae5e6e91ce66a20aed40e064fd19fe4dd3918a994",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev3.jar",
+        "jar_sha256": "10d59670881fa8b5c7eefcfe040f661c62898844d7e3f522727cf3a9a0463fed"
+      }
+    ]
+  }
+]

@@ -59,6 +59,7 @@ public final class NaturalCapitalGameTests {
     /** Share of a plan's solid, non-marker blocks that must stand in the world. Calibrated against Millénaire's own instant placement. */
     private static final double MIN_MATCH = 0.90;
     private static final int LOAD_RADIUS = 8;
+    private static final int CHIEF_LOAD_TIMEOUT_TICKS = 600;
 
     private static boolean read() { return "read".equals(System.getProperty("kingdoms.tests.persistence")); }
     /** -Dcapitals.only=natural|matrix|rules runs one group only (development convenience); the others pass at once. */
@@ -77,10 +78,10 @@ public final class NaturalCapitalGameTests {
         double chance = CapitalConfig.CHANCE_PERCENT.get(); int distance = CapitalConfig.MIN_DISTANCE.get();
         List<Village> made = new ArrayList<>();
         try {
-            h.assertTrue(CapitalConfig.CHANCE_PERCENT.getDefault() == 2.0 && CapitalConfig.MIN_DISTANCE.getDefault() == 1500
-                    && CapitalConfig.ENABLED.getDefault(), "Defaults: enabled, 2%, 1500 blocks");
-            h.assertTrue(NaturalCapitals.chosen(2.0, 0.0) && NaturalCapitals.chosen(2.0, 0.0199) && !NaturalCapitals.chosen(2.0, 0.02)
-                    && !NaturalCapitals.chosen(2.0, 0.5), "2%: samples below 0.02 only");
+            h.assertTrue(CapitalConfig.CHANCE_PERCENT.getDefault() == 10.0 && CapitalConfig.MIN_DISTANCE.getDefault() == 1000
+                    && CapitalConfig.ENABLED.getDefault(), "Defaults: enabled, 10%, 1000 blocks");
+            h.assertTrue(NaturalCapitals.chosen(10.0, 0.0) && NaturalCapitals.chosen(10.0, 0.0999) && !NaturalCapitals.chosen(10.0, 0.1)
+                    && !NaturalCapitals.chosen(10.0, 0.5), "10%: samples below 0.1 only");
             h.assertTrue(!NaturalCapitals.chosen(0.0, 0.0) && NaturalCapitals.chosen(100.0, 0.999999), "0% never, 100% always");
             // 3. The probability is read from the NeoForge config.
             CapitalConfig.CHANCE_PERCENT.set(50.0);
@@ -92,16 +93,16 @@ public final class NaturalCapitalGameTests {
             BlockPos origin = new BlockPos(500_000, 70, 500_000);
             Village capital = synthetic(level, origin, eligibleType(), made);
             var d = new KingdomSavedData(); var k = d.create("Rule capital", capital.getId().uuid());
-            h.assertTrue(!NaturalCapitals.farFromCapitals(level, d, origin.offset(1499, 0, 0), 1500)
-                    && NaturalCapitals.farFromCapitals(level, d, origin.offset(1500, 0, 0), 1500)
-                    && NaturalCapitals.farFromCapitals(level, d, origin.offset(900, 0, 1200), 1500)
-                    && !NaturalCapitals.farFromCapitals(level, d, origin.offset(900, 0, 1199), 1500), "Horizontal distance, 1500 inclusive");
+            h.assertTrue(!NaturalCapitals.farFromCapitals(level, d, origin.offset(999, 0, 0), 1000)
+                    && NaturalCapitals.farFromCapitals(level, d, origin.offset(1000, 0, 0), 1000)
+                    && NaturalCapitals.farFromCapitals(level, d, origin.offset(600, 0, 800), 1000)
+                    && !NaturalCapitals.farFromCapitals(level, d, origin.offset(600, 0, 799), 1000), "Horizontal distance, 1000 inclusive");
             h.assertTrue(NaturalCapitals.farFromCapitals(level, d, origin.offset(1000, 0, 0), 900), "A configured distance is used as given");
             d.setActive(k.id(), false);
-            h.assertTrue(!NaturalCapitals.farFromCapitals(level, d, origin.offset(1000, 0, 0), 1500), "An inactive but living kingdom still has a capital");
+            h.assertTrue(!NaturalCapitals.farFromCapitals(level, d, origin.offset(999, 0, 0), 1000), "An inactive but living kingdom still has a capital");
 
             // Rule order on real Millénaire village records (no structures needed before the space check).
-            Village near = synthetic(level, origin.offset(1000, 0, 0), eligibleType(), made);
+            Village near = synthetic(level, origin.offset(999, 0, 0), eligibleType(), made);
             CapitalConfig.CHANCE_PERCENT.set(100.0);
             h.assertTrue(NaturalCapitals.consider(level, d, near, 0.5).outcome() == Outcome.TOO_CLOSE, "Too close to a capital");
             CapitalConfig.CHANCE_PERCENT.set(2.0);
@@ -168,7 +169,7 @@ public final class NaturalCapitalGameTests {
         CompoundTag again = d.save(new CompoundTag(), reg);
         // Format 6 (1.0.0) keeps every 0.4.0 field and only adds the autonomy section (the fixture's war ended in peace: no clock).
         CompoundTag autonomy = again.getCompound("autonomy"); again.remove("autonomy");
-        CompoundTag expected = old.copy(); expected.putInt("format", KingdomSavedData.FORMAT);
+        CompoundTag expected = old.copy(); expected.putInt("format", 6);
         h.assertTrue(canonical(again).equals(canonical(expected)) && autonomy.getList("orders", Tag.TAG_COMPOUND).isEmpty()
                 && autonomy.getList("truces", Tag.TAG_COMPOUND).isEmpty(), "Loads and saves back identically apart from the format-6 additions");
         h.assertTrue(d.kingdoms().size() == 2 && d.kingdoms().stream().filter(k -> d.npcGoverned(k.id())).count() == 1,
@@ -235,6 +236,14 @@ public final class NaturalCapitalGameTests {
             String problem = NaturalCapitals.spaceProblem(level, village, hall);
             if (problem != null) failures.add(type.id() + ": no space: " + problem);
             boolean developed = NaturalCapitals.develop(level, village, hall);
+            for(var building:village.getBuildings()) {
+                if(building.isSubBuilding() || building.isWallSegment())continue;
+                int end=NaturalCapitals.finalLevel(building);
+                Check physical=structure(level,village,building,building.getLevel());
+                System.out.println("CAPITAL_ALL_BUILDINGS type="+type.id()+" plan="+building.getPlanId()+" level="+building.getLevel()+"/"+end+" physical="+physical);
+                if(building.getLevel()!=end || building.getStatus()!=BuildingInstance.Status.COMPLETE || end>0 && physical.match<MIN_MATCH)
+                    failures.add(type.id()+": non-centre building "+building.getPlanId()+" level="+building.getLevel()+"/"+end+" physical="+physical);
+            }
             Check after = structure(level, village, hall, hall.getLevel());
             List<BuildingInstance> subs = village.getBuildings().stream().filter(b -> hall.getId().equals(b.getParentBuildingId())).toList();
             boolean subsDone = subs.stream().allMatch(b -> b.getStatus() == BuildingInstance.Status.COMPLETE);
@@ -261,11 +270,11 @@ public final class NaturalCapitalGameTests {
 
     private record Candidate(String key, int dx, int dz, double chance, boolean capital) {}
     /** Relative to world spawn, all inside Millénaire's 2000-block "no initial completion" zone: a normal natural village
-     * keeps its level-0 town hall, so "unchanged" is visible. A-C: 2000 apart (both capitals), B: 1000-1414 from them
+     * keeps its level-0 town hall, so "unchanged" is visible. A-C: 2000 apart (both capitals), B: 600 from A
      * (too close), D: 1600 from A but chance 0 in the config. */
     private static final List<Candidate> CANDIDATES = List.of(
             new Candidate("A", 1000, 0, 100.0, true),
-            new Candidate("B", 1000, 1000, 100.0, false),
+            new Candidate("B", 1000, 600, 100.0, false),
             new Candidate("C", -1000, 0, 100.0, true),
             new Candidate("D", 1000, -1600, 0.0, false));
 
@@ -326,9 +335,20 @@ public final class NaturalCapitalGameTests {
                 return;
             }
             if (watched.isEmpty()) {
-                boolean ready = loaded(level, spawned.get("A").getCenter()) && loaded(level, spawned.get("C").getCenter())
-                        && !villagers(level, spawned.get("A")).isEmpty() && !villagers(level, spawned.get("C")).isEmpty();
-                if (!ready && level.getGameTime() - loadFrom[0] < 600) return;
+                // Terrain and the first returning villager can precede the chief's entity chunk load.
+                // Wait for the same live chiefs that checkWorld asserts, not just any village NPC.
+                boolean ready = loadedWithChief(level, spawned.get("A")) && loadedWithChief(level, spawned.get("C"));
+                long waited = level.getGameTime() - loadFrom[0];
+                if (ready || waited == 1 || waited % 100 == 0) {
+                    System.out.println("CAPITAL_CHIEF_LOAD tick=" + level.getGameTime() + " waited=" + waited + " ready=" + ready
+                            + " A=" + chiefLoadState(level, spawned.get("A")) + " C=" + chiefLoadState(level, spawned.get("C")));
+                }
+                if (!ready) {
+                    h.assertTrue(waited < CHIEF_LOAD_TIMEOUT_TICKS,
+                            "Timed out after " + waited + " ticks waiting for both capital chiefs: A="
+                                    + chiefLoadState(level, spawned.get("A")) + " C=" + chiefLoadState(level, spawned.get("C")));
+                    return;
+                }
                 checkWorld(h, level, spawned, file);
                 for (MillVillager m : villagers(level, spawned.get("A"))) watched.put(m.getUUID(), m.blockPosition());
                 watchFrom[0] = level.getGameTime();
@@ -365,6 +385,7 @@ public final class NaturalCapitalGameTests {
                 continue;
             }
             // 2, 7, 8, 9: kingdom record and the physical final-level town hall.
+            h.assertTrue(k!=null,c.key+": natural generation must publish a fully developed capital");
             Kingdom kingdom = data.kingdom(k);
             int last = NaturalCapitals.finalLevel(hall);
             h.assertTrue(k != null && data.isCapital(id) && kingdom.active() && !kingdom.fallen() && data.ruler(k) == null
@@ -401,23 +422,24 @@ public final class NaturalCapitalGameTests {
         int villages = manager(level).getAllVillages().size(), kingdoms = data.kingdoms().size();
         requeue(level, spawned);
         h.assertTrue(manager(level).getAllVillages().size() == villages && data.kingdoms().size() == kingdoms, "Re-queued spots create nothing");
-        // Income: a natural capital with no members earns nothing; with one it is paid into its own town hall chests.
+        // RC.8: the completed capital produces4 per displayed centre level, plus4 for a first-level member.
         UUID ka = data.owner(a.getId().uuid());
-        h.assertTrue(EconomyService.dailyIncome(level, data, ka) == 0, "No members, no income");
+        long capitalProduction = (long) (a.getTownhall().getLevel() + 1) * EconomyService.DENIERS_PER_LEVEL;
+        h.assertTrue(capitalProduction > 0 && EconomyService.dailyIncome(level, data, ka) == capitalProduction, "A real fully developed natural capital earns its RC.8 level-scaled production without other members");
         var copy = KingdomSavedData.load(data.save(new CompoundTag(), level.registryAccess()), level.registryAccess());
         Village member = synthetic(level, a.getCenter().offset(300, 0, 300), ModCultures.getVillageType(a.getVillageTypeId()), new ArrayList<>());
         member.addBuilding(new BuildingInstance(org.millenaire.building.BuildingId.random(), a.getTownhall().getPlanId(), member.getCenter(),
                 net.minecraft.world.level.block.Rotation.NONE, BuildingInstance.Status.COMPLETE, a.getTownhall().getPlanSetId(), a.getTownhall().getVariant(), 0));
         copy.attach(ka, member.getId().uuid());
-        int coins = a.getTownhall().getInventory().getCount(level, ModItems.DENIER.get());
+        long coins = com.millenairekingdoms.economy.TreasuryService.stored(level, copy.kingdom(ka)).value();
         // Other suites may already have advanced the persistent ledger. Never assume that its day can be reset to 0.
         long previousDay = Math.max(7, copy.day());
         copy.startDay(previousDay, Map.of());
         h.assertTrue(!EconomyService.runDay(level, copy, previousDay), "An already booked day is never taxed twice");
         boolean paid = EconomyService.runDay(level, copy, previousDay + 1);
-        int after = a.getTownhall().getInventory().getCount(level, ModItems.DENIER.get());
+        long after = com.millenairekingdoms.economy.TreasuryService.stored(level, copy.kingdom(ka)).value();
         manager(level).removeVillage(member.getId());
-        h.assertTrue(paid && after == coins + EconomyService.DENIERS_PER_LEVEL && copy.owed(ka) == 0, "Income paid into the natural capital's town hall (" + coins + " -> " + after + ")");
+        h.assertTrue(paid && after == coins + capitalProduction + EconomyService.DENIERS_PER_LEVEL && copy.owed(ka) == 0, "Income paid into the natural capital's town hall (" + coins + " -> " + after + ")");
         try { Files.writeString(file, toText(out)); } catch (java.io.IOException e) { throw new IllegalStateException(e); }
         data.setDirty(); VillageSavedData.get(level).setDirty();
         System.out.println("CAPITAL_NATURAL_WRITE_PASS " + out);
@@ -442,6 +464,12 @@ public final class NaturalCapitalGameTests {
                     c.key + ": town hall level kept");
             Check check = structure(level, v, hall, hall.getLevel());
             h.assertTrue(check.match >= MIN_MATCH && check.added >= MIN_MATCH, c.key + ": buildings kept after restart, " + check);
+            for(var building:v.getBuildings()) {
+                if(building.isSubBuilding() || building.isWallSegment())continue;
+                var physical=structure(level,v,building,building.getLevel());
+                h.assertTrue(building.getStatus()==BuildingInstance.Status.COMPLETE && building.getLevel()==NaturalCapitals.finalLevel(building)
+                        && (building.getLevel()==0 || physical.match>=MIN_MATCH),c.key+": every generated building remains at its physical final level after a separate JVM: "+building.getPlanId()+" "+physical);
+            }
             System.out.println("CAPITAL_RESTART " + c.key + " " + v.getVillageName() + " level " + hall.getLevel() + " " + check);
         }
         int villages = manager(level).getAllVillages().size(), kingdoms = data.kingdoms().size();
@@ -492,11 +520,11 @@ public final class NaturalCapitalGameTests {
         manager(level).addVillage(v); made.add(v);
         return v;
     }
-    /** Lowest plan ground level of the type's town hall and its sub-buildings (cellars). */
+    /** Lowest ground level of every generated centre/start building; side-building cellars need real ground too. */
     private static int deepestGround(VillageType type) {
         int min = 0;
         for (VillageType.LayoutSlot slot : type.layout()) {
-            if (!"centre".equals(slot.role()) && !"townhall".equals(slot.role())) continue;
+            if (!"centre".equals(slot.role()) && !"townhall".equals(slot.role()) && !"start".equals(slot.role())) continue;
             BuildingPlanSet set = ModCultures.getBuildingPlanSet(slot.plan());
             for (var levels : set.variants().values()) for (var l : levels) min = Math.min(min, ModCultures.getBuildingPlan(l.planId()).groundLevel());
         }
@@ -506,14 +534,15 @@ public final class NaturalCapitalGameTests {
      * level down to -8). A walkable 14-block mound gives the town hall at this centre real ground below it, as normal terrain does. */
     private static void mound(ServerLevel level, BlockPos center) {
         int surface = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, center.getX(), center.getZ());
-        int height = 14, low = -75, high = 75; // a wide plateau: Millénaire wants level ground for the start buildings too
+        int height = 14, low = -125, high = 125; // Full starter layouts, including large groves/quarries, need level ground.
         var dirt = net.minecraft.world.level.block.Blocks.DIRT.defaultBlockState();
         var grass = net.minecraft.world.level.block.Blocks.GRASS_BLOCK.defaultBlockState();
         for (int dx = low - height; dx <= high + height; dx++) for (int dz = low - height; dz <= high + height; dz++) {
             int outside = Math.max(Math.max(low - dx, dx - high), Math.max(low - dz, dz - high));
             int top = height - Math.max(0, outside);
             for (int y = 0; y < top; y++)
-                level.setBlock(new BlockPos(center.getX() + dx, surface + y, center.getZ() + dz), y == top - 1 ? grass : dirt, 2);
+                level.setBlock(new BlockPos(center.getX() + dx, surface + y, center.getZ() + dz), y == top - 1 ? grass
+                        : y<top-3 ? net.minecraft.world.level.block.Blocks.STONE.defaultBlockState() : dirt, 2);
             if (top > 0) level.setBlock(new BlockPos(center.getX() + dx, surface - 1, center.getZ() + dz), dirt, 2);
         }
     }
@@ -528,6 +557,35 @@ public final class NaturalCapitalGameTests {
     private static List<MillVillager> villagers(ServerLevel level, Village v) {
         AABB box = new AABB(v.getCenter()).inflate(160, 128, 160);
         return level.getEntitiesOfClass(MillVillager.class, box, m -> m.isAlive() && v.getId().equals(m.getVillageId()));
+    }
+    private static boolean loadedWithChief(ServerLevel level, Village v) {
+        return loaded(level, v.getCenter())
+                && villagers(level, v).stream().anyMatch(com.millenairekingdoms.politics.ChiefInteraction::isChief);
+    }
+    /** Distinguish a saved chief from a live entity, and terrain readiness from entity-chunk readiness. */
+    private static String chiefLoadState(ServerLevel level, Village v) {
+        var people = villagers(level, v);
+        var chiefs = people.stream().filter(com.millenairekingdoms.politics.ChiefInteraction::isChief)
+                .map(m -> m.getUUID() + "@" + m.blockPosition().toShortString()).toList();
+        var records = v.getVillagerRecords().values().stream().filter(r -> {
+            var type = ModCultures.getVillagerType(r.getVillagerTypeId());
+            return type != null && type.hasTag("chief");
+        }).map(r -> {
+            BlockPos pos = r.getLastKnownPos();
+            var entity = level.getEntity(r.getUuid());
+            ChunkPos chunk = pos == null ? null : new ChunkPos(pos);
+            return r.getUuid() + "/" + r.getVillagerTypeId() + " savedPos=" + pos + " killed=" + r.isKilled()
+                    + " chunk=" + chunk + " terrain=" + (pos != null && level.hasChunkAt(pos))
+                    + " entitiesLoaded=" + (chunk != null && level.areEntitiesLoaded(chunk.toLong()))
+                    + " entityTicking=" + (pos != null && level.isPositionEntityTicking(pos))
+                    + " testForced=" + (chunk != null && level.getForcedChunks().contains(chunk.toLong()))
+                    + " entity=" + (entity == null ? "absent" : entity.blockPosition().toShortString()
+                            + "/alive=" + entity.isAlive() + "/removed=" + entity.isRemoved()
+                            + "/inQuery=" + people.contains(entity));
+        }).toList();
+        return "{village=" + v.getId() + " center=" + v.getCenter().toShortString()
+                + " terrainReady=" + loaded(level, v.getCenter()) + " villagers=" + people.size()
+                + " chiefs=" + chiefs + " records=" + records + "}";
     }
     private static void discard(ServerLevel level, Village v) {
         villagers(level, v).forEach(net.minecraft.world.entity.Entity::discard);

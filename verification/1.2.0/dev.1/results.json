@@ -1,0 +1,142 @@
+[
+  {
+    "suite": "verifyWars",
+    "exit_code": 0,
+    "required_pass_counts": [
+      30,
+      30
+    ],
+    "expected_per_pass": 30,
+    "launches": [
+      [
+        "runWarGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261023-164257-beb7d531/verifyWars"
+      ],
+      [
+        "runWarGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261023-164257-beb7d531/verifyWars"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyConquest",
+    "exit_code": 0,
+    "required_pass_counts": [
+      25,
+      25
+    ],
+    "expected_per_pass": 25,
+    "launches": [
+      [
+        "runGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261023-164257-beb7d531/verifyConquest"
+      ],
+      [
+        "runGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261023-164257-beb7d531/verifyConquest"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyStage5",
+    "exit_code": 0,
+    "required_pass_counts": [
+      24,
+      24
+    ],
+    "expected_per_pass": 24,
+    "launches": [
+      [
+        "runStage5GameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261023-164257-beb7d531/verifyStage5"
+      ],
+      [
+        "runStage5GameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261023-164257-beb7d531/verifyStage5"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyCapitals",
+    "exit_code": 0,
+    "required_pass_counts": [
+      5,
+      5
+    ],
+    "expected_per_pass": 5,
+    "launches": [
+      [
+        "runCapitalGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261023-164257-beb7d531/verifyCapitals"
+      ],
+      [
+        "runCapitalGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261023-164257-beb7d531/verifyCapitals"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyAutonomy",
+    "exit_code": 0,
+    "required_pass_counts": [
+      22,
+      22
+    ],
+    "expected_per_pass": 22,
+    "launches": [
+      [
+        "runAutonomyGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261023-164257-beb7d531/verifyAutonomy"
+      ],
+      [
+        "runAutonomyGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261023-164257-beb7d531/verifyAutonomy"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyGui",
+    "exit_code": 0,
+    "required_pass_counts": [
+      7,
+      7
+    ],
+    "expected_per_pass": 7,
+    "launches": [
+      [
+        "runGuiGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261023-164257-beb7d531/verifyGui"
+      ],
+      [
+        "runGuiGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261023-164257-beb7d531/verifyGui"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyFounding",
+    "exit_code": 0,
+    "required_pass_counts": [
+      12,
+      12
+    ],
+    "expected_per_pass": 12,
+    "launches": [
+      [
+        "runFoundingGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261023-164257-beb7d531/verifyFounding"
+      ],
+      [
+        "runFoundingGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261023-164257-beb7d531/verifyFounding"
+      ]
+    ],
+    "passed": true
+  }
+]

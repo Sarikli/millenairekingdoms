@@ -1,0 +1,57 @@
+{
+  "source": {
+    "jar_sha256": "b7ae9fc2f208588962bac8739021b4e4169322443d475b65c672791a53a3e8dd"
+  },
+  "legacy_source_world": "/workspace/millenairekingdoms/run/release-120-production-new-01",
+  "legacy_source_level_sha256": "99f974fb81397fcaa403dd482efac066ff67aa005efb2accb17a066b05ea5a4b",
+  "results": [
+    {
+      "kind": "legacy-120-copy",
+      "phase": "write",
+      "exit_code": 0,
+      "ready": true,
+      "saved": true,
+      "stopped": true,
+      "build_successful": true,
+      "final_initialized": true,
+      "dependency_verified": true,
+      "test_mod_loaded": false,
+      "jar_sha256": "b7ae9fc2f208588962bac8739021b4e4169322443d475b65c672791a53a3e8dd",
+      "staged_jar_sha256": "b7ae9fc2f208588962bac8739021b4e4169322443d475b65c672791a53a3e8dd",
+      "log_sha256": "347e694bbde9b3e2631f729f0694ec0c9f0af8362c41d30c74b4a6e7ded15c16",
+      "level_before_sha256": "99f974fb81397fcaa403dd482efac066ff67aa005efb2accb17a066b05ea5a4b",
+      "level_after_sha256": "3a0f73ce5d07ece894470f70058ab1489ec8c50dc86a2f46fba5281af8e383b6",
+      "world": "/workspace/millenairekingdoms/run/stable-120-production-legacy-120-copy-01",
+      "properties_semantically_unchanged": true,
+      "eula_unchanged": true,
+      "legacy_original_unchanged": true,
+      "retired_cache_files": 0,
+      "retired_cache_bytes_unchanged": true,
+      "authentication": "Unverified: existing127.0.0.1:25579 offline-mode production fixture; no graphical or authenticated client."
+    },
+    {
+      "kind": "legacy-120-copy",
+      "phase": "reopen",
+      "exit_code": 0,
+      "ready": true,
+      "saved": true,
+      "stopped": true,
+      "build_successful": true,
+      "final_initialized": true,
+      "dependency_verified": true,
+      "test_mod_loaded": false,
+      "jar_sha256": "b7ae9fc2f208588962bac8739021b4e4169322443d475b65c672791a53a3e8dd",
+      "staged_jar_sha256": "b7ae9fc2f208588962bac8739021b4e4169322443d475b65c672791a53a3e8dd",
+      "log_sha256": "80c27f588bc72b5efc27cb51718ac0a34b9d73ea7b2a88006e6e1d4770d85049",
+      "level_before_sha256": "3a0f73ce5d07ece894470f70058ab1489ec8c50dc86a2f46fba5281af8e383b6",
+      "level_after_sha256": "c9bd7baa23d4f4791fdd7450e4fa450c3872d2fdd241bc573576fcdf64fcf71e",
+      "world": "/workspace/millenairekingdoms/run/stable-120-production-legacy-120-copy-01",
+      "properties_semantically_unchanged": true,
+      "eula_unchanged": true,
+      "legacy_original_unchanged": true,
+      "retired_cache_files": 0,
+      "retired_cache_bytes_unchanged": true,
+      "authentication": "Unverified: existing127.0.0.1:25579 offline-mode production fixture; no graphical or authenticated client."
+    }
+  ]
+}

@@ -1,0 +1,767 @@
+{
+  "artifact": {
+    "version": "1.2.0-rc.8",
+    "bytes": 628317,
+    "sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+    "original_millenaire_version": "9.0.3",
+    "original_millenaire_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+    "source_base_commit": "85796cbd9499db1e4698080b3c47663e7111dfc5",
+    "source_commit_lookup": "git log -1 --format=%H -- src/main/java/com/millenairekingdoms/construction/RoyalConstructionStore.java",
+    "artifact_commit_lookup": "git log -1 --format=%H -- releases/1.2.0-rc.8/millenairekingdoms-1.2.0-rc.8.jar",
+    "network_protocol": 4,
+    "construction_format": 5,
+    "recovery_audit_format": 2,
+    "legacy_construction_reads": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "legacy_recovery_audit_reads": [
+      1
+    ],
+    "translation_keys_per_language": 326,
+    "normal_generated_config_identical_to_rc7": true,
+    "packed_comparison": {
+      "sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+      "bytes": 628317,
+      "production_classes": 203,
+      "identical_to_rc7_classes": 178,
+      "changed": [
+        "META-INF/MANIFEST.MF",
+        "META-INF/neoforge.mods.toml",
+        "assets/millenairekingdoms/lang/en_us.json",
+        "assets/millenairekingdoms/lang/tr_tr.json",
+        "com/millenairekingdoms/client/KingdomScreen$RowList$Row.class",
+        "com/millenairekingdoms/client/KingdomScreen$RowList.class",
+        "com/millenairekingdoms/client/KingdomScreen.class",
+        "com/millenairekingdoms/construction/NormalGrowthBridge$Candidate.class",
+        "com/millenairekingdoms/construction/NormalGrowthBridge$Methods.class",
+        "com/millenairekingdoms/construction/NormalGrowthBridge.class",
+        "com/millenairekingdoms/construction/RoyalConstructionCatalog$Catalog.class",
+        "com/millenairekingdoms/construction/RoyalConstructionCatalog$Option.class",
+        "com/millenairekingdoms/construction/RoyalConstructionCatalog.class",
+        "com/millenairekingdoms/construction/RoyalConstructionMonitor.class",
+        "com/millenairekingdoms/construction/RoyalConstructionService.class",
+        "com/millenairekingdoms/construction/RoyalConstructionStore$Entry.class",
+        "com/millenairekingdoms/construction/RoyalConstructionStore$Intent.class",
+        "com/millenairekingdoms/construction/RoyalConstructionStore.class",
+        "com/millenairekingdoms/construction/RoyalRecoveryService.class",
+        "com/millenairekingdoms/construction/RoyalRecoveryStore$Intent.class",
+        "com/millenairekingdoms/construction/RoyalRecoveryStore.class",
+        "com/millenairekingdoms/economy/EconomyService.class",
+        "com/millenairekingdoms/economy/RoyalPrices.class",
+        "com/millenairekingdoms/gui/KingdomScreens.class",
+        "com/millenairekingdoms/gui/RoyalConstructionView$Offer.class",
+        "com/millenairekingdoms/gui/RoyalConstructionView$Session.class",
+        "com/millenairekingdoms/gui/RoyalConstructionView.class",
+        "com/millenairekingdoms/network/KingdomNetwork.class"
+      ],
+      "added": [
+        "com/millenairekingdoms/client/ShipmentProductScreen.class"
+      ],
+      "removed": [],
+      "lang_keys": 326
+    }
+  },
+  "build": {
+    "successful": true,
+    "archive": {
+      "path": "verification/1.2.0/rc.8-upgrades/build.log.gz",
+      "raw_sha256": "7224b574edb7692a9d28e16e6292fcf827e387be4a7636cf7342c21b2734fa95",
+      "gzip_sha256": "c69d3a70bd9145c34b529fa3e6b8f3bf3ed7e19bfac2e936cbbb91c566bf3278"
+    }
+  },
+  "paired_packages": [
+    {
+      "suite": "verifyRoyalGui",
+      "run": "royal-rc8-royalgui-01",
+      "world": "/workspace/millenairekingdoms/run/regression/royal-rc8-royalgui-01/verifyRoyalGui",
+      "stages": [
+        {
+          "phase": "write",
+          "exit_code": 0,
+          "pass_lines": [
+            "28"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-royalgui-01-write.log",
+          "sha256": "097dcf602f124c53691ed50ac993519a1824fc7eef25b74b8bfda276226c4961",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/gui-initial-write.log.gz",
+            "raw_sha256": "097dcf602f124c53691ed50ac993519a1824fc7eef25b74b8bfda276226c4961",
+            "gzip_sha256": "0149b89c3f66a6713f8a355e870928d80288904b4c64517b2b971384838be2ba"
+          }
+        },
+        {
+          "phase": "reopen",
+          "exit_code": 0,
+          "pass_lines": [
+            "28"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-royalgui-01-reopen.log",
+          "sha256": "5984312b663c6e368dc06dce13822b3368b612af0f5c27ec500733ee66284f7a",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/gui-initial-reopen.log.gz",
+            "raw_sha256": "5984312b663c6e368dc06dce13822b3368b612af0f5c27ec500733ee66284f7a",
+            "gzip_sha256": "e8f397466daca97bacda28fee7c5f1e0939afd9d11728350475b324c425ddbf3"
+          }
+        }
+      ]
+    },
+    {
+      "suite": "verifyRoyalLive",
+      "run": "royal-rc8-royallive-02",
+      "world": "/workspace/millenairekingdoms/run/regression/royal-rc8-royallive-02/verifyRoyalLive",
+      "stages": [
+        {
+          "phase": "write",
+          "exit_code": 0,
+          "pass_lines": [
+            "3"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-royallive-02-write.log",
+          "sha256": "f2177fe0b1debaffbb98a275b23d9ee29e83510e2c518427a10dab961358ca44",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/live-write.log.gz",
+            "raw_sha256": "f2177fe0b1debaffbb98a275b23d9ee29e83510e2c518427a10dab961358ca44",
+            "gzip_sha256": "89f03de85484222d20978121d7fbfd749a8f0a37bc3121f016ba1940bd1a6e89"
+          }
+        },
+        {
+          "phase": "reopen",
+          "exit_code": 0,
+          "pass_lines": [
+            "3"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-royallive-02-reopen.log",
+          "sha256": "8dbf6e5d49bcd21af82c74eac985474f32a8d99d73eeff2085b15ee277964f30",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/live-reopen.log.gz",
+            "raw_sha256": "8dbf6e5d49bcd21af82c74eac985474f32a8d99d73eeff2085b15ee277964f30",
+            "gzip_sha256": "e6d1d049147df404069bb25c94b30c4ca8e05f2e77395723ad10adc35a2fcf31"
+          }
+        }
+      ]
+    },
+    {
+      "suite": "verifyStage5",
+      "run": "royal-rc8-stage5-01",
+      "world": "/workspace/millenairekingdoms/run/regression/royal-rc8-stage5-01/verifyStage5",
+      "stages": [
+        {
+          "phase": "write",
+          "exit_code": 0,
+          "pass_lines": [
+            "26"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-stage5-01-write.log",
+          "sha256": "b9ca0974fd84ca845053e11405db5ff7faa1bfd277ce855923692f23b5cfd6a7",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/capital-economy-write.log.gz",
+            "raw_sha256": "b9ca0974fd84ca845053e11405db5ff7faa1bfd277ce855923692f23b5cfd6a7",
+            "gzip_sha256": "d7cbd269457a88e5d7bf1d18e6646828ab8f2b78fc4a065ba830ff9f1083e0d8"
+          }
+        },
+        {
+          "phase": "reopen",
+          "exit_code": 0,
+          "pass_lines": [
+            "26"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-stage5-01-reopen.log",
+          "sha256": "f2fdb481d1a253c1c36f654aa8ed1491e89469d01417b5a5c0436b007c890b19",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/capital-economy-reopen.log.gz",
+            "raw_sha256": "f2fdb481d1a253c1c36f654aa8ed1491e89469d01417b5a5c0436b007c890b19",
+            "gzip_sha256": "0c69f412a3a99adf6dc9fb7b17c64eddb5e00719a74f1fd6933aa701866b6b9b"
+          }
+        }
+      ]
+    },
+    {
+      "suite": "verifyGui",
+      "run": "royal-rc8-gui-01",
+      "world": "/workspace/millenairekingdoms/run/regression/royal-rc8-gui-01/verifyGui",
+      "stages": [
+        {
+          "phase": "write",
+          "exit_code": 0,
+          "pass_lines": [
+            "7"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-gui-01-write.log",
+          "sha256": "4538ae3f9c5353736ded3faae2ac7bbf15853d4e89105975382cf4ee7de11301",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/verifyGui-write.log.gz",
+            "raw_sha256": "4538ae3f9c5353736ded3faae2ac7bbf15853d4e89105975382cf4ee7de11301",
+            "gzip_sha256": "8e93e5a35ba904db950a4a66c2c2cf0eac7e47b5feca1c14de62cd1c28d98fc7"
+          }
+        },
+        {
+          "phase": "reopen",
+          "exit_code": 0,
+          "pass_lines": [
+            "7"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-gui-01-reopen.log",
+          "sha256": "7f54edce9b6618561fbf0c228cc3ec102ddc6185ffafae7a99765ebcb8ad45c1",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/verifyGui-reopen.log.gz",
+            "raw_sha256": "7f54edce9b6618561fbf0c228cc3ec102ddc6185ffafae7a99765ebcb8ad45c1",
+            "gzip_sha256": "0fbb1166b67d133584197f97b74d537dafcfa9051e55ebdac5a81ab761ce4290"
+          }
+        }
+      ]
+    },
+    {
+      "suite": "verifyRoyalConstruction",
+      "run": "royal-rc8-royalconstruction-01",
+      "world": "/workspace/millenairekingdoms/run/regression/royal-rc8-royalconstruction-01/verifyRoyalConstruction",
+      "stages": [
+        {
+          "phase": "write",
+          "exit_code": 0,
+          "pass_lines": [
+            "55"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-royalconstruction-01-write.log",
+          "sha256": "2514cc85dc103277effa8e5d0f2d5ee282d2ec2069ecaac38076ecd725d20f25",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/verifyRoyalConstruction-write.log.gz",
+            "raw_sha256": "2514cc85dc103277effa8e5d0f2d5ee282d2ec2069ecaac38076ecd725d20f25",
+            "gzip_sha256": "6b8b8bfd9d31b709e1fcb3d75ae4b544d7ab0147d15188ef4acf2a71bf88adcd"
+          }
+        },
+        {
+          "phase": "reopen",
+          "exit_code": 0,
+          "pass_lines": [
+            "55"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-royalconstruction-01-reopen.log",
+          "sha256": "0255cd95feeaee60bfcbbef512cc0c5544f9083c643a58d03fc636e9217a6153",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/verifyRoyalConstruction-reopen.log.gz",
+            "raw_sha256": "0255cd95feeaee60bfcbbef512cc0c5544f9083c643a58d03fc636e9217a6153",
+            "gzip_sha256": "9094284074924ae06c47bcee3f1903e975e55808200c12bcfe6feab6d4a2a4d2"
+          }
+        }
+      ]
+    },
+    {
+      "suite": "verifyRoyalRecovery",
+      "run": "royal-rc8-royalrecovery-01",
+      "world": "/workspace/millenairekingdoms/run/regression/royal-rc8-royalrecovery-01/verifyRoyalRecovery",
+      "stages": [
+        {
+          "phase": "write",
+          "exit_code": 0,
+          "pass_lines": [
+            "16"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-royalrecovery-01-write.log",
+          "sha256": "f1fa9cf7960015acee4cb34c73fa6ad8b4aa4988dfff927b2b1c902a819b7a51",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/verifyRoyalRecovery-write.log.gz",
+            "raw_sha256": "f1fa9cf7960015acee4cb34c73fa6ad8b4aa4988dfff927b2b1c902a819b7a51",
+            "gzip_sha256": "d14089703fb00fba458d788d7b83c72289a32ee03fd71211ccc51d2ee7d71e23"
+          }
+        },
+        {
+          "phase": "reopen",
+          "exit_code": 0,
+          "pass_lines": [
+            "16"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-royalrecovery-01-reopen.log",
+          "sha256": "4af9a2dbcfc80aba2f5f21b493ad677e057456cdaf657417dd046571766cb0e3",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/verifyRoyalRecovery-reopen.log.gz",
+            "raw_sha256": "4af9a2dbcfc80aba2f5f21b493ad677e057456cdaf657417dd046571766cb0e3",
+            "gzip_sha256": "e9cc71df80fd59f49f76b4d17f517c562320c9e9ac9051150a1655d41b86c348"
+          }
+        }
+      ]
+    },
+    {
+      "suite": "verifyRoyalSites",
+      "run": "royal-rc8-royalsites-01",
+      "world": "/workspace/millenairekingdoms/run/regression/royal-rc8-royalsites-01/verifyRoyalSites",
+      "stages": [
+        {
+          "phase": "write",
+          "exit_code": 0,
+          "pass_lines": [
+            "10"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-royalsites-01-write.log",
+          "sha256": "2eea4efd072722369bc9d48781ad87b053bc054aed25bf89988d750450c035b9",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/verifyRoyalSites-write.log.gz",
+            "raw_sha256": "2eea4efd072722369bc9d48781ad87b053bc054aed25bf89988d750450c035b9",
+            "gzip_sha256": "202a61537b886f1271cf43775c1e8355122169e4b1f091466cd87435859f07c2"
+          }
+        },
+        {
+          "phase": "reopen",
+          "exit_code": 0,
+          "pass_lines": [
+            "10"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-royalsites-01-reopen.log",
+          "sha256": "0341c29e14e1bdaa9ebf4e0967f05274765a865c30b554b5a2a9effd60e0baf1",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/verifyRoyalSites-reopen.log.gz",
+            "raw_sha256": "0341c29e14e1bdaa9ebf4e0967f05274765a865c30b554b5a2a9effd60e0baf1",
+            "gzip_sha256": "7a40e18501985b6f92d8a431cf8751ec4e24124b6291c38ff4200049485b6ba7"
+          }
+        }
+      ]
+    },
+    {
+      "suite": "verifyRoyalShipmentGui",
+      "run": "royal-rc8-royalshipmentgui-01",
+      "world": "/workspace/millenairekingdoms/run/regression/royal-rc8-royalshipmentgui-01/verifyRoyalShipmentGui",
+      "stages": [
+        {
+          "phase": "write",
+          "exit_code": 0,
+          "pass_lines": [
+            "18"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-royalshipmentgui-01-write.log",
+          "sha256": "173b07d2cb2de3614a42f623e6e82a91f8e9608d453b670db0eb4413d5c05a4b",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/verifyRoyalShipmentGui-write.log.gz",
+            "raw_sha256": "173b07d2cb2de3614a42f623e6e82a91f8e9608d453b670db0eb4413d5c05a4b",
+            "gzip_sha256": "86c40d35b60962faa08cd0a9accbe60fd96d82c80d9a4ff1acb205b2ce01a0de"
+          }
+        },
+        {
+          "phase": "reopen",
+          "exit_code": 0,
+          "pass_lines": [
+            "18"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-royalshipmentgui-01-reopen.log",
+          "sha256": "28daea3c85e1329350ebcdd5fdd5d617545bab0512b25cc7304017c86f1af613",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/verifyRoyalShipmentGui-reopen.log.gz",
+            "raw_sha256": "28daea3c85e1329350ebcdd5fdd5d617545bab0512b25cc7304017c86f1af613",
+            "gzip_sha256": "736e4eac6aa832c9c8c73121ab776712381010e172b5fb087e10491c3121261e"
+          }
+        }
+      ]
+    },
+    {
+      "suite": "verifyRoyalIntegration",
+      "run": "royal-rc8-royalintegration-02",
+      "world": "/workspace/millenairekingdoms/run/regression/royal-rc8-royalintegration-02/verifyRoyalIntegration",
+      "stages": [
+        {
+          "phase": "write",
+          "exit_code": 0,
+          "pass_lines": [
+            "9"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-royalintegration-02-write.log",
+          "sha256": "0c0b8118cf01ccc9a70461261e34aebf48b70f0e5fd9a8779399e4ffe347c93a",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/verifyRoyalIntegration-write.log.gz",
+            "raw_sha256": "0c0b8118cf01ccc9a70461261e34aebf48b70f0e5fd9a8779399e4ffe347c93a",
+            "gzip_sha256": "caa1902de8c2df8252d7b35df34e46b63adda08e8d6e5c76d9a8cff32424a8b3"
+          }
+        },
+        {
+          "phase": "reopen",
+          "exit_code": 0,
+          "pass_lines": [
+            "9"
+          ],
+          "build_successful": true,
+          "log": "/workspace/royal-decree/royal-rc8-royalintegration-02-reopen.log",
+          "sha256": "74ba1f6ec6c27ac2b9065bd8edfd7780a1de69daa6d9eab317df7f008da7699b",
+          "production_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+          "archive": {
+            "path": "verification/1.2.0/rc.8-upgrades/verifyRoyalIntegration-reopen.log.gz",
+            "raw_sha256": "74ba1f6ec6c27ac2b9065bd8edfd7780a1de69daa6d9eab317df7f008da7699b",
+            "gzip_sha256": "af15d42d2d65a874c7c387c52829d783c8c56c1e7000e7352d5470ba8788ea42"
+          }
+        }
+      ]
+    }
+  ],
+  "normal_servers": [
+    {
+      "phase": "write",
+      "exit_code": 0,
+      "ready": true,
+      "saved": true,
+      "stopped": true,
+      "build_successful": true,
+      "rc_initialized": true,
+      "dependency_verified": true,
+      "test_mod_loaded": false,
+      "staged_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+      "log_sha256": "bfa1e45e0df5dbc65dded706d90dde66fc8a7b7d99d887c6c2bca071a2dea52f",
+      "authentication": "Unverified: unchanged existing smoke fixture is offline-mode on127.0.0.1:25579.",
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/normal-server-write.log.gz",
+        "raw_sha256": "bfa1e45e0df5dbc65dded706d90dde66fc8a7b7d99d887c6c2bca071a2dea52f",
+        "gzip_sha256": "5ec7c0205cc50c4d6099afe02860f28a6689167b1a3f5f47cff728bc2f140eb4"
+      }
+    },
+    {
+      "phase": "reopen",
+      "exit_code": 0,
+      "ready": true,
+      "saved": true,
+      "stopped": true,
+      "build_successful": true,
+      "rc_initialized": true,
+      "dependency_verified": true,
+      "test_mod_loaded": false,
+      "staged_jar_sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb",
+      "log_sha256": "ec24b32329fb98e79aece0dbc66692f9993e29b2904a3e2692091d41af51c2a9",
+      "authentication": "Unverified: unchanged existing smoke fixture is offline-mode on127.0.0.1:25579.",
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/normal-server-reopen.log.gz",
+        "raw_sha256": "ec24b32329fb98e79aece0dbc66692f9993e29b2904a3e2692091d41af51c2a9",
+        "gzip_sha256": "8bbdf54aecbf8628a5068a89afc029dfcf72863d706805bc4b49eadaf2278613"
+      }
+    }
+  ],
+  "process_cuts": {
+    "run": "order-crash-20261025T012342-d8fff8cf",
+    "kind": "abrupt-jvm-construction-domain-recovery",
+    "cases": [
+      {
+        "boundary": "before-village",
+        "world_run": "order-crash-20261025T012342-d8fff8cf-before-village",
+        "stages": [
+          {
+            "stage": "prepare",
+            "exit_code": 0,
+            "required_test_pass_lines": [
+              "1"
+            ],
+            "verified": true,
+            "log": "before-village-prepare.log",
+            "archive": {
+              "path": "verification/1.2.0/rc.8-upgrades/crashes/before-village-prepare.log.gz",
+              "raw_sha256": "c12451e314d58bacaab457e415d14af9083be7a4c4efa3da5a04a081e359a785",
+              "gzip_sha256": "714e5412f6c94444791d37fe96007f001b5f122f3f85a351278b49f749b08a1f"
+            }
+          },
+          {
+            "stage": "interrupt",
+            "exit_code": 1,
+            "required_test_pass_lines": [],
+            "verified": true,
+            "log": "before-village-interrupt.log",
+            "expected_jvm_exit_code": 70,
+            "archive": {
+              "path": "verification/1.2.0/rc.8-upgrades/crashes/before-village-interrupt.log.gz",
+              "raw_sha256": "cbd6bd84cd7c26430ca090da2a8762e80ad1cd0f3b057ca0d374adf8fdda3dcb",
+              "gzip_sha256": "666a28e38077e03ac66812336a53dcc31132c6384410dda18aa03ce7db1135b0"
+            }
+          },
+          {
+            "stage": "recover",
+            "exit_code": 0,
+            "required_test_pass_lines": [
+              "1"
+            ],
+            "verified": true,
+            "log": "before-village-recover.log",
+            "archive": {
+              "path": "verification/1.2.0/rc.8-upgrades/crashes/before-village-recover.log.gz",
+              "raw_sha256": "7f6e67aa889478a41ac43373d4bf7a0e3ccb10d45dd2cfbf1b50b597c96fbdbc",
+              "gzip_sha256": "e4119bfee703196c380205c8e858b58ef2f6b8fa26825cac60ecbb103fee48f8"
+            }
+          }
+        ]
+      },
+      {
+        "boundary": "after-village",
+        "world_run": "order-crash-20261025T012342-d8fff8cf-after-village",
+        "stages": [
+          {
+            "stage": "prepare",
+            "exit_code": 0,
+            "required_test_pass_lines": [
+              "1"
+            ],
+            "verified": true,
+            "log": "after-village-prepare.log",
+            "archive": {
+              "path": "verification/1.2.0/rc.8-upgrades/crashes/after-village-prepare.log.gz",
+              "raw_sha256": "fbdebb1063e7bb0c575022e990dfcd040cdb0099f9f382dff736a75faab048c0",
+              "gzip_sha256": "da2994fbdd928a7ffead6b26911d395cc1e4592118a5635fddb1c8ef1ca3ec88"
+            }
+          },
+          {
+            "stage": "interrupt",
+            "exit_code": 1,
+            "required_test_pass_lines": [],
+            "verified": true,
+            "log": "after-village-interrupt.log",
+            "expected_jvm_exit_code": 70,
+            "archive": {
+              "path": "verification/1.2.0/rc.8-upgrades/crashes/after-village-interrupt.log.gz",
+              "raw_sha256": "65e0bbd97ba13cad77ad912b94b922ac73d43d3c8e0bed306afe1a8e5c36e6eb",
+              "gzip_sha256": "e9ab2b569add63df1fa7af2c9d620e667ceaff80039191401bd3b1761424cb2d"
+            }
+          },
+          {
+            "stage": "recover",
+            "exit_code": 0,
+            "required_test_pass_lines": [
+              "1"
+            ],
+            "verified": true,
+            "log": "after-village-recover.log",
+            "archive": {
+              "path": "verification/1.2.0/rc.8-upgrades/crashes/after-village-recover.log.gz",
+              "raw_sha256": "d52185470c414bd6e5864f9e66c32d685fd0d7d6607662b54f5b8eb002032d41",
+              "gzip_sha256": "6f6def442b0cb61b33d27ab5df65501b878a27fa37e7d229e5b579c8c15a2449"
+            }
+          }
+        ]
+      }
+    ],
+    "complete": true
+  },
+  "intermediate_attempts_not_final_pairs": [
+    {
+      "log": "royal-rc8-basic-build.log",
+      "pass_lines": [],
+      "build_successful": true,
+      "counted_as_final_pair": false,
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/attempts/royal-rc8-basic-build.log.gz",
+        "raw_sha256": "544220cb85ff720d2185d44875f0e5e456c8d151ea7b8348f55d82957eb7fcd1",
+        "gzip_sha256": "50edfd06cc88437090b0d711c94562225abd6ef7a928e1b14ab654566206e9a5"
+      }
+    },
+    {
+      "log": "royal-rc8-final-checks-paused.log",
+      "pass_lines": [],
+      "build_successful": false,
+      "counted_as_final_pair": false,
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/attempts/royal-rc8-final-checks-paused.log.gz",
+        "raw_sha256": "8c0e688abe15d5ce692a7fcd0b39bf9a8e4496f762351ed3bbedb730c489fe6d",
+        "gzip_sha256": "af897a44610734b0fdf57376e34fdf30d176b2b16f7d739a53af0aa3fc3d8a81"
+      }
+    },
+    {
+      "log": "royal-rc8-final-checks-runner.log",
+      "pass_lines": [],
+      "build_successful": false,
+      "counted_as_final_pair": false,
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/attempts/royal-rc8-final-checks-runner.log.gz",
+        "raw_sha256": "0416eac04c33a168510abc2fc47f512a623f9243b8d662e2657120460fd7f3fd",
+        "gzip_sha256": "6ecd9079797e61a0fa0df0a96c454a875f2d077a479e94668df05baabfa95206"
+      }
+    },
+    {
+      "log": "royal-rc8-fixture-build.log",
+      "pass_lines": [],
+      "build_successful": true,
+      "counted_as_final_pair": false,
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/attempts/royal-rc8-fixture-build.log.gz",
+        "raw_sha256": "31d10cebcdaf69fc1397850a7b41133c4aa07b7026cabb961d9cf0e11d1cad06",
+        "gzip_sha256": "1ab8972e6444aee6afac1a0cb4e1c1bc44120a35e344edbc38b4509319c954e1"
+      }
+    },
+    {
+      "log": "royal-rc8-integration-fixture-build.log",
+      "pass_lines": [],
+      "build_successful": true,
+      "counted_as_final_pair": false,
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/attempts/royal-rc8-integration-fixture-build.log.gz",
+        "raw_sha256": "914a190d040bb2ef3ad0689edc80654a2f353d7c5ddb28472bd92a00af4dab01",
+        "gzip_sha256": "3aeb4313fb0816261776303993a69c153915f60ff066929fd23dde8af41a49fc"
+      }
+    },
+    {
+      "log": "royal-rc8-royalintegration-01-write.log",
+      "pass_lines": [],
+      "build_successful": false,
+      "counted_as_final_pair": false,
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/attempts/royal-rc8-royalintegration-01-write.log.gz",
+        "raw_sha256": "61d1b69d7fe350e8d03ef3e1e8c683194f2c6a65668ee50d56a84f304d117963",
+        "gzip_sha256": "0f52e962ffa600fcfa1e4c60c7745c2173a8e8ead7cd49ce011e2506eafa22a1"
+      }
+    },
+    {
+      "log": "royal-rc8-royallive-01-reopen.log",
+      "pass_lines": [],
+      "build_successful": false,
+      "counted_as_final_pair": false,
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/attempts/royal-rc8-royallive-01-reopen.log.gz",
+        "raw_sha256": "4697d1a5cc3b3c0243e68e113b7d92c0cc4a64d26f3c4297418c94e63e2753e0",
+        "gzip_sha256": "3a267de87f3bee8f121ae9be7d10522135b1d5bfe60b3fcdf7492efe3894bdb8"
+      }
+    },
+    {
+      "log": "royal-rc8-royallive-01-write.log",
+      "pass_lines": [
+        "3"
+      ],
+      "build_successful": true,
+      "counted_as_final_pair": false,
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/attempts/royal-rc8-royallive-01-write.log.gz",
+        "raw_sha256": "e087c4b5ecaf910a3cca7fe79534f157718ba1843b2a9363f0f92abec1284845",
+        "gzip_sha256": "6b95d0b9c9f3c58e07dcc3cc445663d4cb5e58b1c5ce6fb2b26cd7d25f6c84f7"
+      }
+    },
+    {
+      "log": "royal-rc8-runner-02.log",
+      "pass_lines": [],
+      "build_successful": false,
+      "counted_as_final_pair": false,
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/attempts/royal-rc8-runner-02.log.gz",
+        "raw_sha256": "058e91362ec35a41af1ad91e1295bd9e980871476ad26c09b2fc6173bade8489",
+        "gzip_sha256": "233606be929a1920301ac273641a7521c0b04f75c4d76c8bc71a4a7f7f3e4335"
+      }
+    },
+    {
+      "log": "royal-rc8-runner-03.log",
+      "pass_lines": [],
+      "build_successful": false,
+      "counted_as_final_pair": false,
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/attempts/royal-rc8-runner-03.log.gz",
+        "raw_sha256": "6f7c9db2201fcea87956c1823aa62a7fac36ffcba6b93c8bd480c60726eeb839",
+        "gzip_sha256": "ba9e55e1faac30ac6e4bbe5b87efe340cc28bb9afe0a2ae1be49c1063660b26d"
+      }
+    },
+    {
+      "log": "royal-rc8-runner.log",
+      "pass_lines": [],
+      "build_successful": false,
+      "counted_as_final_pair": false,
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/attempts/royal-rc8-runner.log.gz",
+        "raw_sha256": "ea9f561b70bc4775a4f0624820f2bae248a5d4c8c6dae71bcf8acf40c2521719",
+        "gzip_sha256": "8ef5b8380c00c086349a6c71da6a858654a5b27beae527f1ea014a41e70745ab"
+      }
+    },
+    {
+      "log": "royal-rc8-tests-build-01.log",
+      "pass_lines": [],
+      "build_successful": true,
+      "counted_as_final_pair": false,
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/attempts/royal-rc8-tests-build-01.log.gz",
+        "raw_sha256": "8776dd6b2486afe9e451d038235b74f6d41d2fdaa4e1e3ea5a8660dd6c5104ac",
+        "gzip_sha256": "bd626525259d3ce054d2f3f510ccc7adf6d88a77a8739b5dc6ba476bb48a96cc"
+      }
+    },
+    {
+      "log": "royal-rc8-tests-build-02.log",
+      "pass_lines": [],
+      "build_successful": true,
+      "counted_as_final_pair": false,
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/attempts/royal-rc8-tests-build-02.log.gz",
+        "raw_sha256": "64d72be2c48328e004706499892b727b198cfcc3ce1006d34ccc6af1c989bf6d",
+        "gzip_sha256": "f27f874641ed1bf98a5a98d17cb7a1e6746eb457390ad29e002ce9dec3aa501d"
+      }
+    },
+    {
+      "log": "royal-rc8-tests-build-03.log",
+      "pass_lines": [],
+      "build_successful": false,
+      "counted_as_final_pair": false,
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/attempts/royal-rc8-tests-build-03.log.gz",
+        "raw_sha256": "066c6e48e2bb273cc220f859de04bd3a4fc8c41fa6b176f178e96d5ddd68f9c2",
+        "gzip_sha256": "52e3900ce8c0b336cfe499daf47434122dfc75e3c39c66e6c6ac238863e360fd"
+      }
+    },
+    {
+      "log": "royal-rc8-tests-build-04.log",
+      "pass_lines": [],
+      "build_successful": true,
+      "counted_as_final_pair": false,
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/attempts/royal-rc8-tests-build-04.log.gz",
+        "raw_sha256": "0fe1b69b9514a543efd19be3afe51de0d0429a5ba6cad5a2be482c45ade6902d",
+        "gzip_sha256": "28abe848962cb9da7cecb59c1a612483b5c700a1529aa05e094675a6a7ba0564"
+      }
+    },
+    {
+      "log": "royal-rc8-upgrades-build-01.log",
+      "pass_lines": [],
+      "build_successful": false,
+      "counted_as_final_pair": false,
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/attempts/royal-rc8-upgrades-build-01.log.gz",
+        "raw_sha256": "4e08f22526e0fa76f7b42ab51d6ee7f59eb18c1677529a7458c1739662924463",
+        "gzip_sha256": "9fa1728dd7a6f5f682221ca14aa239314bfe81eb9ba670a4ae5f7cd68c74d04f"
+      }
+    },
+    {
+      "log": "royal-rc8-upgrades-build-02.log",
+      "pass_lines": [],
+      "build_successful": true,
+      "counted_as_final_pair": false,
+      "archive": {
+        "path": "verification/1.2.0/rc.8-upgrades/attempts/royal-rc8-upgrades-build-02.log.gz",
+        "raw_sha256": "76975d6154f6e17c674dc335d647aadb42ed4de596b5b0279baa70fda8ff4c8f",
+        "gzip_sha256": "dfa12c875179326ab3b3c89cbcf31294483be0acba5fa2691ee7ef2463a717f5"
+      }
+    }
+  ],
+  "scope": {
+    "graphical_client": "unverified",
+    "online_authentication": "unverified; localhost/offline fixture only",
+    "user_1047_zero_shipment_root_cause": "open; actual world/config unavailable",
+    "old_902_whole_world_migration": "not claimed",
+    "full_matrix_or_400_day_rerun": false
+  }
+}

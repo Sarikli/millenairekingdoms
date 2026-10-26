@@ -1,0 +1,9 @@
+# dev.6: automatic economic commissions with genuine native builders
+
+Final fresh verifyRoyalNpcBuilders / royal-dev6-builders-final-03 logged **All 1 required tests passed** in each write/separate reopen JVM; normal build passed. Production defaults1200/2 choose the commission, tracking100/2 follows it; probe never requests/evaluates/steps/observes after setup. Original full Norman military village has10 actual native residents. Known fixture inputs:256 real coins and material bank twice maximum legal native candidate requirements, loaded tickets and tick sprint, daylight6000. These inputs are explicit; they do not fabricate the commissioned building or advance its task.
+
+Automatic shared church commission costs64, retains192. Write: original task5588/6012,1/425 physical blocks matched, actual builder carries163 oak (11 generic+152 fixed), stock356 decreased. Separate JVM: original task6012/6012,425/425 blocks matched, carried0, same single committed fee. Existing native wall construction proceeds independently.
+
+Initial write failed because the blanket ongoing-task guard counted a native wall as an occupied ordinary construction slot; no fee was charged, no reload launched and no success is claimed. Original9.0.3 VillageGrowthManager.canStartNewConstruction explicitly excludes wall segments. The narrow correction matches that independent slot rule while retaining every ordinary pending/task guard. Failed raw evidence and intermediate1+1 are retained. Final versioned related coordinator logged All 12 required tests passed in each JVM/build. Other successful packages were not repeated.
+
+Phase6 is complete at this milestone. Full integration/migration, long simulations/performance/balance, final review/RC and separate graphical/authentication gates remain. No stable release or merge. See results.json for original raw log checksums and production JAR SHA256.

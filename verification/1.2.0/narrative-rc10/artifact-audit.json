@@ -1,0 +1,127 @@
+{
+  "jar_sha256": "07a596e2d156b73fe70ad39f231d71366ce1ad32c0947f144a61415ccbdcbb0f",
+  "jar_bytes": 1939394,
+  "changed_production_classes": [
+    "com/millenairekingdoms/history/ChronicleNarrator.class"
+  ],
+  "added_production_classes": [],
+  "other_production_classes_identical": 270,
+  "prior_120_jar_preserved": true,
+  "old_en_tr_catalog_values": {
+    "en_us": {
+      "old_values_preserved": 1397,
+      "new_keys": 89
+    },
+    "tr_tr": {
+      "old_values_preserved": 1397,
+      "new_keys": 89
+    }
+  },
+  "all_locale_previous_values": {
+    "assets/millenairekingdoms/lang/ar_sa.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/cs_cz.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/da_dk.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/de_de.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/en_us.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/es_es.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/et_ee.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/fr_fr.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/hi_in.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/hu_hu.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/it_it.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/ja_jp.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/ko_kr.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/nb_no.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/nl_nl.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/pl_pl.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/pt_br.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/pt_pt.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/ru_ru.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/sl_si.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/sv_se.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/th_th.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/tr_tr.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/uk_ua.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/zh_cn.json": {
+      "preserved": 1397,
+      "added": 89
+    },
+    "assets/millenairekingdoms/lang/zh_tw.json": {
+      "preserved": 1397,
+      "added": 89
+    }
+  },
+  "previous_jar_artifacts_verified": 36
+}

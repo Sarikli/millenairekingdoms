@@ -1,0 +1,22 @@
+{
+  "version": "1.2.0-beta",
+  "production_jar_sha256": "cc66e461488e1c4f79ebee2dbc6d465cf136e948aebab122361bd753139e3943",
+  "production_code_changed": false,
+  "runs": [
+    {
+      "log": "obsolete-image-only-failure.log.gz",
+      "required_pass_counts": [],
+      "sha256": "ee14b618d1d47dccb61fece4395fba65141be8d585fd3fcea584c9e8dd710204",
+      "build_successful": false
+    },
+    {
+      "log": "final-16-pair.log.gz",
+      "required_pass_counts": [
+        16,
+        16
+      ],
+      "sha256": "2f870d74e470aece5aa333264c52e9f210da07c8b8243ede997e4ff32ea449ff",
+      "build_successful": true
+    }
+  ]
+}

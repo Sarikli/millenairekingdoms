@@ -1,0 +1,8 @@
+{
+  "version": "1.2.0-rc8-alpha.3.dev5",
+  "bytes": 1838049,
+  "sha256": "3149ed28e55a2899f3e2d27ba41f04ceb9857e58430879d8a44597ab6d8ff5de",
+  "source_parent": "3224c79e17c8490c602539af4f3a1df597c99a8b",
+  "baseline_alpha2_sha256": "4101f637a2a3a65f2e8b73c2f2606b30a4e8293a4f3bd72d725a564f1a9c6b94",
+  "ocean_scanning": "disabled"
+}

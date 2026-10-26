@@ -1,0 +1,50 @@
+{
+  "fresh_worlds": "royal-governance-02/<suite>",
+  "separate_jvms": true,
+  "results": [
+    {
+      "suite": "verifyRoyalConstruction",
+      "exit_code": 0,
+      "counts": [
+        42,
+        42
+      ],
+      "expected": 42,
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalEconomy",
+      "exit_code": 0,
+      "counts": [
+        46,
+        46
+      ],
+      "expected": 46,
+      "passed": true
+    },
+    {
+      "suite": "verifyWars",
+      "exit_code": 0,
+      "counts": [
+        30,
+        30
+      ],
+      "expected": 30,
+      "passed": true
+    },
+    {
+      "suite": "verifyStage5",
+      "exit_code": 0,
+      "counts": [
+        24,
+        24
+      ],
+      "expected": 24,
+      "passed": true
+    }
+  ],
+  "normal_build_passed": true,
+  "development_jar_sha256": "1eacfa853108308ffda688eb74a0ec135552287823b37fa57e8eb537c4bcaeb3",
+  "actual_npc_construction_completed": false,
+  "gui_or_scheduler_exposed": false
+}

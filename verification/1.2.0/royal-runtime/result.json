@@ -1,0 +1,21 @@
+{
+  "suite": "verifyRoyalConstruction",
+  "write": 53,
+  "reload": 53,
+  "fresh_world": "royal-runtime-01",
+  "separate_jvms": true,
+  "normal_build_passed": true,
+  "development_jar_sha256": "0b8486b51497ef7d2e0bf6b564601a393088048584a5adc8b2c10727ab900f85",
+  "startup_publication_quarantine": true,
+  "bounded_scheduler_direct_step_tested": true,
+  "automatic_tick_event_gameplay_not_yet_isolated": true,
+  "real_builder_reopened_completed": true,
+  "original_plan": "millenaire:norman/lumbermanhut_b_0",
+  "task_cursor_before_restart": 2184,
+  "total_steps": 2405,
+  "task_cursor_after_restart": 2405,
+  "carried_spruce_before": 11,
+  "carried_spruce_after": 0,
+  "final_template_block_match": 1.0,
+  "player_gui_exposed": false
+}

@@ -1,0 +1,35 @@
+{
+  "cases": [
+    {
+      "run": "royal-shipment-runtime-01",
+      "required_pass_counts": [
+        1,
+        1
+      ],
+      "normal_build_successful": true,
+      "log_sha256": "63046ca6526393c317c03c6d7ceba96b0a91a7371c3d38e00d9ecaf84fbb9730"
+    },
+    {
+      "run": "royal-shipment-live-01",
+      "required_pass_counts": [
+        1,
+        1
+      ],
+      "normal_build_successful": true,
+      "log_sha256": "a28742d8a0a852ab034f003b1ecf9293992820b16a2ccdcbbf3a7d541ab9d458"
+    }
+  ],
+  "production_jar_sha256": "7dcc952cb4d8a1c0afaf2c756d83ff8c04281f1acd1c753377f6d85cd1b57c14",
+  "actual_event_defaults": {
+    "interval_ticks": 100,
+    "maximum_jobs": 2,
+    "route_duration_ticks": 3600,
+    "fee": 9
+  },
+  "automatic_read": {
+    "source": 56,
+    "target": 44,
+    "capital": 119,
+    "escrow": 0
+  }
+}

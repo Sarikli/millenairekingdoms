@@ -1,0 +1,20 @@
+// Opt-in only; always pair with isolated-tests.gradle and never point at a player's world.
+gradle.projectsEvaluated {
+    def p = gradle.rootProject
+    def stage = System.getProperty('kingdoms.crashStage')
+    def boundary = System.getProperty('kingdoms.orderCrashBoundary')
+    def run = System.getProperty('kingdoms.testRun')
+    if (System.getProperty('kingdoms.testSuite') != 'verifyRoyalOrderCrash' || !(run ==~ /order-crash-[A-Za-z0-9-]+/)) {
+        throw new GradleException('Construction crash probes require their dedicated isolated run ID/world')
+    }
+    if (!(stage in ['prepare','interrupt','recover']) || !(boundary in ['before-debit','debit-before-order','before-village','after-village','before-commit','cancel-before-refund','cancel-physical','cancel-receipt'])) {
+        throw new GradleException('Select an explicit construction crash stage and boundary')
+    }
+    p.neoForge.runs.configureEach { spec ->
+        if (spec.name.toLowerCase().contains('royalconstructiongametestserver')) {
+            gameDirectory = p.layout.projectDirectory.dir("run/regression/${run}/verifyRoyalOrderCrash").asFile
+            systemProperty 'neoforge.enabledGameTestNamespaces', "millenairekingdoms_order_crash_${stage}"
+            systemProperty 'kingdoms.tests.orderCrashBoundary', boundary
+        }
+    }
+}

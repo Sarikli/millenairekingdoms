@@ -1,0 +1,9 @@
+{
+  "version": "1.2.0-rc8-alpha.dev7.3",
+  "bytes": 760575,
+  "sha256": "437448676208fb7559e39d35a6b5b822136ba443e95e79935fb5f3bf3b90ba67",
+  "source_parent": "195111ee06fb068ee7e0d8ac1230d2b5c8be66bd",
+  "build_log_sha256": "d3394dd28f4afdd5ddd759bccfd22546186333f429363c1733805795a7b82517",
+  "build_log_archive_sha256": "8b6b504be285de268142116809c32c6873778e312a7aba849cc2525cdb48ddb2",
+  "scope": "Client footer only plus nested debug line numbers, matching existing regression business/history/atlas bytes; no GameTest rerun or graphical pass claimed."
+}

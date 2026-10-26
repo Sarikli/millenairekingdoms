@@ -216,7 +216,7 @@ public final class CapitalGameTests {
         h.assertTrue(old.getInt("format") == 3, "Fixture is an authentic 0.3.1 save (format 3)");
         var d = KingdomSavedData.load(old.copy(), h.getLevel().registryAccess());
         // Formats 4 and 5 only add an empty ruler list and an empty ledger; every format-3 field is saved back unchanged.
-        CompoundTag expected = old.copy(); expected.putInt("format", KingdomSavedData.FORMAT); expected.put("rulers", new net.minecraft.nbt.ListTag());
+        CompoundTag expected = old.copy(); expected.putInt("format", 6); expected.put("rulers", new net.minecraft.nbt.ListTag());
         CompoundTag ledger = new CompoundTag(); ledger.putLong("day", -1);
         for (String key : new String[]{"owed", "peaceOffers", "joinRequests"}) ledger.put(key, new net.minecraft.nbt.ListTag());
         expected.put("ledger", ledger);

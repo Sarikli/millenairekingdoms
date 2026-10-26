@@ -1,0 +1,9 @@
+# RC.4 narrative personality names: verification scope
+
+Only five personality display values change per language: Warlike/Savaşçı, Traditionalist/Gelenekçi, Peaceful/Barışçıl, Industrious/Üretken and Pragmatic/Pragmatik. Category IDs, mapping revision1, policy weights, persisted identity, server protocol3 and all existing functionality remain unchanged. The naming rationale is in docs/1.2.0_PERSONALITIES.md.
+
+The existing offline Gradle build passed. The packed resources have314 matching keys in each language; exactly the five personality keys changed, with all other values retained. Format arguments match after normalizing implicit and indexed positions (valid Turkish reordering such as %2$s/%1$s is preserved). ZIP comparison against RC.3 has no added/removed entries; only four payloads differ: EN/TR files and two version metadata files. All200 production class files are byte-identical. The own addon contains no original dependency or test classes.
+
+The actual RC.4 JAR, SHA256 `20cdc368d0ee2f61083c4512ca43223cb3f519d838462b6ee7f330394eca758b`, was staged without a test mod, opened a fresh ordinary server world, saved/stopped, then reopened/saved/stopped the same world in a separate JVM. Both runs exit0 with Done/Saved the game/BUILD SUCCESSFUL, native9.0.3 and RC.4 initialized, staged/archive hash identical. Existing accepted eula/server properties were copied unchanged from the earlier localhost/offline fixture. Raw logs and hashes are archived beside results.json.
+
+No GameTest suite was run or newly claimed successful for a localization-only change with identical Java classes. Gradle test NO-SOURCE is not GameTest evidence. Prior paired package results remain historical; unrelated successful suites were not repeated. This normal-server lifecycle does not prove client font/layout/rendering or online authentication. Both remain pending manual checks.

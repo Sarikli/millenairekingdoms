@@ -1,0 +1,34 @@
+{
+  "run": "building-crash-20261023T213012-6de1b3da",
+  "kind": "actual-resident-physical-building-abrupt-save",
+  "stages": [
+    {
+      "stage": "prepare",
+      "exit_code": 0,
+      "required_test_pass_lines": [
+        "1"
+      ],
+      "verified": true,
+      "log": "prepare.log"
+    },
+    {
+      "stage": "interrupt",
+      "exit_code": 1,
+      "required_test_pass_lines": [],
+      "verified": true,
+      "log": "interrupt.log",
+      "expected_jvm_exit_code": 70
+    },
+    {
+      "stage": "recover",
+      "exit_code": 1,
+      "required_test_pass_lines": [],
+      "verified": false,
+      "log": "recover.log",
+      "physical_disk_observations": [
+        "ROYAL_BUILD_CRASH_DISK_STATE matches=2 total=233 carried=14 expectedCarriedMax=0"
+      ]
+    }
+  ],
+  "complete": false
+}

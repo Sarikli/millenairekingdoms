@@ -1,0 +1,264 @@
+{
+  "kind": "native-money-receipt-actual-abrupt-process-cuts",
+  "source_commit": "98a2df4",
+  "cases": [
+    {
+      "boundary": "before",
+      "world_run": "payment-crash-20261024T051021-aa1e23bf-before",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "before-prepare.log",
+          "uncompressed_log_sha256": "1e2f17a80df30eab8fdbbc5dc23d45e7baf01607c23c7e13b484918a4f5c17ab"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "before-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "23bd0af4c51b86a79006baa0958f8100b5d1937b312195a56f3825db6ac7e281"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "before-recover.log",
+          "uncompressed_log_sha256": "a9b704d92b4a198d507c5842de787818cd09c58cf3864480cd3e780f32103d96"
+        }
+      ]
+    },
+    {
+      "boundary": "partial",
+      "world_run": "payment-crash-20261024T051021-aa1e23bf-partial",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "partial-prepare.log",
+          "uncompressed_log_sha256": "226872c4945590425985183d179557bbc2804f51811488cb94356e027ff5804b"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "partial-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "6a675a668ae04c215c9a49930775a1064dd8796c46f72fc18ef4b7aee420f5f2"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "partial-recover.log",
+          "uncompressed_log_sha256": "8780bb99eda8b847a5d923a420b3da7593278217db36cd789d02e2052095cb1c"
+        }
+      ]
+    },
+    {
+      "boundary": "after",
+      "world_run": "payment-crash-20261024T051021-aa1e23bf-after",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "after-prepare.log",
+          "uncompressed_log_sha256": "17e3685e0fea857c5c8f1af850d284c7e45802f93281da78656d0db4db34b205"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "after-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "74bb25487186822ca3b5220b9b84658ce2afc2bec052c4d5ab66f3d45ce99551"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "after-recover.log",
+          "uncompressed_log_sha256": "e1d99ce61fd971640907c7b1d26fd2b55b6e623424ccd0186c8e22c8c2960631"
+        }
+      ]
+    },
+    {
+      "boundary": "refund",
+      "world_run": "payment-crash-20261024T051455-34772de4-refund",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "refund-prepare.log",
+          "uncompressed_log_sha256": "6260aad6c279a308e49ea230594b2b14a5d1515d65051eafba27097861c08c51"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "refund-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "e42c89bf13bc4d3ea4b14bacabc3d558e777bcd7b26fbd3332f8a6ea0aca3c18"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "refund-recover.log",
+          "uncompressed_log_sha256": "555e2e98e0290055a3c4b58790bc6924fbd62a20023f8dbad1497654fa27ccc1"
+        }
+      ]
+    },
+    {
+      "boundary": "slots-before-proof",
+      "world_run": "payment-crash-20261024T051455-34772de4-slots-before-proof",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "slots-before-proof-prepare.log",
+          "uncompressed_log_sha256": "3c2072ff9aeff60c1f14d9c9a1041fbeb97ea454c355df1ac8a8496c23c7fa64"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "slots-before-proof-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "4a8b49cee8265b07caeb07c576295a18c578429e0d9661fbd50b1a1ea3547c4b"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "slots-before-proof-recover.log",
+          "uncompressed_log_sha256": "73daf84367e495b67ad3d5381f2f0bc9ec6d0eabe6abf34bbddd80f32ac01020"
+        }
+      ]
+    },
+    {
+      "boundary": "debit-activity",
+      "world_run": "payment-crash-20261024T051455-34772de4-debit-activity",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "debit-activity-prepare.log",
+          "uncompressed_log_sha256": "1f776c09f7ff38813ca153322bd04047058d04cde473cf6ba49719284b1081be"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "debit-activity-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "1c72a67e7768f232175eaee3d62962e5f8304c83d5b7cacd3500652ff66a1a0a"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "debit-activity-recover.log",
+          "uncompressed_log_sha256": "f5da76c3d9afe9301504373c8ec87b3ee9775bf026a6618f2e2a47bb014c2e28"
+        }
+      ]
+    },
+    {
+      "boundary": "refund-activity",
+      "world_run": "payment-crash-20261024T051455-34772de4-refund-activity",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "refund-activity-prepare.log",
+          "uncompressed_log_sha256": "821117272a3c544ebcc50e356cffb70e42a0544abe5c8ac9e39c6746bd7e44d6"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "refund-activity-interrupt.log",
+          "expected_jvm_exit_code": 70,
+          "uncompressed_log_sha256": "dc33d70b5e27c3c1a60872a1aae5f258b3a8bd226221a02f7564f93aef0bb203"
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "refund-activity-recover.log",
+          "uncompressed_log_sha256": "4433e63e1ba85475bbe9d68fcb13b885840755ffae05ea6fd3e058ca9eae5617"
+        }
+      ]
+    }
+  ],
+  "complete": true,
+  "normal_required_pass_lines": 14,
+  "expected_halt70_failures": 7,
+  "interrupted_attempt": "One extra invocation stopped before JVM launch by an unrelated in-progress shipment-store compile error. That draft was removed from the source tree; only uncompleted boundaries were resumed in fresh worlds.",
+  "related_construction": {
+    "run": "royal-receipt-construction-01",
+    "required_pass_counts": [
+      53,
+      53
+    ],
+    "normal_build_successful": true,
+    "log_sha256": "85422b37c61e083e281bb5199eeb7d38e567fa5df5bba650935e8ba04aaf7622"
+  }
+}

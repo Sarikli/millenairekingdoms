@@ -1,0 +1,7 @@
+# RC.6 Ethos / Karakter heading verification
+
+Only the existing `millenairekingdoms.gui.personality` value changes in each language: English `Ethos: %s`, Turkish `Karakter: %s`. The314-key sets match, the %s argument and all five temperament names/other translation values are retained. ZIP comparison against RC.5 has no added/removed entries: only EN/TR files and two version metadata payloads differ. All200 Java class files and every other resource are byte-identical. No gameplay/configuration, source dependency, category key, protocol or save-format changes.
+
+Existing offline build passed. The actual RC.6 production JAR then opened/saved/stopped/reopened the same normal server world in two separate JVMs, both exit0/Done/Saved the game/BUILD SUCCESSFUL, original9.0.3 and RC.6 initialized, test mod absent, staged/archive SHA identical. The newly generated server configuration equals RC.5 in every field. Existing accepted eula/properties were copied unchanged from the earlier localhost/offline fixture.
+
+No new GameTest success is claimed or unrelated successful package repeated for this text change; Gradle test NO-SOURCE is not gameplay evidence. RC.5's six focused paired packages remain historical evidence. No environment/setup/start instructions changed. Actual raw build/ordinary-server logs and hashes are archived beside results.json.

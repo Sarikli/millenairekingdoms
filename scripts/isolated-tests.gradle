@@ -1,0 +1,19 @@
+// Each suite gets a fresh world; its write/reload tasks share that world.
+gradle.projectsEvaluated {
+    def p = gradle.rootProject
+    def suite = System.getProperty('kingdoms.testSuite')
+    def run = System.getProperty('kingdoms.testRun')
+    if (!(suite ==~ /verify[A-Za-z0-9]+/) || !(run ==~ /[A-Za-z0-9-]+/)) {
+        throw new GradleException('Set kingdoms.testSuite and a unique kingdoms.testRun')
+    }
+    def directory = p.layout.projectDirectory.dir("run/regression/${run}/${suite}")
+    p.neoForge.runs.configureEach { spec ->
+        if (spec.name.toLowerCase().contains('gametestserver')) spec.gameDirectory = directory.asFile
+    }
+    p.tasks.named('stageGameTestJar', Copy) { into directory.dir('mods') }
+    p.tasks.withType(JavaExec).configureEach { task ->
+        if (task.name.toLowerCase().contains('gametestserver')) {
+            doFirst { logger.lifecycle("ISOLATED_TEST suite=${suite} task=${task.name} world=${directory.asFile}") }
+        }
+    }
+}

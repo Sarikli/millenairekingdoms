@@ -1,0 +1,12 @@
+{
+  "run": "royal-shipment-ledger-01",
+  "suite": "verifyRoyalShipments",
+  "required_pass_counts": [
+    9,
+    9
+  ],
+  "build_successful": true,
+  "kind": "metadata-accounting-and-filesystem-only",
+  "log_sha256": "195e77ea66f1bbc7a7b8cf3738c851431be4e7c9c2380545ac9e699cce1c73db",
+  "production_jar_sha256": "ce3f29af610afb833b9b2adee24ec93ace82ae19d57cb911d72ab92da03acedb"
+}

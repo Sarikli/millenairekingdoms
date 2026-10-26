@@ -1,0 +1,62 @@
+[
+  {
+    "suite": "verifyStrategicMilitary",
+    "run": "stabilization-military-dev4-02",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "9"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-dev4-02-write.log",
+        "sha256": "0e6aede9399e74d8e9b9d2304e2d47e0e507054b5ed8f861e037c858407f7e59",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "ff120970a1758bfd6a5963b67717ef7ff2353a79f701e2bf6c42185c1207c9c1"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "9"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-dev4-02-reopen.log",
+        "sha256": "28d1d84e170f2aeb00b70faf8b8ee7eafb6181d8e8e2e916b0d41d5bbdfd27a0",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "ff120970a1758bfd6a5963b67717ef7ff2353a79f701e2bf6c42185c1207c9c1"
+      }
+    ]
+  },
+  {
+    "suite": "verifyStrategicRestart",
+    "run": "stabilization-military-restart-dev4-02",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-restart-dev4-02-write.log",
+        "sha256": "259296ee0617be8173cf9045f052089f01cacc67efaa9cfef831fbe30390cb0a",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "ff120970a1758bfd6a5963b67717ef7ff2353a79f701e2bf6c42185c1207c9c1"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-restart-dev4-02-reopen.log",
+        "sha256": "f848606e543dec9fad8467cec696fc349c47e3c6c2a8570b6107c0bf4cb7dcf6",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "ff120970a1758bfd6a5963b67717ef7ff2353a79f701e2bf6c42185c1207c9c1"
+      }
+    ]
+  }
+]

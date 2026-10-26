@@ -48,6 +48,7 @@ public final class ConquestService {
         require(level.getGameTime() > 0 && level.getDayTime() > 0, "World time must be positive for Millénaire raid timestamps.");
         require(!Military.busy(attacker) && !Military.busy(target), "A village is already involved in a raid or raid preparation.");
         var data = KingdomSavedData.get(level);
+        require(orderId==null || !com.millenairekingdoms.autonomy.StrategicBattleService.owns(level,orderId),"This operation already owns a committed strategic result; no duplicate physical raid may launch.");
         require(!data.involves(attackerId) && !data.involves(targetId), "A village already has an active conquest raid.");
         data.startable(attackerId, targetId); // Validate politics and war before starting any Millénaire side effects.
         require(!target.getId().equals(attacker.getParentVillageId())
@@ -107,15 +108,14 @@ public final class ConquestService {
             var war = raid.campaign() == null || raid.campaign().warId() == null ? null : data.war(raid.campaign().warId());
             boolean capitalFell = result.transferred() && war != null && war.status() == KingdomSavedData.WarStatus.CONQUERED;
             String victor = result.outcome() == KingdomSavedData.Outcome.WON ? data.kingdom(raid.campaign().attackerKingdom()).name() : "";
-            String message = switch (result.outcome()) {
-                case WON -> "Conquest " + name(target) + ": " + count + "/" + KingdomSavedData.requiredWins(raid.campaign())
-                        + (capitalFell ? " — capital fell; kingdom " + data.kingdom(war.defenderKingdom()).name()
-                        + " collapsed and its remaining villages now belong to " + victor + "."
-                        : result.transferred() ? " — political allegiance transferred to " + victor + "." : " — first victory.");
-                case LEGACY_WON -> "Legacy conquest completed; old target-only progress grants no political ownership.";
-                default -> "Conquest context changed; no political progress awarded.";
+            Component message = switch (result.outcome()) {
+                case WON -> com.millenairekingdoms.localization.PublicText.of("Conquest %s: %s/%s%s",name(target),count,KingdomSavedData.requiredWins(raid.campaign()),
+                        capitalFell ? com.millenairekingdoms.localization.PublicText.of(" — capital fell; kingdom %s collapsed and its remaining villages now belong to %s.",data.kingdom(war.defenderKingdom()).name(),victor)
+                        : result.transferred() ? com.millenairekingdoms.localization.PublicText.of(" — political allegiance transferred to %s.",victor) : com.millenairekingdoms.localization.PublicText.of(" — first victory."));
+                case LEGACY_WON -> com.millenairekingdoms.localization.PublicText.of("Legacy conquest completed; old target-only progress grants no political ownership.");
+                default -> com.millenairekingdoms.localization.PublicText.of("Conquest context changed; no political progress awarded.");
             };
-            notify(level, raid, message + " Loot prevented.");
+            notify(level, raid, Component.empty().append(message).append(com.millenairekingdoms.localization.PublicText.of(" Loot prevented.")));
             notifyKingdoms(level, data, raid, message);
         }
         return true;
@@ -131,9 +131,8 @@ public final class ConquestService {
         try { DiplomacyService.raidIncident(level, data, attacker, target, conquest ? raid.campaign() : null); }
         catch (RuntimeException e) { LOGGER.error("[Kingdoms] Raid tension could not be applied; the raid itself is unaffected.", e); }
         if (!conquest) return;
-        if (!raid.victoryRecorded()) notify(level, raid, "Conquest raid failed at " + name(target)
-                + (raid.campaign() == null ? "." : ". Progress remains " + data.wins(raid.campaign())
-                + "/" + KingdomSavedData.requiredWins(raid.campaign()) + "."));
+        if (!raid.victoryRecorded()) notify(level,raid,com.millenairekingdoms.localization.PublicText.of("Conquest raid failed at %s%s",name(target),
+                raid.campaign()==null?Component.literal("."):com.millenairekingdoms.localization.PublicText.of(". Progress remains %s/%s.",data.wins(raid.campaign()),KingdomSavedData.requiredWins(raid.campaign()))));
         logBattle(level, raid, attacker, target);
         data.finish(raid, KingdomSavedData.Outcome.LOST);
     }
@@ -164,6 +163,7 @@ public final class ConquestService {
         if (data.activeRaids().isEmpty()) return;
         var manager = VillageSavedData.get(level).getVillageManager();
         for (var raid : data.activeRaids()) {
+            if(com.millenairekingdoms.autonomy.StrategicBattleService.owns(level,raid.id()))continue;
             Village attacker = manager.getVillage(new VillageId(raid.attacker()));
             Village target = manager.getVillage(new VillageId(raid.target()));
             if (!matches(raid, attacker, target)) {
@@ -178,15 +178,15 @@ public final class ConquestService {
         return village.getVillageName() == null ? village.getId().uuid().toString() : village.getVillageName();
     }
 
-    private static void notify(ServerLevel level, KingdomSavedData.Raid raid, String text) {
-        LOGGER.info("{} [raid={}]", text, raid.id());
+    private static void notify(ServerLevel level, KingdomSavedData.Raid raid, Component text) {
+        LOGGER.info("{} [raid={}]", text.getString(), raid.id());
         if (raid.initiator() != null) {
             var player = level.getServer().getPlayerList().getPlayer(raid.initiator());
-            if (player != null) player.sendSystemMessage(Component.literal("[Kingdoms] " + text));
+            if (player != null) com.millenairekingdoms.localization.PublicText.send(player,Component.literal("[Kingdoms] ").append(text));
         }
     }
     /** The rulers of both kingdoms hear about a conquest victory, whoever ordered it. */
-    private static void notifyKingdoms(ServerLevel level, KingdomSavedData data, KingdomSavedData.Raid raid, String text) {
+    private static void notifyKingdoms(ServerLevel level, KingdomSavedData data, KingdomSavedData.Raid raid, Component text) {
         if (raid.campaign() == null) return;
         UUID attackerKingdom = raid.campaign().attackerKingdom();
         var war = raid.campaign().warId() == null ? null : data.war(raid.campaign().warId());
@@ -194,7 +194,7 @@ public final class ConquestService {
             var ruler = data.ruler(kingdom);
             if (ruler == null || ruler.player().equals(raid.initiator())) continue;
             var player = level.getServer().getPlayerList().getPlayer(ruler.player());
-            if (player != null) player.sendSystemMessage(Component.literal("[Kingdoms] " + text));
+            if (player != null) com.millenairekingdoms.localization.PublicText.send(player,Component.literal("[Kingdoms] ").append(text));
         }
     }
 

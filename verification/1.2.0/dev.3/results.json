@@ -1,0 +1,23 @@
+{
+  "suite": "verifyRoyalGui",
+  "run": "royal-dev3-gui-final-01",
+  "version": "1.2.0-dev.3",
+  "required_pass_counts": [
+    14,
+    14
+  ],
+  "separate_jvms": true,
+  "normal_build_passed": true,
+  "production_jar_sha256": "1a1a77872d6db5a61943bfd59867691e81585f216ed8e7078621cc4bf3728caf",
+  "original_millenaire_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "graphical_client": "unverified: no DISPLAY/Wayland/Xvfb",
+  "online_authentication": "unverified: Yggdrasil public-key request refused",
+  "related_existing_gui": {
+    "run": "royal-dev3-existing-gui-01",
+    "required_pass_counts": [
+      7,
+      7
+    ],
+    "normal_build_passed": true
+  }
+}

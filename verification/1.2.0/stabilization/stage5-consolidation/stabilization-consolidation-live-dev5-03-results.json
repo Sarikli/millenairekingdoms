@@ -1,0 +1,18 @@
+[
+  {
+    "suite": "verifyConsolidationLive",
+    "run": "stabilization-consolidation-live-dev5-03",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 1,
+        "passes": [],
+        "build": false,
+        "log": "/workspace/royal-decree/stabilization-consolidation-live-dev5-03-write.log",
+        "sha256": "2bf67e9263ce9ece639fad70788c9cde34f43de0ee3054850da985a0b0daab76",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev5.jar",
+        "jar_sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+      }
+    ]
+  }
+]

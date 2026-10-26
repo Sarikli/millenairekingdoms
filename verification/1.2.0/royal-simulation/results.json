@@ -1,0 +1,43 @@
+{
+  "required_pass_counts": [
+    1,
+    1,
+    1,
+    1
+  ],
+  "jvms": 4,
+  "days": 400,
+  "kingdoms": 10,
+  "cultures": 5,
+  "personalities": 5,
+  "decisions": 1252,
+  "minimum_attempt_cooldown_days": 3,
+  "construction_stage_counts": {
+    "CANCELLING": 2,
+    "QUEUED": 8
+  },
+  "construction_blocked_counts": {
+    "AUTHORITY": 2,
+    "NONE": 8
+  },
+  "shipment_stage_counts": {
+    "DELIVERED": 10
+  },
+  "construction_count": 10,
+  "war_construction_count": 10,
+  "military_commissions": 2,
+  "total_fees": 730,
+  "total_earned": 32644,
+  "total_final_coins": 52394,
+  "total_initial": 20480,
+  "delivered_goods": 92,
+  "held_goods": 0,
+  "performance": [
+    "ROYAL_SIMULATION_EPOCH_PASS epoch=0 days=100 realms=10 cultures=5 personalities=5 evaluateCount=1000 evaluateP50us=1335 evaluateP95us=9578 evaluateMaxus=95325 runtimeP95us=39540 runtimeMaxus=296933 actualPhysicalCompletionsClaimed=0",
+    "ROYAL_SIMULATION_EPOCH_PASS epoch=1 days=200 realms=10 cultures=5 personalities=5 evaluateCount=1000 evaluateP50us=2826 evaluateP95us=14617 evaluateMaxus=29656 runtimeP95us=41348 runtimeMaxus=74467 actualPhysicalCompletionsClaimed=0",
+    "ROYAL_SIMULATION_EPOCH_PASS epoch=2 days=300 realms=10 cultures=5 personalities=5 evaluateCount=1000 evaluateP50us=4502 evaluateP95us=23788 evaluateMaxus=82675 runtimeP95us=81667 runtimeMaxus=131050 actualPhysicalCompletionsClaimed=0",
+    "ROYAL_SIMULATION_EPOCH_PASS epoch=3 days=400 realms=10 cultures=5 personalities=5 evaluateCount=1000 evaluateP50us=5254 evaluateP95us=23697 evaluateMaxus=53832 runtimeP95us=66963 runtimeMaxus=116086 actualPhysicalCompletionsClaimed=0"
+  ],
+  "log_sha256": "6ecd46f673589bd0ac56f52d3acb7155760c4b94abb2e80ef48594bbe43e0aa6",
+  "physical_completions_claimed": 0
+}

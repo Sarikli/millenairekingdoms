@@ -1,0 +1,32 @@
+[
+  {
+    "suite": "verifyAtlas",
+    "run": "stabilization-stage6-atlas-dev6-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "21"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-stage6-atlas-dev6-01-write.log",
+        "sha256": "266655ea84ea94c065aa0f6532a21372467c96745e5445c7c76df9af52d3064e",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev6.jar",
+        "jar_sha256": "8811819418f05d61aa00445cfdf307d0589ec447eac0797ee69e504f890d55f9"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "21"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-stage6-atlas-dev6-01-reopen.log",
+        "sha256": "46634b2a9a6785db4b6193cf26902fececc55a17a6307efdb852d9f1674da97a",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev6.jar",
+        "jar_sha256": "8811819418f05d61aa00445cfdf307d0589ec447eac0797ee69e504f890d55f9"
+      }
+    ]
+  }
+]

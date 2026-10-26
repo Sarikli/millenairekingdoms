@@ -1,0 +1,36 @@
+{
+  "suite": "verifyRoyalConstruction",
+  "write": 53,
+  "reload": 53,
+  "fresh_world": "royal-physical-final-01",
+  "separate_jvms": true,
+  "normal_build_passed": true,
+  "development_jar_sha256": "3464546b75adb14d123888786e29630482b425acdbbb47edf68ee4ef4f0f4d23",
+  "before_fix": {
+    "prepare_pass_lines": [
+      1
+    ],
+    "interrupt_expected_exit": 70,
+    "recovery_passed": false,
+    "persisted_template_matches": 2,
+    "template_positions": 233,
+    "carried_spruce": 14
+  },
+  "after_fix": {
+    "prepare_pass_lines": [
+      1
+    ],
+    "interrupt_expected_exit": 70,
+    "recovery_pass_lines": [
+      1
+    ],
+    "persisted_template_matches": 233,
+    "template_positions": 233,
+    "carried_spruce": 0
+  },
+  "authentic_damaged_save_guard_pass_lines": [
+    1
+  ],
+  "world_fixture_sha256": "df5527acc41da8b0fdfdb1ffd5e3527bcecc5316b9bd77eb3bc9c8e49a1c26b3",
+  "player_gui_exposed": false
+}

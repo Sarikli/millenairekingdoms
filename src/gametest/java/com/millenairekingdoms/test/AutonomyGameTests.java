@@ -214,7 +214,7 @@ public final class AutonomyGameTests {
             h.assertTrue(AutonomyService.warTargets(d, war).equals(java.util.List.of(id(target))), "11. Capital closed: only the member is a target");
             var order = AutonomyService.decideCampaign(level, d, k, day, yes(), ON);
             h.assertTrue(order != null && order.target().equals(id(target)) && order.source().equals(id(src)) && order.byNpc()
-                    && order.dueGameTime() > level.getGameTime(), "NPC kingdom picks a ready source and prepares an order");
+                    && order.dueGameTime() - order.issuedGameTime() == 3000 && order.expiresGameTime() - order.issuedGameTime() == 24000, "NPC kingdom picks a ready source and prepares an order");
             h.assertTrue(AutonomyService.decideCampaign(level, d, k, day, yes(), ON) == null, "13. One order per kingdom");
             h.assertTrue(RaidOrderService.process(level) == 0 && d.order(order.id()) != null && src.getRaidTarget() == null, "Nothing leaves before preparation ends");
             var attempt = RaidOrderService.attempt(level, d, order, ON);
@@ -223,21 +223,21 @@ public final class AutonomyGameTests {
             h.assertTrue(((java.util.Map<?, ?>) raidManager("applyLooting", src, target, level)).isEmpty(), "9/10. No loot in a conquest raid");
             raidManager("endRaid", src, target, level);
             h.assertTrue(d.wins(d.campaignFor(k.id(), id(target))) == 1 && t.id().equals(d.owner(id(target))), "10. 1/2 after the first win");
-            h.assertTrue(d.lastRaidDay(id(target)) == day && RaidOrderService.cooldownLeft(d, id(target), ON) == 3, "13. Three-day cooldown recorded");
+            h.assertTrue(d.lastRaidDay(id(target)) == day && RaidOrderService.cooldownLeft(d, id(target), ON) == 1, "13. One-day cooldown recorded");
             h.assertTrue(AutonomyService.decideCampaign(level, d, k, day, yes(), ON) == null, "13. The cooldown blocks a second raid on the target");
-            d.startDay(day + 3, Map.of());
-            var second = AutonomyService.decideCampaign(level, d, k, day + 3, yes(), ON);
-            h.assertTrue(second != null && RaidOrderService.attempt(level, d, second, ON).status() == RaidOrderService.Status.STARTED, "After 3 days the next raid starts");
+            d.startDay(day + 1, Map.of());
+            var second = AutonomyService.decideCampaign(level, d, k, day + 1, yes(), ON);
+            h.assertTrue(second != null && RaidOrderService.attempt(level, d, second, ON).status() == RaidOrderService.Status.STARTED, "After 1 day the next raid starts");
             raidManager("applyLooting", src, target, level); raidManager("endRaid", src, target, level);
             h.assertTrue(k.id().equals(d.owner(id(target))) && owner.equals(target.getOwnerUUID()), "10/20. 2/2 transfers allegiance; Millénaire owner kept");
-            h.assertTrue(d.warClock(war.id()).lastProgressDay() == day + 3, "The war clock records the progress");
+            h.assertTrue(d.warClock(war.id()).lastProgressDay() == day + 1, "The war clock records the progress");
             h.assertTrue(d.capitalOpen(d.war(war.id())) && AutonomyService.warTargets(d, d.war(war.id())).equals(java.util.List.of(id(tc))),
                     "11. Holding 1 of 1 opens the capital as the next target");
-            d.startDay(day + 6, Map.of());
-            var capitalOrder = AutonomyService.decideCampaign(level, d, k, day + 6, yes(), ON);
+            d.startDay(day + 2, Map.of());
+            var capitalOrder = AutonomyService.decideCampaign(level, d, k, day + 2, yes(), ON);
             h.assertTrue(capitalOrder != null && capitalOrder.target().equals(id(tc)), "The capital is targeted only now");
             for (int i = 0; i < 2; i++) {
-                if (i == 1) { d.startDay(day + 9, Map.of()); capitalOrder = AutonomyService.decideCampaign(level, d, k, day + 9, yes(), ON); }
+                if (i == 1) { d.startDay(day + 3, Map.of()); capitalOrder = AutonomyService.decideCampaign(level, d, k, day + 3, yes(), ON); }
                 h.assertTrue(RaidOrderService.attempt(level, d, capitalOrder, ON).status() == RaidOrderService.Status.STARTED, "Capital raid " + (i + 1));
                 raidManager("applyLooting", src, tc, level); raidManager("endRaid", src, tc, level);
             }
@@ -397,7 +397,7 @@ public final class AutonomyGameTests {
     // ---------------------------------------------------------------- E: peace and truces
 
     @GameTest(templateNamespace = NS, template = "empty", timeoutTicks = 200)
-    public static void npcPeaceAfterTwelveDaysKeepsConquests(GameTestHelper h) throws Exception {
+    public static void npcPeaceAfterSixDaysKeepsConquests(GameTestHelper h) throws Exception {
         var a = village(h, 1, 1, "Peace A"); var b = village(h, 5, 5, "Peace B"); var m = village(h, 1, 5, "Peace member"); var r = village(h, 5, 1, "Peace ruled");
         try {
             var level = h.getLevel(); var d = new KingdomSavedData();
@@ -408,13 +408,13 @@ public final class AutonomyGameTests {
             for (int i = 0; i < 2; i++) { var raid = d.begin(id(a), id(m), 1, null); d.recordVictory(raid); d.finish(raid, Outcome.LOST); }
             h.assertTrue(ka.id().equals(d.owner(id(m))) && d.conquered(war.id()) == 1, "A village was taken");
             relation(a, b, -90);
-            h.assertTrue(AutonomyService.decidePeace(level, d, war, 31, yes(), ON) == PeaceDecision.NONE, "14. No NPC peace before day 12 of the war");
-            h.assertTrue(AutonomyService.peaceMotive(level, d, war, 32, ON) != null, "From day 12 a limited success is a reason");
-            h.assertTrue(AutonomyService.decidePeace(level, d, war, 32, no(), ON) == PeaceDecision.NONE, "Peace is a chance, not automatic");
+            h.assertTrue(AutonomyService.decidePeace(level, d, war, 25, yes(), ON) == PeaceDecision.NONE, "14. No NPC peace before day 6 of the war");
+            h.assertTrue(AutonomyService.peaceMotive(level, d, war, 26, ON) != null, "From day 6 a limited success is a reason");
+            h.assertTrue(AutonomyService.decidePeace(level, d, war, 26, no(), ON) == PeaceDecision.NONE, "Peace is a chance, not automatic");
             int before = a.getRelation(b.getId());
-            h.assertTrue(AutonomyService.decidePeace(level, d, war, 32, yes(), ON) == PeaceDecision.MADE, "14. NPC attacker makes peace");
+            h.assertTrue(AutonomyService.decidePeace(level, d, war, 26, yes(), ON) == PeaceDecision.MADE, "14. NPC attacker makes peace");
             h.assertTrue(d.war(war.id()).status() == WarStatus.PEACE && d.war(war.id()).endReason().equals(KingdomSavedData.NPC_PEACE_REASON)
-                    && ka.id().equals(d.owner(id(m))) && d.truceUntil(ka.id(), kb.id()) == 20 + 10, "Conquest kept; truce from the ledger day");
+                    && ka.id().equals(d.owner(id(m))) && d.truceUntil(ka.id(), kb.id()) == 20 + 5, "Conquest kept; truce from the ledger day");
             h.assertTrue(a.getRelation(b.getId()) == before + DiplomacyService.PEACE_TREATY, "The treaty improves relations once");
             // A ruled attacker is never made to make peace: an NPC defender only offers it.
             d.startDay(31, Map.of());
@@ -435,16 +435,17 @@ public final class AutonomyGameTests {
             var d = new KingdomSavedData(); kingdom(d, a);
             d.startDay(0, Map.of());
             KingdomDay.run(h.getLevel(), d, 1, ON);
-            h.assertTrue(d.nextDecisionDay() == 4, "First evaluation scheduled three days ahead");
-            KingdomDay.run(h.getLevel(), d, 2, ON); KingdomDay.run(h.getLevel(), d, 3, ON);
-            h.assertTrue(d.nextDecisionDay() == 4, "Not before");
-            KingdomDay.run(h.getLevel(), d, 4, ON);
-            h.assertTrue(d.nextDecisionDay() == 7, "Evaluated on day 4, next on day 7");
+            h.assertTrue(d.nextDecisionDay() == 2, "First evaluation scheduled one day ahead");
+            h.assertTrue(!KingdomDay.run(h.getLevel(), d, 1, ON) && d.nextDecisionDay() == 2, "Repeated booked day never evaluates again");
+            KingdomDay.run(h.getLevel(), d, 2, ON);
+            h.assertTrue(d.nextDecisionDay() == 3, "Evaluated on day 2, next on day 3");
+            KingdomDay.run(h.getLevel(), d, 3, ON);
+            h.assertTrue(d.nextDecisionDay() == 4, "Joining and all political decisions run once each new day");
             KingdomDay.run(h.getLevel(), d, 40, ON);
-            h.assertTrue(d.nextDecisionDay() == 43, "A skipped stretch evaluates once");
+            h.assertTrue(d.nextDecisionDay() == 41, "A skipped stretch evaluates once");
             var off = ON.with(false, true, true);
             KingdomDay.run(h.getLevel(), d, 50, off);
-            h.assertTrue(d.nextDecisionDay() == 43, "Autonomy off: no evaluation");
+            h.assertTrue(d.nextDecisionDay() == 41, "Autonomy off: no evaluation");
             h.succeed();
         } finally { remove(h, a); }
     }
@@ -452,7 +453,7 @@ public final class AutonomyGameTests {
     // ---------------------------------------------------------------- calendar simulation (package I)
 
     /** 300 Minecraft days by calendar jump: Millénaire's own nightly diplomacy runs for every village each day, then the
-     * addon's day (income, drift, border tension, decisions every 3 days). Real battles are NOT simulated: conquest raids are
+     * addon's day (income, drift, border tension, decisions every day). Real battles are NOT simulated: conquest raids are
      * off here (campaigns=false), because a victory may only come from a real Millénaire raid; the real-tick tests cover them.
      * Measures joins, wars, peaces, war lengths, time at war and the largest kingdom. */
     @GameTest(templateNamespace = NS, template = "empty", batch = "calendar", timeoutTicks = 2400)

@@ -1,0 +1,11 @@
+{
+  "src/main/java/com/millenairekingdoms/atlas/geography/GeographyStore.java": "39d713bbf22cf2e9a0c5dd6ce638824ccb711dce8474f6c87ca9a01ee9775c96",
+  "src/main/java/com/millenairekingdoms/atlas/geography/GeographyRaster.java": "2058cfdd59e7223e7c553350383007c57de6f7b82851d6444a0bfd25bf8b80ef",
+  "src/main/java/com/millenairekingdoms/atlas/geography/GeographyView.java": "77f93ba9afe3cd4e5e130895d60760c2dd92fbcdd32af3a2a63876007a68da5f",
+  "src/main/java/com/millenairekingdoms/atlas/geography/GeographyService.java": "ddde9c26d7e6766a1584a99dc09c45b34ab0d6373d534dd1f89aa24f39472a3b",
+  "src/main/java/com/millenairekingdoms/atlas/geography/GeographyFiles.java": "bffe780de8e4887efad5bbb2d27447f96c03c7691b67e84dee7ede96042cf672",
+  "src/main/java/com/millenairekingdoms/atlas/geography/GeographyTile.java": "def4c3390ab5cd9fc69c1270b9e3f21a4ea81769bf72d795fcb3a5f33df3c319",
+  "src/main/java/com/millenairekingdoms/atlas/geography/GeographySnapshot.java": "e7f4fde701c36bab9a74424315b992772ca5ceaaa1bf1a02010af428cfeee69a",
+  "src/gametest/java/com/millenairekingdoms/test/GeographyGameTests.java": "120d5570fb6492a8339b6282001a97aa623593e485e7eee9584c16ee76194928",
+  "src/gametest/java/com/millenairekingdoms/test/GeographyAsyncGameTests.java": "2e64b96b6735974aae8fbe6ffda312de5d456bc1cf23d20f4635504c4df1afc6"
+}

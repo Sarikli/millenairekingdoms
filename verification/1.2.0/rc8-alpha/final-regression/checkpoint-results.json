@@ -1,0 +1,172 @@
+[
+  {
+    "suite": "verifyWars",
+    "run": "alpha-dev72-reg-wars-02",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "30"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/alpha-dev72-reg-wars-02-write.log",
+        "sha256": "524235156b316ba431f3d882f9cf3be5c2486a7f054708b505e7e449d90c30db",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.2.jar",
+        "jar_sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+        "archive_log": "verification/1.2.0/rc8-alpha/final-regression/alpha-dev72-reg-wars-02-write.log.gz",
+        "archive_sha256": "b66e64d58872f9b1d753ff43963069cf1cd469ccf794ecf8f1b6a3a56de7ae58"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "30"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/alpha-dev72-reg-wars-02-reopen.log",
+        "sha256": "ea39444c447a7c0cea1d77f48e6da2f394b48d7fa5c5a3f15b7a641d6ed36a7b",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.2.jar",
+        "jar_sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+        "archive_log": "verification/1.2.0/rc8-alpha/final-regression/alpha-dev72-reg-wars-02-reopen.log.gz",
+        "archive_sha256": "12c4ca8781a18b5af1c9d02d4ad5437d43cdc2ba9b16b679b75e307aaceac9da"
+      }
+    ]
+  },
+  {
+    "suite": "verifyConquest",
+    "run": "alpha-dev72-reg-conquest-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "25"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/alpha-dev72-reg-conquest-01-write.log",
+        "sha256": "c118c384bc18e3eff04f9736b61bb3e6a7f16fa3c5a7eeaa9e408f483af3b528",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.2.jar",
+        "jar_sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+        "archive_log": "verification/1.2.0/rc8-alpha/final-regression/alpha-dev72-reg-conquest-01-write.log.gz",
+        "archive_sha256": "50decb042497f0011afdaa0a3abefcbbe880bcead1eb32eba91bf661004bb3e9"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "25"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/alpha-dev72-reg-conquest-01-reopen.log",
+        "sha256": "66bcaba49310e4a0d67e3de297b3cb224c44e751d25b97f87c7a7d963078891f",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.2.jar",
+        "jar_sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+        "archive_log": "verification/1.2.0/rc8-alpha/final-regression/alpha-dev72-reg-conquest-01-reopen.log.gz",
+        "archive_sha256": "c6d12170a664cb5e820096a7c9f3cd6e866b2df7d27f3ca03905ea4083d7aa9c"
+      }
+    ]
+  },
+  {
+    "suite": "verifyStage5",
+    "run": "alpha-dev72-reg-stage5-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "26"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/alpha-dev72-reg-stage5-01-write.log",
+        "sha256": "bc6fb98bf9c300de0e0436a273c91a42441703aae0f2fd0f10c400158458354d",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.2.jar",
+        "jar_sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+        "archive_log": "verification/1.2.0/rc8-alpha/final-regression/alpha-dev72-reg-stage5-01-write.log.gz",
+        "archive_sha256": "774eda1e0a3e17483e76e7f91078f42fd5754a5687142b109ec628faba12da71"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "26"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/alpha-dev72-reg-stage5-01-reopen.log",
+        "sha256": "f9eace62b7e800b625a618dfc5a8169d04bfc89e6c6db82f17623637f09d23dd",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.2.jar",
+        "jar_sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+        "archive_log": "verification/1.2.0/rc8-alpha/final-regression/alpha-dev72-reg-stage5-01-reopen.log.gz",
+        "archive_sha256": "c8dc264440ea47c5f098d7825f17dc828ec3dcc20093de92187c8d890fd2667c"
+      }
+    ]
+  },
+  {
+    "suite": "verifyCapitals",
+    "run": "alpha-dev72-reg-capitals-03",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "5"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/alpha-dev72-reg-capitals-03-write.log",
+        "sha256": "768d64ed89eb395782c9f201fa48e1cd397f28170282f068eecb91d16c63b91f",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.2.jar",
+        "jar_sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+        "archive_log": "verification/1.2.0/rc8-alpha/final-regression/alpha-dev72-reg-capitals-03-write.log.gz",
+        "archive_sha256": "1e891ca6524c4642366ae59f3173b9dc4ee1f84e738fa31e5fc03d199c22331e"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "5"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/alpha-dev72-reg-capitals-03-reopen.log",
+        "sha256": "b39921d236e4ebc754306ce8cd6f1bebe9b5fcd709dd43e2ba369cbc4eed7f10",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.2.jar",
+        "jar_sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+        "archive_log": "verification/1.2.0/rc8-alpha/final-regression/alpha-dev72-reg-capitals-03-reopen.log.gz",
+        "archive_sha256": "7ab3b6248c3db64cdb70b0469397fe6aea3e3d9c56c282a0b98e1c2daf110ae5"
+      }
+    ]
+  },
+  {
+    "suite": "verifyAutonomy",
+    "run": "alpha-dev72-reg-autonomy-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "22"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/alpha-dev72-reg-autonomy-01-write.log",
+        "sha256": "23a0f8f0ab2b54204e542a0e59e92bcbb6ccadac84367ece75f64acc47d1b0b9",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.2.jar",
+        "jar_sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+        "archive_log": "verification/1.2.0/rc8-alpha/final-regression/alpha-dev72-reg-autonomy-01-write.log.gz",
+        "archive_sha256": "80d6a6ff616a5630186ef131859394a94dddedbeb3107e8ad71827942941fd9d"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "22"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/alpha-dev72-reg-autonomy-01-reopen.log",
+        "sha256": "fb2c21518d9eaf9dac23bf680e10359f6a01308d158e5d245261f5ae157fc5a5",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.2.jar",
+        "jar_sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+        "archive_log": "verification/1.2.0/rc8-alpha/final-regression/alpha-dev72-reg-autonomy-01-reopen.log.gz",
+        "archive_sha256": "6537ba67965fdae540e2641617f6d1bcec35ba2b46d94cf23a28223ff6ef6cc8"
+      }
+    ]
+  }
+]

@@ -1,0 +1,1 @@
+Stage5 conserving treasury maintenance development checkpoint. See docs/1.2.0_FINAL_STABILIZATION.md and verification/1.2.0/stabilization/stage5-consolidation/. Production and native JAR unchanged across all reported stage5 runs. Final relevant regression/RC preparation is Stage6, still pending.

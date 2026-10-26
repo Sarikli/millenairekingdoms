@@ -1,0 +1,15 @@
+{
+  "initial_review": "Byte-equality assertion for server.properties failed because Minecraft replaces its generated timestamp comment on startup. This was a review assertion, not a GameTest or server failure.",
+  "property_lines_exactly_equal_excluding_comments": true,
+  "source_comment_header": [
+    "#Minecraft server properties",
+    "#Fri Oct 23 16:47:50 UTC 2026"
+  ],
+  "new_comment_header": [
+    "#Minecraft server properties",
+    "#Sun Oct 25 13:58:45 UTC 2026"
+  ],
+  "eula_byte_equal": true,
+  "eula_sha256": "ee27072e4a23e088522f740ddaab0c7c4145c186969e90a86254faa3a5ec5ce6",
+  "environment_setup_start_scripts_changed": false
+}

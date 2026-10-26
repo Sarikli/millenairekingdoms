@@ -1,0 +1,11 @@
+{
+  "suite": "verifyRoyalConstruction",
+  "write": 30,
+  "reload": 30,
+  "fresh_world": "royal-cancellation-03",
+  "separate_jvms": true,
+  "normal_build_passed": true,
+  "development_jar_sha256": "49a237e428b5c1ae39b262379678609cd3306fbf07bb425083088982346cca27",
+  "actual_npc_construction_completed": false,
+  "gui_or_scheduler_exposed": false
+}

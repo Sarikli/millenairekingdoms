@@ -11,6 +11,7 @@ public final class KingdomClient {
 
     public static void show(CompoundTag view) {
         Minecraft minecraft = Minecraft.getInstance();
+        if(HistoryClient.updateManagement(view))return;
         if (minecraft.screen instanceof KingdomScreen screen) screen.update(view);
         else minecraft.setScreen(new KingdomScreen(view));
     }

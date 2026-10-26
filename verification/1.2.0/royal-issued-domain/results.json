@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "run": "royal-issued-domain-01",
+      "required_pass_counts": [],
+      "normal_build_successful": false,
+      "log_sha256": "c2d97428b05686699313774f3d20f6e8213a39c68dde5202fd4a6b68ce0f1e33"
+    },
+    {
+      "run": "royal-issued-domain-final-02",
+      "required_pass_counts": [],
+      "normal_build_successful": false,
+      "log_sha256": "f2584f33e5580e2321a2d35f45ad301744859e1487e26bd94069be252686a399"
+    },
+    {
+      "run": "royal-issued-domain-final-03",
+      "required_pass_counts": [
+        35,
+        35
+      ],
+      "normal_build_successful": true,
+      "log_sha256": "2a98e71e14fca01cc9e59e53fdf741edf6ab083d9f90c8cac6af9616ee7ceb80"
+    },
+    {
+      "run": "royal-issued-stock-regression-01",
+      "required_pass_counts": [
+        20,
+        20
+      ],
+      "normal_build_successful": true,
+      "log_sha256": "236852ee8ebff8df5c950abc3dd61fb1f6b46fb57690a8fb3787ae5238e6b8c7"
+    }
+  ],
+  "production_jar_sha256": "f25cec66d0afa1bf61eafc5928a5feb914eebe43ea917f222b39670c7c87417c",
+  "scope": "bound existing-order stock and fee endpoints plus configured duration primitive; no complete authorized paid timed village workflow yet"
+}

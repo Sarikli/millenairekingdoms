@@ -1,0 +1,9 @@
+{
+  "version": "1.2.0-rc8-alpha.3",
+  "bytes": 1838040,
+  "sha256": "5c01e987a221a08432ef7305429f89bb5e6767a98534b7debea23fb413d9297f",
+  "source_parent": "893363957a79b4c1d4558b507683948d0c067a61",
+  "ocean_scanning": "disabled",
+  "source_verification": "verification/1.2.0/ocean-loading/dev5/results.json",
+  "metadata_only_change_proof": "verification/1.2.0/ocean-loading/alpha3/alpha3-artifact-audit.json"
+}

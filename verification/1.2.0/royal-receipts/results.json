@@ -1,0 +1,40 @@
+{
+  "kind": "bound-native-container-receipts",
+  "dependency_version": "9.0.3",
+  "dependency_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "cases": [
+    {
+      "run": "royal-receipt-fix-01",
+      "required_pass_counts": [
+        1,
+        1
+      ],
+      "build_successful": true,
+      "log_sha256": "256a4c47fdaec2f7103fe0cb237aaa649cf41dbfa4ecc7bb450d3cba459c33a2"
+    },
+    {
+      "run": "royal-receipt-fix-02",
+      "required_pass_counts": [
+        12,
+        12
+      ],
+      "build_successful": true,
+      "log_sha256": "1f4fcda1343438eec295e0dfed784177f93f3f00009b16c8022b845d899134d1"
+    },
+    {
+      "run": "royal-receipt-economy-01",
+      "required_pass_counts": [
+        46,
+        46
+      ],
+      "build_successful": true,
+      "log_sha256": "7a482314873b19d7db5cdca9b2349067b8a7095c1737375f3a55cf40899d9394"
+    }
+  ],
+  "artifacts": {
+    "millenairekingdoms-1.1.1.jar": "7ecdc176cee847d78398bb8f8095941df1c54a2698cabe752dab099bbd62dbe4",
+    "millenairekingdoms-1.2.0-dev.1.jar": "e5d5092af0ff329fb5fbe546700458b8c5798f235ec9584626051df42312d1b2",
+    "millenairekingdoms-1.2.0-dev.2.jar": "61fa5b246bc908c1cc98325de7f5d549072871d6ed39493daac1b38a37c9c907",
+    "millenairekingdoms-1.2.0-dev.3.jar": "2e7e47224a5e89c97539cb0c0d0bc54e5f83a04c79293e6b7add130eb477c869"
+  }
+}

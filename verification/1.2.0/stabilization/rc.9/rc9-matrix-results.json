@@ -1,0 +1,1451 @@
+{
+  "version": "1.2.0-rc.9",
+  "source_commit": "b609f27caa234fb0681b7372c09bf74cf608dcb6",
+  "source_sha256": "38b9252616d8f227fc0988164127351d4f9954220a1a69757465e7bd44a22116",
+  "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6",
+  "expected_suites": 40,
+  "expected_jvms": 80,
+  "required_tests_each_complete_pass": 559,
+  "results": [
+    {
+      "suite": "verifyWars",
+      "run": "stabilization-rc9-wars-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "30"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-wars-01-write.log",
+          "sha256": "8248a98dd5ac3bc634ed782e8355f80ac3eb8b41a1b1b612da92211b1e507e63",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "30"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-wars-01-reopen.log",
+          "sha256": "91bc3f40b39df941ff21d778b162726f91f52ba3474cfd049d7d872eb1041fa5",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 30,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "passed": true
+    },
+    {
+      "suite": "verifyConquest",
+      "run": "stabilization-rc9-conquest-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "25"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-conquest-01-write.log",
+          "sha256": "35dd654c7511e9d96049ac66c2b1d8335955b4aa3d939b838a2be6d6e60909c7",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "25"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-conquest-01-reopen.log",
+          "sha256": "c04965fe85aa433b5fc5993747b85dfba4b1e1b90320b4d42bc317ccfd50ef0c",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 25,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "passed": true
+    },
+    {
+      "suite": "verifyStage5",
+      "run": "stabilization-rc9-stage5-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "26"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-stage5-01-write.log",
+          "sha256": "8b377e2369b34c66792c7b779f83e9e32c06d34347e04e640af7fd15e25e602d",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "26"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-stage5-01-reopen.log",
+          "sha256": "7e1087c82ee0e55065da75da5863f977350591d88281ceb76358f8ac25f4e13a",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 26,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "passed": true
+    },
+    {
+      "suite": "verifyCapitals",
+      "run": "stabilization-rc9-capitals-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "5"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-capitals-01-write.log",
+          "sha256": "28da230751e85171d5f47de0413b3737772f7440d7f4303fd38486a9424ba3b5",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "5"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-capitals-01-reopen.log",
+          "sha256": "3c76cf67aebb18689feb6b48fe051eb8f679c8f3fe707619e71150097bb77759",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 5,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "passed": true
+    },
+    {
+      "suite": "verifyAutonomy",
+      "run": "stabilization-rc9-autonomy-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "22"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-autonomy-01-write.log",
+          "sha256": "562f51d38cf8fbb8784d1ee37502ce3dffef75b794ec66f336bc80a132e318c2",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "22"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-autonomy-01-reopen.log",
+          "sha256": "2df30137a55abfb06bd0edc9d0a8ae9654ad06cb9d14887c8ac59f48bf39cdef",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 22,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "passed": true
+    },
+    {
+      "suite": "verifyGui",
+      "run": "stabilization-rc9-gui-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "7"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-gui-01-write.log",
+          "sha256": "e9e8e2c612d939afd415dd4761b902bb953a6beb4dca58ed2beb564bdcfa6d06",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "7"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-gui-01-reopen.log",
+          "sha256": "001676c04a9eacff52e0d56227eae5fbbbde7cb095409fc7a4a072ddcab6a742",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 7,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "passed": true
+    },
+    {
+      "suite": "verifyFounding",
+      "run": "stabilization-rc9-founding-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "12"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-founding-01-write.log",
+          "sha256": "b21a180430be004d0794d4afe7553b666f99a19c376a228202b779fcb1662093",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "12"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-founding-01-reopen.log",
+          "sha256": "ba1425a664043b14912a7500ba7c633591055b98ae40c569bce17b72ea0534a6",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 12,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalEconomy",
+      "run": "stabilization-rc9-royaleconomy-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "46"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royaleconomy-01-write.log",
+          "sha256": "1265508d7781a3f1c4253d37b38bfff796a896b65407cd6e80b31222d896d929",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "46"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royaleconomy-01-reopen.log",
+          "sha256": "62071298ec5d0059571e820f36777c6a63f0ad4cb8a02e4e562d3d1951477f8f",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 46,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalConstruction",
+      "run": "stabilization-rc9-royalconstruction-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "55"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalconstruction-01-write.log",
+          "sha256": "b394152f115bc396354ae8f6d0d0e1fff8e6d3d7ee209003cbcb7e6ed84b2570",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "55"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalconstruction-01-reopen.log",
+          "sha256": "71c9d2b981379adb829e292efa6f0e32be6c25d83a4ab6ff345aaf04f5c2c50d",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 55,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalRecovery",
+      "run": "stabilization-rc9-royalrecovery-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "16"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalrecovery-01-write.log",
+          "sha256": "9a6602e3ec93c3a15c4652e3d0f0d2a70a6ffb96c6672d7fbd53234e930607c4",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "16"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalrecovery-01-reopen.log",
+          "sha256": "4778172bddcdf9d493dd85b23a29e2054c0e80418dc24cc973a64f2e79c8fc93",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 16,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalSites",
+      "run": "stabilization-rc9-royalsites-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "10"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalsites-01-write.log",
+          "sha256": "72be75aaccf2564bce47cd844407ce9559a9943dc1dc8893647c6613bbc2c133",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "10"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalsites-01-reopen.log",
+          "sha256": "8829528b01e1ea9676d8d28fbe79bee122daeb9a4ea27e83b6d11c8823042464",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 10,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalLive",
+      "run": "stabilization-rc9-royallive-02",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "3"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royallive-02-write.log",
+          "sha256": "6bd325a42833def19f52bd562587756291ad97417e159ac7baf3cb9bbffb4c9c",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "3"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royallive-02-reopen.log",
+          "sha256": "84b57b4e220204676ba48e610f9d9bd9bb91395a934092e97b27e0681a85fa12",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 3,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalGui",
+      "run": "stabilization-rc9-royalgui-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "28"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalgui-01-write.log",
+          "sha256": "4da39592e5d5fcffd4ff1bd824d8acb169d5167b9b7b2023bb9d22b2279bccca",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "28"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalgui-01-reopen.log",
+          "sha256": "c63eb75d32aed3c4eab25540e8855b2079971b6dac9e25c1ad2d76f753240ff4",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 28,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalGoods",
+      "run": "stabilization-rc9-royalgoods-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "20"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalgoods-01-write.log",
+          "sha256": "f5aa7ee7e8b9bdc452464347effc77d3f4c9f2065f8558878175387a501c9405",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "20"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalgoods-01-reopen.log",
+          "sha256": "99fae4c5b781025bd88636a433642a7000baabcce91ca5371c9e456a9d02294d",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 20,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalReceipts",
+      "run": "stabilization-rc9-royalreceipts-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "12"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalreceipts-01-write.log",
+          "sha256": "1accb5185ad4225ea8b4768e1536d85c5cb17198fff2699abd93689f8560bbae",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "12"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalreceipts-01-reopen.log",
+          "sha256": "f5002e96644fd01eccfd1acf23b3b1bbb5aa012d08fadff71cd8886e5c43a667",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 12,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalShipments",
+      "run": "stabilization-rc9-royalshipments-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "49"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalshipments-01-write.log",
+          "sha256": "ad6493dd44488f0660e6f88f9a13008f7622bf4b3f9cf00537aad6889616bdc0",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "49"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalshipments-01-reopen.log",
+          "sha256": "3446c4fd36ebeec727fcea0dede7123a904deb6e91a6eb51360ef5c04b083b2b",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 49,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalShipmentRuntime",
+      "run": "stabilization-rc9-royalshipmentruntime-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalshipmentruntime-01-write.log",
+          "sha256": "2b0d03fd8a191a7c0c1fae92b3967497ddffc44e82afe71a46fa46f1dc5cdf7c",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalshipmentruntime-01-reopen.log",
+          "sha256": "0e35972f05be6a7b6b7f5270fffcd2a479031bb44de9a34571a78b04e0072585",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 1,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalShipmentLive",
+      "run": "stabilization-rc9-royalshipmentlive-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalshipmentlive-01-write.log",
+          "sha256": "dec22375262445f81fb3edc9e224cecbefa72847aa86d09c3d21d381e7e0a2ea",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalshipmentlive-01-reopen.log",
+          "sha256": "e2f58d428eba7ed59c36867743737aa8b23fb99d5d01991f9a98f449088e7cc1",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 1,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalShipmentGui",
+      "run": "stabilization-rc9-royalshipmentgui-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "18"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalshipmentgui-01-write.log",
+          "sha256": "e7fd3ec8a7369a992a381489453200c3a3cce273fe2869e6d78c020053c950cb",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "18"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalshipmentgui-01-reopen.log",
+          "sha256": "d035e9227e3c058a15d8572bf4e097ffeebb02d8bedf9f1586363f7e99237a5f",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 18,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyPersonalities",
+      "run": "stabilization-rc9-personalities-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "9"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-personalities-01-write.log",
+          "sha256": "5a2b66d0d22549f44858c21cd2918cc82f95a55ef71cc6e040da06a7ea86d667",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "9"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-personalities-01-reopen.log",
+          "sha256": "d93b08b2266469fadc1a0d09c3b672e1646e3b9245014cc517e3feb390066ffd",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 9,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalPolicy",
+      "run": "stabilization-rc9-royalpolicy-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "7"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalpolicy-01-write.log",
+          "sha256": "ee0d743bf3b3427084d33ebd3f3e7c1287852a94757a5d37949714cbc128b398",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "7"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalpolicy-01-reopen.log",
+          "sha256": "8f27a8b3e26602c09e14bd6c86a544cd3412993d5aaa4efca33713e56f9360f0",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 7,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalNpcBudget",
+      "run": "stabilization-rc9-royalnpcbudget-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "13"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalnpcbudget-01-write.log",
+          "sha256": "4a26c4162aa6eb5e127efa67155b8072c3b0bf83e3e82f618e421d1fa1a9cab9",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "13"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalnpcbudget-01-reopen.log",
+          "sha256": "a6f5abd4e4815b8d64b2765c04f362369b2af7f492bd9c5e19623f3a7942bb1c",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 13,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalNpcEconomy",
+      "run": "stabilization-rc9-royalnpceconomy-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "12"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalnpceconomy-01-write.log",
+          "sha256": "f85e10fae70af5edae34cbfb9629cefddc32874bb738605f38db05f1917fd225",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "12"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalnpceconomy-01-reopen.log",
+          "sha256": "76a52fcbf904d8600a259febc8dff590327cb7f396e4e35083e766b8757ad6d8",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 12,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalNpcRuntime",
+      "run": "stabilization-rc9-royalnpcruntime-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "4"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalnpcruntime-01-write.log",
+          "sha256": "55b19345b89ec5414325a8bb49ebb1baf314797aefc4ddc0bb18ed7c21c1384a",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "4"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalnpcruntime-01-reopen.log",
+          "sha256": "e87fd90abfe21e34c60f69f34e819c71e938f0361b88cb38fefbe8dde646ed9b",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 4,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalNpcLive",
+      "run": "stabilization-rc9-royalnpclive-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalnpclive-01-write.log",
+          "sha256": "0243d1b8c3f53f7331cdf5f487714e5c3f08bf2f76371d601c0f284be4283ba0",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalnpclive-01-reopen.log",
+          "sha256": "85d3e0bfac5add8f9c4a7b4759b0aff354f56492d10e2afa6024d088c8339422",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 1,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalNpcBuilders",
+      "run": "stabilization-rc9-royalnpcbuilders-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalnpcbuilders-01-write.log",
+          "sha256": "f868f78b9ad2ed2514259f354538cc69d30dac62cfe242e2186ddd6a35cbe353",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalnpcbuilders-01-reopen.log",
+          "sha256": "da0d25095831e83bfcce8d007e3f2eb4a02372d0483265a941b12c82d8489995",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 1,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalIntegration",
+      "run": "stabilization-rc9-royalintegration-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "9"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalintegration-01-write.log",
+          "sha256": "bcee7ffbaf21709852193975d2bae0340e06706cd3f52f1a6e881d9ef68fdb07",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "9"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalintegration-01-reopen.log",
+          "sha256": "06c83e381519d3d9856d40f0613b6b97da3f3aa0802f1ef864cae40357ecb7ac",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 9,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyHistory",
+      "run": "stabilization-rc9-history-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "36"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-history-01-write.log",
+          "sha256": "146dd29c31061e40c3aaedfd5dfb8954c19b2d703524088ce1c8e6ed2aee9b24",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "36"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-history-01-reopen.log",
+          "sha256": "e3d27eabf98a2dc28e627146f0454c7d3f1bddeaac579098743665b1c3172294",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 36,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyHistoryWorld",
+      "run": "stabilization-rc9-historyworld-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-historyworld-01-write.log",
+          "sha256": "e85aa8d84bd29babf80a48e169bb0f4e2bd9f8df06b00dacccff127c2b806cf1",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-historyworld-01-reopen.log",
+          "sha256": "22a0fded56dcb3a61881e8b647a0587756a75ef1ca4d64d0259238042090e970",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 1,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyAtlas",
+      "run": "stabilization-rc9-atlas-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "21"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-atlas-01-write.log",
+          "sha256": "60a40b4b2748dbf9a31d9cda0df48ebb5ed92d08590a47b9d35ac9006dd6db11",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "21"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-atlas-01-reopen.log",
+          "sha256": "a05ef185365ba677792320a9653167f29aeb7e93abe30e1237af7368785918b9",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 21,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyGeography",
+      "run": "stabilization-rc9-geography-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "4"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-geography-01-write.log",
+          "sha256": "d7ae7b6188eb9f934f3a46b3be2012f7b91b4e3e028c4c06652797433e7cbe9b",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "4"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-geography-01-reopen.log",
+          "sha256": "45894103d68c74c0595b747f56db88ebf211a278fcbd7f2dfc5058addbbdb037",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 4,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyLocalization",
+      "run": "stabilization-rc9-localization-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "8"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-localization-01-write.log",
+          "sha256": "716d8b5fef7b072dc3a03daa08237d3b4a883d24f15edb8f6d6085868c4a5dbf",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "8"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-localization-01-reopen.log",
+          "sha256": "4e0c269c0909a60782416841fe35470a505ad99e8af385fb4e0ac7e16dc2b821",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 8,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyRoyalStrategy",
+      "run": "stabilization-rc9-royalstrategy-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "7"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalstrategy-01-write.log",
+          "sha256": "87882cdf8495c5c48c22e75f222eb77e747f9139cc4cb3946e73480ba9b25153",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "7"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-royalstrategy-01-reopen.log",
+          "sha256": "6f07ec5e9134fe50b21e4b133180c49d0dfeff5799edc4267ca12ee5764b8284",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 7,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyStrategyRecovery",
+      "run": "stabilization-rc9-strategyrecovery-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "3"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-strategyrecovery-01-write.log",
+          "sha256": "42ca07b300186d8c29cb4f66f6151430eb80ca761c2e5f6427207919a724265c",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "3"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-strategyrecovery-01-reopen.log",
+          "sha256": "caf0bfc06589233cc3cb752367bea8dd1bb23bf6980019c1b765113ccad579f2",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 3,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyStrategicMilitary",
+      "run": "stabilization-rc9-strategicmilitary-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "11"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-strategicmilitary-01-write.log",
+          "sha256": "3ea6efe784849d612ab3c9846121d05067a29fe367b4d118a939ce1a205934df",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "11"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-strategicmilitary-01-reopen.log",
+          "sha256": "161cdb884732776c640c54003575d498000d7b07a8830332e97a4299ab2f2f0b",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 11,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyStrategicRestart",
+      "run": "stabilization-rc9-strategicrestart-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-strategicrestart-01-write.log",
+          "sha256": "8a519eb5c48addd5d6e23bbed9bb3991e429352023ed823157791eb3158fa4d7",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-strategicrestart-01-reopen.log",
+          "sha256": "802b6a98c066546e33ccc1cd592e1f38cfa534bc51071e55758831d18d9e39b5",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 1,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyNativeBattle",
+      "run": "stabilization-rc9-nativebattle-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-nativebattle-01-write.log",
+          "sha256": "a3d0f38e8e7e6a656bcdf0a512c3a0d440807c45b07bb6aefe30d7452188f700",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-nativebattle-01-reopen.log",
+          "sha256": "b1a9ed5a9657f686aa41c808bff44341f077b4490d3a1cbd2d86abc2104b1bee",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 1,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyNativeWar",
+      "run": "stabilization-rc9-nativewar-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-nativewar-01-write.log",
+          "sha256": "8669c96307498376f143cd401384eb19ded2986630818da16bec4def6df49304",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-nativewar-01-reopen.log",
+          "sha256": "26fbd63b65bd71336ce75b33079028ee13e98e6ab1eaaa7ec0fbfd0b8248e814",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 1,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyConsolidation",
+      "run": "stabilization-rc9-consolidation-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "22"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-consolidation-01-write.log",
+          "sha256": "067b132eb5031548ea4636f0dee86819d92de0c920c1c3f223486de85e1b4de8",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "22"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-consolidation-01-reopen.log",
+          "sha256": "8e0979e7ecf4bb05a52366f6b91cfab4dcd001ce89a82f073b96fa41399f0d9d",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 22,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    },
+    {
+      "suite": "verifyConsolidationLive",
+      "run": "stabilization-rc9-consolidationlive-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-consolidationlive-01-write.log",
+          "sha256": "7eeae712fb745b2f522ae5ffb694f5bfbb321fc21e2d7a3164aa74dbcbb87f74",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/stabilization-rc9-consolidationlive-01-reopen.log",
+          "sha256": "7365358cc68c85b5d92eb917a83bdc0459150a8fa14c1853c4c12f0cc7293647",
+          "jar": "millenairekingdoms-1.2.0-rc.9.jar",
+          "jar_sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+        }
+      ],
+      "expected_per_pass": 1,
+      "runner_exit": 0,
+      "source_frozen": true,
+      "test_source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "test_source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "passed": true
+    }
+  ],
+  "complete": true,
+  "test_source_revisions": [
+    {
+      "source_commit": "b609f27caa234fb0681b7372c09bf74cf608dcb6",
+      "source_sha256": "38b9252616d8f227fc0988164127351d4f9954220a1a69757465e7bd44a22116",
+      "completed_suites": 11
+    },
+    {
+      "source_commit": "02b9ee4688e67fc8e7ca7d3ebc0a09b205d6002e",
+      "source_sha256": "5d2786e6101eda3e3bca38cc35761e6808528a7f50eb49a6a1695759ac5ce2e8",
+      "reason": "Only long-test observer callbacks changed after the RoyalLive reopen ended without a terminal result; production JAR byte-identical. Completed pairs retained."
+    }
+  ],
+  "interrupted_attempts": [
+    {
+      "suite": "verifyRoyalLive",
+      "run": "stabilization-rc9-royallive-01",
+      "write_result": "All 3 required tests passed; exit0/BUILD SUCCESSFUL",
+      "reopen_result": "Interrupted without an all-required line or terminal build result. Unverified, never a passed pair.",
+      "reopen_log": "/workspace/royal-decree/stabilization-rc9-royallive-01-reopen.log"
+    }
+  ]
+}

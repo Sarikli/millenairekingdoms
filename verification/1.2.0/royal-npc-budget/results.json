@@ -1,0 +1,62 @@
+{
+  "phase": "6 in progress: attempt/cooldown and delayed first-fee budget primitive",
+  "decision_format": 1,
+  "political_format": 6,
+  "payment_format": 1,
+  "cases": [
+    {
+      "run": "royal-npc-budget-01",
+      "required_pass_counts": [
+        10,
+        10
+      ],
+      "normal_build_successful": true,
+      "raw_sha256": "5d9bb12b9a3f53aa95c6e4d34e04d49ff804dc9dc0947831a2b3d81171e31461"
+    },
+    {
+      "run": "royal-npc-budget-final-02",
+      "required_pass_counts": [
+        11,
+        11
+      ],
+      "normal_build_successful": true,
+      "raw_sha256": "d1c97693cae274b6e6d8d21a95d55c1f2f43b265ab7056c2103c1ada5a49580d"
+    },
+    {
+      "run": "royal-npc-budget-final-03",
+      "required_pass_counts": [
+        12,
+        12
+      ],
+      "normal_build_successful": true,
+      "raw_sha256": "84bd50b4de626cb9fb61c73e76a72fd9252c71de1f60cfe832bfcc34fe34dfc5"
+    },
+    {
+      "run": "royal-npc-budget-economy-01",
+      "required_pass_counts": [
+        46,
+        46
+      ],
+      "normal_build_successful": true,
+      "raw_sha256": "e569e5b34976d6369e2c42fa71fad58f2e218f07125dfc9c0e4ff8cbd3933fc5"
+    }
+  ],
+  "current_jar_sha256": "01e225e37b4be155c420078a7f06fdf520f1382c205f5b56f67f21d8b7ad5d1a",
+  "actual_restart": {
+    "before": 128,
+    "known_deposit": 128,
+    "fee": 64,
+    "after": 192,
+    "nextDay": 16,
+    "attempt": "ISSUING"
+  },
+  "actual_prepared_native_debit": {
+    "treasury": 192,
+    "fee": 64,
+    "before": "PREPARED",
+    "after": "COMMITTED",
+    "new_spending_enabled_during_recovery": false,
+    "new_reserve_during_recovery": 256
+  },
+  "automatic_need_based_decisions": "NOT IMPLEMENTED YET"
+}

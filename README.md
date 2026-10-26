@@ -1,7 +1,10 @@
 # Millénaire Kingdoms
 
+> **1.2.0 — By Royal Decree.** [Stable release](https://github.com/Sarikli/millenairekingdoms/releases/tag/1.2.0) · [JAR, checksum and bilingual release notes](releases/1.2.0-final/) · [final verification](docs/1.2.0_FINAL_RELEASE.md).
+> Royal construction and upgrades, paid shipments, autonomous kingdoms, village-only political atlas and revised chronicles. [Actual EN/TR examples](docs/1.2.0_NARRATIVE_EXAMPLES.md) · [player guide](docs/1.2.0_USER_GUIDE.md) · [progress](docs/1.2.0_PROGRESS.md). Previous artifacts and their verification remain preserved. PR3 continues separately; `main` is not merged.
+
 A medieval kingdom layer for [Millénaire](https://millenaire.org) villages: NPC kingdoms with their own capitals,
-player rulers, diplomacy, war and peace, conquest through **real Millénaire raids**, daily taxes paid into a capital
+player rulers, diplomacy, war and peace, conquest through native raids and persistent unattended strategic engagements, daily taxes paid into a capital
 treasury, and independent villages that grow into kingdoms of their own. Everything is managed from an in-game
 kingdom screen, so no commands need to be memorised.
 
@@ -10,48 +13,56 @@ left untouched, and the original Millénaire JAR is never modified.
 
 | | |
 |---|---|
-| Mod version | 1.1.1 |
+| Stable version | 1.2.0 — By Royal Decree |
 | Minecraft | 1.21.1 |
 | Loader | NeoForge 21.1.259 |
-| Required dependency | Millénaire 9.0.2 |
+| Required dependency | Millénaire 9.0.3 |
 | Java | 21 |
 | Mod ID | `millenairekingdoms` |
-| Languages | English, Turkish |
+| Languages | All26 original Millénaire9.0.3 locales; new translations are AI/machine-assisted drafts pending native review |
 
-1.1.1 is a maintenance build: expired raid orders, ruler-transition cleanup and conquest diplomacy are fixed;
-name-based commands and save-compatibility tests are strengthened. No new gameplay system is added.
-A stable tag and GitHub Release have not been published. See the [maintenance report](TEST_RAPORU_1_1_1.md)
-and [changelog](CHANGELOG.md).
+See the [bilingual release notes](releases/1.2.0-final/RELEASE_NOTES.md) and [changelog](CHANGELOG.md). The final package includes the RC.10 prose revision; the earlier staged `releases/1.2.0/` image is retained only as historical evidence.
 
 ## Features
 
 - **Kingdom screen.** Press **K** (rebindable under Controls → Key Binds → Millénaire Kingdoms) or run `/kingdom`.
-  Five tabs: My Kingdom, Military, Diplomacy, Treasury and Rulership. Greyed-out buttons explain why they are disabled,
+  Five main tabs: My Kingdom, Military, Diplomacy, Treasury and Rulership. Open Construction and Shipping using the two buttons inside Rulership; click Rulership or press Esc to return. Greyed-out buttons explain why they are disabled,
   and every action is checked again on the server.
+- **Chronicles and political atlas.** Open History/Tarihçe at the kingdom screen's bottom-left. Read kingdom/world events, search fallen archives, filter dates/types and locate known historical places on a separate full-screen political atlas. All settlements of one kingdom share a persistent color/name; native village icons, capital crowns, zoom/pan and information connect to village/kingdom history. Ocean scanning and territorial polygon rendering are removed. Old founding dates stay unknown; original NPC work and real financial/cargo rules remain. See [usage, privacy and verified scope](docs/1.2.0_RC8_ALPHA_REPORT.md).
 - **Player rulership.** Claim an unruled kingdom at its capital with a combined Millénaire reputation of 32768 or more.
   Political decisions need 8192. A kingdom has at most one ruler, and a player rules at most one kingdom.
-- **Conquest.** Villages change hands only through real Millénaire raids, without looting. An independent village falls
+- **Conquest.** Active regions use original native raids; genuinely unloaded NPC war regions can resolve a persistent opposed-dice engagement using actual native military records. Existing political conquest requirements remain, without invented physical deaths or loot. An independent village falls
   after one victory and a rival kingdom's village after two victories during an active war. A capital can be attacked
   once the attacker holds 60% of the villages the defender had when the war began; two victories there end that kingdom.
-- **Raid orders.** Rulers pick the target and the village that sends the soldiers. Military readiness, a three-day
+- **Raid orders.** Rulers pick the target and the village that sends the soldiers. Military readiness, a one-day
   cooldown per target and one running raid at a time apply. NPC kingdoms use the same rules.
-- **NPC kingdoms decide for themselves.** Every three days a kingdom without a player ruler weighs accepting villages,
-  declaring war on a hostile neighbour (relation −70 or worse), sending conquest raids and making peace (after day 12,
-  followed by a ten-day truce). A kingdom with a player ruler is never driven by this automation.
+- **NPC kingdoms decide for themselves.** Every day a kingdom without a player ruler weighs accepting villages,
+  declaring war on a hostile neighbour (relation −70 or worse), sending conquest raids and making peace (after day 6,
+  followed by a five-day truce). A kingdom with a player ruler is never driven by this automation.
 - **Diplomacy.** Kingdom relations follow Millénaire's relation between the two capitals. Border villages and raids
   create tension, peace treaties improve relations, and independent villages may join a kingdom on their own once their
   relation with its capital reaches +50.
 - **Income and treasury.** Each member village produces its town hall level × 4 deniers per day. Real coins go into the
   capital town hall's storage, and the ruler can withdraw them from the kingdom screen while at the capital.
-- **Natural capitals.** About 2% of newly generated natural villages, at least 1,500 blocks from any living capital,
-  start as NPC capitals with a fully upgraded town hall.
+- **Conserving treasury maintenance.** Useful bounded maintenance converts64bronze→1silver→(64silver)1gold in one verified physical chest, conserving exact value and preserving payment/cargo recovery. Unavailable storage is deferred.
+- **Natural capitals.** About 10% of newly generated natural villages, at least 1,000 blocks from any living capital,
+  start as NPC capitals with all generated buildings at their final native levels.
 - **Kingdoms founded by development.** An independent NPC village that completes town hall level 3 through
-  Millénaire's normal construction gets a chance to found its own kingdom every seven in-game days. The chance starts
+  Millénaire's normal construction gets a chance to found its own kingdom every three in-game days. The chance starts
   at 5% and rises by 5 points per further completed level, up to 100%. The village itself is not changed in any way.
 
-All chances, distances and intervals can be adjusted per world.
+- **Royal commissions.** Pay real capital coins for one culturally eligible autonomous-village construction request. The original village chooses the site and its own builders use real materials; saved progress and explicit cancellation/recovery preserve natural projects.
+- **Royal shipments.** Pay normal logistics costs to transfer actual surplus with at most50 protected units per product between member villages over server-tick travel time. Full/unloaded destinations retain held cargo; normal Millénaire trade stays unrestricted.
+- **Capital ethos.** Exact native capital types give a Warlike, Peaceful, Traditionalist, Industrious or Pragmatic ethos (Karakter in Turkish). Bounded NPC decisions use the same paid services, actual needs/reserves and persistent cooldowns. War increases military preference for every type; player rule excludes new NPC economics.
+
+[RC.5 balance changes and existing-world settings](docs/1.2.0_RC5_TIMINGS.md) describe the new defaults. Existing per-world configuration values remain in effect until edited. Configurable chances, distances and intervals can be adjusted per world. See the bilingual [1.2.0 player/operator guide](docs/1.2.0_USER_GUIDE.md), [save/downgrade policy](docs/1.2.0_SAVE_COMPATIBILITY.md), and [separate unverified graphical/online checks](docs/1.2.0_MANUAL_TESTS.md).
 
 ## Installation
+
+Download **[millenairekingdoms-1.2.0.jar](https://github.com/Sarikli/millenairekingdoms/releases/download/1.2.0/millenairekingdoms-1.2.0.jar)** and install it alongside the original **Millénaire 9.0.3** with the versions above. Use the same addon/dependency versions on the server and all clients, removing older addon copies. See the [current player guide](docs/1.2.0_USER_GUIDE.md). Keep a whole-world pre-upgrade backup.
+
+### Historical 1.1.1 installation
+
 
 1. Install NeoForge 21.1.259 for Minecraft 1.21.1.
 2. Put the original **Millénaire 9.0.2** JAR and **[millenairekingdoms-1.1.1.jar](releases/1.1.1/millenairekingdoms-1.1.1.jar)** (local maintenance build) into your `mods` folder.
@@ -107,23 +118,25 @@ Village targets and operator kingdom targets accept exact names or UUIDs. Quote 
 
 ## Save format
 
-Kingdom data is stored per dimension in `data/millenairekingdoms_kingdoms.dat`, currently using save format 6.
+Kingdom data is stored per dimension in `data/millenairekingdoms_kingdoms.dat`, currently using save format 7. Financial, construction, shipment and history stores are versioned separately; see the [current compatibility policy](docs/1.2.0_SAVE_COMPATIBILITY.md).
 
-- Worlds from older versions (formats 1 to 5) load without losing data and are upgraded to format 6 on the next save.
-- The upgrade cannot be undone: versions before 1.0.0 cannot open a format 6 file.
+- Political registry formats 1–6 remain readable and migrate lazily; format 7 retains causal publication identity.
+- Downgrading requires a matching whole-world backup. Older addons do not understand all new records or pending paid work.
 - A damaged file, or one written by a newer version, is never overwritten with empty data.
-- 1.1.1 keeps format 6 and preserves valid pending orders on load. Changing a ruler cancels waiting orders
+- Historical 1.1.1 used format 6. Changing a ruler cancels waiting orders
   from the old tenure; active raids finish normally. Unresolved applications to kingdoms returning to NPC rule
   are withdrawn so villages can apply again. Legacy orphan applications are released on the next kingdom day.
 
 ## Building from source
 
-Millénaire is not included in this repository. Download **Millénaire 9.0.2** yourself and place it in the project root
-as `millenaire-9.0.2.jar`. The build verifies its SHA-256 checksum:
+Millénaire is not included in this repository. Download the pinned original **Millénaire 9.0.3** JAR from the official site with:
 
-```text
-8665fcb513dc17eed08fee4b30dae988f45157f72d332ab795611b3761cbc92f
+```bash
+bash scripts/setup-millenaire.sh
 ```
+
+The script and build verify SHA-256 `5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62`.
+The dependency is stored locally as ignored `millenaire-9.0.3.jar`; never redistribute it with this addon.
 
 Then build with the Gradle wrapper (Java 21 required):
 

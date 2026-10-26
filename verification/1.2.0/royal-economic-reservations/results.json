@@ -1,0 +1,33 @@
+{
+  "cases": [
+    {
+      "run": "royal-economic-reservations-01",
+      "required_pass_counts": [
+        27,
+        27
+      ],
+      "normal_build_successful": true,
+      "log_sha256": "2df9b971477caadd3129307596720f1f4e88501df4ccc234a7cf3b0127e7d0b4"
+    },
+    {
+      "run": "royal-reservation-economy-01",
+      "required_pass_counts": [
+        46,
+        46
+      ],
+      "normal_build_successful": true,
+      "log_sha256": "67b85ea090cd37313c04da63cef159200d87d20f35d4b4dbc919bc7fa99dd84e"
+    },
+    {
+      "run": "royal-reservation-gui-01",
+      "required_pass_counts": [
+        7,
+        7
+      ],
+      "normal_build_successful": true,
+      "log_sha256": "bd1e928d93e6173320904d3e29bee3282479afcf32786d6c4bc3e6aa4a6b231b"
+    }
+  ],
+  "production_jar_sha256": "c440b787e592d6c2f0f89f0b46870a4010ebb7227fca5b96fb2797c262a321a9",
+  "scope": "actual treasury pay/refund/player withdrawal with native low-level cargo reservations; no live route/time/fee or abrupt cargo claim"
+}

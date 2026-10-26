@@ -1,0 +1,13 @@
+{
+  "from_sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae",
+  "to_sha256": "437448676208fb7559e39d35a6b5b822136ba443e95e79935fb5f3bf3b90ba67",
+  "changed": [
+    "META-INF/MANIFEST.MF",
+    "com/millenairekingdoms/client/KingdomScreen$RowList$Row.class",
+    "com/millenairekingdoms/client/KingdomScreen$RowList.class",
+    "com/millenairekingdoms/client/KingdomScreen.class",
+    "META-INF/neoforge.mods.toml"
+  ],
+  "all_other_238_classes_and_game_resources_identical": true,
+  "two_nested_RowList_classes_only_LineNumberTable_values_changed": true
+}

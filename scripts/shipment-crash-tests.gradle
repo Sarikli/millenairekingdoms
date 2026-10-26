@@ -1,0 +1,20 @@
+// Opt-in only. Use together with isolated-tests.gradle; never run in a player's world.
+gradle.projectsEvaluated {
+    def p = gradle.rootProject
+    def stage = System.getProperty('kingdoms.crashStage')
+    def boundary = System.getProperty('kingdoms.crashBoundary')
+    def run = System.getProperty('kingdoms.testRun')
+    if (System.getProperty('kingdoms.testSuite') != 'verifyRoyalShipmentCrash' || !(run ==~ /shipment-crash-[A-Za-z0-9-]+/)) {
+        throw new GradleException('Crash probes require their dedicated isolated world/run ID')
+    }
+    if (!(stage in ['prepare', 'interrupt', 'recover']) || !(boundary in ['paid-before-domain', 'dispatch-before-commit', 'refund-before-terminal'])) {
+        throw new GradleException('Explicit paid shipment crash stage and boundary are required')
+    }
+    p.neoForge.runs.configureEach { spec ->
+        if (spec.name.toLowerCase().contains('royalshipmentgametestserver')) {
+            gameDirectory = p.layout.projectDirectory.dir("run/regression/${run}/verifyRoyalShipmentCrash").asFile
+            systemProperty 'neoforge.enabledGameTestNamespaces', "millenairekingdoms_shipment_crash_${stage}"
+            systemProperty 'kingdoms.tests.shipmentCrashBoundary', boundary
+        }
+    }
+}

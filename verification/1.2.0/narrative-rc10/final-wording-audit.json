@@ -1,0 +1,17 @@
+{
+  "first_jar_sha256": "23a41208914f5ab577da88085db2d9185b63f647f042a6ae3e6827a0e2a82a33",
+  "final_jar_sha256": "07a596e2d156b73fe70ad39f231d71366ce1ad32c0947f144a61415ccbdcbb0f",
+  "all_production_classes_identical": true,
+  "changed_values": {
+    "en_us": [
+      "millenairekingdoms.chronicle.compact.body.peace.0.general"
+    ],
+    "tr_tr": [
+      "millenairekingdoms.chronicle.compact.body.peace.0.military",
+      "millenairekingdoms.chronicle.compact.body.peace.0.religious",
+      "millenairekingdoms.chronicle.compact.body.peace.0.agricultural",
+      "millenairekingdoms.chronicle.compact.body.peace.0.artisan",
+      "millenairekingdoms.chronicle.compact.body.peace.0.general"
+    ]
+  }
+}

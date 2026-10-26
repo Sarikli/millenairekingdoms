@@ -1,0 +1,21 @@
+{
+  "cases": [
+    {
+      "run": "royal-live-service-01",
+      "required_pass_counts": [],
+      "normal_build_successful": false,
+      "log_sha256": "0ea092b38834c3b76c6a5222ff8b130ef60b26aaa2429b6ca5512526fc9c819c"
+    },
+    {
+      "run": "royal-live-service-final-02",
+      "required_pass_counts": [
+        49,
+        49
+      ],
+      "normal_build_successful": true,
+      "log_sha256": "a8f46914ae05521f3ddefaf529aa3dd55b34878c20ca5f18ee190345b423c76d"
+    }
+  ],
+  "production_jar_sha256": "d20733677e621c19e5827d90c34142879f35aadcc9f92e099eea54aae599b0b5",
+  "scope": "real paid authorized timed native-member service including actual clock and separate-JVM recovery; direct service steps, not scheduled runtime or graphical UI proof"
+}

@@ -1,0 +1,20 @@
+{
+  "suite": "verifyRoyalGoods",
+  "run": "royal-goods-plan-01",
+  "required_pass_counts": [
+    8,
+    8
+  ],
+  "separate_jvms": true,
+  "normal_build_passed": true,
+  "production_jar_sha256": "4cc19853320ad0655a06a26b0a2b21746f33b681267f001b4b21c5e9524b3e98",
+  "original_millenaire_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "physical_fixture": {
+    "source_before": 64,
+    "destination_before": 4,
+    "source_after": 24,
+    "destination_after": 44,
+    "total": 68
+  },
+  "shipment_or_durable_escrow_implemented": false
+}

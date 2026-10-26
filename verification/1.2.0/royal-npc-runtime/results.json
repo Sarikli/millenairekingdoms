@@ -1,0 +1,47 @@
+{
+  "phase": "6 automatic need/shipping runtime implemented; genuine automatic commissioned building remains next",
+  "cases": [
+    {
+      "run": "royal-npc-runtime-01",
+      "required_pass_counts": [
+        3,
+        3
+      ],
+      "normal_build_successful": true,
+      "raw_sha256": "859ea16e3d44944d86ac497430cf4fd033dde4c582315470955cd9f2da05c7b8"
+    },
+    {
+      "run": "royal-npc-live-01",
+      "required_pass_counts": [
+        1,
+        1
+      ],
+      "normal_build_successful": true,
+      "raw_sha256": "90bdd7a3cf6f552017e087076ff2e3af14285737b2ef2c1d9ccdccf4847dd178"
+    }
+  ],
+  "current_jar_sha256": "e9a145fda4cb5b9842bca7f556354170736b79771477a269d82272f4c544f2be",
+  "defaults": {
+    "npc_interval": 1200,
+    "npc_budget": 2,
+    "shipping_interval": 100,
+    "shipping_budget": 2,
+    "travel_ticks": 3600
+  },
+  "actual_automatic": {
+    "issued": 1200,
+    "due": 4900,
+    "delivered_at": 5100,
+    "quantity": 5,
+    "fee": 9,
+    "treasury": 247,
+    "attempts": 1
+  },
+  "test_only_conditions": [
+    "known native pending/storage/funds",
+    "loaded active fixture villages at HIGHEST/LOW",
+    "real tick sprint",
+    "no gameTime/duration edit",
+    "no direct evaluate/step/observe from read-only probe"
+  ]
+}

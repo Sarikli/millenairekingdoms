@@ -11,14 +11,14 @@ public final class KingdomException extends IllegalArgumentException {
 
     /** fallback uses %s placeholders only, as Minecraft's translation strings do. */
     public KingdomException(String key, String fallback, Object... args) {
-        super(String.format(java.util.Locale.ROOT, fallback, args));
+        super(String.format(java.util.Locale.ROOT,fallback,java.util.Arrays.stream(args).map(value->value instanceof Component component?component.getString():value).toArray()));
         this.key = key; this.fallback = fallback; this.args = args;
     }
     public MutableComponent component() {
         return Component.translatableWithFallback(key, fallback, args);
     }
     public static MutableComponent of(RuntimeException e) {
-        return e instanceof KingdomException k ? k.component() : Component.literal(e.getMessage() == null ? e.toString() : e.getMessage());
+        return e instanceof KingdomException k ? k.component() : com.millenairekingdoms.localization.PublicText.error(e.getMessage() == null ? e.toString() : e.getMessage());
     }
     public static void check(boolean condition, String key, String fallback, Object... args) {
         if (!condition) throw new KingdomException(key, fallback, args);

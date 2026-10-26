@@ -1,0 +1,16 @@
+[
+  {
+    "class": "com/millenairekingdoms/client/KingdomScreen$RowList.class",
+    "old_sha256": "3115cd3e81d0a39588969174ea5a1ee9e43dd3bca9b56b9245c38311e568ff8d",
+    "new_sha256": "a77e92945b1fbbad52c563ff5208a26cdba93f2ceb0cd69fd10f821c745f88e2",
+    "only_LineNumberTable_line_values_differ": true,
+    "normalized_sha256": "adab655ab71850e97f85b1446141a8da1e974c9dc16e42b111e0eb8d448ce3ad"
+  },
+  {
+    "class": "com/millenairekingdoms/client/KingdomScreen$RowList$Row.class",
+    "old_sha256": "aa78527417c2ab2926922872306855c73d2dde4fad3d83fde57d9e55998e6358",
+    "new_sha256": "36f6080a679d07c0d0efdf66078cd6e402872e8196ea94c4d15704cc131adfb1",
+    "only_LineNumberTable_line_values_differ": true,
+    "normalized_sha256": "f83ee10a9aa3acec5364012f40ac34de5ffc50be7475a8d8aaf7e52cd4700d80"
+  }
+]

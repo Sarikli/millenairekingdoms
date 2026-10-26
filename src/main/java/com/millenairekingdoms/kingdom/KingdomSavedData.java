@@ -34,7 +34,9 @@ public final class KingdomSavedData extends SavedData {
      * Format 6: adds the stage-6.2 "autonomy" compound (next political decision day, truces, last conquest raid day per
      * target, war clocks, pending raid orders) and allows NPC village join applications without a player.
      * Older files start with no truces or orders; every ACTIVE war gets a clock starting on the stored ledger day. */
-    public static final int FORMAT = 6;
+    /** Format7 adds only a causal history commit UUID; all history records remain in their separate archive.
+     * Format1–6 remain readable. Without a new live historical transition, compatible saves still write format6. */
+    public static final int FORMAT = 7;
     /** Marks pre-4.2A two-win campaigns. Never produced by campaign(), so their progress stays historical. */
     public static final UUID STAGE3_WAR = new UUID(0L, 0L);
 
@@ -184,6 +186,9 @@ public final class KingdomSavedData extends SavedData {
     }
     private State state = new State(Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Ledger.EMPTY);
     private CompoundTag legacyArchive = new CompoundTag();
+    // Only get(level) binds a live registry. Detached readers/tests never publish economic side effects.
+    private ServerLevel royalRuntimeLevel;
+    private UUID historyCommit;
 
     public static Factory<KingdomSavedData> factory() {
         return new Factory<>(KingdomSavedData::new, KingdomSavedData::load, null);
@@ -191,7 +196,7 @@ public final class KingdomSavedData extends SavedData {
     public static KingdomSavedData get(ServerLevel level) {
         var storage = level.getDataStorage();
         var data = storage.get(factory(), NAME);
-        if (data != null) return data;
+        if (data != null) { data.royalRuntimeLevel = level; return data; }
         var folder = DimensionType.getStorageFolder(level.dimension(), level.getServer().getWorldPath(LevelResource.ROOT)).resolve("data");
         // DimensionDataStorage converts parse/IO failures to null. Never overwrite a damaged or newer file with an empty registry.
         check(Files.notExists(folder.resolve(NAME + ".dat")), "Kingdom data could not be loaded; restore a valid backup before continuing.");
@@ -200,6 +205,7 @@ public final class KingdomSavedData extends SavedData {
         data = legacy == null ? new KingdomSavedData() : fromLegacy(legacy.save(new CompoundTag(), level.registryAccess()), level.registryAccess());
         data.setDirty();
         storage.set(NAME, data);
+        data.royalRuntimeLevel = level;
         return data;
     }
 
@@ -398,10 +404,11 @@ public final class KingdomSavedData extends SavedData {
      * Ownership, development and distance checks belong to the caller. */
     public Kingdom found(String name, UUID capital, UUID player, String playerName, long gameTime) {
         check(ruledBy(player) == null, "A player can rule only one kingdom.");
-        var before = state;
-        Kingdom kingdom = create(name, capital);
-        try { claimRule(kingdom.id, player, playerName, gameTime); }
-        catch (IllegalArgumentException invalid) { state = before; throw invalid; }
+        // Validate the complete composite on a detached registry before publishing any live/economic/history effect.
+        var proposal = new KingdomSavedData(); proposal.state = state;
+        Kingdom kingdom = proposal.create(name, capital);
+        proposal.claimRule(kingdom.id, player, playerName, gameTime);
+        publish(proposal.state);
         return kingdom;
     }
 
@@ -562,12 +569,18 @@ public final class KingdomSavedData extends SavedData {
     public Raid begin(UUID attacker, UUID target, long startGameTime, UUID initiator) { return begin(attacker, target, startGameTime, initiator, null); }
     /** Starts the raid record; an order it fulfils is removed in the same snapshot, so a restart can never start it twice. */
     public Raid begin(UUID attacker, UUID target, long startGameTime, UUID initiator, UUID orderId) {
+        return beginIdentified(attacker,target,startGameTime,initiator,orderId,UUID.randomUUID());
+    }
+    /** Internal durable-operation entry: the exact external operation ID cannot acquire a second political result. */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public Raid beginIdentified(UUID attacker, UUID target, long startGameTime, UUID initiator, UUID orderId,UUID raidId) {
         check(startGameTime > 0, "Invalid conquest raid start time.");
+        check(raidId!=null && !state.receipts.containsKey(raidId) && state.active.values().stream().noneMatch(r->r.id().equals(raidId)),"Military operation identity was already used.");
         var context = startable(attacker, target);
         RaidOrder order = orderId == null ? null : order(orderId);
         check(orderId == null || order != null && order.target.equals(target) && order.kingdom.equals(context.attackerKingdom)
                 && java.util.Objects.equals(order.warId, context.warId), "The raid order changed; it cannot start this raid.");
-        Raid raid = new Raid(UUID.randomUUID(), attacker, target, startGameTime, initiator, context, false);
+        Raid raid = new Raid(raidId, attacker, target, startGameTime, initiator, context, false);
         var active = new HashMap<>(state.active); active.put(target, raid);
         var orders = new HashMap<>(state.ledger.orders); if (orderId != null) orders.remove(orderId);
         publish(new State(state.kingdoms, state.membership, state.revisions, state.progress, active, state.receipts, state.last, state.wars, state.rulers,
@@ -645,7 +658,35 @@ public final class KingdomSavedData extends SavedData {
         publish(new State(state.kingdoms, state.membership, state.revisions, state.progress, active, receipts, last, state.wars, state.rulers,
                 state.ledger.withRaidDays(raidDays)));
     }
-    private void publish(State next) { state = next; setDirty(); }
+    private void publish(State next) {
+        if (royalRuntimeLevel != null && (!state.rulers.equals(next.rulers) || !state.membership.equals(next.membership) || !state.kingdoms.equals(next.kingdoms))) {
+            com.millenairekingdoms.construction.RoyalConstructionGovernance.beforePoliticalChange(royalRuntimeLevel, intent -> {
+                Kingdom kingdom = next.kingdoms.get(intent.kingdom()); Ruler ruler = next.rulers.get(intent.kingdom());
+                return kingdom == null || !kingdom.active || kingdom.fallen() || !kingdom.capital.equals(intent.capital())
+                        || !intent.kingdom().equals(next.membership.get(intent.village()))
+                        || !java.util.Objects.equals(state.rulers.get(intent.kingdom()), ruler)
+                        || (ruler == null ? intent.actor() != null : !ruler.player.equals(intent.actor()) || ruler.sinceGameTime != intent.rulerSince());
+            });
+            com.millenairekingdoms.shipping.RoyalShipmentGovernance.beforePoliticalChange(royalRuntimeLevel, intent -> {
+                Kingdom kingdom=next.kingdoms.get(intent.kingdom());Ruler ruler=next.rulers.get(intent.kingdom());
+                return kingdom==null || !kingdom.active || kingdom.fallen() || !kingdom.capital.equals(intent.capital())
+                        || !intent.kingdom().equals(next.membership.get(intent.source().village())) || !intent.kingdom().equals(next.membership.get(intent.destination().village()))
+                        || !java.util.Objects.equals(state.rulers.get(intent.kingdom()),ruler)
+                        || (ruler==null ? intent.actor()!=null : !ruler.player.equals(intent.actor()) || ruler.sinceGameTime!=intent.rulerSince());
+            });
+        }
+        java.nio.file.Path historyPending = null;
+        if (royalRuntimeLevel != null && (!state.kingdoms.equals(next.kingdoms) || !state.membership.equals(next.membership)
+                || !state.wars.equals(next.wars) || !state.rulers.equals(next.rulers))) {
+            var detached = new KingdomSavedData(); detached.state = next; detached.historyCommit = UUID.randomUUID();
+            historyPending = com.millenairekingdoms.history.HistoryHooks.stagePolitical(royalRuntimeLevel,
+                    save(new CompoundTag(), royalRuntimeLevel.registryAccess()), detached.save(new CompoundTag(), royalRuntimeLevel.registryAccess()));
+            // Even when history I/O is unavailable, a later transition cannot reuse an earlier pending marker.
+            historyCommit = detached.historyCommit;
+        }
+        state = next; setDirty();
+        if (royalRuntimeLevel != null) com.millenairekingdoms.history.HistoryHooks.afterPolitical(royalRuntimeLevel, this, historyPending);
+    }
 
     /** Old target-only wins are archived, never credited to an arbitrary new kingdom.
      * In-flight old conquests retain no-loot semantics and cleanup, but award no politics. */
@@ -672,7 +713,8 @@ public final class KingdomSavedData extends SavedData {
     }
 
     @Override public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
-        tag.putInt("format", FORMAT);
+        tag.putInt("format", historyCommit == null ? 6 : FORMAT);
+        if (historyCommit != null) tag.putUUID("historyCommit", historyCommit);
         tag.put("legacyArchive", legacyArchive.copy());
         ListTag kingdoms = new ListTag();
         state.kingdoms.values().forEach(k -> {
@@ -767,6 +809,7 @@ public final class KingdomSavedData extends SavedData {
     public static KingdomSavedData load(CompoundTag tag, HolderLookup.Provider registries) {
         int format = tag.getInt("format");
         check(format >= 1 && format <= FORMAT, "Unsupported kingdom data format.");
+        check(format >= 7 ? tag.hasUUID("historyCommit") : !tag.contains("historyCommit"), "Invalid or disguised historical commit marker.");
         boolean stage3 = format < 3;
         // A format-1 file must not hide format-2 war records during migration.
         check(format != 1 || !tag.contains("wars"), "Unexpected wars in legacy kingdom data.");
@@ -859,7 +902,8 @@ public final class KingdomSavedData extends SavedData {
         // Older formats had no war clocks: every ACTIVE war starts its clock on the stored ledger day.
         Ledger expected = format < 6 ? ledger.withClocks(data.state.ledger.warClocks) : ledger;
         check(data.state.ledger.equals(expected), "Ledger refers to ended wars, fallen kingdoms or member villages.");
-        if (format < FORMAT) data.setDirty();
+        data.historyCommit = format >= 7 ? tag.getUUID("historyCommit") : null;
+        if (format < 6) data.setDirty();
         data.legacyArchive = tag.getCompound("legacyArchive").copy();
         if (!data.legacyArchive.isEmpty()) ConquestSavedData.load(data.legacyArchive, registries);
         return data;

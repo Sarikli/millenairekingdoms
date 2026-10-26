@@ -1,5 +1,104 @@
 # Changelog
 
+## 1.2.0 — 2026-10-27 — By Royal Decree
+
+- Finalize the verified RC.10 gameplay and language payload as stable 1.2.0; only JAR version metadata changes.
+- Include paid royal construction, persistent queues, non-centre upgrades, icon-based shipment selection, level-scaled capital income and Ethos-aware NPC investment.
+- Include native/strategic warfare, conserving treasury maintenance, village-only political atlas, fully developed generated capitals and a 50-unit shipment protection ceiling.
+- Include concise revised EN/TR chronicles with occasional word-level Ethos cues and no repeated preambles or closing mottos; retain all 26 locales and saved event facts.
+- Preserve previous artifacts and image-specific test evidence. Final-JAR lifecycle and packed-resource results are in the [final report](docs/1.2.0_FINAL_RELEASE.md); graphical/authenticated-client and linguistic limits remain explicit.
+
+## 1.2.0-rc.10 — Chronicle prose
+
+- Remove repeated chronicler introductions and Ethos closing sentences.
+- Rewrite all EN/TR event bodies/headings with three concise variants and occasional word-level tone.
+- Preserve factual direction, literal names, accepted/completed distinctions and old saved events.
+- Retain all26 locales and all previous catalog values; other languages reuse their localized bodies without the old global boilerplate.
+
+## 1.2.0 — release preparation
+
+- Exclude native lone structures and ruins from political atlas pages, member lists and current-structure history pins.
+- Develop every generated natural-capital building to its final native level using original rush upgrades.
+- Cap combined shipment protection at50 ordinary units per product, including older larger configured floors.
+- Remove individual save reports and conversational attribution from documentation.
+
+## 1.2.0-rc.9 — 2026-10-26 (final stabilization review candidate)
+
+- Replace experimental ocean/territory rendering with authorized settlement markers, persistent shared kingdom colors and same-color capital crowns. Remove geography/geometry workers; preserve old caches and discovery/history. Bound exact color allocation and support8192 identities without the old size/performance failure.
+- Continue conditional NPC investment planning when native villages are unloaded; revalidate actual funds/materials/builders through existing paid services when available. Safely reconsider only proven unperformed interrupted intentions after cooldown, under new IDs.
+- Resolve legitimate unattended NPC wars using canonical native military records and persisted opposed dice. Keep active native physical raids, original conquest constraints and exactly-once political/Chronicle receipts.
+- Consolidate original64bronze/64silver denominations within one verified physical chest with exact conservation, saved read-back, native-interference proofs and financial/cargo guards. Keep bounded periodic maintenance; disclose synchronous disk-barrier latency.
+- Exact candidate JAR passed40 paired packages/80JVMs and4 normal new/legacy production lifecycle JVMs.26-locale coverage and34 prior artifact checksums preserved. All raw source/image evidence, actual process cuts, retained failed/interrupted attempts and manual/latency/old-stock limits are in [the final report](docs/1.2.0_RC9_REPORT.md). Same Draft PR3; no stable release/tag/main merge.
+
+## 1.2.0-rc8-alpha —2026-10-25 (Chronicles & Political Atlas, experimental)
+
+- Fold the chronicles/atlas expansion into1.2.0: bottom-left History/Tarihçe, paginated kingdom/world chronicles and fallen archives, deterministic EN/TR medieval perspectives/culture/ethos, direct known-place/history links and independent full-screen political atlas with cached clipped regions, native icons, capitals/war/info and server discovery/privacy. Turkish heading becomes Töre; five ethos names/weights preserved.
+- Add separate strict event/archive1, political pending2 and domain candidate1 storage. Political maximum7 adds one causal nonce with lazy legacy1–6 compatibility; payment1/order5/audit2/shipment1/native formats remain. Record only verified actual accepted/completed/delivered transitions, no backfill/duplicate/fake incidents or gameplay replay. Correct reproduced intermediate-founding publication and atlas double-chest chunk-load issues; separate footer replies from History.
+- Thirty current/focused fresh package pairs retain exact per-JVM All-lines/hashes. Actual native automatic commission/completion/default-timer delivery,30-resident accelerated political-history comparison,400 controlled model days/four All1 epochs and three actual history cuts are separately scoped. Final production JAR startup/save/stop/reopen passed without the test mod. [Full report/raw evidence/limits](docs/1.2.0_RC8_ALPHA_REPORT.md).
+- Final JAR 760562 bytes, SHA256 `d6a6975c5c4abe7d2090298ce0492bae20d14b3196d7f546014ce352a5e07df9`; [artifact/checksum](releases/1.2.0-rc8-alpha/). Graphics/input/scaling/authenticated login manual/unverified. Same Draft PR3; no stable tag/Release/merge/main/setup/start changes.
+
+
+## 1.2.0-rc.8 — 2026-10-25 (upgrades, product picker, capital production)
+
+- Add player royal upgrades for original eligible completed non-centre buildings, binding exact UUID/next level/quote. Charge construction base × target display level:128/192/256 with64 base, material costs separate. Retain unpaid queue, one village slot, authority/fee/recovery safeguards and original NPC work. Order5 lazily reads1–4, audit2 reads1; network4 prevents old clients misreading the new upgrade offers.
+- Replace shipment product cycling with a searchable icon/name list and Back/Esc return; retain server stock/authorization/transport rules.
+- Add capital production4 deniers per completed centre level/day through the existing daily ledger/native coins, including capitals without members; preserve once-per-day/restart/unavailable-storage behavior and existing member rates.
+- Nine related paired packages logged their exact All28/3/26/7/55/16/10/18/9 lines per JVM, with real original building→two upgrades for64+128+192,100% final physical match and actual capital coin/day restart. Two publication process cuts and ordinary production-JAR save/reopen also verified. Initial plan-only fixture selection failure is retained; corrected only the test, kept the successful unchanged-binary GUI pair. [Exact evidence/scope](verification/1.2.0/rc.8-upgrades/README.md). Graphics/auth remain unverified; no unrelated full matrix/400-day repeat.
+
+## 1.2.0-rc.7 — 2026-10-25 (construction waiting queue)
+
+- Let players queue one unpaid royal mandate behind ongoing ordinary native construction/upgrade. Preserve the current native project/task; revalidate current online ruler, original loaded target/treasury, eligibility and real funds before automatic single payment at the saved quote. Persist waiting across restart, cancel without fees/native deletion, retain one active royal slot per village.
+- Fix the observed native20-tick/royal100-tick handoff race with a pinned noncancelling per-village pre-growth hook. Extend the native-building observation baseline atomically only before first publication so preceding natural work cannot fulfill the royal order. Format4 lazily reads1–3 and preserves all earlier liabilities/recovery identities. Earlier candidates cannot read4; downgrade requires a matching whole-world backup.
+- Final paired JVMs each logged `All 2 required tests passed` (live), `All 20 required tests passed` (GUI), `All 55 required tests passed` (construction), `All 16 required tests passed` (recovery) and `All 10 required tests passed` (sites). Actual original villagers finish the prior1048-step upgrade then a distinct royal building at100% physical match, one64 fee. Two relevant abrupt publication cuts retain conservative recovery; normal production-JAR save/stop/reopen and packed EN/TR320-key checks passed. [Raw evidence/failed attempts/scope](verification/1.2.0/rc.7-construction-queue/README.md). Graphical/online checks remain unverified; unrelated successful suites/simulation were not repeated.
+
+## 1.2.0-rc.6 — 2026-10-25 (Ethos / Karakter heading)
+
+- Rename the kingdom screen heading to **Ethos** in English and **Karakter** in Turkish. Keep all five temperament names and the existing translation key/format argument.
+- Build and packed translation checks passed; all200 production classes match RC.5. Only the two heading values and version metadata differ. No GameTest package was repeated for this text change; graphical label fit remains unverified. RC.5 timing defaults/configuration and previous evidence remain intact.
+
+## 1.2.0-rc.5 — 2026-10-24 (natural capitals and decision timing)
+
+- Set new natural-capital chance to10% and both natural/development-founded capital spacing defaults to1000 blocks. Joining/shared political evaluations now default to1 day. Halve other decision waits with rounding down: founding7→3, raid cooldown3→1, truce10→5, peace age12→6/idle6→3/long-war36→18 days.
+- Halve NPC raid preparation6000→3000 ticks, order lifetime48000→24000 and queued-order checks100→50. NPC economic checks1200→600 ticks and attempt/project/village/route waits3/6/12/6→1/3/6/3 days. Retain all other probabilities, relation/level/reputation thresholds, personality weights, real payments/stock protections and actual cargo travel.
+- Existing active TOML values and already persisted due dates/truces/order lifetimes are retained. A [partial gameplay settings list](releases/1.2.0-rc.5/serverconfig-changes.toml) supports updating existing installations without replacing unrelated configuration. Full [timing table and compatibility details](docs/1.2.0_RC5_TIMINGS.md).
+
+- Focused paired GameTests logged exact All5/22/12/12/1/1 in each write/separate-JVM reopen, plus normal build and actual production-JAR save/stop/reopen. Generated normal config changed exactly the12 preset keys. An obsolete3-day assertion failed once, was corrected only in the fixture and passed in a fresh world; failure retained. [Exact evidence/scope](verification/1.2.0/rc.5-timings/README.md). Graphics/online remain unverified; unrelated successful suites were not repeated.
+
+## 1.2.0-rc.4 — 2026-10-24 (narrative personality names)
+
+- Name the kingdom's temperament in English and Turkish: Military → Warlike/Savaşçı, Religious → Traditionalist/Gelenekçi, Agricultural → Peaceful/Barışçıl, Artisan → Industrious/Üretken, Palace/General → Pragmatic/Pragmatik.
+- Keep the existing capital-origin identities, policy weights and persisted data. The five displayed names in each language and version metadata are the only changed production payloads; all200 Java classes match RC.3. English/Turkish retain314 matching keys and equivalent indexed/implicit format arguments. Build passed; no new or repeated GameTest result is claimed for this text change.
+- Rulership navigation and stock diagnostics remain available.
+
+## 1.2.0-rc.3 — 2026-10-24 (rulership navigation)
+
+- Reduce the top navigation to five main tabs. Open Construction and Shipping with two buttons inside Rulership; the Rulership tab or Esc returns from either page. Reopening starts at the parent page.
+- Keep the royal forms intact, make rulership information scrollable, and retain the fixed claim/abdication controls and existing confirmation/authority checks. Add the English/Turkish return hint; retain RC.2 stock diagnostics.
+- Gradle build passed. The focused existing GUI suite logged **All 7 required tests passed** in both write and separate-JVM reopen; the actual RC.3 production JAR also completed ordinary startup/save/stop/reopen without a test mod. Server/view/payment/cargo/domain payloads are byte-identical to RC.2. No unrelated successful suite was repeated.
+- Graphical layout and online authentication remain unverified.
+
+## 1.2.0-rc.2 — 2026-10-24 (stock diagnostic follow-up)
+
+- Show actual and kept shipment stock, plus a product-hover breakdown of native target, construction, residents, configured minimum and Millénaire protection. Insufficient-stock messages show requested/sendable/kept amounts in English and Turkish.
+- Add an original Norman storage regression with real stock, collection, separate-JVM reopen and exact cancellation/refund. Controlled floor diagnostics remain archived with the historical artifact.
+- Focused shipment GUI passed18+18, existing GUI7+7/build; actual RC2 normal production-JAR startup/save/stop/reopen passed. Stock/payment/cargo/domain bytecode is unchanged; no reserve is bypassed or world format changed.
+Graphical tooltip layout and online authentication remain unverified. See [investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md).
+
+
+## 1.2.0-rc.1 — 2026-10-24 (release candidate)
+
+- Target the verified original Millénaire 9.0.3 with Minecraft 1.21.1, NeoForge 21.1.259 and Java 21; keep the dependency separate.
+- Spend real capital coins through durable, bound native-container receipts. Preserve denomination change, tax debts, refunds and later legitimate inventory activity; quarantine uncertain/future evidence.
+- Commission culturally eligible autonomous village construction. The original engine selects sites and its genuine NPC builders consume real materials; loaded physical block/entity persistence precedes completion acknowledgement. Add explicit cancellation and audited OP recovery.
+- Ship protected real surplus between member villages for a distance/quantity fee and server-tick travel time. Preserve native project/household stocks, exact held cargo, full/unloaded destinations and governance retirement without restricting ordinary trade.
+- Add Construction and Shipping to the existing kingdom screen with server-owned offers, replay protection, saved history/status and English/Turkish translations (seven tabs, protocol3).
+- Derive five personalities from exact native capital village types. Add bounded, need-based NPC investments/logistics through shared paid services, actual reserves/share limits, persistent cooldowns, war-time military preference and existing eligible campaign weighting. Player rule excludes new NPC economic decisions.
+- Preserve political format6 and original1.1.0/representative original1.1.1 serializer fields across restart; document strict new stores and unsupported full downgrade.
+- Retain actual failed/passing process-crash evidence, original builder/material/block gates and400-day/four-JVM conservation/performance measurements. The final [technical report](docs/1.2.0_RELEASE_REPORT.md) records exact regression results and RC checksum.
+- Graphical client layout and authenticated online login remain separately unverified in the manual checklist. This is a review candidate; no stable release, tag or merge is performed.
+
+Türkçe: Gerçek para ile özerk inşaat siparişi ve korunan stoktan süreli sevkiyat, iki dilli arayüz ve başkent türüne bağlı NPC ekonomi kararları eklendi. Vergi modeli ve normal Millénaire ticareti korundu. Gerçek envanter, makbuz, yeniden açma ve özgün NPC inşaat kanıtları raporda bulunur; görsel/çevrimiçi kontroller ayrı ve henüz doğrulanmamıştır.
+
 ## 1.1.1 — 2026-10-22 (local maintenance build)
 
 ### Fixed

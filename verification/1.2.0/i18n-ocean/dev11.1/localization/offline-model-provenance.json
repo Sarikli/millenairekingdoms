@@ -1,0 +1,14 @@
+{
+  "repository": "JustFrederik/nllb-200-distilled-600M-ct2-int8",
+  "revision": "302d78f00e6fdb50a1064059df7c392b735e9d05",
+  "sha256": {
+    "config.json": "0c2f6fa2057c7264d052fb4a62ba3476eeae70487acddfa8e779a53a00cbf44c",
+    "model.bin": "ed1beaf75134de7505315a5223162f56acff397eff6b50638a500d3936fe707b",
+    "sentencepiece.bpe.model": "14bb8dfb35c0ffdea7bc01e56cea38b9e3d5efcdcb9c251d6b40538e1aab555a",
+    "shared_vocabulary.txt": "a132a83330f45514c2476eb81d1d69b3c41762264d16ce0a7ea982e5d6c728e5",
+    "special_tokens_map.json": "992bd4ed610d644d6823081937bcc91bb8878dd556cea4ae5327f2480361330e",
+    "tokenizer.json": "e316b82de11d0f951f370943b3c438311629547285129b0b81dadabd01bca665",
+    "tokenizer_config.json": "d1aa8c3697d3e35674f97b5b7e9c99d22b010f528e80140257d97316be90d044"
+  },
+  "project_text_sent": false
+}

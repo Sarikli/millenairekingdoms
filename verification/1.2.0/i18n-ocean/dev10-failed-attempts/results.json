@@ -1,0 +1,66 @@
+[
+  {
+    "suite": "verifyGeography",
+    "run": "i18n-dev10-geography-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 1,
+        "passes": [],
+        "build": false,
+        "log": "/workspace/royal-decree/i18n-dev10-geography-01-write.log",
+        "sha256": "1a14d57351e0142723c47e3ccb94ba1acd569daf44c9476a0bdc1f471f9a99b8",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev10.jar",
+        "jar_sha256": "022233928c5db2b3946f73452e5481c2e348c055947ba106cc4c1190dae523eb"
+      }
+    ]
+  },
+  {
+    "suite": "verifyGeography",
+    "run": "i18n-dev10-geography-02",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 1,
+        "passes": [],
+        "build": false,
+        "log": "/workspace/royal-decree/i18n-dev10-geography-02-write.log",
+        "sha256": "62e18835736e578f12235d31badb0412096b0ca49f8dd250b5e9906a2555406f",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev10.1.jar",
+        "jar_sha256": "a2045e820b74316addd7e9f0ff98525d3ed6883b013c9ecf58440d80b3c082a4"
+      }
+    ]
+  },
+  {
+    "suite": "verifyGeography",
+    "run": "i18n-dev10-geography-03",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 1,
+        "passes": [],
+        "build": false,
+        "log": "/workspace/royal-decree/i18n-dev10-geography-03-write.log",
+        "sha256": "de5c655596d027d36059a654493c0d7c7c8e4715ca4346bb589b13902539cba2",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev10.2.jar",
+        "jar_sha256": "b5b040e1d618bf497385520d464ee986940fc65f8984f98def7a4491c3ccf6bd"
+      }
+    ]
+  },
+  {
+    "suite": "verifyGui",
+    "run": "i18n-dev10-gui-04",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 1,
+        "passes": [],
+        "build": false,
+        "log": "/workspace/royal-decree/i18n-dev10-gui-04-write.log",
+        "sha256": "dc7b41f5673c1749b22858c631e20d23928931cab46d99d43b4ea7666ea55902",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev10.3.jar",
+        "jar_sha256": "da21e31c64c5d93ee3660bf81649bb55ac31dcd9204ca3caceeef3edb74d8d7f"
+      }
+    ]
+  }
+]

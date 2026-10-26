@@ -1,0 +1,17 @@
+[
+  {
+    "archive_log": "verification/1.2.0/rc8-alpha/final-regression/attempts/alpha-dev72-reg-wars-01-write.log.gz",
+    "raw_sha256": "ed8368127b718a0e97649ca6c862851ed7374f62232ec14895a9105f69e45a35",
+    "archive_sha256": "47b597601dbef04a99b46bcf9a90ff17506032673c5eeebca4754afa2a5707e9"
+  },
+  {
+    "archive_log": "verification/1.2.0/rc8-alpha/final-regression/attempts/alpha-dev72-reg-capitals-01-write.log.gz",
+    "raw_sha256": "9bc12df27966c06d36234ebf6fc2289e684c8edb4b963bf7288e4c04260271f2",
+    "archive_sha256": "34a9e976a3298e22c0ce48a88e726fd0edbc8c99f090a7b4b7e55fe258304801"
+  },
+  {
+    "archive_log": "verification/1.2.0/rc8-alpha/final-regression/attempts/alpha-dev72-reg-capitals-02-write.log.gz",
+    "raw_sha256": "7a2df1af6a24f2f5dfd0adad4f8f13af94f23aaa7407987d3d4fa3c0df04726c",
+    "archive_sha256": "6ae0ac2d4b91b8748b12e97f835ccd20afacc00d51124e0a659bbef0771f7ee8"
+  }
+]

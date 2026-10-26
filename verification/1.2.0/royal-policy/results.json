@@ -1,0 +1,40 @@
+{
+  "phase": "6 in progress: preferences/existing political draws only",
+  "mod_version": "1.2.0-dev.5",
+  "native_functions": 179,
+  "roles": {
+    "MILITARY": 20,
+    "AGRICULTURAL": 44,
+    "RELIGIOUS": 24,
+    "ARTISAN": 74,
+    "CIVIC": 17
+  },
+  "cases": [
+    {
+      "run": "royal-policy-01",
+      "required_pass_counts": [],
+      "normal_build_successful": false,
+      "raw_sha256": "03c28882ab44b330aa6a089a2fa2f5e32abae42aff67524c40ff1d7f4b1e75af"
+    },
+    {
+      "run": "royal-policy-02",
+      "required_pass_counts": [
+        7,
+        7
+      ],
+      "normal_build_successful": true,
+      "raw_sha256": "9224acfdc0ed9720b0177563ccf2b14bedddcabee1a1c3ec4f7c74e02cafc2a4"
+    },
+    {
+      "run": "royal-policy-autonomy-01",
+      "required_pass_counts": [
+        22,
+        22
+      ],
+      "normal_build_successful": true,
+      "raw_sha256": "3bd89aaf32a8263cddb9d9d123020b10c858d171b09aafdb785e8c90d1faf482"
+    }
+  ],
+  "current_jar_sha256": "604df66c7dd4bbd6a7e5948f5f94452e964aede9f6fe4e6641af1bb639df7a88",
+  "automatic_new_economic_decisions": "NOT IMPLEMENTED YET"
+}

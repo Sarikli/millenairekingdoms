@@ -1,0 +1,5 @@
+{
+  "initial_scope_assertion": "Expected only KingdomScreen.class plus metadata, but two nested RowList classes also changed. No release artifact was copied before this assertion.",
+  "actual_correction": "Both nested classes differ only in LineNumberTable line values; normalized complete class bytes and javap instructions/descriptors equal. Other238 classes/resources match.",
+  "temporary_review_parser_error": "Initial standalone classfile auditor lost a u2 offset through augmented assignment; parser corrected before any proof output. No production code/test result affected."
+}

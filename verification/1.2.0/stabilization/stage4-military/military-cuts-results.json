@@ -1,0 +1,162 @@
+[
+  {
+    "cut": "after-roll",
+    "run": "stabilization-military-cut-after-roll-01",
+    "stages": [
+      {
+        "phase": "prepare",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "expected_halt": false,
+        "log": "/workspace/royal-decree/stabilization/stabilization-military-cut-after-roll-01-prepare.log",
+        "sha256": "9629c0050b0d6473ede303e803be82aa18534c840e119a44b11fd8b5e3305a70",
+        "jar_sha256": "737baa8c77f7a011a921ee555b8a68b7d741cdb8db6690cfab660e08a369baaf"
+      },
+      {
+        "phase": "cut",
+        "exit": 1,
+        "passes": [],
+        "build": false,
+        "expected_halt": true,
+        "log": "/workspace/royal-decree/stabilization/stabilization-military-cut-after-roll-01-cut.log",
+        "sha256": "48970cef8293f2e4338d1a085bbde476b89782619dbd5c37716ccff5b1057686",
+        "jar_sha256": "737baa8c77f7a011a921ee555b8a68b7d741cdb8db6690cfab660e08a369baaf"
+      },
+      {
+        "phase": "read",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "expected_halt": false,
+        "log": "/workspace/royal-decree/stabilization/stabilization-military-cut-after-roll-01-read.log",
+        "sha256": "d47b41ef9d8976f099434608b196e403c8d58c3dcdc141af56d898249915e4ce",
+        "jar_sha256": "737baa8c77f7a011a921ee555b8a68b7d741cdb8db6690cfab660e08a369baaf"
+      }
+    ]
+  },
+  {
+    "cut": "after-begin",
+    "run": "stabilization-military-cut-after-begin-01",
+    "stages": [
+      {
+        "phase": "prepare",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "expected_halt": false,
+        "log": "/workspace/royal-decree/stabilization/stabilization-military-cut-after-begin-01-prepare.log",
+        "sha256": "bb498cdc54ce86ff8c95abf6cafa68bb898550859a3b56e8e16972ac5c0e17f2",
+        "jar_sha256": "737baa8c77f7a011a921ee555b8a68b7d741cdb8db6690cfab660e08a369baaf"
+      },
+      {
+        "phase": "cut",
+        "exit": 1,
+        "passes": [],
+        "build": false,
+        "expected_halt": true,
+        "log": "/workspace/royal-decree/stabilization/stabilization-military-cut-after-begin-01-cut.log",
+        "sha256": "fecd1ebb5e9acb799a8fe757b0a0620d08d51af7dc3d5874cb11006794733502",
+        "jar_sha256": "737baa8c77f7a011a921ee555b8a68b7d741cdb8db6690cfab660e08a369baaf"
+      },
+      {
+        "phase": "read",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "expected_halt": false,
+        "log": "/workspace/royal-decree/stabilization/stabilization-military-cut-after-begin-01-read.log",
+        "sha256": "8916cb324ec89176a0221becb04d1451ee568ed812e88a4d07e17b4b0ac3d0a6",
+        "jar_sha256": "737baa8c77f7a011a921ee555b8a68b7d741cdb8db6690cfab660e08a369baaf"
+      }
+    ]
+  },
+  {
+    "cut": "after-victory",
+    "run": "stabilization-military-cut-after-victory-01",
+    "stages": [
+      {
+        "phase": "prepare",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "expected_halt": false,
+        "log": "/workspace/royal-decree/stabilization/stabilization-military-cut-after-victory-01-prepare.log",
+        "sha256": "a3c5a7f70e7efed7cbe75eae15f756790263450c05bd1d3b15bd37db6d462588",
+        "jar_sha256": "737baa8c77f7a011a921ee555b8a68b7d741cdb8db6690cfab660e08a369baaf"
+      },
+      {
+        "phase": "cut",
+        "exit": 1,
+        "passes": [],
+        "build": false,
+        "expected_halt": true,
+        "log": "/workspace/royal-decree/stabilization/stabilization-military-cut-after-victory-01-cut.log",
+        "sha256": "8102b34e78bdca2b64da8785650170dfc5f973b5a86a386c64b56b3ce21e3f35",
+        "jar_sha256": "737baa8c77f7a011a921ee555b8a68b7d741cdb8db6690cfab660e08a369baaf"
+      },
+      {
+        "phase": "read",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "expected_halt": false,
+        "log": "/workspace/royal-decree/stabilization/stabilization-military-cut-after-victory-01-read.log",
+        "sha256": "cb99ccb7eae1e033b780c41419dd8457d131750d94c155e34a7c6551001e1db9",
+        "jar_sha256": "737baa8c77f7a011a921ee555b8a68b7d741cdb8db6690cfab660e08a369baaf"
+      }
+    ]
+  },
+  {
+    "cut": "after-political-ack",
+    "run": "stabilization-military-cut-after-political-ack-01",
+    "stages": [
+      {
+        "phase": "prepare",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "expected_halt": false,
+        "log": "/workspace/royal-decree/stabilization/stabilization-military-cut-after-political-ack-01-prepare.log",
+        "sha256": "1cfdca0259a59c0ace7d16e6863e799ebdff6f8f5e3effaa78bc05e5945bb7d2",
+        "jar_sha256": "737baa8c77f7a011a921ee555b8a68b7d741cdb8db6690cfab660e08a369baaf"
+      },
+      {
+        "phase": "cut",
+        "exit": 1,
+        "passes": [],
+        "build": false,
+        "expected_halt": true,
+        "log": "/workspace/royal-decree/stabilization/stabilization-military-cut-after-political-ack-01-cut.log",
+        "sha256": "49b4b1546c939aac20152846df792d67ae45ad22da78638afa91b9ccf8485415",
+        "jar_sha256": "737baa8c77f7a011a921ee555b8a68b7d741cdb8db6690cfab660e08a369baaf"
+      },
+      {
+        "phase": "read",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "expected_halt": false,
+        "log": "/workspace/royal-decree/stabilization/stabilization-military-cut-after-political-ack-01-read.log",
+        "sha256": "619699be70cd7fb9bca004ecbea1da8ed69014a85990def12ce4c0de7fe2b537",
+        "jar_sha256": "737baa8c77f7a011a921ee555b8a68b7d741cdb8db6690cfab660e08a369baaf"
+      }
+    ]
+  }
+]

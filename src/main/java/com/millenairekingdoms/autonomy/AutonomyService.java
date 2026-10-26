@@ -24,7 +24,7 @@ import org.millenaire.village.Village;
 import org.millenaire.village.VillageSavedData;
 import org.slf4j.Logger;
 
-/** Stage 6.2: the political decisions of NPC-governed kingdoms, taken once per decision interval (3 days by default)
+/** Stage 6.2: the political decisions of NPC-governed kingdoms, taken once per decision interval (1 day by default)
  * from KingdomDay, never per tick. Everything is read from persistent data (Millénaire relations and villager records,
  * kingdom data), so unloaded villages take part in politics; nothing here fights or simulates a battle. Raid orders it
  * creates start only as real Millénaire raids (RaidOrderService). A kingdom with a player ruler is never decided for:
@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 public final class AutonomyService {
     private static final Logger LOGGER = LogUtils.getLogger();
     /** Wars are not ended by NPC decision before this many days; after IDLE_DAYS without a victory they may be. */
-    public static final int PEACE_AFTER_DAYS = 12, IDLE_DAYS = 6, LONG_WAR_DAYS = 36;
+    public static final int PEACE_AFTER_DAYS = 6, IDLE_DAYS = 3, LONG_WAR_DAYS = 18;
     /** Base chance per evaluation that an independent village with good relations joins (or applies to) a kingdom. */
     public static final double JOIN_CHANCE = 0.10;
     private static final String TAG = "[Kingdoms] ";
@@ -100,15 +100,14 @@ public final class AutonomyService {
             catch (IllegalArgumentException raidsRunning) { return PeaceDecision.NONE; } // Retried at the next evaluation.
             DiplomacyService.treaty(level, data, war);
             LOGGER.info("[Kingdoms] {} made peace with {} ({}); truce {} days.", attacker.name(), defender.name(), motive.reason(), s.truceDays());
-            PoliticsService.notifyRuler(level, defender.id(), Component.literal(TAG + attacker.name() + " made peace with your kingdom ("
-                    + motive.reason() + "). Truce: " + s.truceDays() + " days.").withStyle(ChatFormatting.GREEN));
+            PoliticsService.notifyRuler(level, defender.id(), com.millenairekingdoms.localization.PublicText.of("%s%s made peace with your kingdom (%s). Truce: %s days.", TAG, attacker.name(), com.millenairekingdoms.localization.PublicText.error(motive.reason()), s.truceDays()).withStyle(ChatFormatting.GREEN));
             return PeaceDecision.MADE;
         }
         // The attacker has a ruler: an NPC defender can only offer peace; the ruler decides.
         data.offerPeace(war.id());
         LOGGER.info("[Kingdoms] {} offers peace to {} ({}).", defender.name(), attacker.name(), motive.reason());
-        PoliticsService.notifyRuler(level, attacker.id(), Component.literal(TAG + defender.name() + " offers peace (" + motive.reason() + "). ")
-                .withStyle(ChatFormatting.GOLD).append(PoliticsService.button("[Accept peace]", "/kingdom war peace", "End the war with " + defender.name())));
+        PoliticsService.notifyRuler(level, attacker.id(), com.millenairekingdoms.localization.PublicText.of("%s%s offers peace (%s). ", TAG, defender.name(), com.millenairekingdoms.localization.PublicText.error(motive.reason()))
+                .withStyle(ChatFormatting.GOLD).append(PoliticsService.button(com.millenairekingdoms.localization.PublicText.of("[Accept peace]"), "/kingdom war peace", com.millenairekingdoms.localization.PublicText.of("End the war with %s", defender.name()))));
         return PeaceDecision.OFFERED;
     }
 
@@ -161,7 +160,8 @@ public final class AutonomyService {
     /** Chance that k declares war on t at one evaluation: the profile's base, more for the stronger side, never certain. */
     public static double declareChance(ServerLevel level, KingdomSavedData data, Kingdom k, Kingdom t, Settings s) {
         double ratio = (double) Military.strength(level, data, k.id()) / Math.max(1, Military.defence(level, data, t.id()));
-        return s.frequency().declare * Math.max(0.5, Math.min(1.5, 0.5 + 0.5 * ratio));
+        double existing=s.frequency().declare * Math.max(0.5, Math.min(1.5, 0.5 + 0.5 * ratio));
+        return RoyalInvestmentPolicy.aggression(existing,com.millenairekingdoms.personality.KingdomPersonality.forCapital(level,k).category(),RoyalNpcConfig.weights());
     }
 
     private static int wars(ServerLevel level, KingdomSavedData data, long day, RandomSource random, Settings s) {
@@ -177,7 +177,7 @@ public final class AutonomyService {
         try { war = data.declareWar(k.id(), t.id(), level.getGameTime()); }
         catch (IllegalArgumentException refused) { return null; }
         LOGGER.info("[Kingdoms] {} declared war on {} (relation {}).", k.name(), t.name(), relation(level, k, t));
-        PoliticsService.notifyRuler(level, t.id(), Component.literal(TAG + k.name() + " declared war on your kingdom.").withStyle(ChatFormatting.RED));
+        PoliticsService.notifyRuler(level, t.id(), com.millenairekingdoms.localization.PublicText.of("%s%s declared war on your kingdom.", TAG, k.name()).withStyle(ChatFormatting.RED));
         return war;
     }
 
@@ -250,10 +250,10 @@ public final class AutonomyService {
             }
             data.requestJoin(id, k.id(), null, "", level.getGameTime());
             LOGGER.info("[Kingdoms] {} applies to join {}; its ruler decides.", PoliticsService.name(v), k.name());
-            PoliticsService.notifyRuler(level, k.id(), Component.literal(TAG + PoliticsService.name(v) + " asks to join " + k.name() + ". ")
+            PoliticsService.notifyRuler(level, k.id(), com.millenairekingdoms.localization.PublicText.of("%s%s asks to join %s. ", TAG, PoliticsService.name(v), k.name())
                     .withStyle(ChatFormatting.GOLD)
-                    .append(PoliticsService.button("[Accept]", "/kingdom accept " + id, "Attach " + PoliticsService.name(v))).append(" ")
-                    .append(PoliticsService.button("[Refuse]", "/kingdom refuse " + id, "Refuse the application")));
+                    .append(PoliticsService.button(com.millenairekingdoms.localization.PublicText.of("[Accept]"), "/kingdom accept " + id, com.millenairekingdoms.localization.PublicText.of("Attach %s", PoliticsService.name(v)))).append(" ")
+                    .append(PoliticsService.button(com.millenairekingdoms.localization.PublicText.of("[Refuse]"), "/kingdom refuse " + id, com.millenairekingdoms.localization.PublicText.of("Refuse the application"))));
             return JoinDecision.APPLIED;
         } catch (IllegalArgumentException refused) { return JoinDecision.NONE; /* Changed meanwhile; considered again next time. */ }
     }
@@ -317,7 +317,7 @@ public final class AutonomyService {
         War war = data.activeWar(k.id());
         boolean attacking = war != null && war.attackerKingdom().equals(k.id());
         if (war != null && !attacking) return null; // A defender does not counter-conquer (stage-4 directional wars).
-        double chance = attacking ? s.frequency().campaign : s.frequency().independent;
+        double chance = campaignChance(level,k,attacking,s);
         if (random.nextDouble() >= chance) return null;
         Plan plan = plan(level, data, k.id(), attacking ? warTargets(data, war) : hostileIndependents(level, data, k, s), day, s);
         if (plan == null) return null;
@@ -329,9 +329,14 @@ public final class AutonomyService {
         } catch (IllegalArgumentException refused) { return null; }
         LOGGER.info("[Kingdoms] {} prepares a conquest raid from {} on {}{}.", k.name(), PoliticsService.name(plan.source),
                 PoliticsService.name(plan.target), attacking ? " (war on " + data.kingdom(war.defenderKingdom()).name() + ")" : " (independent village)");
-        if (attacking) PoliticsService.notifyRuler(level, war.defenderKingdom(), Component.literal(TAG + k.name() + " prepares a conquest raid on "
-                + PoliticsService.name(plan.target) + ".").withStyle(ChatFormatting.RED));
+        if (attacking) PoliticsService.notifyRuler(level, war.defenderKingdom(), com.millenairekingdoms.localization.PublicText.of("%s%s prepares a conquest raid on %s.", TAG, k.name(), PoliticsService.name(plan.target)).withStyle(ChatFormatting.RED));
         return order;
+    }
+
+    /** Personality scales the old draw only; all source/target/directional/60%/cooldown checks remain in place. */
+    public static double campaignChance(ServerLevel level,Kingdom k,boolean attacking,Settings settings){
+        return RoyalInvestmentPolicy.aggression(attacking ? settings.frequency().campaign : settings.frequency().independent,
+                com.millenairekingdoms.personality.KingdomPersonality.forCapital(level,k).category(),RoyalNpcConfig.weights());
     }
 
     // ---- helpers ----

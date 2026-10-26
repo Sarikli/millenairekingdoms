@@ -1,0 +1,267 @@
+{
+  "run": "order-crash-20261023T211209-12a02bcd",
+  "kind": "abrupt-jvm-construction-domain-recovery",
+  "cases": [
+    {
+      "boundary": "before-debit",
+      "world_run": "order-crash-20261023T211209-12a02bcd-before-debit",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "before-debit-prepare.log"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "before-debit-interrupt.log",
+          "expected_jvm_exit_code": 70
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "before-debit-recover.log"
+        }
+      ]
+    },
+    {
+      "boundary": "debit-before-order",
+      "world_run": "order-crash-20261023T211209-12a02bcd-debit-before-order",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "debit-before-order-prepare.log"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "debit-before-order-interrupt.log",
+          "expected_jvm_exit_code": 70
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "debit-before-order-recover.log"
+        }
+      ]
+    },
+    {
+      "boundary": "before-village",
+      "world_run": "order-crash-20261023T211209-12a02bcd-before-village",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "before-village-prepare.log"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "before-village-interrupt.log",
+          "expected_jvm_exit_code": 70
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "before-village-recover.log"
+        }
+      ]
+    },
+    {
+      "boundary": "after-village",
+      "world_run": "order-crash-20261023T211209-12a02bcd-after-village",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "after-village-prepare.log"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "after-village-interrupt.log",
+          "expected_jvm_exit_code": 70
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "after-village-recover.log"
+        }
+      ]
+    },
+    {
+      "boundary": "before-commit",
+      "world_run": "order-crash-20261023T211209-12a02bcd-before-commit",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "before-commit-prepare.log"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "before-commit-interrupt.log",
+          "expected_jvm_exit_code": 70
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "before-commit-recover.log"
+        }
+      ]
+    },
+    {
+      "boundary": "cancel-before-refund",
+      "world_run": "order-crash-20261023T211209-12a02bcd-cancel-before-refund",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "cancel-before-refund-prepare.log"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "cancel-before-refund-interrupt.log",
+          "expected_jvm_exit_code": 70
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "cancel-before-refund-recover.log"
+        }
+      ]
+    },
+    {
+      "boundary": "cancel-physical",
+      "world_run": "order-crash-20261023T211209-12a02bcd-cancel-physical",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "cancel-physical-prepare.log"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "cancel-physical-interrupt.log",
+          "expected_jvm_exit_code": 70
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "cancel-physical-recover.log"
+        }
+      ]
+    },
+    {
+      "boundary": "cancel-receipt",
+      "world_run": "order-crash-20261023T211209-12a02bcd-cancel-receipt",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "cancel-receipt-prepare.log"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "cancel-receipt-interrupt.log",
+          "expected_jvm_exit_code": 70
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "cancel-receipt-recover.log"
+        }
+      ]
+    }
+  ],
+  "complete": true,
+  "normal_build_passed": true,
+  "development_jar_sha256": "8c1792ffb5b0edb86e3e97dc65a458b472779f699ab3d1a962d5f623f94c4779",
+  "halted_jvms_are_expected_failures": true,
+  "physical_building_abrupt_save_safety_tested": false
+}

@@ -1,0 +1,242 @@
+[
+  {
+    "suite": "verifyWars",
+    "count": 30,
+    "task_stem": "War",
+    "run": "stabilization-rc9-wars-01"
+  },
+  {
+    "suite": "verifyConquest",
+    "count": 25,
+    "task_stem": "",
+    "run": "stabilization-rc9-conquest-01"
+  },
+  {
+    "suite": "verifyStage5",
+    "count": 26,
+    "task_stem": "Stage5",
+    "run": "stabilization-rc9-stage5-01"
+  },
+  {
+    "suite": "verifyCapitals",
+    "count": 5,
+    "task_stem": "Capital",
+    "run": "stabilization-rc9-capitals-01"
+  },
+  {
+    "suite": "verifyAutonomy",
+    "count": 22,
+    "task_stem": "Autonomy",
+    "run": "stabilization-rc9-autonomy-01"
+  },
+  {
+    "suite": "verifyGui",
+    "count": 7,
+    "task_stem": "Gui",
+    "run": "stabilization-rc9-gui-01"
+  },
+  {
+    "suite": "verifyFounding",
+    "count": 12,
+    "task_stem": "Founding",
+    "run": "stabilization-rc9-founding-01"
+  },
+  {
+    "suite": "verifyRoyalEconomy",
+    "count": 46,
+    "task_stem": "RoyalEconomy",
+    "run": "stabilization-rc9-royaleconomy-01"
+  },
+  {
+    "suite": "verifyRoyalConstruction",
+    "count": 55,
+    "task_stem": "RoyalConstruction",
+    "run": "stabilization-rc9-royalconstruction-01"
+  },
+  {
+    "suite": "verifyRoyalRecovery",
+    "count": 16,
+    "task_stem": "RoyalRecovery",
+    "run": "stabilization-rc9-royalrecovery-01"
+  },
+  {
+    "suite": "verifyRoyalSites",
+    "count": 10,
+    "task_stem": "RoyalSites",
+    "run": "stabilization-rc9-royalsites-01"
+  },
+  {
+    "suite": "verifyRoyalLive",
+    "count": 3,
+    "task_stem": "RoyalLive",
+    "run": "stabilization-rc9-royallive-02"
+  },
+  {
+    "suite": "verifyRoyalGui",
+    "count": 28,
+    "task_stem": "RoyalGui",
+    "run": "stabilization-rc9-royalgui-01"
+  },
+  {
+    "suite": "verifyRoyalGoods",
+    "count": 20,
+    "task_stem": "RoyalGoods",
+    "run": "stabilization-rc9-royalgoods-01"
+  },
+  {
+    "suite": "verifyRoyalReceipts",
+    "count": 12,
+    "task_stem": "RoyalReceipt",
+    "run": "stabilization-rc9-royalreceipts-01"
+  },
+  {
+    "suite": "verifyRoyalShipments",
+    "count": 49,
+    "task_stem": "RoyalShipment",
+    "run": "stabilization-rc9-royalshipments-01"
+  },
+  {
+    "suite": "verifyRoyalShipmentRuntime",
+    "count": 1,
+    "task_stem": "RoyalShipmentRuntime",
+    "run": "stabilization-rc9-royalshipmentruntime-01"
+  },
+  {
+    "suite": "verifyRoyalShipmentLive",
+    "count": 1,
+    "task_stem": "RoyalShipmentLive",
+    "run": "stabilization-rc9-royalshipmentlive-01"
+  },
+  {
+    "suite": "verifyRoyalShipmentGui",
+    "count": 18,
+    "task_stem": "RoyalShipmentGui",
+    "run": "stabilization-rc9-royalshipmentgui-01"
+  },
+  {
+    "suite": "verifyPersonalities",
+    "count": 9,
+    "task_stem": "Personality",
+    "run": "stabilization-rc9-personalities-01"
+  },
+  {
+    "suite": "verifyRoyalPolicy",
+    "count": 7,
+    "task_stem": "RoyalPolicy",
+    "run": "stabilization-rc9-royalpolicy-01"
+  },
+  {
+    "suite": "verifyRoyalNpcBudget",
+    "count": 13,
+    "task_stem": "RoyalNpcBudget",
+    "run": "stabilization-rc9-royalnpcbudget-01"
+  },
+  {
+    "suite": "verifyRoyalNpcEconomy",
+    "count": 12,
+    "task_stem": "RoyalNpcEconomy",
+    "run": "stabilization-rc9-royalnpceconomy-01"
+  },
+  {
+    "suite": "verifyRoyalNpcRuntime",
+    "count": 4,
+    "task_stem": "RoyalNpcRuntime",
+    "run": "stabilization-rc9-royalnpcruntime-01"
+  },
+  {
+    "suite": "verifyRoyalNpcLive",
+    "count": 1,
+    "task_stem": "RoyalNpcLive",
+    "run": "stabilization-rc9-royalnpclive-01"
+  },
+  {
+    "suite": "verifyRoyalNpcBuilders",
+    "count": 1,
+    "task_stem": "RoyalNpcBuilder",
+    "run": "stabilization-rc9-royalnpcbuilders-01"
+  },
+  {
+    "suite": "verifyRoyalIntegration",
+    "count": 9,
+    "task_stem": "RoyalIntegration",
+    "run": "stabilization-rc9-royalintegration-01"
+  },
+  {
+    "suite": "verifyHistory",
+    "count": 36,
+    "task_stem": "History",
+    "run": "stabilization-rc9-history-01"
+  },
+  {
+    "suite": "verifyHistoryWorld",
+    "count": 1,
+    "task_stem": "HistoryWorld",
+    "run": "stabilization-rc9-historyworld-01"
+  },
+  {
+    "suite": "verifyAtlas",
+    "count": 21,
+    "task_stem": "Atlas",
+    "run": "stabilization-rc9-atlas-01"
+  },
+  {
+    "suite": "verifyGeography",
+    "count": 4,
+    "task_stem": "Geography",
+    "run": "stabilization-rc9-geography-01"
+  },
+  {
+    "suite": "verifyLocalization",
+    "count": 8,
+    "task_stem": "Localization",
+    "run": "stabilization-rc9-localization-01"
+  },
+  {
+    "suite": "verifyRoyalStrategy",
+    "count": 7,
+    "task_stem": "RoyalStrategy",
+    "run": "stabilization-rc9-royalstrategy-01"
+  },
+  {
+    "suite": "verifyStrategyRecovery",
+    "count": 3,
+    "task_stem": "StrategyRecovery",
+    "run": "stabilization-rc9-strategyrecovery-01"
+  },
+  {
+    "suite": "verifyStrategicMilitary",
+    "count": 11,
+    "task_stem": "StrategicMilitary",
+    "run": "stabilization-rc9-strategicmilitary-01"
+  },
+  {
+    "suite": "verifyStrategicRestart",
+    "count": 1,
+    "task_stem": "StrategicRestart",
+    "run": "stabilization-rc9-strategicrestart-01"
+  },
+  {
+    "suite": "verifyNativeBattle",
+    "count": 1,
+    "task_stem": "NativeBattle",
+    "run": "stabilization-rc9-nativebattle-01"
+  },
+  {
+    "suite": "verifyNativeWar",
+    "count": 1,
+    "task_stem": "NativeWar",
+    "run": "stabilization-rc9-nativewar-01"
+  },
+  {
+    "suite": "verifyConsolidation",
+    "count": 22,
+    "task_stem": "Consolidation",
+    "run": "stabilization-rc9-consolidation-01"
+  },
+  {
+    "suite": "verifyConsolidationLive",
+    "count": 1,
+    "task_stem": "ConsolidationLive",
+    "run": "stabilization-rc9-consolidationlive-01"
+  }
+]

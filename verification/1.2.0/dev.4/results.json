@@ -1,0 +1,54 @@
+{
+  "mod_version": "1.2.0-dev.4",
+  "network_protocol": "3",
+  "dependency_version": "9.0.3",
+  "dependency_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "production_jar_sha256": "fcc331e7b4842aff1573a9658a12c8ed3969081eb7ec3925116c42399907c753",
+  "cases": [
+    {
+      "run": "shipment-gui-01",
+      "required_pass_counts": [
+        16,
+        16
+      ],
+      "normal_build_successful": true,
+      "raw_sha256": "e3d97c20437e2c263aa8f094cd57abb0c08ba54e203404e3adb90d2cfbfa53ed"
+    },
+    {
+      "run": "royal-dev4-gui-02",
+      "required_pass_counts": [
+        17,
+        17
+      ],
+      "normal_build_successful": true,
+      "raw_sha256": "661c33e7264663480adb00da6e0d857a36e7be199cc10a910ddaabbaa811cef3"
+    },
+    {
+      "run": "royal-dev4-related-verifyRoyalGui",
+      "required_pass_counts": [
+        14,
+        14
+      ],
+      "normal_build_successful": true,
+      "raw_sha256": "bdb27a769a533075c52d624d73436709c9c6aef54d07d8c107a3f8c095eeb8b9"
+    },
+    {
+      "run": "royal-dev4-related-verifyGui",
+      "required_pass_counts": [
+        7,
+        7
+      ],
+      "normal_build_successful": true,
+      "raw_sha256": "86eebf39221a5fd55bf43141ec62b0e3953709219dcf91a9f66ac05106ebf85c"
+    }
+  ],
+  "separate_jvm_native_reload": {
+    "source": 56,
+    "target": 4,
+    "held": 40,
+    "capital": 119
+  },
+  "graphics": "UNVERIFIED",
+  "online_authenticated_login": "UNVERIFIED",
+  "prior_compatibility_evidence": "Historical gates are retained; this is not a fresh full regression."
+}

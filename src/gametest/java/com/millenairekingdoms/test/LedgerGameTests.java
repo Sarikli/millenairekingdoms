@@ -29,7 +29,7 @@ public final class LedgerGameTests {
         d.startDay(7, Map.of(a.id(), 12L, c.id(), 0L));
         d.requestJoin(village, c.id(), player, "Owner", 3);
         CompoundTag saved = save(d, h);
-        h.assertTrue(saved.getInt("format") == KingdomSavedData.FORMAT && saved.getCompound("ledger").getLong("day") == 7, "The current format stores the ledger");
+        h.assertTrue(saved.getInt("format") == 6 && saved.getCompound("ledger").getLong("day") == 7, "Detached compatibility format6 stores the ledger");
         var loaded = KingdomSavedData.load(saved.copy(), h.getLevel().registryAccess());
         h.assertTrue(!loaded.isDirty() && loaded.day() == 7 && loaded.owed(a.id()) == 12 && loaded.owed(c.id()) == 0
                 && loaded.peaceOffered(war.id()) && loaded.joinRequest(village).player().equals(player), "Ledger round-trips unchanged");
@@ -88,7 +88,7 @@ public final class LedgerGameTests {
         CompoundTag tag = save(four, h); tag.putInt("format", 4); tag.remove("ledger"); tag.remove("autonomy");
         var upgraded = KingdomSavedData.load(tag, h.getLevel().registryAccess());
         h.assertTrue(upgraded.isDirty() && upgraded.day() == -1 && upgraded.ruler(k.id()) != null
-                && save(upgraded, h).getInt("format") == KingdomSavedData.FORMAT, "Format 4 keeps rulers, gains an empty ledger and saves in the current format");
+                && save(upgraded, h).getInt("format") == 6, "Format 4 keeps rulers, gains an empty ledger and saves in compatibility format6");
         h.succeed();
     }
 

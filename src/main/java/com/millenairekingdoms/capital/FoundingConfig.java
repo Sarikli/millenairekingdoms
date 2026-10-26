@@ -8,7 +8,7 @@ public final class FoundingConfig {
     /** One immutable view of the settings, so an evaluation never mixes two config states and tests can pass their own. */
     public record Settings(boolean enabled, int minimumLevel, int intervalDays, double baseChancePercent, double increasePerLevel,
                            int minCapitalDistance) {
-        public static final Settings DEFAULTS = new Settings(true, 3, 7, 5.0, 5.0, 1500);
+        public static final Settings DEFAULTS = new Settings(true, 3, 3, 5.0, 5.0, 1000);
         public Settings withChance(double base, double increase) {
             return new Settings(enabled, minimumLevel, intervalDays, base, increase, minCapitalDistance);
         }
@@ -33,13 +33,13 @@ public final class FoundingConfig {
                         "A town hall still upgrading counts as not completed; maximum levels differ by culture and village type.")
                 .defineInRange("minimumTownhallLevel", 3, 0, 100);
         INTERVAL_DAYS = b.comment("Minecraft days between two founding evaluations (one chance roll per eligible village each time).")
-                .defineInRange("checkIntervalDays", 7, 1, 365);
+                .defineInRange("checkIntervalDays", 3, 1, 365);
         BASE_CHANCE = b.comment("Chance in percent at the minimum town hall level (5.0 = 5%).")
                 .defineInRange("baseChancePercent", 5.0, 0.0, 100.0);
         INCREASE = b.comment("Percentage points added for each completed level above the minimum; the chance never exceeds 100%.")
                 .defineInRange("chanceIncreasePerLevel", 5.0, 0.0, 100.0);
         MIN_DISTANCE = b.comment("Minimum horizontal distance in blocks between the founding village and every living capital.")
-                .defineInRange("minCapitalDistance", 1500, 0, 100_000);
+                .defineInRange("minCapitalDistance", 1000, 0, 100_000);
         b.pop();
     }
 

@@ -1,0 +1,18 @@
+[
+  {
+    "suite": "verifyLocalization",
+    "run": "i18n-dev11-localization-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 1,
+        "passes": [],
+        "build": false,
+        "log": "/workspace/royal-decree/i18n-dev11-localization-01-write.log",
+        "sha256": "a1b34c113e0b5d8e04d5c1605b6117ce62e860d6b73cb87f59539b7f706b947d",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev11.jar",
+        "jar_sha256": "f9dd3944cc1f1ad2b2bda72e3f5a4e06739c4c0dcadce2b911cd79999bbb13ff"
+      }
+    ]
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "from": "releases/1.2.0-rc8-alpha.dev7.1/millenairekingdoms-1.2.0-rc8-alpha.dev7.1.jar",
+  "to": "build/libs/millenairekingdoms-1.2.0-rc8-alpha.dev7.2.jar",
+  "changed": [
+    "META-INF/MANIFEST.MF",
+    "com/millenairekingdoms/atlas/AtlasViews.class",
+    "META-INF/neoforge.mods.toml"
+  ],
+  "added": [],
+  "removed": [],
+  "identical_production_classes": 240
+}

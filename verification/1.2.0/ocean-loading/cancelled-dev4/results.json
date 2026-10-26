@@ -1,0 +1,32 @@
+[
+  {
+    "suite": "verifyGeography",
+    "run": "ocean-dev4-geography-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "25"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/ocean-dev4-geography-01-write.log",
+        "sha256": "1d6d0be2139ccdb22f9c95ad325f53b35c2d9d087b0daa7765f3db86dc9600d5",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.3.dev4.jar",
+        "jar_sha256": "ffc403c18460d14922da5927b370596f1c59d991d35c83c3bc4f623524aa598b"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "25"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/ocean-dev4-geography-01-reopen.log",
+        "sha256": "57588a0617c12170e3fe2b6bbb37d19e362dc3f575c4ae08753c0a72b9f0d9e5",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.3.dev4.jar",
+        "jar_sha256": "ffc403c18460d14922da5927b370596f1c59d991d35c83c3bc4f623524aa598b"
+      }
+    ]
+  }
+]

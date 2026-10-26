@@ -34,7 +34,7 @@ import org.slf4j.Logger;
 /** Stage 6.1: a rare new village from Millénaire's natural world generation becomes the capital of its own NPC kingdom.
  * Called only from the natural spawn in VillageSpawnQueue, never for commands, hamlets or player villages, so a village
  * is considered once, at its creation; restarts and chunk reloads never call it again.
- * The town hall reaches its final plan level through Millénaire's own rush upgrades (the code its distant-village
+ * Every generated building reaches its final plan level through Millénaire's own rush upgrades (the code its distant-village
  * completion uses), inside the footprint Millénaire already reserved for it. The kingdom is recorded only afterwards,
  * in one KingdomSavedData snapshot, so a failure leaves a normal village and no political record. */
 public final class NaturalCapitals {
@@ -98,9 +98,14 @@ public final class NaturalCapitals {
             LOGGER.info("[Kingdoms] Natural capital refused for '{}': {}.", village.getVillageName(), problem);
             return Result.of(Outcome.NO_SPACE);
         }
+        for(var building:village.getBuildings()) {
+            if(building.isSubBuilding() || building.isWallSegment() || finalLevel(building)<=building.getLevel())continue;
+            problem=buildingSpaceProblem(level,village,building);
+            if(problem!=null){LOGGER.info("[Kingdoms] Natural capital refused for '{}': {}: {}.",village.getVillageName(),building.getPlanId(),problem);return Result.of(Outcome.NO_SPACE);}
+        }
         int finalLevel = finalLevel(hall);
         if (!develop(level, village, hall)) {
-            LOGGER.warn("[Kingdoms] Natural capital refused: town hall of '{}' reached plan level {} of {}.",
+            LOGGER.warn("[Kingdoms] Natural capital refused: not all buildings of '{}' completed; town hall reached plan level {} of {}.",
                     village.getVillageName(), hall.getLevel(), finalLevel);
             return new Result(Outcome.NOT_DEVELOPED, null, hall.getLevel(), finalLevel);
         }
@@ -170,9 +175,15 @@ public final class NaturalCapitals {
     public static String spaceProblem(ServerLevel level, Village village, BuildingInstance hall) {
         if (hall == null || hall.isSubBuilding() || hall.getStatus() != BuildingInstance.Status.COMPLETE) return "no completed town hall";
         if (finalLevel(hall) <= hall.getLevel()) return "town hall has no higher level";
+        return buildingSpaceProblem(level,village,hall);
+    }
+
+    /** Preflight all native upgrade levels inside an already loaded, non-overlapping reserved footprint. */
+    static String buildingSpaceProblem(ServerLevel level,Village village,BuildingInstance hall) {
+        if(hall==null || hall.getStatus()!=BuildingInstance.Status.COMPLETE)return "building not complete";
         BuildingPlanSet set = ModCultures.getBuildingPlanSet(hall.getPlanSetId());
         BuildingPlan current = ModCultures.getBuildingPlan(hall.getPlanId());
-        if (set == null || !set.isTownHall() || current == null) return "unknown town hall plan";
+        if (set == null || current == null || hall.getVariant()==null || !set.variants().containsKey(hall.getVariant())) return "unknown building plan";
         var rect = footprint(hall, current);
         if (!level.hasChunksAt(new BlockPos(rect.startX(), 0, rect.startZ()),
                 new BlockPos(rect.startX() + rect.width() - 1, 0, rect.startZ() + rect.depth() - 1))) return "footprint not loaded";
@@ -185,38 +196,37 @@ public final class NaturalCapitals {
         }
         for (BuildingPlanSet.LevelDef l : set.variants().get(hall.getVariant())) {
             BuildingPlan plan = ModCultures.getBuildingPlan(l.planId());
+            if(plan==null || plan.width()!=current.width() || plan.depth()!=current.depth())return "upgrade leaves reserved footprint";
             int y = base + plan.groundLevel();
             if (y < level.getMinBuildHeight() || y + Math.max(plan.height(), tallestSub) > level.getMaxBuildHeight())
                 return "level " + l.level() + " leaves the world height (from y " + y + ")";
         }
         for (BuildingInstance other : village.getBuildings()) {
-            if (other == hall || hall.getId().equals(other.getParentBuildingId())) continue;
+            if (other == hall || hall.getId().equals(other.getParentBuildingId()) || other.getId().equals(hall.getParentBuildingId())
+                    || hall.getParentBuildingId()!=null && hall.getParentBuildingId().equals(other.getParentBuildingId())) continue;
             BuildingPlan plan = ModCultures.getBuildingPlan(other.getPlanId());
             if (plan == null) return "unknown plan " + other.getPlanId();
             var o = footprint(other, plan);
             if (o.startX() < rect.startX() + rect.width() && rect.startX() < o.startX() + o.width()
                     && o.startZ() < rect.startZ() + rect.depth() && rect.startZ() < o.startZ() + o.depth())
-                return other.getPlanId().getPath() + " overlaps the town hall footprint";
+                return other.getPlanId().getPath() + " overlaps the building footprint";
         }
         return null;
     }
 
-    /** Raises the town hall to its final level with Millénaire's public rush API, exactly as its natural completion does,
-     * but only for the town hall and its sub-buildings: every other plan set is excluded from the rush.
-     * Returns whether the final level was reached. */
+    /** Raises generated buildings with the original native upgrade implementation. No new layout placements are added.
+     * Only natural generation calls this in production; existing saves are never retroactively developed. */
     public static boolean develop(ServerLevel level, Village village, BuildingInstance hall) {
         BuildingPlanSet set = ModCultures.getBuildingPlanSet(hall.getPlanSetId());
-        Set<ResourceLocation> chain = chain(set);
         boolean any = false;
         for (int round = 0; round < ROUNDS; round++) {
             boolean changed = false;
             for (BuildingInstance b : new ArrayList<>(village.getBuildings()))
-                if (b.isSubBuilding() && b.getStatus() == BuildingInstance.Status.PLANNED && hall.getId().equals(b.getParentBuildingId())) {
+                if (b.isSubBuilding() && b.getStatus() == BuildingInstance.Status.PLANNED) {
                     SubBuildingHelper.completePlannedSubBuilding(level, village, b);
                     changed = true;
                 }
-            // rushOneProject clears the set after a success, so each call gets a fresh one.
-            for (int i = 0; i < RUSHES_PER_ROUND && VillageGrowthManager.rushOneProject(level, village, null, others(village, chain)); i++) changed = true;
+            for (int i = 0; i < RUSHES_PER_ROUND && NaturalCapitalGrowth.upgradeOne(level,village); i++) changed = true;
             any |= changed;
             if (!changed) break;
         }
@@ -229,8 +239,12 @@ public final class NaturalCapitals {
             VillageSavedData.get(level).setDirty();
         }
         int last = finalLevel(hall);
+        for(var building:village.getBuildings())if(!building.isWallSegment() && (building.getStatus()!=BuildingInstance.Status.COMPLETE || finalLevel(building)!=building.getLevel()))
+            LOGGER.warn("[Kingdoms] Natural capital development pending: {} level {}/{} sub={} upgrades={} space={}",building.getPlanId(),building.getLevel(),finalLevel(building),building.isSubBuilding(),building.isUpgradesAllowed(),buildingSpaceProblem(level,village,building));
         return hall.getStatus() == BuildingInstance.Status.COMPLETE && hall.getLevel() == last && last > 0
-                && hall.getPlanId().equals(set.getPlanId(hall.getVariant(), last));
+                && hall.getPlanId().equals(set.getPlanId(hall.getVariant(), last))
+                && village.getBuildings().stream().filter(b->!b.isWallSegment()).allMatch(b->b.getStatus()==BuildingInstance.Status.COMPLETE
+                    && finalLevel(b)==b.getLevel());
     }
 
     /** "Kingdom of <village>", then "<Culture> Kingdom of <village>", then numbered (II, III, ...);
@@ -273,19 +287,6 @@ public final class NaturalCapitals {
         for (String key : keys)
             chain.add(ResourceLocation.fromNamespaceAndPath("millenaire", hall.culture().getPath() + "/" + key.toLowerCase()));
         return chain;
-    }
-
-    /** Every plan set the rush could otherwise pick for this village (new buildings and upgrades), minus the town hall chain. */
-    private static Set<ResourceLocation> others(Village village, Set<ResourceLocation> chain) {
-        Set<ResourceLocation> out = new HashSet<>();
-        VillageType type = ModCultures.getVillageType(village.getVillageTypeId());
-        if (type != null) {
-            type.layout().forEach(s -> out.add(s.plan()));
-            out.addAll(type.playerBuildings());
-        }
-        village.getBuildings().forEach(b -> { if (b.getPlanSetId() != null) out.add(b.getPlanSetId()); });
-        out.removeAll(chain);
-        return out;
     }
 
     private static VillageTerrainMap.FootprintRect footprint(BuildingInstance b, BuildingPlan plan) {

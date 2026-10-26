@@ -1,0 +1,3 @@
+# Footer source/layout checkpoint
+
+Normal build exit0/BUILD SUCCESSFUL; raw gzip/hash metadata retained. Packed comparison changes only KingdomScreen.class and version metadata from verified dev7.2; two nested RowList classes change only LineNumberTable source positions (normalized full class bytes equal), preserving all238 other production classes/game resources. Source-coordinate review checks117 panel widths304–420 with8-pixel gaps between History/message/Refresh; full-message hover preserves longer replies. This is not a rendered-client, actual font-fit, input or GUI-scaling pass. No unrelated GameTest was repeated; current regression executes its exact dev7.1/dev7.2 hashes.

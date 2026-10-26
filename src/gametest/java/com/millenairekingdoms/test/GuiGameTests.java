@@ -94,7 +94,7 @@ public final class GuiGameTests {
             var k = view.getCompound("kingdom");
             h.assertTrue(view.getBoolean("isRuler") && view.getUUID("focus").equals(r.kingdom().id()) && k.getString("name").equals(r.kingdom().name())
                     && k.getString("capital").equals("Snapshot capital") && k.getList("members", Tag.TAG_COMPOUND).size() == 2
-                    && k.getLong("income") == 12 && k.getLong("coins") == 128 && k.contains("x"), "My kingdom and treasury data");
+                    && k.getLong("income") == 24 && k.getLong("coins") == 128 && k.contains("x"), "My kingdom and treasury data");
             var targets = view.getList("targets", Tag.TAG_COMPOUND);
             boolean freeListed = targets.stream().anyMatch(t -> ((net.minecraft.nbt.CompoundTag) t).getUUID("id").equals(id(free))
                     && ((net.minecraft.nbt.CompoundTag) t).getBoolean("ready"));

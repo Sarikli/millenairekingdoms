@@ -1,0 +1,151 @@
+{
+  "version": "1.2.0",
+  "jar": "build/libs/millenairekingdoms-1.2.0.jar",
+  "jar_sha256": "c7f6f59bab1046153d7c0b75bd0bdc836950fcf2853a4a8365be5e86196d177e",
+  "jar_bytes": 1888661,
+  "prior_artifacts_verified": 35,
+  "original_millenaire_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "changed_classes_from_rc9": [
+    "com/millenairekingdoms/atlas/AtlasViews.class",
+    "com/millenairekingdoms/capital/NaturalCapitals.class",
+    "com/millenairekingdoms/shipping/RoyalShipmentConfig.class",
+    "com/millenairekingdoms/shipping/RoyalVillageStock$Availability.class",
+    "com/millenairekingdoms/shipping/RoyalVillageStock$Chest.class",
+    "com/millenairekingdoms/shipping/RoyalVillageStock.class"
+  ],
+  "added_classes": [
+    "com/millenairekingdoms/capital/NaturalCapitalGrowth$Methods.class",
+    "com/millenairekingdoms/capital/NaturalCapitalGrowth$Pinned.class",
+    "com/millenairekingdoms/capital/NaturalCapitalGrowth.class"
+  ],
+  "removed_classes": [],
+  "unchanged_financial_classes": 42,
+  "unchanged_political_classes": 15,
+  "locale_count": 26,
+  "locale_changes": {
+    "assets/millenairekingdoms/lang/ar_sa.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/cs_cz.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/da_dk.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/de_de.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/en_us.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/es_es.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/et_ee.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/fr_fr.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/hi_in.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/hu_hu.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/it_it.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/ja_jp.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/ko_kr.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/nb_no.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/nl_nl.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/pl_pl.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/pt_br.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/pt_pt.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/ru_ru.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/sl_si.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/sv_se.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/th_th.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/tr_tr.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/uk_ua.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/zh_cn.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ],
+    "assets/millenairekingdoms/lang/zh_tw.json": [
+      "millenairekingdoms.gui.shipment.stock_details"
+    ]
+  },
+  "domain_image_sha256": "8e6526c55ee91e86e22ec0a57a9838c4d98a284ba9b766ca6c89d22b05368368",
+  "all_domain_production_classes_identical": true,
+  "reused_focused_evidence": [
+    {
+      "run": "release-120-atlas-02",
+      "phase": "write",
+      "tested_jar_sha256": "7a3bee5d1f9ef6482c1ada473e2904d8c448192ae1a816867982f98c00ce0753",
+      "difference_from_final": [
+        "com/millenairekingdoms/capital/NaturalCapitals.class"
+      ],
+      "atlas_and_stock_classes_identical": true
+    },
+    {
+      "run": "release-120-atlas-02",
+      "phase": "reopen",
+      "tested_jar_sha256": "7a3bee5d1f9ef6482c1ada473e2904d8c448192ae1a816867982f98c00ce0753",
+      "difference_from_final": [
+        "com/millenairekingdoms/capital/NaturalCapitals.class"
+      ],
+      "atlas_and_stock_classes_identical": true
+    },
+    {
+      "run": "release-120-goods-01",
+      "phase": "write",
+      "tested_jar_sha256": "7a3bee5d1f9ef6482c1ada473e2904d8c448192ae1a816867982f98c00ce0753",
+      "difference_from_final": [
+        "com/millenairekingdoms/capital/NaturalCapitals.class"
+      ],
+      "atlas_and_stock_classes_identical": true
+    },
+    {
+      "run": "release-120-goods-01",
+      "phase": "reopen",
+      "tested_jar_sha256": "7a3bee5d1f9ef6482c1ada473e2904d8c448192ae1a816867982f98c00ce0753",
+      "difference_from_final": [
+        "com/millenairekingdoms/capital/NaturalCapitals.class"
+      ],
+      "atlas_and_stock_classes_identical": true
+    }
+  ],
+  "preserved_inputs": {
+    "gradlew.bat": "0c09e2ab543937d760afcb2f611e66a1f36b0f24ed4362e07b068ef02f7314d3",
+    "/workspace/cloud-setup/millenaire-gradle.py": "f1115b56690eaef1438dc0e745c13bc86e47db3631dab3a2207384e4e29225b1",
+    "/workspace/cloud-setup/jdk-21.0.13+9/release": "f83f6dcc966043c93cd498ac8e7ee7c310852074970d62c702e4ad2710002898",
+    "millenaire-9.0.3.jar": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62"
+  }
+}

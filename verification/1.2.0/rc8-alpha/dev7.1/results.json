@@ -1,0 +1,147 @@
+{
+  "artifact": {
+    "version": "1.2.0-rc8-alpha.dev7.1",
+    "bytes": 759835,
+    "sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+    "baseline_commit": "ec6ba85145ff3c80b3557f63ae3d30385030e015",
+    "source_parent": "5ce2db75e9a2aa67233a3fb986e3d9800377cb01"
+  },
+  "pairs": [
+    {
+      "suite": "verifyHistory",
+      "run": "alpha-dev71-history-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "36"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev71-history-01-write.log",
+          "sha256": "13c827898651847ee9eb740dca1cba82cc0352aad1b475f7f63643a584651d80",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.1.jar",
+          "jar_sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev7.1/alpha-dev71-history-01-write.log.gz",
+          "archive_sha256": "eb64d423d74a96c36ff8aa2395996028fcc26b700274715977fca87aae812ce9"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "36"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev71-history-01-reopen.log",
+          "sha256": "07d0dfbca31b8ded4bd0d002e232cde21a9367e7000301fe241d2819013d9e92",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.1.jar",
+          "jar_sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev7.1/alpha-dev71-history-01-reopen.log.gz",
+          "archive_sha256": "a0ed1f08db0f320007c281b96b4115c1c665bd26a91a024f843c160bb4d3f843"
+        }
+      ]
+    },
+    {
+      "suite": "verifyRoyalNpcBuilders",
+      "run": "alpha-dev71-npcbuilders-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev71-npcbuilders-01-write.log",
+          "sha256": "a4998674bfd8716cedcb9b781afe7fecea71da79e0b19eb01ab89d372c6b2c61",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.1.jar",
+          "jar_sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev7.1/alpha-dev71-npcbuilders-01-write.log.gz",
+          "archive_sha256": "9bdbce1ff3e14ef0ca9360565fbfc0e66badd625f0d3d7cde696cfd70ac26257"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev71-npcbuilders-01-reopen.log",
+          "sha256": "f15f493ff0152c078362fe101e3917c25a34f5fbf06be703dbc421a2844ba9b7",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.1.jar",
+          "jar_sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev7.1/alpha-dev71-npcbuilders-01-reopen.log.gz",
+          "archive_sha256": "0e20ed32b8db5c8ae4887280d7946d7886da7b395e96447654be6645834ec884"
+        }
+      ]
+    },
+    {
+      "suite": "verifyRoyalNpcLive",
+      "run": "alpha-dev71-npclive-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev71-npclive-01-write.log",
+          "sha256": "edb9c6923dd3f5c1eb12667b9b4d50b40c108fcecb972eb515152aa0987efbe0",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.1.jar",
+          "jar_sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev7.1/alpha-dev71-npclive-01-write.log.gz",
+          "archive_sha256": "f61575b55d21bf9297d803b0ad80a856e8f624a5c03620ae81d6b7a931a39fe9"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev71-npclive-01-reopen.log",
+          "sha256": "3955afec1ffd2afd621343e0c460c0f582916269562723688462c85fec54b453",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.1.jar",
+          "jar_sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev7.1/alpha-dev71-npclive-01-reopen.log.gz",
+          "archive_sha256": "76d8fa97208452018bd1f10441f210dc5555866eab1cd9fd9c58de217a63a1bd"
+        }
+      ]
+    },
+    {
+      "suite": "verifyHistoryWorld",
+      "run": "alpha-dev71-world-01",
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev71-world-01-write.log",
+          "sha256": "d1965b3f79633d29d93ef6b0d3ccaea65cfc81941661f52ac23159a15d222d7a",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.1.jar",
+          "jar_sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev7.1/alpha-dev71-world-01-write.log.gz",
+          "archive_sha256": "fa9c07e624c26549a8d2f5be984b4c35055894669df99eb9712d3c8f39731e27"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "1"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/alpha-dev71-world-01-reopen.log",
+          "sha256": "09fa8e1e01ba24a8f08ef000148c265e25a9273906eef5c355d995fd52ac4a67",
+          "jar": "millenairekingdoms-1.2.0-rc8-alpha.dev7.1.jar",
+          "jar_sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb",
+          "archive_log": "verification/1.2.0/rc8-alpha/dev7.1/alpha-dev71-world-01-reopen.log.gz",
+          "archive_sha256": "6675e1719fb7b472b730c3b4e70fe7071f4f942b8b1bf5ffb14b5d3ffd288ab0"
+        }
+      ]
+    }
+  ]
+}

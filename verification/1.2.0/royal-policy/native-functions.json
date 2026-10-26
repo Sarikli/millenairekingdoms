@@ -1,0 +1,721 @@
+{
+  "dependency_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "functions": [
+    {
+      "plan": "millenaire:byzantines/watchtower",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:indian/armyforge",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:indian/soldierhouse",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:inuits/armourerhouse",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:inuits/armoury",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:japanese/japanesearmyforge",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:japanese/japaneselookout",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:japanese/japanesesamuraih",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:mayan/mayanarmyforge",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:mayan/mayanguard",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:mayan/mayanwatchtower",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:norman/armoury",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:norman/guardhouse",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:norman/watchtower",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:norman/largeguardhouse",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:norman/guardroom",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:seljuk/armoury",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:seljuk/barracks",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:seljuk/barrackssmall",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:seljuk/watchtower",
+      "role": "MILITARY"
+    },
+    {
+      "plan": "millenaire:byzantines/chapel",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:byzantines/presbytery",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:indian/pandithouse",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:indian/villagetemple",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:inuits/animistic",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:inuits/offering",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:inuits/offering1",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:inuits/offering2",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:inuits/shaman",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:japanese/japanesepagoda",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:japanese/japaneseshintoshrine",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:japanese/japanesezen",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:mayan/mayanalter",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:mayan/mayancalendar",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:mayan/mayanshamangrounds",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:mayan/mayantemple",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:norman/presbytery",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:norman/abbaye",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:norman/pilgrimhall",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:norman/church",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:seljuk/abdesthane",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:seljuk/imamshouse",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:seljuk/mosque",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:seljuk/smallmosque",
+      "role": "RELIGIOUS"
+    },
+    {
+      "plan": "millenaire:byzantines/carrotfield",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:byzantines/vineyard",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:byzantines/wheatfield",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:byzantines/farm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:byzantines/fishfarm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:byzantines/sheepfarm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:byzantines/windmill",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:indian/paddy",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:indian/spicegarden",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:indian/sugarplantation",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:inuits/foodpreparer",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:inuits/foodprephouse",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:inuits/hunter",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:inuits/hunterex",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:inuits/lake",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:inuits/farmp",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:inuits/farmw",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:japanese/chickenfarm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:japanese/japanesefarm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:japanese/japanesefishery",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:japanese/japanesekitchen",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:japanese/japanesepaddy",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:japanese/squidfarm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:mayan/mayanbakery",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:mayan/mayancacaofarm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:mayan/mayancornfarm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:mayan/mayansheepchickenfarm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:norman/cattlefarm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:norman/chickenfarmnorm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:norman/farm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:norman/largeorchard",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:norman/pigfarm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:norman/sheepchickenfarm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:norman/bakery",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:norman/smallorchard",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:seljuk/cowfarm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:seljuk/fishery",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:seljuk/kitchen",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:seljuk/mill",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:seljuk/olivefarm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:seljuk/pistachiotrees",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:seljuk/sheepfarm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:seljuk/sugarcanefarm",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:seljuk/wheatpaddy",
+      "role": "AGRICULTURAL"
+    },
+    {
+      "plan": "millenaire:byzantines/acaciagrove",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:byzantines/acaciagrovesmall",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:byzantines/pinegrove",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:byzantines/pinegrovesmall",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:byzantines/architect",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:byzantines/dressmaker",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:byzantines/mason",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:byzantines/mine",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:byzantines/silkfarm",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:byzantines/smelter",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:byzantines/toolsmith",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:byzantines/woodcutter",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:byzantines/market",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:byzantines/sandpit",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:byzantines/workshop",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:byzantines/inn",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:byzantines/taverna",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:indian/bazaar",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:indian/brickkiln",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:indian/cottonfield",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:indian/craftsmanhouse",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:indian/forge",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:indian/grove",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:indian/lumbermanhouse",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:indian/painterhouse",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:indian/quarry",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:indian/scultorhouse",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:indian/weaverhouse",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:indian/inn",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:indian/guesthouse",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:inuits/carver",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:inuits/lumberman",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:inuits/market",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:inuits/sodder",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:inuits/grove",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:inuits/guesthouse",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:japanese/japanesecrafter",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:japanese/japaneseforge",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:japanese/japanesegrove",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:japanese/japaneselmh",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:japanese/japanesemarket",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:japanese/japanesequarry",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:japanese/japaneseinn",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:mayan/mayancrafter",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:mayan/mayangrove",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:mayan/mayanlumber",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:mayan/mayanmarket",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:mayan/mayanmining",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:mayan/mayanobsidiancrafter",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:mayan/mayansculptorhouse",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:mayan/mayaninn",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:norman/alchemyworkshop",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:norman/carpenterhouse",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:norman/forge",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:norman/glassblower",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:norman/lumbermanhut",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:norman/quarry",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:norman/weaverhouse",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:norman/grove",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:norman/market",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:norman/inn",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:norman/largeinn",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:norman/guesthouse",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:norman/tavern",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:seljuk/brick",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:seljuk/cottonfarm",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:seljuk/cottonfield",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:seljuk/lumbermanshouse",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:seljuk/market",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:seljuk/mine_brick",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:seljuk/stonecraftsman",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:seljuk/toolsmith",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:seljuk/weaver",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:seljuk/inn",
+      "role": "ARTISAN"
+    },
+    {
+      "plan": "millenaire:byzantines/archives",
+      "role": "CIVIC"
+    },
+    {
+      "plan": "millenaire:indian/archives",
+      "role": "CIVIC"
+    },
+    {
+      "plan": "millenaire:japanese/bath",
+      "role": "CIVIC"
+    },
+    {
+      "plan": "millenaire:japanese/japanesearchive",
+      "role": "CIVIC"
+    },
+    {
+      "plan": "millenaire:japanese/well",
+      "role": "CIVIC"
+    },
+    {
+      "plan": "millenaire:mayan/mayanballcourt",
+      "role": "CIVIC"
+    },
+    {
+      "plan": "millenaire:mayan/mayanlibrary",
+      "role": "CIVIC"
+    },
+    {
+      "plan": "millenaire:norman/archives",
+      "role": "CIVIC"
+    },
+    {
+      "plan": "millenaire:norman/fountain",
+      "role": "CIVIC"
+    },
+    {
+      "plan": "millenaire:norman/largefountain",
+      "role": "CIVIC"
+    },
+    {
+      "plan": "millenaire:norman/well",
+      "role": "CIVIC"
+    },
+    {
+      "plan": "millenaire:norman/residence",
+      "role": "CIVIC"
+    },
+    {
+      "plan": "millenaire:seljuk/bigwell",
+      "role": "CIVIC"
+    },
+    {
+      "plan": "millenaire:seljuk/cesme",
+      "role": "CIVIC"
+    },
+    {
+      "plan": "millenaire:seljuk/golgealti",
+      "role": "CIVIC"
+    },
+    {
+      "plan": "millenaire:seljuk/hamambath",
+      "role": "CIVIC"
+    },
+    {
+      "plan": "millenaire:seljuk/well",
+      "role": "CIVIC"
+    }
+  ]
+}

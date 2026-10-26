@@ -80,6 +80,8 @@ public final class KingdomScreens {
         var war = data.activeWar(focus.id());
         if (war != null) view.put("war", war(level, data, war, focus));
         view.put("rights", rights(player, data, focus, isRuler));
+        view.put("construction",RoyalConstructionView.build(player,focus.id()));
+        view.put("shipments",RoyalShipmentView.build(player,focus.id()));
         if (isRuler) {
             view.put("targets", targets(player, level, data, focus));
             view.put("sources", sources(level, data, focus));
@@ -121,11 +123,14 @@ public final class KingdomScreens {
         if (capital != null) {
             e.putString("capital", PoliticsService.name(capital));
             var culture = ModCultures.getCulture(capital.getCultureId());
+            e.putString("cultureId",capital.getCultureId().toString());
             e.putString("culture", culture == null || culture.displayName() == null ? capital.getCultureId().getPath() : culture.displayName());
             e.putInt("x", capital.getCenter().getX()); e.putInt("y", capital.getCenter().getY()); e.putInt("z", capital.getCenter().getZ());
         }
         var ruler = data.ruler(k.id());
         e.putString("ruler", ruler == null ? "" : ruler.lastKnownName());
+        var personality=com.millenairekingdoms.personality.KingdomPersonality.forCapital(level,k);
+        e.putString("personality",personality.category().name());e.putBoolean("personalityFallback",!personality.specialized());
         ListTag members = new ListTag();
         data.members(k.id()).stream().map(id -> PoliticsService.village(level, id)).filter(v -> v != null)
                 .sorted(Comparator.comparing(v -> !v.getId().uuid().equals(k.capital()))).forEach(v -> {
@@ -134,7 +139,7 @@ public final class KingdomScreens {
                     m.putBoolean("capital", v.getId().uuid().equals(k.capital()));
                     int townhall = EconomyService.centerLevel(v);
                     m.putInt("level", townhall);
-                    m.putLong("income", v.getId().uuid().equals(k.capital()) ? 0 : (long) townhall * EconomyService.DENIERS_PER_LEVEL);
+                    m.putLong("income", (long) townhall * EconomyService.DENIERS_PER_LEVEL);
                     members.add(m);
                 });
         e.put("members", members);

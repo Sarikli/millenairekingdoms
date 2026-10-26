@@ -1,0 +1,82 @@
+[
+  {
+    "cut": "before-decision",
+    "run": "stabilization-strategy-economy-cut-before-decision-01",
+    "stages": [
+      {
+        "phase": "prepare",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "expected_halt": false,
+        "log": "/workspace/royal-decree/stabilization/stabilization-strategy-economy-cut-before-decision-01-prepare.log",
+        "sha256": "81e089d0836a67d1a2a4afe9fd5f0f3945975a216a84af5b65cbd43dc4bdd1d1",
+        "jar_sha256": "8811819418f05d61aa00445cfdf307d0589ec447eac0797ee69e504f890d55f9"
+      },
+      {
+        "phase": "cut",
+        "exit": 1,
+        "passes": [],
+        "build": false,
+        "expected_halt": true,
+        "log": "/workspace/royal-decree/stabilization/stabilization-strategy-economy-cut-before-decision-01-cut.log",
+        "sha256": "3023befd62f217b8e4f815ac292bde5f0bb2691dab1b20a8acf8523d8eb078d3",
+        "jar_sha256": "8811819418f05d61aa00445cfdf307d0589ec447eac0797ee69e504f890d55f9"
+      },
+      {
+        "phase": "read",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "expected_halt": false,
+        "log": "/workspace/royal-decree/stabilization/stabilization-strategy-economy-cut-before-decision-01-read.log",
+        "sha256": "ee4a355f042b9a59e44735f53d51d3f3f12a6aef62d4a30392e63a0b8f5fb036",
+        "jar_sha256": "8811819418f05d61aa00445cfdf307d0589ec447eac0797ee69e504f890d55f9"
+      }
+    ]
+  },
+  {
+    "cut": "after-decision",
+    "run": "stabilization-strategy-economy-cut-after-decision-01",
+    "stages": [
+      {
+        "phase": "prepare",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "expected_halt": false,
+        "log": "/workspace/royal-decree/stabilization/stabilization-strategy-economy-cut-after-decision-01-prepare.log",
+        "sha256": "b078fdf2c9aef1d5142cff5751ec8cbbafc55c944f1b053d759af459fffb38fe",
+        "jar_sha256": "8811819418f05d61aa00445cfdf307d0589ec447eac0797ee69e504f890d55f9"
+      },
+      {
+        "phase": "cut",
+        "exit": 1,
+        "passes": [],
+        "build": false,
+        "expected_halt": true,
+        "log": "/workspace/royal-decree/stabilization/stabilization-strategy-economy-cut-after-decision-01-cut.log",
+        "sha256": "83cb05383452f45f7f0b7b0c297bf72802603e94667e87e4b89d46c7602126b8",
+        "jar_sha256": "8811819418f05d61aa00445cfdf307d0589ec447eac0797ee69e504f890d55f9"
+      },
+      {
+        "phase": "read",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "expected_halt": false,
+        "log": "/workspace/royal-decree/stabilization/stabilization-strategy-economy-cut-after-decision-01-read.log",
+        "sha256": "007e41d13a31a5fce96c0653c8b1b33e2a8184c0a4000d0a70a0da2cfcccdc9a",
+        "jar_sha256": "8811819418f05d61aa00445cfdf307d0589ec447eac0797ee69e504f890d55f9"
+      }
+    ]
+  }
+]

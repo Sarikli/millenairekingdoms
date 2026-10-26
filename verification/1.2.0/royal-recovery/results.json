@@ -1,0 +1,20 @@
+{
+  "suite": "verifyRoyalRecovery",
+  "run": "royal-recovery-01",
+  "required_pass_counts": [
+    15,
+    15
+  ],
+  "separate_jvms": true,
+  "normal_build_passed": true,
+  "production_jar_sha256": "69cc3d7c6f8ef30005067713a1d846092fb45cdbaee7c22f1806d61d459f2d2c",
+  "original_millenaire_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "related_construction": {
+    "run": "royal-recovery-schema-01",
+    "required_pass_counts": [
+      53,
+      53
+    ],
+    "normal_build_passed": true
+  }
+}

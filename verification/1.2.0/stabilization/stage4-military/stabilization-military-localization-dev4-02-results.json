@@ -1,0 +1,152 @@
+[
+  {
+    "suite": "verifyStrategicMilitary",
+    "run": "stabilization-military-dev4-03",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "9"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-dev4-03-write.log",
+        "sha256": "252e3eae76ad17e9d6d71c00c608bc9f2c93d2f885fdedc7fa28ccb722906884",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "e1119a6683d7c42483336127a711bce7037273f5978d29fe0e3dacb64e5f315b"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "9"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-dev4-03-reopen.log",
+        "sha256": "a93730d5491de802f777e46efd9f7e1e06ec3383b1e20a0f5f0ed0afc5d625f1",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "e1119a6683d7c42483336127a711bce7037273f5978d29fe0e3dacb64e5f315b"
+      }
+    ]
+  },
+  {
+    "suite": "verifyStrategicRestart",
+    "run": "stabilization-military-restart-dev4-03",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-restart-dev4-03-write.log",
+        "sha256": "752cce5b64bcec1951aa55b46a0f1510fb3796a3347cc7ca87c7affc9c0fd7d8",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "e1119a6683d7c42483336127a711bce7037273f5978d29fe0e3dacb64e5f315b"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-restart-dev4-03-reopen.log",
+        "sha256": "ee883d29d9d320b52867b9f1dd33e5db72c915533e3f9891808276fdfc75abb4",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "e1119a6683d7c42483336127a711bce7037273f5978d29fe0e3dacb64e5f315b"
+      }
+    ]
+  },
+  {
+    "suite": "verifyGeography",
+    "run": "stabilization-military-no-geography-dev4-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "4"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-no-geography-dev4-01-write.log",
+        "sha256": "bfbfe0f728f3f9b2b01a6020c59d256327190e3cac7925ba2445a07a0905ac0e",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "e1119a6683d7c42483336127a711bce7037273f5978d29fe0e3dacb64e5f315b"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "4"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-no-geography-dev4-01-reopen.log",
+        "sha256": "3d721b18b59d428ee36d19b291772feda0bdfdc6e7f9b5bae8d3c7af3ad5f717",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "e1119a6683d7c42483336127a711bce7037273f5978d29fe0e3dacb64e5f315b"
+      }
+    ]
+  },
+  {
+    "suite": "verifyHistory",
+    "run": "stabilization-military-history-dev4-02",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "36"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-history-dev4-02-write.log",
+        "sha256": "d78946547968edc080d03c24aa1e8b5f299e4eac1cc4102263915b1bb5376746",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "e1119a6683d7c42483336127a711bce7037273f5978d29fe0e3dacb64e5f315b"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "36"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-history-dev4-02-reopen.log",
+        "sha256": "bcb13962c5ca9260543f2e5a236b76066f2113ad127d2e6e699fadc6b9441b66",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "e1119a6683d7c42483336127a711bce7037273f5978d29fe0e3dacb64e5f315b"
+      }
+    ]
+  },
+  {
+    "suite": "verifyLocalization",
+    "run": "stabilization-military-localization-dev4-02",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "8"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-localization-dev4-02-write.log",
+        "sha256": "957aa4d1dc2e75e2ce2bcec73879272f6f321c9fe5da8003d80684e29e81d248",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "e1119a6683d7c42483336127a711bce7037273f5978d29fe0e3dacb64e5f315b"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "8"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-localization-dev4-02-reopen.log",
+        "sha256": "7da2f7af261840f5d2c8a77ff11f77cf29aeb1e605ec0c3f4d0eb75e5fbf0ffc",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "e1119a6683d7c42483336127a711bce7037273f5978d29fe0e3dacb64e5f315b"
+      }
+    ]
+  }
+]

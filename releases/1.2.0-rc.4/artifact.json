@@ -1,0 +1,29 @@
+{
+  "version": "1.2.0-rc.4",
+  "bytes": 614476,
+  "sha256": "20cdc368d0ee2f61083c4512ca43223cb3f519d838462b6ee7f330394eca758b",
+  "prior_rc3_sha256": "260e38d393e1d445cb30f4375d078c09eef5c09fb18f5d687e4452da98035c31",
+  "changed_payloads": [
+    "META-INF/MANIFEST.MF",
+    "META-INF/neoforge.mods.toml",
+    "assets/millenairekingdoms/lang/en_us.json",
+    "assets/millenairekingdoms/lang/tr_tr.json"
+  ],
+  "identical_production_class_files": 200,
+  "translation_keys_per_language": 314,
+  "modified_translation_keys_per_language": [
+    "millenairekingdoms.gui.personality.AGRICULTURAL",
+    "millenairekingdoms.gui.personality.ARTISAN",
+    "millenairekingdoms.gui.personality.GENERAL",
+    "millenairekingdoms.gui.personality.MILITARY",
+    "millenairekingdoms.gui.personality.RELIGIOUS"
+  ],
+  "all_translation_keys_and_semantic_format_arguments_match": true,
+  "source_base_commit": "965d4c781279d80d6d6652ba72cde36541512d43",
+  "source_commit_lookup": "git log -1 --format=%H -- releases/1.2.0-rc.4/millenairekingdoms-1.2.0-rc.4.jar",
+  "protocol": 3,
+  "mapping_revision": 1,
+  "scope": "Five personality display values per language and version metadata. All production classes, category IDs, policy weights, save formats, rulership navigation and stock diagnostics are unchanged.",
+  "graphical_layout": "Unverified: no graphical client session.",
+  "online_authentication": "Unverified: unchanged localhost/offline-mode fixture."
+}

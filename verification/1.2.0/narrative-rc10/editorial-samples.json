@@ -1,0 +1,218 @@
+[
+  {
+    "language": "en_us",
+    "kind": "FOUNDING",
+    "opposing": false,
+    "prose": "Akçay came into being with Çamlıdere as its capital."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "FOUNDING",
+    "opposing": false,
+    "prose": "Akçay adıyla yeni bir krallık ortaya çıktı; başkent Çamlıdere oldu."
+  },
+  {
+    "language": "en_us",
+    "kind": "INCORPORATION",
+    "opposing": false,
+    "prose": "The village of Çamlıdere joined Akçay."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "INCORPORATION",
+    "opposing": false,
+    "prose": "Çamlıdere yerleşimi, Akçay adlı krallığa katıldı."
+  },
+  {
+    "language": "en_us",
+    "kind": "WAR",
+    "opposing": false,
+    "prose": "Akçay declared war on Karadağ."
+  },
+  {
+    "language": "en_us",
+    "kind": "WAR",
+    "opposing": true,
+    "prose": "Karadağ faced a declaration of war from Akçay."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "WAR",
+    "opposing": false,
+    "prose": "Akçay, Karadağ adlı krallığa savaş ilan etti."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "WAR",
+    "opposing": true,
+    "prose": "Karadağ, Akçay tarafından ilan edilen savaşla karşı karşıya kaldı."
+  },
+  {
+    "language": "en_us",
+    "kind": "PEACE",
+    "opposing": false,
+    "prose": "The war between Akçay and Karadağ ended in a peace agreement."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "PEACE",
+    "opposing": false,
+    "prose": "Akçay ile Karadağ arasındaki savaş barışla sona erdi."
+  },
+  {
+    "language": "en_us",
+    "kind": "VILLAGE_CONQUEST",
+    "opposing": false,
+    "prose": "Akçay conquered the village of Çamlıdere."
+  },
+  {
+    "language": "en_us",
+    "kind": "VILLAGE_CONQUEST",
+    "opposing": true,
+    "prose": "Karadağ lost the village of Çamlıdere to Akçay."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "VILLAGE_CONQUEST",
+    "opposing": false,
+    "prose": "Akçay, Çamlıdere yerleşimini fethetti."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "VILLAGE_CONQUEST",
+    "opposing": true,
+    "prose": "Karadağ, Çamlıdere yerleşimini Akçay adlı krallığa kaybetti."
+  },
+  {
+    "language": "en_us",
+    "kind": "CAPITAL_CONQUEST",
+    "opposing": false,
+    "prose": "Akçay captured the capital at Çamlıdere."
+  },
+  {
+    "language": "en_us",
+    "kind": "CAPITAL_CONQUEST",
+    "opposing": true,
+    "prose": "Karadağ lost its capital at Çamlıdere to Akçay."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "CAPITAL_CONQUEST",
+    "opposing": false,
+    "prose": "Akçay, Çamlıdere başkentini ele geçirdi."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "CAPITAL_CONQUEST",
+    "opposing": true,
+    "prose": "Karadağ, Çamlıdere başkentini Akçay adlı krallığa kaybetti."
+  },
+  {
+    "language": "en_us",
+    "kind": "COLLAPSE",
+    "opposing": false,
+    "prose": "The realm of Akçay came to an end."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "COLLAPSE",
+    "opposing": false,
+    "prose": "Akçay adlı krallık sona erdi."
+  },
+  {
+    "language": "en_us",
+    "kind": "RULER_CLAIM",
+    "opposing": false,
+    "prose": "Alparslan assumed rule over Akçay."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "RULER_CLAIM",
+    "opposing": false,
+    "prose": "Alparslan, Akçay yönetimini üstlendi."
+  },
+  {
+    "language": "en_us",
+    "kind": "RULER_RELEASE",
+    "opposing": false,
+    "prose": "Alparslan ceased to rule Akçay."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "RULER_RELEASE",
+    "opposing": false,
+    "prose": "Alparslan, Akçay yönetiminden ayrıldı."
+  },
+  {
+    "language": "en_us",
+    "kind": "CONSTRUCTION_ORDER",
+    "opposing": false,
+    "prose": "Akçay commissioned work on “Demirhane” at Çamlıdere."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "CONSTRUCTION_ORDER",
+    "opposing": false,
+    "prose": "Akçay, Çamlıdere yerleşiminde “Demirhane” için yapım emri verdi."
+  },
+  {
+    "language": "en_us",
+    "kind": "CONSTRUCTION_COMPLETE",
+    "opposing": false,
+    "prose": "Work on “Demirhane” at Çamlıdere was completed."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "CONSTRUCTION_COMPLETE",
+    "opposing": false,
+    "prose": "Çamlıdere yerleşiminde “Demirhane” için verilen iş tamamlandı."
+  },
+  {
+    "language": "en_us",
+    "kind": "INVESTMENT",
+    "opposing": false,
+    "prose": "Akçay committed treasury funds to work at Çamlıdere."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "INVESTMENT",
+    "opposing": false,
+    "prose": "Akçay, Çamlıdere yerleşimindeki çalışma için hazineden kaynak ayırdı."
+  },
+  {
+    "language": "en_us",
+    "kind": "SHIPMENT",
+    "opposing": false,
+    "prose": "A shipment from Çamlıdere reached Göktepe on behalf of Akçay."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "SHIPMENT",
+    "opposing": false,
+    "prose": "Akçay adına Çamlıdere yerleşiminden gönderilen yük, Göktepe deposuna ulaştı."
+  },
+  {
+    "language": "en_us",
+    "kind": "STRATEGIC_BATTLE",
+    "opposing": false,
+    "prose": "Near Göktepe, Akçay prevailed over Karadağ in a strategic engagement."
+  },
+  {
+    "language": "en_us",
+    "kind": "STRATEGIC_BATTLE",
+    "opposing": true,
+    "prose": "Karadağ was defeated by Akçay in a strategic engagement near Göktepe."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "STRATEGIC_BATTLE",
+    "opposing": false,
+    "prose": "Göktepe yakınındaki stratejik çarpışmada Akçay, Karadağ karşısında üstün geldi."
+  },
+  {
+    "language": "tr_tr",
+    "kind": "STRATEGIC_BATTLE",
+    "opposing": true,
+    "prose": "Karadağ, Göktepe yakınındaki stratejik çarpışmada Akçay karşısında yenildi."
+  }
+]

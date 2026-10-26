@@ -1,0 +1,34 @@
+[
+  {
+    "phase": "write",
+    "exit_code": 0,
+    "ready": true,
+    "saved": true,
+    "stopped": true,
+    "build_successful": true,
+    "alpha_initialized": true,
+    "dependency_verified": true,
+    "test_mod_loaded": false,
+    "staged_jar_sha256": "d6a6975c5c4abe7d2090298ce0492bae20d14b3196d7f546014ce352a5e07df9",
+    "log_sha256": "f8ea065e740029345bd5dbc53c53ab1e00e6b27616d44ab6677bc2c2666e125f",
+    "authentication": "Unverified: unchanged existing smoke fixture is offline-mode on127.0.0.1:25579.",
+    "archive_log": "verification/1.2.0/rc8-alpha/final/royal-rc8-alpha-server-write.log.gz",
+    "archive_sha256": "0749cb64d2d579e5ad6ddcc923dc04b42e35b6a2a5f247a6de71dbdb170f2f58"
+  },
+  {
+    "phase": "reopen",
+    "exit_code": 0,
+    "ready": true,
+    "saved": true,
+    "stopped": true,
+    "build_successful": true,
+    "alpha_initialized": true,
+    "dependency_verified": true,
+    "test_mod_loaded": false,
+    "staged_jar_sha256": "d6a6975c5c4abe7d2090298ce0492bae20d14b3196d7f546014ce352a5e07df9",
+    "log_sha256": "e0d53ffcf893994442fd8b611f97c56aa4a0adedf3f791b600a4dc4a97dce3d4",
+    "authentication": "Unverified: unchanged existing smoke fixture is offline-mode on127.0.0.1:25579.",
+    "archive_log": "verification/1.2.0/rc8-alpha/final/royal-rc8-alpha-server-reopen.log.gz",
+    "archive_sha256": "056f404518630caa3191e5ba82f1e5615e5d4f28c49f3def3bc33beacdbee6ad"
+  }
+]

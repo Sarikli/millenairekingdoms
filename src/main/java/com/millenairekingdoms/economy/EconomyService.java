@@ -48,13 +48,12 @@ public final class EconomyService {
         };
     }
 
-    /** Income of an active, living kingdom: every attached village except the capital. Independent villages pay no one. */
+    /** Income of an active, living kingdom: every member, including level-scaled capital production. Independent villages pay no one. */
     public static long dailyIncome(ServerLevel level, KingdomSavedData data, UUID kingdomId) {
         Kingdom kingdom = data.kingdom(kingdomId);
         if (kingdom == null || kingdom.fallen() || !kingdom.active()) return 0;
         long income = 0;
         for (UUID member : data.members(kingdomId)) {
-            if (member.equals(kingdom.capital())) continue;
             income += (long) centerLevel(PoliticsService.village(level, member)) * DENIERS_PER_LEVEL;
         }
         return income;

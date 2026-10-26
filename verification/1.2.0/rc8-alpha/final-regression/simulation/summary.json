@@ -1,0 +1,27 @@
+{
+  "days": 400,
+  "jvms": 4,
+  "kingdoms": 10,
+  "cultures": 5,
+  "ethos": 5,
+  "required_lines": [
+    "All 1 required tests passed",
+    "All 1 required tests passed",
+    "All 1 required tests passed",
+    "All 1 required tests passed"
+  ],
+  "sample_rows": 210,
+  "physical_completions_claimed": 0,
+  "initial": 20480,
+  "earned": 48000,
+  "coins": 67750,
+  "owed": 0,
+  "fees": 730,
+  "shipments": 10,
+  "delivered": 10,
+  "held": 0,
+  "attempts": 3738,
+  "constructions": 10,
+  "metrics_sha256": "19ec687d7cf0835bf8f0f46875e041a14d2296dfc392b2ca88dc00a06eb1df07",
+  "scope": "Controlled original-storage/policy model with direct calls and skipped gameTime/calendar. No full generated village/physical NPC work or combat AI proof."
+}

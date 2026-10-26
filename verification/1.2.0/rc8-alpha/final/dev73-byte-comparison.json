@@ -1,0 +1,10 @@
+{
+  "tested_jar_sha256": "437448676208fb7559e39d35a6b5b822136ba443e95e79935fb5f3bf3b90ba67",
+  "final_jar_sha256": "d6a6975c5c4abe7d2090298ce0492bae20d14b3196d7f546014ce352a5e07df9",
+  "changed": [
+    "META-INF/MANIFEST.MF",
+    "META-INF/neoforge.mods.toml"
+  ],
+  "production_classes_resources_identical": true,
+  "production_classes": 241
+}

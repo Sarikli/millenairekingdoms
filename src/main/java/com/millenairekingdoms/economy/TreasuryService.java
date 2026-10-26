@@ -125,6 +125,11 @@ public final class TreasuryService {
         Kingdom kingdom = check(player);
         KingdomException.check(amount > 0 && amount <= Integer.MAX_VALUE, "millenairekingdoms.treasury.amount", "Choose an amount of at least one denier.");
         BuildingInventory storage = storage(level, kingdom);
+        try { RoyalEconomicReservations.requireWithdrawalAvailable(level,RoyalTreasurySnapshot.forPlayer(player).positions()); }
+        catch(IllegalStateException unavailable) {
+            LOGGER.warn("Royal withdrawal postponed to preserve native container evidence: {}",unavailable.getMessage());
+            throw new KingdomException("millenairekingdoms.treasury.pending_operation", "Town hall storage has an unresolved economic operation or is unavailable; settle it before withdrawing.");
+        }
         Coins stock = stored(level, kingdom);
         KingdomException.check(stock.value() >= amount, "millenairekingdoms.treasury.not_enough",
                 "The storage holds only %s.", EconomyService.format(stock.value()));
@@ -163,6 +168,16 @@ public final class TreasuryService {
         LOGGER.info("[Kingdoms] {} withdrew {} ({} gold, {} silver, {} deniers) from the storage of {} ({} left).", player.getGameProfile().getName(),
                 EconomyService.format(amount), coins.gold, coins.silver, coins.bronze, kingdom.name(), EconomyService.format(stored(level, kingdom).value()));
         return amount;
+    }
+
+    /** Localized chat presentation over the same existing authority/storage facts; never a new transaction. */
+    public static net.minecraft.network.chat.Component describeComponent(ServerPlayer player){
+        var level=player.serverLevel();var data=KingdomSavedData.get(level);var id=data.ruledBy(player.getUUID());
+        KingdomException.check(id!=null,"millenairekingdoms.treasury.not_ruler","Only a kingdom's ruler can use its treasury.");
+        var kingdom=data.kingdom(id);var stock=stored(level,kingdom);var problem=problemComponent(player);
+        var text=com.millenairekingdoms.localization.PublicText.of("%s treasury (capital town hall storage): %s (%s gold, %s silver, %s deniers) | daily income %s",kingdom.name(),EconomyService.format(stock.value()),stock.gold(),stock.silver(),stock.bronze(),EconomyService.format(EconomyService.dailyIncome(level,data,id)));
+        if(data.owed(id)>0)text.append(com.millenairekingdoms.localization.PublicText.of(" | waiting for storage space: %s",EconomyService.format(data.owed(id))));
+        if(problem!=null)text.append(com.millenairekingdoms.localization.PublicText.of(" | withdrawal not possible now: %s",problem));return text;
     }
 
     public static String describe(ServerPlayer player) {

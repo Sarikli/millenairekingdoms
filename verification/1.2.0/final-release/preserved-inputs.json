@@ -1,0 +1,157 @@
+{
+  "earlier_releases": [
+    {
+      "file": "releases/1.1.1/millenairekingdoms-1.1.1.jar",
+      "sha256": "cd4395a87675db083bf04d7f53697a935ffec9b1de5117132b1c44f308144346"
+    },
+    {
+      "file": "releases/1.2.0-rc.1/millenairekingdoms-1.2.0-rc.1.jar",
+      "sha256": "17db082c52f7c6708ab3a4aaa143dbd2568d7f69244d2ecdfdb92fd7dbbff40f"
+    },
+    {
+      "file": "releases/1.2.0-rc.10/millenairekingdoms-1.2.0-rc.10.jar",
+      "sha256": "07a596e2d156b73fe70ad39f231d71366ce1ad32c0947f144a61415ccbdcbb0f"
+    },
+    {
+      "file": "releases/1.2.0-rc.2/millenairekingdoms-1.2.0-rc.2.jar",
+      "sha256": "1628fc37c790065056b15ab94bae38b2f88c09fe3f70e90e89cd4147b8fe9cf7"
+    },
+    {
+      "file": "releases/1.2.0-rc.3/millenairekingdoms-1.2.0-rc.3.jar",
+      "sha256": "260e38d393e1d445cb30f4375d078c09eef5c09fb18f5d687e4452da98035c31"
+    },
+    {
+      "file": "releases/1.2.0-rc.4/millenairekingdoms-1.2.0-rc.4.jar",
+      "sha256": "20cdc368d0ee2f61083c4512ca43223cb3f519d838462b6ee7f330394eca758b"
+    },
+    {
+      "file": "releases/1.2.0-rc.5/millenairekingdoms-1.2.0-rc.5.jar",
+      "sha256": "d86edde94ce31b0eb590a80520b8142268bfcd185b15aad0131289f62dbc78c6"
+    },
+    {
+      "file": "releases/1.2.0-rc.6/millenairekingdoms-1.2.0-rc.6.jar",
+      "sha256": "11b91cd081bd3f2e466d613ae4ff1408394fc244bff6d34521bf1703d0c4fa9b"
+    },
+    {
+      "file": "releases/1.2.0-rc.7/millenairekingdoms-1.2.0-rc.7.jar",
+      "sha256": "208f1290dad63c5c98b41af0fde6ca7bca31ed036d0220087d9f28c479b07743"
+    },
+    {
+      "file": "releases/1.2.0-rc.8/millenairekingdoms-1.2.0-rc.8.jar",
+      "sha256": "29cd440d245b23869ae8b26c534c9451c97febc077fb80342a4b4e0bcbd6cfbb"
+    },
+    {
+      "file": "releases/1.2.0-rc.9/millenairekingdoms-1.2.0-rc.9.jar",
+      "sha256": "6f45d75c100c03aead7d2d02bad72c56d875f93852f735bb029d00598423a9a6"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.2/millenairekingdoms-1.2.0-rc8-alpha.2.jar",
+      "sha256": "4101f637a2a3a65f2e8b73c2f2606b30a4e8293a4f3bd72d725a564f1a9c6b94"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.3.dev5/millenairekingdoms-1.2.0-rc8-alpha.3.dev5.jar",
+      "sha256": "3149ed28e55a2899f3e2d27ba41f04ceb9857e58430879d8a44597ab6d8ff5de"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.3/millenairekingdoms-1.2.0-rc8-alpha.3.jar",
+      "sha256": "5c01e987a221a08432ef7305429f89bb5e6767a98534b7debea23fb413d9297f"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.4.dev1/millenairekingdoms-1.2.0-rc8-alpha.4.dev1.jar",
+      "sha256": "fc6cb644bbf8641eee0dd4e30d54d6d96b08306ce958078541a953376d9a9511"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.4.dev2/millenairekingdoms-1.2.0-rc8-alpha.4.dev2.jar",
+      "sha256": "334f0014c0eb9baa1ead835cab90cdfbb523b60c747a7275959b913f052487be"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.4.dev3/millenairekingdoms-1.2.0-rc8-alpha.4.dev3.jar",
+      "sha256": "10d59670881fa8b5c7eefcfe040f661c62898844d7e3f522727cf3a9a0463fed"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.4.dev4/millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+      "sha256": "737baa8c77f7a011a921ee555b8a68b7d741cdb8db6690cfab660e08a369baaf"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.4.dev5/millenairekingdoms-1.2.0-rc8-alpha.4.dev5.jar",
+      "sha256": "05217b4db692ef45831dd9fea57ab3d587b9d63b2cc05fd00f133501f723f868"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.4.dev6/millenairekingdoms-1.2.0-rc8-alpha.4.dev6.jar",
+      "sha256": "8811819418f05d61aa00445cfdf307d0589ec447eac0797ee69e504f890d55f9"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.dev1/millenairekingdoms-1.2.0-rc8-alpha.dev1.jar",
+      "sha256": "460b1fa084259cd7a0f68324ccddd15d37e01ba4fcc5caf2489b2a89a439ec33"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.dev10.3/millenairekingdoms-1.2.0-rc8-alpha.dev10.3.jar",
+      "sha256": "da21e31c64c5d93ee3660bf81649bb55ac31dcd9204ca3caceeef3edb74d8d7f"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.dev10.4/millenairekingdoms-1.2.0-rc8-alpha.dev10.4.jar",
+      "sha256": "f13ddd5989e2d064821b9334533a896cfe8a1a5ba3265f9257a5e82a4872e508"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.dev11.1/millenairekingdoms-1.2.0-rc8-alpha.dev11.1.jar",
+      "sha256": "4731701aae7f0e603bc9a00e7862ef66a7b230d249324f30259160a7b6bfa2ca"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.dev12/millenairekingdoms-1.2.0-rc8-alpha.dev12.jar",
+      "sha256": "b393189b3c5cada3e7521ebff6d09bb26a8392509f4f0ca1d40c3700c707564a"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.dev2/millenairekingdoms-1.2.0-rc8-alpha.dev2.jar",
+      "sha256": "fc3fabd2e79f41a8ad53cdf2dc7b1bb59dbce37af523dbc39d64234694ce6416"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.dev3/millenairekingdoms-1.2.0-rc8-alpha.dev3.jar",
+      "sha256": "4d4da18a1220125145af592bd28748209beb6831cdf3f49ae306a1e946c02787"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.dev4/millenairekingdoms-1.2.0-rc8-alpha.dev4.jar",
+      "sha256": "f266bcfb22535a7c78b35a08b325dc22d412ac55b31461bbbe8122bfe95dabe9"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.dev5/millenairekingdoms-1.2.0-rc8-alpha.dev5.jar",
+      "sha256": "a0f81841f8f819e2a0c56635cbbbc3ca41781024f110ae360d3259e89abeda15"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.dev6/millenairekingdoms-1.2.0-rc8-alpha.dev6.jar",
+      "sha256": "8cae7b46ab01c87ebb473bc55af70a26a074f1dc373b968e6f3a1aa9aa9ba0bb"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.dev7.1/millenairekingdoms-1.2.0-rc8-alpha.dev7.1.jar",
+      "sha256": "b76eed1eb97533a9cfd335aa03c800c0e1fcaa0c744ba2cea014ad0f9cc6f2bb"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.dev7.2/millenairekingdoms-1.2.0-rc8-alpha.dev7.2.jar",
+      "sha256": "8c1856c85669a679fc261dd617628c243d7f82f4afdee0052f0c2323806bcfae"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.dev7.3/millenairekingdoms-1.2.0-rc8-alpha.dev7.3.jar",
+      "sha256": "437448676208fb7559e39d35a6b5b822136ba443e95e79935fb5f3bf3b90ba67"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.dev7/millenairekingdoms-1.2.0-rc8-alpha.dev7.jar",
+      "sha256": "1269ac34e0aef2479e7666e7ad2648243074edbc739558e88eda2a45649a0c99"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha.dev8/millenairekingdoms-1.2.0-rc8-alpha.dev8.jar",
+      "sha256": "4a51dc7b34f404fa6b5ffb6f5eb9586e7810ada3f4978a50c8ab13d4bffdc2ef"
+    },
+    {
+      "file": "releases/1.2.0-rc8-alpha/millenairekingdoms-1.2.0-rc8-alpha.jar",
+      "sha256": "d6a6975c5c4abe7d2090298ce0492bae20d14b3196d7f546014ce352a5e07df9"
+    },
+    {
+      "file": "releases/1.2.0/millenairekingdoms-1.2.0.jar",
+      "sha256": "c7f6f59bab1046153d7c0b75bd0bdc836950fcf2853a4a8365be5e86196d177e"
+    }
+  ],
+  "inputs": {
+    "gradlew.bat": "0c09e2ab543937d760afcb2f611e66a1f36b0f24ed4362e07b068ef02f7314d3",
+    "millenaire-9.0.3.jar": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+    "/workspace/cloud-setup/millenaire-gradle.py": "f1115b56690eaef1438dc0e745c13bc86e47db3631dab3a2207384e4e29225b1"
+  }
+}
