@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "Laboriosa",
   "millenairekingdoms.gui.personality.GENERAL": "Pragmatica",
   "millenairekingdoms.gui.shipment.stock_summary": "Stoccaggio: %1$s · Tenuto: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "Valore di scorte del villaggio: %1$s Costruzione attiva/progettata: %2$s Residenti bisogni: %3$s Valore minimo: %4$s Protezione millenaria: %5$s Il totale mantenuto utilizza il più grande di obiettivo + costruzione + residenti, protezione millenaria e il minimo.",
+  "millenairekingdoms.gui.shipment.stock_details": "Valore di scorte del villaggio: %1$s Costruzione attiva/progettata: %2$s Residenti bisogni: %3$s Valore minimo: %4$s Protezione millenaria: %5$s Questi sono i fabbisogni prima del limite. Il totale trattenuto è al massimo di 50 unità per prodotto, incluso il minimo configurato.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Richiesto: %1$s; trasferibile: %2$s; custodito: %3$s. Svolga il prodotto per la ripartizione delle scorte.",
   "millenairekingdoms.gui.rulership_back": "Ritorno al dominio",
   "millenairekingdoms.gui.construction.stage.WAITING": "In coda; in attesa del lavoro del villaggio",

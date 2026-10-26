@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "근면",
   "millenairekingdoms.gui.personality.GENERAL": "실용적",
   "millenairekingdoms.gui.shipment.stock_summary": "매장: %1$s · 보유: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "마을 주식 목표: %1$s 활발한/계획된 건설: %2$s 거주자 필요: %3$s 최소 주식: %4$s 밀레니어 보호: %5$s 보유된 총 사용은 목표 + 건설 + 거주자, 밀레니어 보호, 그리고 최소입니다.",
+  "millenairekingdoms.gui.shipment.stock_details": "마을 주식 목표: %1$s 활발한/계획된 건설: %2$s 거주자 필요: %3$s 최소 주식: %4$s 밀레니어 보호: %5$s 이 값들은 상한 적용 전 필요량입니다. 설정한 최소 재고를 포함하여 품목별 총 보호 수량은 최대50개입니다.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "요청: %1$s; 송신 가능: %2$s; 보관: %3$s. 재고 분할을 위해 제품을 넘어서라.",
   "millenairekingdoms.gui.rulership_back": "다시 통치",
   "millenairekingdoms.gui.construction.stage.WAITING": "큐에 서 있고 마을 일 을 기다리고 있다",

@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "Pracowity",
   "millenairekingdoms.gui.personality.GENERAL": "Pragmatyczny",
   "millenairekingdoms.gui.shipment.stock_summary": "Zapasy: %1$s · Utrzymane: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "Wydobycie zapasów w wiosce: %1$s Aktywne/planowane budowle: %2$s Mieszkańcy potrzeby: %3$s Minimalny zapas: %4$s Ochrona millénaire: %5$s Całkowita liczba użytkowników przechowywanych wykorzystuje większą liczbę celów + budownictwo + mieszkańcy, ochronę millénaire i minimalną liczbę.",
+  "millenairekingdoms.gui.shipment.stock_details": "Wydobycie zapasów w wiosce: %1$s Aktywne/planowane budowle: %2$s Mieszkańcy potrzeby: %3$s Minimalny zapas: %4$s Ochrona millénaire: %5$s Są to potrzeby przed zastosowaniem limitu. Łącznie zachowuje się najwyżej 50 sztuk każdego produktu, wraz z ustawionym minimum.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Wymagane: %1$s; wysyłane: %2$s; przechowywane: %3$s. Przełóż nad produktem na rozkładzie.",
   "millenairekingdoms.gui.rulership_back": "Wracając do rządów",
   "millenairekingdoms.gui.construction.stage.WAITING": "W kolejce, czekając na pracę w wiosce",

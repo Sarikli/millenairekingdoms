@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "Trabalhador",
   "millenairekingdoms.gui.personality.GENERAL": "Pragmático",
   "millenairekingdoms.gui.shipment.stock_summary": "Estações: %1$s · Mantido: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "Objecto de estoque da aldeia: %1$s Construção ativa/planejada: %2$s Residentes necessidades: %3$s Minimum stock: %4$s Proteção do milênio: %5$s O total mantido utiliza o maior do alvo + construção + residentes, proteção do milênio e o mínimo.",
+  "millenairekingdoms.gui.shipment.stock_details": "Objecto de estoque da aldeia: %1$s Construção ativa/planejada: %2$s Residentes necessidades: %3$s Minimum stock: %4$s Proteção do milênio: %5$s Estas são as necessidades antes do limite. O total reservado está limitado a 50 unidades por produto, incluindo o mínimo configurado.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Pedido: %1$s; enviável: %2$s; mantido: %3$s. Põe-se sobre o produto para a divisão de estoque.",
   "millenairekingdoms.gui.rulership_back": "De volta ao domínio",
   "millenairekingdoms.gui.construction.stage.WAITING": "Em fila; à espera do trabalho da aldeia",

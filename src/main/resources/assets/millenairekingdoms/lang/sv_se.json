@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "Flitig",
   "millenairekingdoms.gui.personality.GENERAL": "Pragmatisk",
   "millenairekingdoms.gui.shipment.stock_summary": "Bestånd: %1$s · Behåll: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "Byggstockmål: %1$s Aktiva/planerade byggnader: %2$s Residenter behov: %3$s Minimalbestånd: %4$s Millénaire skydd: %5$s Den behållna totala användningen är den största av mål + bygg + invånare, Millénaire skydd och den minsta.",
+  "millenairekingdoms.gui.shipment.stock_details": "Byggstockmål: %1$s Aktiva/planerade byggnader: %2$s Residenter behov: %3$s Minimalbestånd: %4$s Millénaire skydd: %5$s Detta är behov före begränsning. Det totala skyddade lagret är högst 50 per vara, inklusive det inställda minimivärdet.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Förfrågad: %1$s; skickbar: %2$s; behållits: %3$s. Flytta över produkten för fördelningen.",
   "millenairekingdoms.gui.rulership_back": "Tillbaka till herraväldet",
   "millenairekingdoms.gui.construction.stage.WAITING": "Ställde i rad; väntade på landsbygdsarbete",

@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "Pracovitý",
   "millenairekingdoms.gui.personality.GENERAL": "Pragmatický",
   "millenairekingdoms.gui.shipment.stock_summary": "Akcie: %1$s · Údržba: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "Cílem populace vesnice: %1$s Aktivní/plánovaná výstavba: %2$s Obydlenci potřeby: %3$s Minimální zásoby: %4$s Ochrana na tisíciletí: %5$s Celkový počet držených spotřeb se zvyšuje na cíl + výstavbu + obyvatele, ochrana na tisíciletí a minimální.",
+  "millenairekingdoms.gui.shipment.stock_details": "Cílem populace vesnice: %1$s Aktivní/plánovaná výstavba: %2$s Obydlenci potřeby: %3$s Minimální zásoby: %4$s Ochrana na tisíciletí: %5$s Jde o potřeby před omezením. Celková chráněná zásoba je nejvýše 50 kusů na produkt, včetně nastaveného minima.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Požádané: %1$s; odesílatelné: %2$s; uchovávané: %3$s. Přetáhněte se nad výrobek na rozdělení zásob.",
   "millenairekingdoms.gui.rulership_back": "Zpět k vládě",
   "millenairekingdoms.gui.construction.stage.WAITING": "V řadě, čekají na práci ve vesnici",

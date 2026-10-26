@@ -12,6 +12,9 @@ ROOT = Path(__file__).resolve().parents[1]
 SLOT = re.compile(r"%(?:(\d+)\$)?([sdf])|%%")
 
 
+#1.2.0 intentionally updates only this legacy GUI tooltip for the50-unit stock ceiling.
+UPDATED_LEGACY_TOOLTIP = {'en_us': 'Village stock target: %s\nActive/planned construction: %s\nResidents’ needs: %s\nMinimum stock: %s\nRaw Millénaire need: %s These are uncapped needs. The total kept is capped at 50 units per product, including the configured minimum.', 'tr_tr': 'Köy stok hedefi: %s\nDevam eden/bekleyen inşaat: %s\nKöylü ihtiyaçları: %s\nMinimum stok: %s\nHam Millénaire ihtiyacı: %s Bunlar ham ihtiyaçlardır. Ayarlanmış minimum dâhil toplam koruma, ürün başına en fazla 50 adettir.'}
+
 def unique_object(pairs):
     result = {}
     for key, value in pairs:
@@ -84,8 +87,10 @@ def main():
     with zipfile.ZipFile(baseline) as old:
         for locale in ("en_us", "tr_tr"):
             legacy = decode(old.read(prefix + "lang/" + locale + ".json"))
-            if any(catalogs[locale].get(key) != value for key, value in legacy.items()):
-                raise ValueError(locale + ": released459 GUI/narrative values changed")
+            changed = {key for key, value in legacy.items() if catalogs[locale].get(key) != value}
+            tooltip = "millenairekingdoms.gui.shipment.stock_details"
+            if changed != {tooltip} or catalogs[locale][tooltip] != UPDATED_LEGACY_TOOLTIP[locale]:
+                raise ValueError(locale + ": only the approved1.2.0 stock-ceiling tooltip may differ from the459-value baseline")
 
     public = decode(resource("public-text-sources.json"))
     for message, key in public["errors"].items():
@@ -116,7 +121,8 @@ def main():
         "artifact_sha256": hashlib.sha256(args.jar.read_bytes()).hexdigest() if args.jar else None,
         "locales": locales, "locale_count": len(locales), "keys_per_locale": len(english),
         "checked_values": len(english) * len(locales), "missing_keys": 0, "malformed_formats": 0,
-        "legacy_en_tr_values_preserved_per_locale": 459,
+        "legacy_en_tr_values_preserved_per_locale": 458,
+        "intentionally_updated_legacy_keys": ["millenairekingdoms.gui.shipment.stock_details"],
         "narrative_keys_per_locale": sum(key.startswith("millenairekingdoms.chronicle.") for key in english),
         "public_literal_errors": len(public["errors"]), "public_dynamic_patterns": len(public["patterns"]),
         "source_public_templates_checked": len(source_templates),

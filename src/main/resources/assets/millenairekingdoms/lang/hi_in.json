@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "परिश्रमी",
   "millenairekingdoms.gui.personality.GENERAL": "व्यावहारिक",
   "millenairekingdoms.gui.shipment.stock_summary": "स्टॉकः %1$s · रखरखावः %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "ग्राम स्टॉक लक्ष्य: %1$s सक्रिय/नियोजित निर्माण: %2$s निवासियों आवश्यकताएं: %3$s न्यूनतम स्टॉक: %4$s सहस्राब्दी संरक्षण: %5$s भंडारित कुल लक्ष्य + निर्माण + निवासियों, सहस्राब्दी संरक्षण और न्यूनतम का उपयोग करता है।",
+  "millenairekingdoms.gui.shipment.stock_details": "ग्राम स्टॉक लक्ष्य: %1$s सक्रिय/नियोजित निर्माण: %2$s निवासियों आवश्यकताएं: %3$s न्यूनतम स्टॉक: %4$s सहस्राब्दी संरक्षण: %5$s ये सीमा लागू करने से पहले की ज़रूरतें हैं। निर्धारित न्यूनतम सहित, हर उत्पाद की कुल सुरक्षित मात्रा अधिकतम 50 इकाइयाँ है।",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "अनुरोध किया गयाः %1$s; भेजनाः %2$s; रखा गयाः %3$s। स्टॉक ब्रेकडाउन के लिए उत्पाद के ऊपर टहलें।",
   "millenairekingdoms.gui.rulership_back": "शासन में वापसी",
   "millenairekingdoms.gui.construction.stage.WAITING": "पंक्तिबद्ध; गांव के काम की प्रतीक्षा में",

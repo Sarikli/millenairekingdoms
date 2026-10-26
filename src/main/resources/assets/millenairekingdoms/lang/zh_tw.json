@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "勤勉",
   "millenairekingdoms.gui.personality.GENERAL": "務實",
   "millenairekingdoms.gui.shipment.stock_summary": "存量: %1$s · 存量: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "村莊庫存目標: %1$s 活動/計劃建設: %2$s 居民需求: %3$s 最少庫存: %4$s 千年保護: %5$s 保持的總使用量是最大的目標 + 建設 + 居民, 千年保護, 最少.",
+  "millenairekingdoms.gui.shipment.stock_details": "村莊庫存目標: %1$s 活動/計劃建設: %2$s 居民需求: %3$s 最少庫存: %4$s 千年保護: %5$s 以上為未套用上限的需求量。每種物品的保留總量最多為50個，包含設定的最低庫存。",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "要求: %1$s;可發送: %2$s;保存: %3$s. 在產品上,",
   "millenairekingdoms.gui.rulership_back": "恢復權力",
   "millenairekingdoms.gui.construction.stage.WAITING": "排隊,等待村莊工作",

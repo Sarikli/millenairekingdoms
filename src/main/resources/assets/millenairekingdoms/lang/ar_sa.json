@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "مجتهد",
   "millenairekingdoms.gui.personality.GENERAL": "عملي",
   "millenairekingdoms.gui.shipment.stock_summary": "المخزون: %1$s · الحفاظ على: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "مخزون القرية المستهدفة: %1$s البناء النشط / المخطط له: %2$s السكان احتياجات: %3$s مخزون أدنى: %4$s حماية الألفية: %5$s مجموع المحتفظ بها يستخدم أكبر من الهدف + البناء + السكان، حماية الألفية، والحد الأدنى.",
+  "millenairekingdoms.gui.shipment.stock_details": "مخزون القرية المستهدفة: %1$s البناء النشط / المخطط له: %2$s السكان احتياجات: %3$s مخزون أدنى: %4$s حماية الألفية: %5$s هذه احتياجات قبل تطبيق الحد. لا يتجاوز إجمالي الكمية المحفوظة 50 وحدة لكل منتج، بما في ذلك الحد الأدنى المضبوط.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "مطلوب: %1$s؛ قابل للإرسال: %2$s؛ تحتفظ به: %3$s. قم بالتحليق على المنتج لتقسيم الأسهم.",
   "millenairekingdoms.gui.rulership_back": "العودة إلى الحكم",
   "millenairekingdoms.gui.construction.stage.WAITING": "في الصف ، في انتظار العمل في القرية",

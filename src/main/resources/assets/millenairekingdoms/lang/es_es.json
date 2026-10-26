@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "Laborioso",
   "millenairekingdoms.gui.personality.GENERAL": "Pragmático",
   "millenairekingdoms.gui.shipment.stock_summary": "Acceso: %1$s · Mantido: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "El objetivo de la población de la aldea: %1$s Construcción activa/planificada: %2$s Residentes necesidades: %3$s Stock mínimo: %4$s Protección del milenio: %5$s El total mantenido utiliza el mayor del objetivo + construcción + residentes, protección del milenio y el mínimo.",
+  "millenairekingdoms.gui.shipment.stock_details": "El objetivo de la población de la aldea: %1$s Construcción activa/planificada: %2$s Residentes necesidades: %3$s Stock mínimo: %4$s Protección del milenio: %5$s Son necesidades sin limitar. El total reservado tiene un máximo de 50 unidades por producto, incluido el mínimo configurado.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Se solicita: %1$s; se envía: %2$s; se conserva: %3$s. Pone sobre el producto para el desglose de existencias.",
   "millenairekingdoms.gui.rulership_back": "De vuelta al gobierno",
   "millenairekingdoms.gui.construction.stage.WAITING": "En fila; esperando el trabajo del pueblo",

@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "Laborieux",
   "millenairekingdoms.gui.personality.GENERAL": "Pragmatique",
   "millenairekingdoms.gui.shipment.stock_summary": "Stock: %1$s · Réserve: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "Objectif de stockage du village: %1$s Construction active/planifiée: %2$s Résidents besoins: %3$s Stock minimum: %4$s Protection millénaire: %5$s Le total conservé utilise le plus grand de la cible + construction + résidents, protection millénaire, et le minimum.",
+  "millenairekingdoms.gui.shipment.stock_details": "Objectif de stockage du village: %1$s Construction active/planifiée: %2$s Résidents besoins: %3$s Stock minimum: %4$s Protection millénaire: %5$s Il s’agit des besoins avant plafonnement. Le total conservé est limité à 50 unités par produit, minimum configuré compris.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Requisition: %1$s; expédiable: %2$s; conservé: %3$s. Survoler le produit pour la répartition des stocks.",
   "millenairekingdoms.gui.rulership_back": "Retour à la domination",
   "millenairekingdoms.gui.construction.stage.WAITING": "En file d'attente pour les travaux du village",

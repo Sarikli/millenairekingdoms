@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "Szorgalmas",
   "millenairekingdoms.gui.personality.GENERAL": "Gyakorlatias",
   "millenairekingdoms.gui.shipment.stock_summary": "Tárgy: %1$s · Megőrzött: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "A falusi készlet célpontja: %1$s Aktívan/tervezett építkezés: %2$s Lakosok szükségletei: %3$s Minimum készlet: %4$s Évszázéves védelme: %5$s A megőrzött teljes felhasználás a nagyobb cél + építkezés + lakosok, Évszázéves védelme, és a minimális.",
+  "millenairekingdoms.gui.shipment.stock_details": "A falusi készlet célpontja: %1$s Aktívan/tervezett építkezés: %2$s Lakosok szükségletei: %3$s Minimum készlet: %4$s Évszázéves védelme: %5$s Ezek a korlátozás előtti igények. A visszatartott teljes készlet termékenként legfeljebb 50 darab, a beállított minimummal együtt.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Kérendő: %1$s; küldhető: %2$s; tárolható: %3$s. A termék fölött a készlet felosztásához.",
   "millenairekingdoms.gui.rulership_back": "Visszatér a birodalomra.",
   "millenairekingdoms.gui.construction.stage.WAITING": "Sorban állnak; várják a falusi munkát",

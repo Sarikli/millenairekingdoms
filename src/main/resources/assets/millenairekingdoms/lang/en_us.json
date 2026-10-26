@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "Industrious",
   "millenairekingdoms.gui.personality.GENERAL": "Pragmatic",
   "millenairekingdoms.gui.shipment.stock_summary": "Stock: %s · Kept: %s",
-  "millenairekingdoms.gui.shipment.stock_details": "Village stock target: %s\nActive/planned construction: %s\nResidents’ needs: %s\nMinimum stock: %s\nMillénaire protection: %s\nThe kept total uses the larger of target + construction + residents, Millénaire protection, and the minimum.",
+  "millenairekingdoms.gui.shipment.stock_details": "Village stock target: %s\nActive/planned construction: %s\nResidents’ needs: %s\nMinimum stock: %s\nRaw Millénaire need: %s These are uncapped needs. The total kept is capped at 50 units per product, including the configured minimum.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Requested: %s; sendable: %s; kept: %s. Hover over the product for the stock breakdown.",
   "millenairekingdoms.gui.rulership_back": "Back to rulership",
   "millenairekingdoms.gui.construction.stage.WAITING": "Queued; waiting for village work",

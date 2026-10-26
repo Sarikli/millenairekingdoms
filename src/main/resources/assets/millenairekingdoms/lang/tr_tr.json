@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "Üretken",
   "millenairekingdoms.gui.personality.GENERAL": "Pragmatik",
   "millenairekingdoms.gui.shipment.stock_summary": "Stok: %s · Korunan: %s",
-  "millenairekingdoms.gui.shipment.stock_details": "Köy stok hedefi: %s\nDevam eden/bekleyen inşaat: %s\nKöylü ihtiyaçları: %s\nMinimum stok: %s\nMillénaire koruması: %s\nKorunan toplam; hedef + inşaat + köylü, Millénaire koruması ve minimum arasındaki en büyük değerdir.",
+  "millenairekingdoms.gui.shipment.stock_details": "Köy stok hedefi: %s\nDevam eden/bekleyen inşaat: %s\nKöylü ihtiyaçları: %s\nMinimum stok: %s\nHam Millénaire ihtiyacı: %s Bunlar ham ihtiyaçlardır. Ayarlanmış minimum dâhil toplam koruma, ürün başına en fazla 50 adettir.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "İstenen: %s; gönderilebilir: %s; korunan: %s. Stok ayrıntısı için ürünün üzerine gelin.",
   "millenairekingdoms.gui.rulership_back": "Hükümdarlığa dön",
   "millenairekingdoms.gui.construction.stage.WAITING": "Sırada; köyün işi bekleniyor",

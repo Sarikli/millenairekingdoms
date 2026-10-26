@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "ขยันขันแข็ง",
   "millenairekingdoms.gui.personality.GENERAL": "เน้นผลในทางปฏิบัติ",
   "millenairekingdoms.gui.shipment.stock_summary": "หุ้น: %1$s · จัดเก็บ: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "ปัจจัยประกอบของหมู่บ้าน: %1$s อาคารประกอบ / แผน: %2$s ผู้อยู่อาศัย ต้องการ: %3$s ปัจจัยประกอบของน้อย: %4$s การคุ้มครองปีทศวรรษ: %5$s ปัจจัยประกอบรวมใช้งานใหญ่ที่สุดของเป้าหมาย + การก่อสร้าง + ผู้อยู่อาศัย, การคุ้มครองปีทศวรรษ, และขั้นต่ํา",
+  "millenairekingdoms.gui.shipment.stock_details": "ปัจจัยประกอบของหมู่บ้าน: %1$s อาคารประกอบ / แผน: %2$s ผู้อยู่อาศัย ต้องการ: %3$s ปัจจัยประกอบของน้อย: %4$s การคุ้มครองปีทศวรรษ: %5$s ตัวเลขเหล่านี้คือความต้องการก่อนใช้เพดาน ปริมาณที่สงวนไว้ทั้งหมดไม่เกิน50 หน่วยต่อสินค้า รวมค่าขั้นต่ำที่ตั้งไว้",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "ต้องการ: %1$s; ส่งได้: %2$s; จัดเก็บ: %3$s หมุนบนสินค้าเพื่อการแบ่งหุ้น",
   "millenairekingdoms.gui.rulership_back": "ย้อนกลับไปสู่อํานาจ",
   "millenairekingdoms.gui.construction.stage.WAITING": "ติดแถว รองานหมู่บ้าน",

@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "Fleißig",
   "millenairekingdoms.gui.personality.GENERAL": "Pragmatisch",
   "millenairekingdoms.gui.shipment.stock_summary": "Lagerbestände: %1$s · Gepflegt: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "Ziel des Dorfbestands: %1$s Aktive/planmäßige Bauarbeiten: %2$s Bewohner Bedürfnisse: %3$s Mindestbestand: %4$s Millénaire Schutz: %5$s Die gehaltenen Gesamtanwendungen sind das größte Ziel + Bau + Bewohner, Millénaire Schutz und das Minimum.",
+  "millenairekingdoms.gui.shipment.stock_details": "Ziel des Dorfbestands: %1$s Aktive/planmäßige Bauarbeiten: %2$s Bewohner Bedürfnisse: %3$s Mindestbestand: %4$s Millénaire Schutz: %5$s Dies sind die ungekürzten Bedarfswerte. Insgesamt werden je Ware höchstens 50 Einheiten zurückbehalten, einschließlich des eingestellten Mindestbestands.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Gefordert: %1$s; versendbar: %2$s; behalten: %3$s. Überlegen Sie das Produkt für die Aktienverteilung.",
   "millenairekingdoms.gui.rulership_back": "Zurück zur Herrschaft",
   "millenairekingdoms.gui.construction.stage.WAITING": "In der Schlange; auf die Dorfarbeit warten",

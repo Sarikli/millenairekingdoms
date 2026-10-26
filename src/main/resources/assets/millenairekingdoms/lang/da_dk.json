@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "Flittig",
   "millenairekingdoms.gui.personality.GENERAL": "Pragmatisk",
   "millenairekingdoms.gui.shipment.stock_summary": "Bestand: %1$s · Bevaret: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "Landets lagermål: %1$s Aktive/planlagte byggeri: %2$s Beboere behov: %3$s Mindste lagermål: %4$s Millénaire beskyttelse: %5$s Den samlede beholdning bruger den største af mål + byggeri + beboere, Millénaire beskyttelse og minimum.",
+  "millenairekingdoms.gui.shipment.stock_details": "Landets lagermål: %1$s Aktive/planlagte byggeri: %2$s Beboere behov: %3$s Mindste lagermål: %4$s Millénaire beskyttelse: %5$s Dette er behov før begrænsning. Den samlede beskyttede beholdning er højst 50 pr. vare, inklusive det indstillede minimum.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Anmodt: %1$s; afsendbar: %2$s; opbevaret: %3$s. Hover over produktet for opdeling af lager.",
   "millenairekingdoms.gui.rulership_back": "Tilbage til herredømmet",
   "millenairekingdoms.gui.construction.stage.WAITING": "I kø; venter på landsbyarbejde",

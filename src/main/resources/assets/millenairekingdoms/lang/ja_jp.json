@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "勤勉",
   "millenairekingdoms.gui.personality.GENERAL": "実利的",
   "millenairekingdoms.gui.shipment.stock_summary": "ストック: %1$s · 保存: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "村のストック対象: %1$s 活性/計画建設: %2$s 住民のニーズ: %3$s 最小ストック: %4$s ミレニアム保護: %5$s 保持された総使用は対象 + 建設 + 住民, ミレニアム保護,および最小です.",
+  "millenairekingdoms.gui.shipment.stock_details": "村のストック対象: %1$s 活性/計画建設: %2$s 住民のニーズ: %3$s 最小ストック: %4$s ミレニアム保護: %5$s これらは上限適用前の必要数です。設定した最低在庫を含め、保護される合計は品目ごとに最大50個です。",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "要求:%1$s;送付可能:%2$s;保管可能:%3$s. 商品を横にして 株式分解をします",
   "millenairekingdoms.gui.rulership_back": "支配に戻る",
   "millenairekingdoms.gui.construction.stage.WAITING": "排列して 村の作業を待っています",

@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "Трудолюбивый",
   "millenairekingdoms.gui.personality.GENERAL": "Прагматичный",
   "millenairekingdoms.gui.shipment.stock_summary": "Запасы: %1$s · Сохранение: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "Цель поселкового запаса: %1$s Активное/планированное строительство: %2$s Жители потребности: %3$s Минимальный запас: %4$s Защита на тысячелетие: %5$s Общий объем используется для увеличения целей + строительства + жителей, защиты на тысячелетие и минимума.",
+  "millenairekingdoms.gui.shipment.stock_details": "Цель поселкового запаса: %1$s Активное/планированное строительство: %2$s Жители потребности: %3$s Минимальный запас: %4$s Защита на тысячелетие: %5$s Это потребности до ограничения. Общий защищённый запас составляет не более 50 единиц каждого товара, включая заданный минимум.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Запрошенное: %1$s; отправляемое: %2$s; хранимое: %3$s. Переверните продукт для расчёта запасов.",
   "millenairekingdoms.gui.rulership_back": "Возвращение к правлению",
   "millenairekingdoms.gui.construction.stage.WAITING": "В очереди; ждут работы в деревне",

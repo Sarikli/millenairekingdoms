@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "Delaven",
   "millenairekingdoms.gui.personality.GENERAL": "Pragmatičen",
   "millenairekingdoms.gui.shipment.stock_summary": "Nabav: %1$s · Vdržen: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "Cilj zaloge vasi: %1$s Aktivna/planirana gradnja: %2$s prebivalci potrebe: %3$s Minimalna zaloge: %4$s Varstvo v mileniji: %5$s Skupno ohranjeno število uporabnikov je večje od cilja + gradnje + prebivalcev, varstvo v mileniju in minimalno.",
+  "millenairekingdoms.gui.shipment.stock_details": "Cilj zaloge vasi: %1$s Aktivna/planirana gradnja: %2$s prebivalci potrebe: %3$s Minimalna zaloge: %4$s Varstvo v mileniji: %5$s To so potrebe pred omejitvijo. Skupna zaščitena zaloga je največ 50 kosov na izdelek, vključno z nastavljenim minimumom.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Zahtevano: %1$s; pošiljateljsko: %2$s; hranjeno: %3$s. Premaknite izdelek za razčlenitev zalog.",
   "millenairekingdoms.gui.rulership_back": "Vrnitev v oblast",
   "millenairekingdoms.gui.construction.stage.WAITING": "V vrsti, čakajo na delo v vasi",

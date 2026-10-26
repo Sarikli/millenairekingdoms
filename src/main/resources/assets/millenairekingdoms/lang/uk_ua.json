@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "Працьовитий",
   "millenairekingdoms.gui.personality.GENERAL": "Прагматичний",
   "millenairekingdoms.gui.shipment.stock_summary": "Запаси: %1$s · Заховувані: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "Місцевий запас: %1$s Активна/планована будівництво: %2$s Жильці потреби: %3$s Мінімальний запас: %4$s Захист тисячоліття: %5$s Общий обсяг зберігання використовує більший від мети + будівництво + жильців, захист тисячоліття і мінімум.",
+  "millenairekingdoms.gui.shipment.stock_details": "Місцевий запас: %1$s Активна/планована будівництво: %2$s Жильці потреби: %3$s Мінімальний запас: %4$s Захист тисячоліття: %5$s Це потреби до застосування обмеження. Загальний захищений запас становить не більше 50 одиниць кожного товару, включно з установленим мінімумом.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Запрошується: %1$s; відправляється: %2$s; зберігається: %3$s. Поверніть продукт на розбивку запасів.",
   "millenairekingdoms.gui.rulership_back": "Повернутися до правління",
   "millenairekingdoms.gui.construction.stage.WAITING": "В черзі; чекають на сільську роботу",

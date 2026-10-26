@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "Nijver",
   "millenairekingdoms.gui.personality.GENERAL": "Pragmatisch",
   "millenairekingdoms.gui.shipment.stock_summary": "Voorraad: %1$s · Behoud: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "Village stock target: %1$s Active/planned construction: %2$s Residents Needs: %3$s Minimum stock: %4$s Millénaire protection: %5$s Het totale gebruik dat wordt gehouden is het grootste van het doel + bouw + inwoners, Millénaire protection en het minimum.",
+  "millenairekingdoms.gui.shipment.stock_details": "Village stock target: %1$s Active/planned construction: %2$s Residents Needs: %3$s Minimum stock: %4$s Millénaire protection: %5$s Dit zijn de behoeften vóór begrenzing. In totaal worden per product maximaal 50 eenheden bewaard, inclusief het ingestelde minimum.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Gezocht: %1$s; verzendbaar: %2$s; bewaard: %3$s. Hover over het product voor de afdeling van de voorraad.",
   "millenairekingdoms.gui.rulership_back": "Terug naar de heerschappij",
   "millenairekingdoms.gui.construction.stage.WAITING": "In de rij staan; wachten op de dorpswerkzaamheden",

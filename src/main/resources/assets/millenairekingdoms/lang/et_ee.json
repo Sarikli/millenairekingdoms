@@ -310,7 +310,7 @@
   "millenairekingdoms.gui.personality.ARTISAN": "Töökas",
   "millenairekingdoms.gui.personality.GENERAL": "Pragmaatiline",
   "millenairekingdoms.gui.shipment.stock_summary": "Varud: %1$s · Hoidetud: %2$s",
-  "millenairekingdoms.gui.shipment.stock_details": "Külavarude sihtmärk: %1$s Aktiivne/kavatud ehitus: %2$s Asutused vajadused: %3$s Miinimumvarud: %4$s Millénaire kaitse: %5$s Hoidetud kogusumma kasutab suuremad sihtmärgid + ehitus + elanikud, Millénaire kaitse ja miinimum.",
+  "millenairekingdoms.gui.shipment.stock_details": "Külavarude sihtmärk: %1$s Aktiivne/kavatud ehitus: %2$s Asutused vajadused: %3$s Miinimumvarud: %4$s Millénaire kaitse: %5$s Need on piiranguta vajadused. Kokku hoitakse iga toote kohta kuni 50 ühikut, sealhulgas seadistatud miinimum.",
   "millenairekingdoms.gui.shipment.insufficient_stock_detail": "Nõutav: %1$s; saadetav: %2$s; hoidetud: %3$s. Pöörake toote üle, et aktsia jaotada.",
   "millenairekingdoms.gui.rulership_back": "Tagasi valitsemisele",
   "millenairekingdoms.gui.construction.stage.WAITING": "Jätkides, oodates külasööd",
