@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "Zmieniono płytkę geograficzną poza sesją; zachować bajty",
   "millenairekingdoms.text.f7514acd2e89b632": "Nieważna cela geograficzna",
   "millenairekingdoms.text.fe2b24b5f519ad81": "Właściciel/wymiar geograficzny nieważny",
-  "millenairekingdoms.text.3aecc537a55e5908": "Wydano rozkaz najazdu podbojowego; rozpocznie się, gdy będzie to możliwe (%1$s). Po jednym dniu zostanie odwołany."
+  "millenairekingdoms.text.3aecc537a55e5908": "Wydano rozkaz najazdu podbojowego; rozpocznie się, gdy będzie to możliwe (%1$s). Po jednym dniu zostanie odwołany.",
+  "millenairekingdoms.chronicle.title.strategic_battle": "Odległe starcie wojskowe",
+  "millenairekingdoms.chronicle.body.strategic_battle": "Odległe starcie strategiczne w pobliżu %4$s zakończyło się zwycięstwem państwa %1$s nad państwem %2$s. Kronika zachowuje ten abstrakcyjny wynik militarny."
 }

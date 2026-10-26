@@ -18,19 +18,16 @@ public final class ChronicleViews {
         PacketDistributor.sendToPlayer(player,new ChronicleViewPayload(respond(player,request)));
     }
     public static CompoundTag respond(ServerPlayer player,ChronicleRequestPayload request){
-        // Disabled legacy requests must neither open geography files nor consume the political/history request budget.
-        if(request.mode().equals("GEOGRAPHY"))return com.millenairekingdoms.atlas.geography.GeographyView.build(player,request);
         long now=player.serverLevel().getGameTime();var last=LAST.get(player.getUUID());
         if(last!=null && now>=last && now-last<4){var retry=header(player,request);retry.putInt("retryAfter",4);return retry;}LAST.put(player.getUUID(),now);
         CompoundTag view;
-        try{view=build(player,request);}catch(com.millenairekingdoms.atlas.geography.GeographyService.Loading expected){view=header(player,request);view.putInt("retryAfter",20);}catch(RuntimeException failure){LogUtils.getLogger().warn("[Kingdoms] Read-only chronicle request unavailable: {}",failure.getMessage());view=header(player,request);view.putString("error","unavailable");}
+        try{view=build(player,request);}catch(RuntimeException failure){LogUtils.getLogger().warn("[Kingdoms] Read-only chronicle request unavailable: {}",failure.getMessage());view=header(player,request);view.putString("error","unavailable");}
         return view;
     }
     public static void forget(UUID player){LAST.remove(player);}
     public static CompoundTag header(ServerPlayer player,ChronicleRequestPayload request){var view=new CompoundTag();view.putUUID("session",request.session());view.putLong("serial",request.serial());view.putString("mode",request.mode());view.putString("dimension",player.serverLevel().dimension().location().toString());return view;}
     public static CompoundTag build(ServerPlayer player,ChronicleRequestPayload request){
         if(!player.serverLevel().getServer().isSameThread())throw new IllegalStateException("Chronicles require server thread");
-        if(request.mode().equals("GEOGRAPHY"))return com.millenairekingdoms.atlas.geography.GeographyView.build(player,request);
         var view=header(player,request);var level=player.serverLevel();var data=KingdomSavedData.get(level);var store=HistoryHooks.store(level);
         if(request.mode().equals("ATLAS") || request.mode().equals("INFO"))return com.millenairekingdoms.atlas.AtlasViews.build(player,request);
         if(request.mode().equals("REALMS")){

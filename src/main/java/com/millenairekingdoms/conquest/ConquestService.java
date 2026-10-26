@@ -48,6 +48,7 @@ public final class ConquestService {
         require(level.getGameTime() > 0 && level.getDayTime() > 0, "World time must be positive for Millénaire raid timestamps.");
         require(!Military.busy(attacker) && !Military.busy(target), "A village is already involved in a raid or raid preparation.");
         var data = KingdomSavedData.get(level);
+        require(orderId==null || !com.millenairekingdoms.autonomy.StrategicBattleService.owns(level,orderId),"This operation already owns a committed strategic result; no duplicate physical raid may launch.");
         require(!data.involves(attackerId) && !data.involves(targetId), "A village already has an active conquest raid.");
         data.startable(attackerId, targetId); // Validate politics and war before starting any Millénaire side effects.
         require(!target.getId().equals(attacker.getParentVillageId())
@@ -162,6 +163,7 @@ public final class ConquestService {
         if (data.activeRaids().isEmpty()) return;
         var manager = VillageSavedData.get(level).getVillageManager();
         for (var raid : data.activeRaids()) {
+            if(com.millenairekingdoms.autonomy.StrategicBattleService.owns(level,raid.id()))continue;
             Village attacker = manager.getVillage(new VillageId(raid.attacker()));
             Village target = manager.getVillage(new VillageId(raid.target()));
             if (!matches(raid, attacker, target)) {

@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "इस सत्र के बाहर भूगोल टाइल बदल गया; बाइट्स को संरक्षित करें",
   "millenairekingdoms.text.f7514acd2e89b632": "अवैध भूगोल सेल",
   "millenairekingdoms.text.fe2b24b5f519ad81": "अवैध भूगोल मालिक/आकार",
-  "millenairekingdoms.text.3aecc537a55e5908": "विजय के लिए छापे का आदेश दिया गया है; संभव होते ही वह शुरू होगा (%1$s)। एक दिन बाद उसे रद्द कर दिया जाएगा।"
+  "millenairekingdoms.text.3aecc537a55e5908": "विजय के लिए छापे का आदेश दिया गया है; संभव होते ही वह शुरू होगा (%1$s)। एक दिन बाद उसे रद्द कर दिया जाएगा।",
+  "millenairekingdoms.chronicle.title.strategic_battle": "दूरस्थ सैन्य मुठभेड़",
+  "millenairekingdoms.chronicle.body.strategic_battle": "%4$s के पास एक दूरस्थ रणनीतिक मुठभेड़ में %1$s ने %2$s पर विजय प्राप्त की। यह वृत्तांत इस अमूर्त सैन्य परिणाम को सुरक्षित रखता है।"
 }

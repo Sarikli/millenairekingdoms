@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "Los datos de geografía cambiaron fuera de esta sesión; preserva los bytes",
   "millenairekingdoms.text.f7514acd2e89b632": "Celda geográfica inválida",
   "millenairekingdoms.text.fe2b24b5f519ad81": "Propietario/dimensión geográfica inválida",
-  "millenairekingdoms.text.3aecc537a55e5908": "Se ha ordenado la incursión de conquista; comenzará cuando sea posible (%1$s). Se cancelará al cabo de un día."
+  "millenairekingdoms.text.3aecc537a55e5908": "Se ha ordenado la incursión de conquista; comenzará cuando sea posible (%1$s). Se cancelará al cabo de un día.",
+  "millenairekingdoms.chronicle.title.strategic_battle": "Enfrentamiento militar lejano",
+  "millenairekingdoms.chronicle.body.strategic_battle": "Un enfrentamiento estratégico lejano cerca de %4$s terminó con la victoria de %1$s sobre %2$s. La crónica conserva este resultado militar abstracto."
 }

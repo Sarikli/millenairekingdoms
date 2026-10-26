@@ -449,6 +449,94 @@ neoForge {
             systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
             systemProperty 'kingdoms.tests.liveShipments', 'true'
         }
+        strategicRestartGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_strategic_restart_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+        }
+        strategicRestartGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_strategic_restart_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+        }
+        strategicMilitaryGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_strategic_military_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+        }
+        strategicMilitaryGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_strategic_military_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+        }
+        nativeBattleGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_native_battle_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+        }
+        nativeBattleGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_native_battle_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+        }
+        nativeWarGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_native_war_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+        }
+        nativeWarGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_native_war_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+        }
         royalNpcLiveGameTestServer {
             type = 'gameTestServer'
             sourceSet = sourceSets.gametest
@@ -470,6 +558,16 @@ neoForge {
             systemProperty 'kingdoms.tests.persistence', 'read'
             systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
             systemProperty 'kingdoms.tests.liveShipments', 'true'
+        }
+        strategicCrashGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_strategic_crash_tests'
+            systemProperty 'kingdoms.tests.strategicCrashPhase', System.getProperty('kingdoms.strategicCrashPhase', 'prepare')
+            systemProperty 'kingdoms.tests.strategicCut', System.getProperty('kingdoms.strategicCut', 'after-roll')
         }
         royalNpcEconomyGameTestServer {
             type = 'gameTestServer'
@@ -1050,3 +1148,15 @@ tasks.register('verifyGeography') { group = 'verification'; dependsOn tasks.name
 
 tasks.named('runRoyalStrategyGameTestServerReload') { dependsOn tasks.named('runRoyalStrategyGameTestServer') }
 tasks.register('verifyRoyalStrategy') { group = 'verification'; dependsOn tasks.named('runRoyalStrategyGameTestServerReload') }
+
+tasks.named('runStrategicMilitaryGameTestServerReload') { dependsOn tasks.named('runStrategicMilitaryGameTestServer') }
+tasks.register('verifyStrategicMilitary') { group = 'verification'; dependsOn tasks.named('runStrategicMilitaryGameTestServerReload') }
+
+tasks.named('runStrategicRestartGameTestServerReload') { dependsOn tasks.named('runStrategicRestartGameTestServer') }
+tasks.register('verifyStrategicRestart') { group = 'verification'; dependsOn tasks.named('runStrategicRestartGameTestServerReload') }
+
+tasks.named('runNativeWarGameTestServerReload') { dependsOn tasks.named('runNativeWarGameTestServer') }
+tasks.register('verifyNativeWar') { group = 'verification'; dependsOn tasks.named('runNativeWarGameTestServerReload') }
+
+tasks.named('runNativeBattleGameTestServerReload') { dependsOn tasks.named('runNativeBattleGameTestServer') }
+tasks.register('verifyNativeBattle') { group = 'verification'; dependsOn tasks.named('runNativeBattleGameTestServerReload') }

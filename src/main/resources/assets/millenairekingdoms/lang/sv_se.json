@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "Geografiska plattor ändrats utanför denna session; bevara byter",
   "millenairekingdoms.text.f7514acd2e89b632": "Invalida geografiska celler",
   "millenairekingdoms.text.fe2b24b5f519ad81": "Invalid geografisk ägare/dimension",
-  "millenairekingdoms.text.3aecc537a55e5908": "Erövringsräden är beordrad och inleds så snart det går (%1$s). Den avbryts efter en dag."
+  "millenairekingdoms.text.3aecc537a55e5908": "Erövringsräden är beordrad och inleds så snart det går (%1$s). Den avbryts efter en dag.",
+  "millenairekingdoms.chronicle.title.strategic_battle": "Avlägsen militär drabbning",
+  "millenairekingdoms.chronicle.body.strategic_battle": "En avlägsen strategisk drabbning nära %4$s slutade med att %1$s segrade över %2$s. Krönikan bevarar detta abstrakta militära utfall."
 }

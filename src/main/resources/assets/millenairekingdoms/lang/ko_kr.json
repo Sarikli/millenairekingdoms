@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "이 세션 밖에서 지리 타일 변경; 바이트를 보존",
   "millenairekingdoms.text.f7514acd2e89b632": "유효하지 않은 지리 셀",
   "millenairekingdoms.text.fe2b24b5f519ad81": "유효하지 않은 지리 소유자/차원",
-  "millenairekingdoms.text.3aecc537a55e5908": "정복 원정이 명령되었다. 가능해지는 대로 출발한다(%1$s). 하루 뒤에는 취소된다."
+  "millenairekingdoms.text.3aecc537a55e5908": "정복 원정이 명령되었다. 가능해지는 대로 출발한다(%1$s). 하루 뒤에는 취소된다.",
+  "millenairekingdoms.chronicle.title.strategic_battle": "먼 곳의 군사 교전",
+  "millenairekingdoms.chronicle.body.strategic_battle": "%4$s 부근의 먼 곳에서 벌어진 전략적 교전은 %1$s 측이 %2$s 측에 승리하며 끝났다. 연대기는 이 추상적인 군사 결과를 기록한다."
 }

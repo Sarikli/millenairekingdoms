@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "Piastrella geografica cambiata al di fuori di questa sessione; conservare byte",
   "millenairekingdoms.text.f7514acd2e89b632": "Cella geografica invalida",
   "millenairekingdoms.text.fe2b24b5f519ad81": "Proprietario/dimensione geografica invalida",
-  "millenairekingdoms.text.3aecc537a55e5908": "L’incursione di conquista è stata ordinata; inizierà appena possibile (%1$s). Verrà annullata dopo un giorno."
+  "millenairekingdoms.text.3aecc537a55e5908": "L’incursione di conquista è stata ordinata; inizierà appena possibile (%1$s). Verrà annullata dopo un giorno.",
+  "millenairekingdoms.chronicle.title.strategic_battle": "Scontro militare lontano",
+  "millenairekingdoms.chronicle.body.strategic_battle": "Uno scontro strategico lontano presso %4$s si concluse con la vittoria di %1$s su %2$s. La cronaca conserva questo esito militare astratto."
 }

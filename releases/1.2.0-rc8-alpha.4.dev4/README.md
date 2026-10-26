@@ -1,0 +1,1 @@
+Autonomous warfare development checkpoint. Stage4 actual native battle, naturally-unloaded real-calendar war/conquest and four abrupt JVM cuts verified. Currency consolidation/final stabilization remain pending; not release-candidate approval.

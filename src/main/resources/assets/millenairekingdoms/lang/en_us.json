@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "Geography tile changed outside this session; preserve bytes",
   "millenairekingdoms.text.f7514acd2e89b632": "Invalid geography cell",
   "millenairekingdoms.text.fe2b24b5f519ad81": "Invalid geography owner/dimension",
-  "millenairekingdoms.text.3aecc537a55e5908": "Conquest raid ordered; it starts when possible (%s). It is called off after one day."
+  "millenairekingdoms.text.3aecc537a55e5908": "Conquest raid ordered; it starts when possible (%s). It is called off after one day.",
+  "millenairekingdoms.chronicle.title.strategic_battle": "Unattended military engagement",
+  "millenairekingdoms.chronicle.body.strategic_battle": "An unattended strategic engagement near %4$s ended with %1$s prevailing over %2$s. The chronicle preserves this abstract military outcome."
 }

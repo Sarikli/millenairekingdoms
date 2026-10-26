@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "Geographische Fliesen außerhalb dieser Sitzung geändert; Bytes erhalten",
   "millenairekingdoms.text.f7514acd2e89b632": "Ungültige Geographie-Zelle",
   "millenairekingdoms.text.fe2b24b5f519ad81": "Nicht gültige geografische Eigentümer/Dimension",
-  "millenairekingdoms.text.3aecc537a55e5908": "Der Eroberungszug wurde angeordnet und beginnt, sobald es möglich ist (%1$s). Nach einem Tag wird er abgesagt."
+  "millenairekingdoms.text.3aecc537a55e5908": "Der Eroberungszug wurde angeordnet und beginnt, sobald es möglich ist (%1$s). Nach einem Tag wird er abgesagt.",
+  "millenairekingdoms.chronicle.title.strategic_battle": "Militärische Auseinandersetzung in der Ferne",
+  "millenairekingdoms.chronicle.body.strategic_battle": "Eine strategische Auseinandersetzung in der Ferne nahe %4$s endete mit einem Sieg von %1$s über %2$s. Die Chronik hält dieses abstrakte militärische Ergebnis fest."
 }

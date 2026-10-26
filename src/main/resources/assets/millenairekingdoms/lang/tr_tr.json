@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "Bu oturum dışında coğrafi kayıp değiştirildi; baytları koru",
   "millenairekingdoms.text.f7514acd2e89b632": "Geçersiz coğrafi hücre",
   "millenairekingdoms.text.fe2b24b5f519ad81": "Geçersiz coğrafya sahibi/ölüm",
-  "millenairekingdoms.text.3aecc537a55e5908": "Fetih akını emredildi; koşullar elverdiğinde başlayacak (%1$s). Bir gün sonra iptal edilir."
+  "millenairekingdoms.text.3aecc537a55e5908": "Fetih akını emredildi; koşullar elverdiğinde başlayacak (%1$s). Bir gün sonra iptal edilir.",
+  "millenairekingdoms.chronicle.title.strategic_battle": "Uzaktaki askerî çarpışma",
+  "millenairekingdoms.chronicle.body.strategic_battle": "Yerleşim %4$s yakınındaki stratejik çarpışmada %1$s krallığı, %2$s krallığı karşısında üstünlük sağladı. Vakayiname, bu soyut askerî sonucu kaydeder."
 }

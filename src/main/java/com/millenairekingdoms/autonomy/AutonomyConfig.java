@@ -35,7 +35,7 @@ public final class AutonomyConfig {
 
     public static void define(ModConfigSpec.Builder b) {
         b.comment("Stage 6.2: political decisions of NPC-governed kingdoms (kingdoms without a player ruler).",
-                "Decisions read persistent data only; real conquest victories always come from completed Millénaire raids.").push("npcAutonomy");
+                "Decisions read persistent data only; conquest victories require completed native raids or verified unattended opposed-dice operations.").push("npcAutonomy");
         ENABLED = b.comment("Let NPC-governed kingdoms decide on their own (war, peace, conquest raids, accepting villages).")
                 .define("enabled", true);
         JOINING = b.comment("Let independent NPC villages with good relations join nearby kingdoms on their own.")
@@ -50,7 +50,7 @@ public final class AutonomyConfig {
                 .defineInRange("raidCooldownDays", 1, 0, 60);
         TRUCE_DAYS = b.comment("Minecraft days after a peace during which the two kingdoms cannot declare war on each other.")
                 .defineInRange("truceDays", 5, 0, 100);
-        CAMPAIGNS = b.comment("Let NPC kingdoms send real Millénaire conquest raids on their own.")
+        CAMPAIGNS = b.comment("Let NPC kingdoms order conquest operations; active regions use native raids and eligible unloaded wars may use strategic resolution.")
                 .define("automaticCampaigns", true);
         b.pop();
     }

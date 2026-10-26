@@ -16,7 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 public record HistoryEvent(UUID id, Kind kind, long day, long gameTime, String dimension, String source,
         List<Realm> realms, List<Place> places, UUID actor, String actorName, String reason, String outcome, Map<String,String> facts) {
     public enum Kind { FOUNDING, INCORPORATION, WAR, PEACE, VILLAGE_CONQUEST, CAPITAL_CONQUEST, COLLAPSE,
-        RULER_CLAIM, RULER_RELEASE, CONSTRUCTION_ORDER, CONSTRUCTION_COMPLETE, INVESTMENT, SHIPMENT }
+        RULER_CLAIM, RULER_RELEASE, CONSTRUCTION_ORDER, CONSTRUCTION_COMPLETE, INVESTMENT, SHIPMENT, STRATEGIC_BATTLE }
     public record Realm(UUID id, String name, String culture, String ethos) {
         public Realm { if (id == null) throw new IllegalArgumentException("Missing historical realm"); text(name,64); text(culture,128); text(ethos,32); }
     }

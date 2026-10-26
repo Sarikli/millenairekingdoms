@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "เทลล์ภูมิศาสตร์เปลี่ยนภายนอกการประชุมนี้; รักษาไบท์",
   "millenairekingdoms.text.f7514acd2e89b632": "เซลล์ภูมิศาสตร์ไม่ถูกต้อง",
   "millenairekingdoms.text.fe2b24b5f519ad81": "เจ้าของ/มิติภูมิศาสตร์ไม่ถูกต้อง",
-  "millenairekingdoms.text.3aecc537a55e5908": "มีคำสั่งให้ยกทัพไปพิชิตแล้ว และจะเริ่มเมื่อทำได้ (%1$s) คำสั่งจะถูกยกเลิกหลังผ่านไปหนึ่งวัน"
+  "millenairekingdoms.text.3aecc537a55e5908": "มีคำสั่งให้ยกทัพไปพิชิตแล้ว และจะเริ่มเมื่อทำได้ (%1$s) คำสั่งจะถูกยกเลิกหลังผ่านไปหนึ่งวัน",
+  "millenairekingdoms.chronicle.title.strategic_battle": "การปะทะทางทหารที่ห่างไกล",
+  "millenairekingdoms.chronicle.body.strategic_battle": "การปะทะเชิงยุทธศาสตร์ที่ห่างไกลใกล้ %4$s จบลงโดย %1$s มีชัยเหนือ %2$s พงศาวดารเก็บรักษาผลลัพธ์ทางทหารเชิงนามธรรมนี้ไว้"
 }

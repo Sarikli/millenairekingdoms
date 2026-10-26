@@ -1,0 +1,60 @@
+[
+  {
+    "suite": "verifyStrategicMilitary",
+    "run": "stabilization-military-dev4-04",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "11"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-dev4-04-write.log",
+        "sha256": "9eddbdf61d8c7485cba31b08bec2d2176a98fd57789a896bd1b4d944675b6d0f",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "cd6aa6ba66c270771536834e9077d57a71e69ae3b2d7e4e51f1ee7c07dd0a893"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "11"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-dev4-04-reopen.log",
+        "sha256": "655391887c14c00f9c951d44757eae1852f5525eee9816bfbd10fd8faad6ca52",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "cd6aa6ba66c270771536834e9077d57a71e69ae3b2d7e4e51f1ee7c07dd0a893"
+      }
+    ]
+  },
+  {
+    "suite": "verifyStrategicRestart",
+    "run": "stabilization-military-restart-dev4-04",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "1"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-restart-dev4-04-write.log",
+        "sha256": "3d067ba9f3cc5b72957ce7f8deacccdf849b64cccfc1afa49d302aa25e751a43",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "cd6aa6ba66c270771536834e9077d57a71e69ae3b2d7e4e51f1ee7c07dd0a893"
+      },
+      {
+        "phase": "reopen",
+        "exit": 1,
+        "passes": [],
+        "build": false,
+        "log": "/workspace/royal-decree/stabilization-military-restart-dev4-04-reopen.log",
+        "sha256": "230d77814085015ed9bfee8f6487f1d46434a1198a76428b394599de8b1e447a",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "cd6aa6ba66c270771536834e9077d57a71e69ae3b2d7e4e51f1ee7c07dd0a893"
+      }
+    ]
+  }
+]

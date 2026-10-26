@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "在此會議之外的地形圖表變更;保存字节",
   "millenairekingdoms.text.f7514acd2e89b632": "不有效的地理細胞",
   "millenairekingdoms.text.fe2b24b5f519ad81": "不有效的地理位置所有者/尺寸",
-  "millenairekingdoms.text.3aecc537a55e5908": "征服遠征已下令；條件允許時便會出發（%1$s）。一天後將取消此命令。"
+  "millenairekingdoms.text.3aecc537a55e5908": "征服遠征已下令；條件允許時便會出發（%1$s）。一天後將取消此命令。",
+  "millenairekingdoms.chronicle.title.strategic_battle": "遠方軍事交鋒",
+  "millenairekingdoms.chronicle.body.strategic_battle": "%4$s附近的一場遠方戰略交鋒以%1$s戰勝%2$s告終。編年史保留了這一抽象的軍事結果。"
 }

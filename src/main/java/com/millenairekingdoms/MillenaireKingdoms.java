@@ -39,6 +39,8 @@ public final class MillenaireKingdoms {
         NeoForge.EVENT_BUS.addListener(ConquestService::onLevelTick);
         NeoForge.EVENT_BUS.addListener(KingdomDay::onLevelTick);
         NeoForge.EVENT_BUS.addListener(RaidOrderService::onLevelTick);
+        NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.autonomy.StrategicBattleService::onTick);
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppedEvent event)->com.millenairekingdoms.autonomy.StrategicBattleService.clear(event.getServer()));
         NeoForge.EVENT_BUS.addListener(KingdomActions::onLogout);
         NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStartedEvent event) -> {
             for (var level : event.getServer().getAllLevels()) try { com.millenairekingdoms.history.HistoryHooks.recover(level); }

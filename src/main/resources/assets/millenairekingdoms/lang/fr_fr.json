@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "Tire de géographie modifiée en dehors de cette session; préserver les octets",
   "millenairekingdoms.text.f7514acd2e89b632": "Cellule géographique invalide",
   "millenairekingdoms.text.fe2b24b5f519ad81": "Propriétaire/dimension géographique non valide",
-  "millenairekingdoms.text.3aecc537a55e5908": "Le raid de conquête a été ordonné ; il débutera dès que possible (%1$s). Il sera annulé au bout d’un jour."
+  "millenairekingdoms.text.3aecc537a55e5908": "Le raid de conquête a été ordonné ; il débutera dès que possible (%1$s). Il sera annulé au bout d’un jour.",
+  "millenairekingdoms.chronicle.title.strategic_battle": "Affrontement militaire lointain",
+  "millenairekingdoms.chronicle.body.strategic_battle": "Un affrontement stratégique lointain près de %4$s se termina par la victoire de %1$s sur %2$s. La chronique conserve cette issue militaire abstraite."
 }

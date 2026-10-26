@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "在此次会议之外的地理图片发生了变化;保存字节",
   "millenairekingdoms.text.f7514acd2e89b632": "无效的地理单元",
   "millenairekingdoms.text.fe2b24b5f519ad81": "无效地质所有者/尺寸",
-  "millenairekingdoms.text.3aecc537a55e5908": "征服远征已下令；条件允许时便会出发（%1$s）。一天后将取消此命令。"
+  "millenairekingdoms.text.3aecc537a55e5908": "征服远征已下令；条件允许时便会出发（%1$s）。一天后将取消此命令。",
+  "millenairekingdoms.chronicle.title.strategic_battle": "远方军事交锋",
+  "millenairekingdoms.chronicle.body.strategic_battle": "%4$s附近的一场远方战略交锋以%1$s战胜%2$s告终。编年史保留了这一抽象的军事结果。"
 }

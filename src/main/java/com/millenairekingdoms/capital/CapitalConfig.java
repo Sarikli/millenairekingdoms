@@ -22,6 +22,7 @@ public final class CapitalConfig {
                 .defineInRange("minCapitalDistance", 1000, 0, 100_000);
         b.pop();
         AutonomyConfig.define(b);
+        com.millenairekingdoms.autonomy.StrategicCombatConfig.define(b);
         com.millenairekingdoms.autonomy.RoyalNpcConfig.define(b);
         FoundingConfig.define(b);
         RoyalEconomyConfig.define(b);

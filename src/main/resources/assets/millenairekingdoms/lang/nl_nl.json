@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "Geografische tegel veranderd buiten deze sessie; behouden bytes",
   "millenairekingdoms.text.f7514acd2e89b632": "Niet geldige geografische cel",
   "millenairekingdoms.text.fe2b24b5f519ad81": "Niet geldige geografische eigenaar/afmeting",
-  "millenairekingdoms.text.3aecc537a55e5908": "De veroveringsaanval is bevolen en begint zodra dat mogelijk is (%1$s). Na één dag wordt hij afgeblazen."
+  "millenairekingdoms.text.3aecc537a55e5908": "De veroveringsaanval is bevolen en begint zodra dat mogelijk is (%1$s). Na één dag wordt hij afgeblazen.",
+  "millenairekingdoms.chronicle.title.strategic_battle": "Militair treffen in de verte",
+  "millenairekingdoms.chronicle.body.strategic_battle": "Een strategisch treffen in de verte bij %4$s eindigde met een overwinning van %1$s op %2$s. De kroniek bewaart deze abstracte militaire uitkomst."
 }

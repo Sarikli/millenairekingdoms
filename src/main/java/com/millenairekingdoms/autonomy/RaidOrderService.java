@@ -33,7 +33,7 @@ public final class RaidOrderService {
     private static final Logger LOGGER = LogUtils.getLogger();
     /** An NPC kingdom's preparation before its raid may leave (an eighth day), and every order's lifetime (one day). */
     public static final long NPC_PREPARATION = 3000L, ORDER_LIFETIME = 24000L, CHECK_INTERVAL = 50L;
-    public enum Status { STARTED, WAITING, DROPPED }
+    public enum Status { STARTED, RESOLVED, WAITING, DROPPED }
     public record Attempt(Status status, String reason, KingdomSavedData.Raid raid) {
         static Attempt waiting(String reason) { return new Attempt(Status.WAITING, reason, null); }
         static Attempt dropped(String reason) { return new Attempt(Status.DROPPED, reason, null); }
@@ -59,13 +59,13 @@ public final class RaidOrderService {
         for (RaidOrder order : data.orders().stream().sorted(Comparator.comparingLong(RaidOrder::issuedGameTime)).toList()) {
             if (data.order(order.id()) == null || now < order.dueGameTime()) continue;
             Attempt attempt;
-            try { attempt = attempt(level, data, order, s); }
+            try { attempt = StrategicBattleService.attempt(level,data,order);if(attempt==null)attempt = attempt(level, data, order, s); }
             catch (RuntimeException e) {
                 // Never let one order stop the world tick; it is dropped instead of being retried every 50 ticks.
                 LOGGER.error("[Kingdoms] Conquest order {} failed unexpectedly; it is dropped.", order.id(), e);
                 attempt = Attempt.dropped("an unexpected error (see the server log)");
             }
-            if (attempt.status() == Status.STARTED) { started++; WAITING.remove(order.id()); continue; }
+            if (attempt.status() == Status.STARTED || attempt.status()==Status.RESOLVED) { started++; WAITING.remove(order.id()); continue; }
             if (attempt.status() == Status.DROPPED || now >= order.expiresGameTime()) {
                 data.removeOrder(order.id());
                 WAITING.remove(order.id());

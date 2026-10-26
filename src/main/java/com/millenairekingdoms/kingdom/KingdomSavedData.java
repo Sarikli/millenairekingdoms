@@ -569,12 +569,18 @@ public final class KingdomSavedData extends SavedData {
     public Raid begin(UUID attacker, UUID target, long startGameTime, UUID initiator) { return begin(attacker, target, startGameTime, initiator, null); }
     /** Starts the raid record; an order it fulfils is removed in the same snapshot, so a restart can never start it twice. */
     public Raid begin(UUID attacker, UUID target, long startGameTime, UUID initiator, UUID orderId) {
+        return beginIdentified(attacker,target,startGameTime,initiator,orderId,UUID.randomUUID());
+    }
+    /** Internal durable-operation entry: the exact external operation ID cannot acquire a second political result. */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public Raid beginIdentified(UUID attacker, UUID target, long startGameTime, UUID initiator, UUID orderId,UUID raidId) {
         check(startGameTime > 0, "Invalid conquest raid start time.");
+        check(raidId!=null && !state.receipts.containsKey(raidId) && state.active.values().stream().noneMatch(r->r.id().equals(raidId)),"Military operation identity was already used.");
         var context = startable(attacker, target);
         RaidOrder order = orderId == null ? null : order(orderId);
         check(orderId == null || order != null && order.target.equals(target) && order.kingdom.equals(context.attackerKingdom)
                 && java.util.Objects.equals(order.warId, context.warId), "The raid order changed; it cannot start this raid.");
-        Raid raid = new Raid(UUID.randomUUID(), attacker, target, startGameTime, initiator, context, false);
+        Raid raid = new Raid(raidId, attacker, target, startGameTime, initiator, context, false);
         var active = new HashMap<>(state.active); active.put(target, raid);
         var orders = new HashMap<>(state.ledger.orders); if (orderId != null) orders.remove(orderId);
         publish(new State(state.kingdoms, state.membership, state.revisions, state.progress, active, state.receipts, state.last, state.wars, state.rulers,

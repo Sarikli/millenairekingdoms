@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "このセッションの外で地理タイルが変更;バイトを保存",
   "millenairekingdoms.text.f7514acd2e89b632": "不有効な地理細胞",
   "millenairekingdoms.text.fe2b24b5f519ad81": "不正地質所有者/次元",
-  "millenairekingdoms.text.3aecc537a55e5908": "征服遠征が命じられた。条件が整い次第、出発する（%1$s）。一日後には取り消される。"
+  "millenairekingdoms.text.3aecc537a55e5908": "征服遠征が命じられた。条件が整い次第、出発する（%1$s）。一日後には取り消される。",
+  "millenairekingdoms.chronicle.title.strategic_battle": "遠方の軍事衝突",
+  "millenairekingdoms.chronicle.body.strategic_battle": "%4$s付近の遠方での戦略的な衝突は、%1$sが%2$sに勝利して決着した。年代記には、この抽象的な軍事的結果が記録されている。"
 }

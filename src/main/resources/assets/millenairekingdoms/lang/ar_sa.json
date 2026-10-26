@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "تم تغيير البطاقة الجغرافية خارج هذه الجلسة؛ الحفاظ على البايت",
   "millenairekingdoms.text.f7514acd2e89b632": "خلية جغرافية غير صالحة",
   "millenairekingdoms.text.fe2b24b5f519ad81": "المالك الجغرافي غير المفعول/الأبعاد",
-  "millenairekingdoms.text.3aecc537a55e5908": "صدر أمر بالغارة للفتح؛ وستبدأ عندما تسمح الظروف (%1$s). تُلغى بعد يوم واحد."
+  "millenairekingdoms.text.3aecc537a55e5908": "صدر أمر بالغارة للفتح؛ وستبدأ عندما تسمح الظروف (%1$s). تُلغى بعد يوم واحد.",
+  "millenairekingdoms.chronicle.title.strategic_battle": "اشتباك عسكري بعيد",
+  "millenairekingdoms.chronicle.body.strategic_battle": "انتهت مواجهة استراتيجية بعيدة قرب %4$s بتفوق %1$s على %2$s. ويحفظ السجل هذه النتيجة العسكرية المجردة."
 }

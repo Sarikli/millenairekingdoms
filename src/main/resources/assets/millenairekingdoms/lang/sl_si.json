@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "Geografska plošča je bila spremenjena zunaj te seje; ohranite bajtove",
   "millenairekingdoms.text.f7514acd2e89b632": "Neveljavna geografska celica",
   "millenairekingdoms.text.fe2b24b5f519ad81": "Neveljavna geografska lastnik/razmer",
-  "millenairekingdoms.text.3aecc537a55e5908": "Osvajalni napad je ukazan in se začne, ko bo mogoče (%1$s). Po enem dnevu bo odpovedan."
+  "millenairekingdoms.text.3aecc537a55e5908": "Osvajalni napad je ukazan in se začne, ko bo mogoče (%1$s). Po enem dnevu bo odpovedan.",
+  "millenairekingdoms.chronicle.title.strategic_battle": "Oddaljen vojaški spopad",
+  "millenairekingdoms.chronicle.body.strategic_battle": "Oddaljen strateški spopad blizu naselja %4$s se je končal z zmago države %1$s nad državo %2$s. Kronika ohranja ta abstraktni vojaški izid."
 }

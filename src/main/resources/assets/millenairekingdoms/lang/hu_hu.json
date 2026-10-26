@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "A földrajzi lap ezen a ülésen kívül változott; tartsa meg a bajtokat",
   "millenairekingdoms.text.f7514acd2e89b632": "Nem érvényes földrajzi sejt",
   "millenairekingdoms.text.fe2b24b5f519ad81": "Nem érvényes földrajzi tulajdonos/méret",
-  "millenairekingdoms.text.3aecc537a55e5908": "A hódító portyát elrendelték; amint lehet, megindul (%1$s). Egy nap elteltével visszavonják."
+  "millenairekingdoms.text.3aecc537a55e5908": "A hódító portyát elrendelték; amint lehet, megindul (%1$s). Egy nap elteltével visszavonják.",
+  "millenairekingdoms.chronicle.title.strategic_battle": "Távoli katonai összecsapás",
+  "millenairekingdoms.chronicle.body.strategic_battle": "A(z) %4$s közelében zajló távoli stratégiai összecsapásban %1$s győzedelmeskedett %2$s felett. A krónika ezt az elvont katonai eredményt őrzi meg."
 }

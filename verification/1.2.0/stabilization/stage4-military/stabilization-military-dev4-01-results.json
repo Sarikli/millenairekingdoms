@@ -1,0 +1,18 @@
+[
+  {
+    "suite": "verifyStrategicMilitary",
+    "run": "stabilization-military-dev4-01",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 1,
+        "passes": [],
+        "build": false,
+        "log": "/workspace/royal-decree/stabilization-military-dev4-01-write.log",
+        "sha256": "dc2b441b7a559296aea21e47f31e6ed0d8107564163a7157373e685e0c58e349",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "64bf98c4804c738ee87d23eeded90abf727b45009420c64e67facff4473a317e"
+      }
+    ]
+  }
+]

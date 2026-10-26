@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "Geografisk tegl ændret uden for denne session; bevare byte",
   "millenairekingdoms.text.f7514acd2e89b632": "Ugyldig geografisk celle",
   "millenairekingdoms.text.fe2b24b5f519ad81": "Ugyldig geografisk ejer/dimension",
-  "millenairekingdoms.text.3aecc537a55e5908": "Erobringstogtet er beordret og begynder, når det er muligt (%1$s). Det aflyses efter én dag."
+  "millenairekingdoms.text.3aecc537a55e5908": "Erobringstogtet er beordret og begynder, når det er muligt (%1$s). Det aflyses efter én dag.",
+  "millenairekingdoms.chronicle.title.strategic_battle": "Fjernt militært sammenstød",
+  "millenairekingdoms.chronicle.body.strategic_battle": "Et fjernt strategisk sammenstød nær %4$s endte med, at %1$s sejrede over %2$s. Krøniken bevarer dette abstrakte militære udfald."
 }

@@ -1,0 +1,32 @@
+[
+  {
+    "suite": "verifyStrategicMilitary",
+    "run": "stabilization-military-dev4-05",
+    "stages": [
+      {
+        "phase": "write",
+        "exit": 0,
+        "passes": [
+          "11"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-dev4-05-write.log",
+        "sha256": "b1cc7160bf828af0423c73fdf59782a95ee2e0bf2bfe2ca04bf34e3f1364e62e",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "737baa8c77f7a011a921ee555b8a68b7d741cdb8db6690cfab660e08a369baaf"
+      },
+      {
+        "phase": "reopen",
+        "exit": 0,
+        "passes": [
+          "11"
+        ],
+        "build": true,
+        "log": "/workspace/royal-decree/stabilization-military-dev4-05-reopen.log",
+        "sha256": "fbed7443d22bc14f0a1ccbbaebdf0f4ce6a1e34741829896b28cb7b4c900609e",
+        "jar": "millenairekingdoms-1.2.0-rc8-alpha.4.dev4.jar",
+        "jar_sha256": "737baa8c77f7a011a921ee555b8a68b7d741cdb8db6690cfab660e08a369baaf"
+      }
+    ]
+  }
+]

@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "Geografická dlaždice se změnila mimo tuto sezení; zachovat bajty",
   "millenairekingdoms.text.f7514acd2e89b632": "Neplatná geografická buňka",
   "millenairekingdoms.text.fe2b24b5f519ad81": "Neoprávněný vlastník/rozměr zeměpisné zeměpisnosti",
-  "millenairekingdoms.text.3aecc537a55e5908": "Dobyvačný nájezd byl nařízen; vyrazí, jakmile to bude možné (%1$s). Po jednom dni bude odvolán."
+  "millenairekingdoms.text.3aecc537a55e5908": "Dobyvačný nájezd byl nařízen; vyrazí, jakmile to bude možné (%1$s). Po jednom dni bude odvolán.",
+  "millenairekingdoms.chronicle.title.strategic_battle": "Vzdálené vojenské střetnutí",
+  "millenairekingdoms.chronicle.body.strategic_battle": "Vzdálené strategické střetnutí poblíž %4$s skončilo vítězstvím %1$s nad %2$s. Kronika uchovává tento abstraktní vojenský výsledek."
 }

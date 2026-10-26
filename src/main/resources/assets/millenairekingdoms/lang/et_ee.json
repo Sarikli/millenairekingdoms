@@ -1393,5 +1393,7 @@
   "millenairekingdoms.text.f5140b60c46b2158": "Geograafia tiili muutus väljaspool seda istungit; säilitada baitid",
   "millenairekingdoms.text.f7514acd2e89b632": "Invaliidsed geograafilised rakud",
   "millenairekingdoms.text.fe2b24b5f519ad81": "Vahepärane geograafiline omanik/dimensioon",
-  "millenairekingdoms.text.3aecc537a55e5908": "Vallutusretk on kästud; see algab niipea, kui võimalik (%1$s). Ühe päeva pärast jäetakse see ära."
+  "millenairekingdoms.text.3aecc537a55e5908": "Vallutusretk on kästud; see algab niipea, kui võimalik (%1$s). Ühe päeva pärast jäetakse see ära.",
+  "millenairekingdoms.chronicle.title.strategic_battle": "Kauge sõjaline kokkupõrge",
+  "millenairekingdoms.chronicle.body.strategic_battle": "Kauge strateegiline kokkupõrge asula %4$s lähedal lõppes riigi %1$s võiduga riigi %2$s üle. Kroonika säilitab selle abstraktse sõjalise tulemuse."
 }
