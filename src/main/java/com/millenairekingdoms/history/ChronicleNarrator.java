@@ -18,21 +18,24 @@ public final class ChronicleNarrator {
         boolean opposing=event.realms().size()>1 && voice.id().equals(event.realms().get(1).id());int variant=Math.floorMod(event.id().hashCode() ^ voice.id().hashCode(),3);
         String a=event.realms().getFirst().name(),b=event.realms().size()>1?event.realms().get(1).name():"";
         String village=event.places().isEmpty()?text.resolve(P+"settlement.unknown"):event.places().getFirst().name();String target=event.places().size()>1?event.places().get(1).name():village;
-        var name=event.facts().getOrDefault("buildingName","");String structure=name.isBlank()?text.resolve(P+"structure.unknown"):text.resolve(P+"structure.known",name);
-        String actor=event.actorName().isBlank()?text.resolve(P+"actor.unknown"):event.actorName();
-        String body=text.resolve(bodyKey(event.kind(),variant,opposing,event.facts().getOrDefault("upgrade","false").equals("true")),a,b,village,target,structure,actor);
+        var name=event.facts().getOrDefault("buildingName","");String structure=name.isBlank()?text.resolve(P+"compact.structure.unknown"):text.resolve(P+"compact.structure.known",name);
+        String actor=event.actorName().isBlank()?text.resolve(P+"compact.actor.unknown"):event.actorName();
         String culture=culture(voice.culture());String ethos=ETHOS.contains(voice.ethos())?voice.ethos():"GENERAL";
-        String opening=text.resolve(P+"opening."+culture+"."+variant);String emphasis=text.resolve(P+"emphasis."+ethos.toLowerCase(Locale.ROOT)+"."+(variant==0?0:1));
-        return new Account(title(event.kind(),text),opening+body+" "+emphasis,voice.name(),text.resolve(P+"tradition."+culture),voice.ethos(),variant);
+        String key=bodyKey(event.kind(),variant,opposing,event.facts().getOrDefault("upgrade","false").equals("true"));
+        // An occasional word choice belongs inside the event. There is no per-ethos motto or compulsory preamble.
+        if(variant==0 && (event.kind()==HistoryEvent.Kind.FOUNDING || event.kind()==HistoryEvent.Kind.PEACE
+                || event.kind()==HistoryEvent.Kind.WAR && !opposing))key+="."+ethos.toLowerCase(Locale.ROOT);
+        String body=text.resolve(key,a,b,village,target,structure,actor);
+        return new Account(title(event.kind(),text),body,voice.name(),text.resolve(P+"tradition."+culture),voice.ethos(),variant);
     }
     public static String bodyKey(HistoryEvent.Kind kind,int variant,boolean opposing,boolean upgrade){
-        String key=P+"body."+kind.name().toLowerCase(Locale.ROOT);
-        if(kind==HistoryEvent.Kind.CONSTRUCTION_ORDER)return key+(upgrade?".upgrade":".new");
-        if(Set.of(HistoryEvent.Kind.WAR,HistoryEvent.Kind.VILLAGE_CONQUEST,HistoryEvent.Kind.CAPITAL_CONQUEST).contains(kind))return key+(opposing?".opponent":".own");
-        if(Set.of(HistoryEvent.Kind.FOUNDING,HistoryEvent.Kind.INCORPORATION,HistoryEvent.Kind.PEACE).contains(kind))return key+"."+(variant==0?0:1);return key;
+        String key=P+"compact.body."+kind.name().toLowerCase(Locale.ROOT);
+        if(kind==HistoryEvent.Kind.CONSTRUCTION_ORDER)key+=upgrade?".upgrade":".new";
+        if(Set.of(HistoryEvent.Kind.WAR,HistoryEvent.Kind.VILLAGE_CONQUEST,HistoryEvent.Kind.CAPITAL_CONQUEST,HistoryEvent.Kind.STRATEGIC_BATTLE).contains(kind))key+=opposing?".opponent":".own";
+        return key+"."+Math.floorMod(variant,3);
     }
     private static String culture(String culture){String id=culture.contains(":")?culture.substring(culture.indexOf(':')+1):culture;return CULTURES.contains(id)?id:"world";}
-    public static String title(HistoryEvent.Kind kind,Text text){return text.resolve(P+"title."+kind.name().toLowerCase(Locale.ROOT));}
+    public static String title(HistoryEvent.Kind kind,Text text){return text.resolve(P+"compact.title."+kind.name().toLowerCase(Locale.ROOT));}
     public static String title(HistoryEvent.Kind kind,String language){return LocalizedResources.text(language,P+"title."+kind.name().toLowerCase(Locale.ROOT));}
     public static String titleEn(HistoryEvent.Kind kind){return title(kind,"en_us");}
     public static String titleTr(HistoryEvent.Kind kind){return title(kind,"tr_tr");}

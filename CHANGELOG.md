@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0-rc.10 — Chronicle prose
+
+- Remove repeated chronicler introductions and Ethos closing sentences.
+- Rewrite all EN/TR event bodies/headings with three concise variants and occasional word-level tone.
+- Preserve factual direction, literal names, accepted/completed distinctions and old saved events.
+- Retain all26 locales and all previous catalog values; other languages reuse their localized bodies without the old global boilerplate.
+
 ## 1.2.0 — release preparation
 
 - Exclude native lone structures and ruins from political atlas pages, member lists and current-structure history pins.
