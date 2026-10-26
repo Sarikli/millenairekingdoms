@@ -1,8 +1,8 @@
 # Millénaire Kingdoms
 
-> **1.2.0 release preparation:** political villages only on the Atlas, fully developed generated capitals and a50-unit shipment protection ceiling. [Current changes and validation](docs/1.2.0_RELEASE_PREPARATION.md).
+> **1.2.0 release preparation complete:** political villages only on the Atlas, fully developed generated capitals and a50-unit shipment protection ceiling. [Current changes and validation](docs/1.2.0_RELEASE_PREPARATION.md).
 
-> **1.2.0 — By Royal Decree, final stabilization.** Targets original Millénaire9.0.3; RC.9 passed40paired packages and normal new/legacy production-server gates. [Current JAR/checksum](releases/1.2.0-rc.9/) · [complete verification/source/hash/remaining review limits](docs/1.2.0_RC9_REPORT.md).
+> **By Royal Decree, final stabilization.** Targets original Millénaire9.0.3; RC.9 passed40paired packages; its preserved evidence remains historical. [Prepared1.2.0 JAR/checksum/release notes](releases/1.2.0/) · [complete verification/source/hash/remaining review limits](docs/1.2.0_RC9_REPORT.md).
 > Settlement-only Atlas, persistent shared kingdom colors, conditional unloaded NPC planning, native/strategic warfare and conserving real-coin maintenance are implemented. [Current status, exact evidence and remaining limits](docs/1.2.0_FINAL_STABILIZATION.md) · [complete accepted requirements](docs/1.2.0_FINAL_STABILIZATION_REQUIREMENTS.md).
 > Same feature branch/Draft PR3; no stable release or main merge. [Progress](docs/1.2.0_PROGRESS.md) · [preserved RC.8](releases/1.2.0-rc.8/) · [original alpha.3](releases/1.2.0-rc8-alpha.3/). Historical artifacts and verification evidence remain preserved.
 

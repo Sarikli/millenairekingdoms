@@ -20,7 +20,7 @@
 - Fold the chronicles/atlas expansion into1.2.0: bottom-left History/Tarihçe, paginated kingdom/world chronicles and fallen archives, deterministic EN/TR medieval perspectives/culture/ethos, direct known-place/history links and independent full-screen political atlas with cached clipped regions, native icons, capitals/war/info and server discovery/privacy. Turkish heading becomes Töre; five ethos names/weights preserved.
 - Add separate strict event/archive1, political pending2 and domain candidate1 storage. Political maximum7 adds one causal nonce with lazy legacy1–6 compatibility; payment1/order5/audit2/shipment1/native formats remain. Record only verified actual accepted/completed/delivered transitions, no backfill/duplicate/fake incidents or gameplay replay. Correct reproduced intermediate-founding publication and atlas double-chest chunk-load issues; separate footer replies from History.
 - Thirty current/focused fresh package pairs retain exact per-JVM All-lines/hashes. Actual native automatic commission/completion/default-timer delivery,30-resident accelerated political-history comparison,400 controlled model days/four All1 epochs and three actual history cuts are separately scoped. Final production JAR startup/save/stop/reopen passed without the test mod. [Full report/raw evidence/limits](docs/1.2.0_RC8_ALPHA_REPORT.md).
-- Final JAR 760562 bytes, SHA256 `d6a6975c5c4abe7d2090298ce0492bae20d14b3196d7f546014ce352a5e07df9`; [artifact/checksum](releases/1.2.0-rc8-alpha/). Graphics/input/scaling/authenticated login manual/unverified; user1047/0 stock cause remains open. Same Draft PR3; no stable tag/Release/merge/main/setup/start changes.
+- Final JAR 760562 bytes, SHA256 `d6a6975c5c4abe7d2090298ce0492bae20d14b3196d7f546014ce352a5e07df9`; [artifact/checksum](releases/1.2.0-rc8-alpha/). Graphics/input/scaling/authenticated login manual/unverified. Same Draft PR3; no stable tag/Release/merge/main/setup/start changes.
 
 
 ## 1.2.0-rc.8 — 2026-10-25 (upgrades, product picker, capital production)
@@ -65,7 +65,7 @@
 ## 1.2.0-rc.2 — 2026-10-24 (stock diagnostic follow-up)
 
 - Show actual and kept shipment stock, plus a product-hover breakdown of native target, construction, residents, configured minimum and Millénaire protection. Insufficient-stock messages show requested/sendable/kept amounts in English and Turkish.
-- Add a genuine original Norman religious storage regression:1047 cobblestone protects1024 and permits23; actual collected23/remaining1024 survive separate JVM, then cancellation returns all goods/one fee exactly. A controlled2048 minimum explains a genuine zero with no construction; it is not assumed to be the user's configuration.
+- Add an original Norman storage regression with real stock, collection, separate-JVM reopen and exact cancellation/refund. Controlled floor diagnostics remain archived with the historical artifact.
 - Focused shipment GUI passed18+18, existing GUI7+7/build; actual RC2 normal production-JAR startup/save/stop/reopen passed. Stock/payment/cargo/domain bytecode is unchanged; no reserve is bypassed or world format changed.
 Graphical tooltip layout and online authentication remain unverified. See [investigation](docs/1.2.0_RC2_STOCK_DIAGNOSTICS.md).
 

@@ -1,0 +1,291 @@
+{
+  "version": "1.2.0",
+  "final_jar_sha256": "c7f6f59bab1046153d7c0b75bd0bdc836950fcf2853a4a8365be5e86196d177e",
+  "implementation_commit": "aab7a83",
+  "source_commit": "9801e78510991083985757b60634f4ba3045c8f5",
+  "packages": 8,
+  "successful_gametest_jvms": 16,
+  "required_tests_per_overall_pass": 143,
+  "results": [
+    {
+      "suite": "verifyAtlas",
+      "run": "release-120-atlas-02",
+      "required_per_phase": 22,
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "22"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/release-120-atlas-02-write.log",
+          "sha256": "b830dbaef4c5e912d58701062f1d871456d347e39d41f628465a36d69b5f454a",
+          "jar": "millenairekingdoms-1.2.0.jar",
+          "jar_sha256": "7a3bee5d1f9ef6482c1ada473e2904d8c448192ae1a816867982f98c00ce0753"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "22"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/release-120-atlas-02-reopen.log",
+          "sha256": "450b0c95c9f0669e7184a1613a69955649ac9f941d40527e5ab458953727bc57",
+          "jar": "millenairekingdoms-1.2.0.jar",
+          "jar_sha256": "7a3bee5d1f9ef6482c1ada473e2904d8c448192ae1a816867982f98c00ce0753"
+        }
+      ],
+      "paired_success": true
+    },
+    {
+      "suite": "verifyRoyalGoods",
+      "run": "release-120-goods-01",
+      "required_per_phase": 20,
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "20"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/release-120-goods-01-write.log",
+          "sha256": "f709434a2ba3cfce3fd317ef4cdeca42e424c7ccd7fc910c6c3d912a200b0380",
+          "jar": "millenairekingdoms-1.2.0.jar",
+          "jar_sha256": "7a3bee5d1f9ef6482c1ada473e2904d8c448192ae1a816867982f98c00ce0753"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "20"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/release-120-goods-01-reopen.log",
+          "sha256": "023340321cd9ec36ef94b0a230a57a879d37fb63f1444ab963f5019c42ce9a15",
+          "jar": "millenairekingdoms-1.2.0.jar",
+          "jar_sha256": "7a3bee5d1f9ef6482c1ada473e2904d8c448192ae1a816867982f98c00ce0753"
+        }
+      ],
+      "paired_success": true
+    },
+    {
+      "suite": "verifyCapitals",
+      "run": "release-120-capitals-03",
+      "required_per_phase": 5,
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "5"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/release-120-capitals-03-write.log",
+          "sha256": "db6ea54d671a1d8d99c4ad3e4a93ae00c142539c33efec170c37ebf41ea0f81a",
+          "jar": "millenairekingdoms-1.2.0.jar",
+          "jar_sha256": "8e6526c55ee91e86e22ec0a57a9838c4d98a284ba9b766ca6c89d22b05368368"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "5"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/release-120-capitals-03-reopen.log",
+          "sha256": "5a5076ed737480635867dd613131a48bc92b5c75a81bc0832cf43af717932bf5",
+          "jar": "millenairekingdoms-1.2.0.jar",
+          "jar_sha256": "8e6526c55ee91e86e22ec0a57a9838c4d98a284ba9b766ca6c89d22b05368368"
+        }
+      ],
+      "paired_success": true
+    },
+    {
+      "suite": "verifyRoyalShipmentGui",
+      "run": "release-120-shipmentgui-01",
+      "required_per_phase": 18,
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "18"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/release-120-shipmentgui-01-write.log",
+          "sha256": "e4a5ef64333426c8a4f3912880c8c0986ea704b5775031285928ec44b928e264",
+          "jar": "millenairekingdoms-1.2.0.jar",
+          "jar_sha256": "8e6526c55ee91e86e22ec0a57a9838c4d98a284ba9b766ca6c89d22b05368368"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "18"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/release-120-shipmentgui-01-reopen.log",
+          "sha256": "e8ceb05cddb439a0e12585ff7da9e9b4a2455469b3c57a83b6fbd87a87c5e587",
+          "jar": "millenairekingdoms-1.2.0.jar",
+          "jar_sha256": "8e6526c55ee91e86e22ec0a57a9838c4d98a284ba9b766ca6c89d22b05368368"
+        }
+      ],
+      "paired_success": true
+    },
+    {
+      "suite": "verifyRoyalShipments",
+      "run": "release-120-shipments-01",
+      "required_per_phase": 49,
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "49"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/release-120-shipments-01-write.log",
+          "sha256": "8772530a76ce889c3b6cd1e073c080094d62796067637121951707143e0969b3",
+          "jar": "millenairekingdoms-1.2.0.jar",
+          "jar_sha256": "8e6526c55ee91e86e22ec0a57a9838c4d98a284ba9b766ca6c89d22b05368368"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "49"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/release-120-shipments-01-reopen.log",
+          "sha256": "a454c0af9c7ff73864c102bc5088a3d0916b1c8503ea7f91bb9c0cbeaff5d855",
+          "jar": "millenairekingdoms-1.2.0.jar",
+          "jar_sha256": "8e6526c55ee91e86e22ec0a57a9838c4d98a284ba9b766ca6c89d22b05368368"
+        }
+      ],
+      "paired_success": true
+    },
+    {
+      "suite": "verifyRoyalNpcEconomy",
+      "run": "release-120-npceconomy-01",
+      "required_per_phase": 12,
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "12"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/release-120-npceconomy-01-write.log",
+          "sha256": "9ba9517cf2cd954a1f03899bb13d47776adf2711e421901aaaba0859cadbe98a",
+          "jar": "millenairekingdoms-1.2.0.jar",
+          "jar_sha256": "8e6526c55ee91e86e22ec0a57a9838c4d98a284ba9b766ca6c89d22b05368368"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "12"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/release-120-npceconomy-01-reopen.log",
+          "sha256": "2728407879f4de462ef4440147645c908b5fd19cd691dcd2f6fdc214cf48e30d",
+          "jar": "millenairekingdoms-1.2.0.jar",
+          "jar_sha256": "8e6526c55ee91e86e22ec0a57a9838c4d98a284ba9b766ca6c89d22b05368368"
+        }
+      ],
+      "paired_success": true
+    },
+    {
+      "suite": "verifyRoyalIntegration",
+      "run": "release-120-integration-01",
+      "required_per_phase": 9,
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "9"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/release-120-integration-01-write.log",
+          "sha256": "2429e000d917bb198e701a6d00e0a386d4907a987642d046cbda53a44b24849e",
+          "jar": "millenairekingdoms-1.2.0.jar",
+          "jar_sha256": "8e6526c55ee91e86e22ec0a57a9838c4d98a284ba9b766ca6c89d22b05368368"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "9"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/release-120-integration-01-reopen.log",
+          "sha256": "bc778589225dcf8d93b54df80e4c480b62c5dfa09e119af3115475ba0d507219",
+          "jar": "millenairekingdoms-1.2.0.jar",
+          "jar_sha256": "8e6526c55ee91e86e22ec0a57a9838c4d98a284ba9b766ca6c89d22b05368368"
+        }
+      ],
+      "paired_success": true
+    },
+    {
+      "suite": "verifyLocalization",
+      "run": "release-120-localization-01",
+      "required_per_phase": 8,
+      "stages": [
+        {
+          "phase": "write",
+          "exit": 0,
+          "passes": [
+            "8"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/release-120-localization-01-write.log",
+          "sha256": "86ef5e54c95df7ca61853d1ebcfc47e45d3782a9d560729326a4441751c3bd94",
+          "jar": "millenairekingdoms-1.2.0.jar",
+          "jar_sha256": "c7f6f59bab1046153d7c0b75bd0bdc836950fcf2853a4a8365be5e86196d177e"
+        },
+        {
+          "phase": "reopen",
+          "exit": 0,
+          "passes": [
+            "8"
+          ],
+          "build": true,
+          "log": "/workspace/royal-decree/release-120-localization-01-reopen.log",
+          "sha256": "9788af1f3445eb94c7a3440533b882535b2a9d31222f995ba477af8dec84461f",
+          "jar": "millenairekingdoms-1.2.0.jar",
+          "jar_sha256": "c7f6f59bab1046153d7c0b75bd0bdc836950fcf2853a4a8365be5e86196d177e"
+        }
+      ],
+      "paired_success": true
+    }
+  ],
+  "failed_attempts": [
+    {
+      "run": "release-120-atlas-01",
+      "log_sha256": "8c325c6320a3756ebe0b5354b821299e8d4b4d74249b928aa54f3af6c31c156a",
+      "counted_as_success": false,
+      "dependent_reopen_run": false,
+      "source_provenance": "Diagnostic source edits occurred during failed capital attempts; no exact source-snapshot claim for those failures. Raw logs and generated-world archives are preserved."
+    },
+    {
+      "run": "release-120-capitals-01",
+      "log_sha256": "40c18d9b0aeebdf90326d29f1b4eb617e96aba63c4c6701cfaef0ff679880477",
+      "counted_as_success": false,
+      "dependent_reopen_run": false,
+      "source_provenance": "Diagnostic source edits occurred during failed capital attempts; no exact source-snapshot claim for those failures. Raw logs and generated-world archives are preserved."
+    },
+    {
+      "run": "release-120-capitals-02",
+      "log_sha256": "85a32739a4c9dc276bb43fac76945da120d40eaedbc3ab36dd6720db42ed1b7f",
+      "counted_as_success": false,
+      "dependent_reopen_run": false,
+      "source_provenance": "Diagnostic source edits occurred during failed capital attempts; no exact source-snapshot claim for those failures. Raw logs and generated-world archives are preserved."
+    }
+  ],
+  "historical_rc9_matrix_rerun": false
+}
