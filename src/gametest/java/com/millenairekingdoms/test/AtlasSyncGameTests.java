@@ -12,13 +12,13 @@ public final class AtlasSyncGameTests {
     private static final String NS="millenairekingdoms_atlas_tests";
     private static final UUID REV=new UUID(88,1);
     static CompoundTag page(int first,int count,int total,boolean more){
-        var t=new CompoundTag();t.putString("revision",REV.toString());t.putString("dimension","minecraft:overworld");t.putInt("radius",500);t.putInt("total",total);t.putLong("observedTime",100);
-        var sites=new ListTag();for(int n=first;n<first+count;n++){var s=new CompoundTag();s.putUUID("id",new UUID(89,n));s.putInt("x",n*100);s.putInt("z",0);for(var key:List.of("name","typeName"))s.putString(key,"Village "+n);s.putString("type","millenaire:norman/agricole");s.putString("culture","millenaire:norman");s.putString("ethos","AGRICULTURAL");s.putString("icon","minecraft:wheat");s.putBoolean("capital",false);sites.add(s);}t.put("settlements",sites);t.put("kingdoms",new ListTag());t.put("wars",new ListTag());if(more)t.putUUID("next",new UUID(89,first+count-1));return t;
+        var t=new CompoundTag();t.putString("revision",REV.toString());t.putString("dimension","minecraft:overworld");t.putInt("total",total);t.putLong("observedTime",100);
+        var sites=new ListTag();for(int n=first;n<first+count;n++){var s=new CompoundTag();s.putUUID("id",new UUID(89,n));s.putInt("x",n*100);s.putInt("z",0);for(var key:List.of("name","typeName"))s.putString(key,"Village "+n);s.putString("type","millenaire:norman/agricole");s.putString("culture","millenaire:norman");s.putString("ethos","AGRICULTURAL");s.putString("icon","minecraft:wheat");s.putBoolean("capital",false);s.putInt("politicalColor",AtlasColors.NEUTRAL);sites.add(s);}t.put("settlements",sites);t.put("kingdoms",new ListTag());t.put("wars",new ListTag());if(more)t.putUUID("next",new UUID(89,first+count-1));return t;
     }
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=200)
     public static void partialPagesNeverBecomeARenderableMixedFrame(GameTestHelper h){
         var assembler=new AtlasSnapshotAssembler();var first=page(1,2,3,true);h.assertTrue(assembler.accept(first,null)==null,"No frame is published while a revision is incomplete");var frame=assembler.accept(page(3,1,3,false),new UUID(89,2));
-        h.assertTrue(frame!=null && frame.settlements().size()==3 && frame.radius()==500 && frame.revision().equals(REV.toString()),"Exactly one complete revision becomes renderable");h.succeed();
+        h.assertTrue(frame!=null && frame.settlements().size()==3 && frame.revision().equals(REV.toString()),"Exactly one complete revision becomes renderable");h.succeed();
     }
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=200)
     public static void changedRevisionDimensionOrCursorRequiresFreshAssembly(GameTestHelper h){

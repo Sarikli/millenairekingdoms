@@ -21,7 +21,8 @@ public final class AtlasViewGameTests {
         var view=AtlasViews.build(player,request("ATLAS",null,null,null,null));var sites=view.getList("settlements",10);
         h.assertTrue(sites.size()==2 && sites.stream().filter(t->((CompoundTag)t).getBoolean("capital")).count()==1 && sites.stream().allMatch(t->((CompoundTag)t).getUUID("kingdom").equals(k.id())),"Actual membership and unique current capital determine marker ownership");
         for(var raw:sites){var tag=(CompoundTag)raw;h.assertTrue(net.minecraft.core.registries.BuiltInRegistries.ITEM.containsKey(ResourceLocation.parse(tag.getString("icon"))) && !tag.getString("typeName").isEmpty(),"Icon comes from the real native village-type item, with readable type name");}
-        h.assertTrue(view.getList("kingdoms",10).getCompound(0).getInt("color")==AtlasGeometry.color(k.id()),"Snapshot color follows immutable kingdom UUID");h.succeed();}}
+        int color=AtlasColors.get(h.getLevel()).color(k.id());
+        h.assertTrue(view.getList("kingdoms",10).getCompound(0).getInt("color")==color && sites.stream().allMatch(t->((CompoundTag)t).getInt("politicalColor")==color && ((CompoundTag)t).getString("kingdomName").equals(k.name())),"Capital and member with different native types use exactly the same persisted political color/name");h.succeed();}}
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
     public static void kingdomInformationSeparatesPublicFactsFromCurrentRulerEconomics(GameTestHelper h){try(var f=new PersonalityGameTests.Villages(h)){
         var k=f.kingdom(f.add("seljuk/religious_village_seljuks"));var data=KingdomSavedData.get(h.getLevel());var owner=new Stage5Support.TestPlayer(h.getLevel(),"Own atlas");var foreign=new Stage5Support.TestPlayer(h.getLevel(),"Foreign atlas");data.claimRule(k.id(),owner.getUUID(),"Own atlas",h.getLevel().getGameTime());
@@ -34,6 +35,7 @@ public final class AtlasViewGameTests {
         var before=AtlasViews.build(player,request("ATLAS",null,null,null,null));d.declareWar(ka.id(),kb.id(),level.getGameTime());for(int n=0;n<2;n++){var raid=d.begin(a.getId().uuid(),b.getId().uuid(),level.getGameTime(),null);d.recordVictory(raid);d.finish(raid,KingdomSavedData.Outcome.LOST);}
         var after=AtlasViews.build(player,request("ATLAS",null,null,null,null));var captured=after.getList("settlements",10).stream().map(t->(CompoundTag)t).filter(t->t.getUUID("id").equals(b.getId().uuid())).findFirst().orElseThrow();
         h.assertTrue(!before.getString("revision").equals(after.getString("revision")) && captured.getUUID("kingdom").equals(ka.id()) && !captured.getBoolean("capital"),"Genuine political receipts change revision/current allegiance/former-capital marker");
+        h.assertTrue(captured.getInt("politicalColor")==AtlasColors.get(level).color(ka.id()) && captured.getString("kingdomName").equals(ka.name()),"Conquest updates marker color and kingdom name immediately without restarting or altering village identity");
         h.assertTrue(AtlasViews.build(player,request("INFO",kb.id(),null,null,null)).getCompound("info").getBoolean("fallen"),"Conquered kingdom still has a selectable surviving historical archive");h.succeed();}}
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=2400)
     public static void snapshotPaginationIsBoundedAndPublicRevealRequiresServerOptIn(GameTestHelper h){boolean old=AtlasConfig.PUBLIC.get();try(var f=new PersonalityGameTests.Villages(h)){
