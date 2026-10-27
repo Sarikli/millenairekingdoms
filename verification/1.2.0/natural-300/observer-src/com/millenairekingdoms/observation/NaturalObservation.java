@@ -29,6 +29,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.millenaire.Millenaire;
 import org.millenaire.config.MillenaireServerConfig;
 import org.millenaire.culture.ModCultures;
@@ -48,16 +49,19 @@ public final class NaturalObservation {
     private Path output; private ServerLevel level; private ServerPlayer observer;
     private String phase="BOOT"; private int ticks,stops,lastSnapshot=-1; private long baseTick,baseDay,previousTick,previousDay,observedTicks,observerCost;
     private long wallStarted=System.nanoTime(),baselineWall; private UUID anchor; private EmbeddedChannel channel;
-    private final boolean reopen="reopen".equals(System.getProperty("kingdoms.observation.mode","write"));
+    private final String mode=System.getProperty("kingdoms.observation.mode","write");
+    private final boolean reopen="reopen".equals(mode);
+    private long resumedAtElapsedTicks;
     public NaturalObservation(){
         for(int radius=0;radius<=20;radius++)for(int z=-radius;z<=radius;z++)for(int x=-radius;x<=radius;x++)
             if(Math.max(Math.abs(x),Math.abs(z))==radius)route.add(new int[]{x*384,z*384});
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,false,ServerStartedEvent.class,this::started);
+        NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST,false,LevelTickEvent.Post.class,this::beforePoliticalDay);
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,false,ServerTickEvent.Post.class,this::tick);
     }
     private void started(ServerStartedEvent event){
         level=event.getServer().overworld();output=event.getServer().getWorldPath(LevelResource.ROOT).resolve("natural-observation");
-        try{Files.createDirectories(output);log("START",Map.of("seed",level.getSeed(),"mode",reopen?"reopen":"write","normalDimension",level.dimension().location().toString(),"capitalChance",CapitalConfig.CHANCE_PERCENT.get(),"capitalSpacing",CapitalConfig.MIN_DISTANCE.get(),"autonomy",AutonomyConfig.current().autonomy(),"originalResourceCosts",!MillenaireServerConfig.SERVER.ignoreResourceCost.get(),"worldGeneration","normal; original ChunkEvent.Load -> native VillageSpawnQueue only"));}
+        try{Files.createDirectories(output);log("START",Map.of("seed",level.getSeed(),"mode",mode,"normalDimension",level.dimension().location().toString(),"capitalChance",CapitalConfig.CHANCE_PERCENT.get(),"capitalSpacing",CapitalConfig.MIN_DISTANCE.get(),"autonomy",AutonomyConfig.current().autonomy(),"originalResourceCosts",!MillenaireServerConfig.SERVER.ignoreResourceCost.get(),"worldGeneration","normal; original ChunkEvent.Load -> native VillageSpawnQueue only"));if(mode.equals("resume"))resumeObservation();}
         catch(Exception e){throw new IllegalStateException(e);}
     }
     private void tick(ServerTickEvent.Post event){
@@ -101,15 +105,47 @@ public final class NaturalObservation {
                 previousTick=now;previousDay=day;observedTicks++;long elapsed=now-baseTick;
                 if(observedTicks!=elapsed)throw new IllegalStateException("Missing observed tick");
                 int completed=(int)(elapsed/24000);
-                if(completed>lastSnapshot)snapshotDay(completed);
+                if(completed>lastSnapshot){if(completed>0){long saveStarted=System.nanoTime();command("save-all flush");log("CHECKPOINT",Map.of("day",completed,"gameTime",level.getGameTime(),"saveMillis",(System.nanoTime()-saveStarted)/1e6));}snapshotDay(completed);}
                 if(elapsed>=7200000){
-                    var result=snapshot(300);result.put("observationComplete",true);result.put("consecutiveTicks",observedTicks);result.put("wallSeconds",(System.nanoTime()-baselineWall)/1e9);result.put("observerNanos",observerCost);write("final.json",result);phase="DONE";log("COMPLETE",Map.of("days",300,"actualTicks",observedTicks,"worldDayTimeDelta",day-baseDay,"wallSeconds",(System.nanoTime()-baselineWall)/1e9));command("tick sprint stop");level.getServer().halt(false);
+                    var result=snapshot(300);result.put("observationComplete",true);result.put("consecutiveTicks",observedTicks);result.put("resumedAtElapsedTicks",resumedAtElapsedTicks);result.put("ticksValidatedInFinalJvm",observedTicks-resumedAtElapsedTicks);result.put("wallSeconds",(System.nanoTime()-baselineWall)/1e9);result.put("wallTimeScope",resumedAtElapsedTicks==0?"observation since original baseline":"final JVM segment only; earlier interrupted segment excluded");result.put("observerNanos",observerCost);write("final.json",result);phase="DONE";log("COMPLETE",Map.of("days",300,"actualTicks",observedTicks,"worldDayTimeDelta",day-baseDay,"wallSeconds",(System.nanoTime()-baselineWall)/1e9));command("tick sprint stop");level.getServer().halt(false);
                 }
+                if(phase.equals("OBSERVE")&&ticks%200==0&&Files.exists(output.resolve("pause.request"))){command("save-all flush");write("paused.json",snapshot(completed));Files.move(output.resolve("pause.request"),output.resolve("pause-applied-"+now+".txt"));phase="DONE";log("PAUSED",Map.of("elapsedTicks",elapsed,"gameTime",now));command("tick sprint stop");level.getServer().halt(false);}
             }
         }catch(Throwable failure){
             phase="FAILED";failure.printStackTrace();try{write("failure.json",Map.of("tick",level.getGameTime(),"dayTime",level.getDayTime(),"phase",phase,"message",failure.toString(),"observedTicks",observedTicks));}catch(Exception ignored){}
             log("FAILED",Map.of("message",failure.toString()));level.getServer().halt(false);
         }finally{observerCost+=System.nanoTime()-started;}
+    }
+    private void resumeObservation()throws Exception{
+        var baseline=JsonParser.parseString(Files.readString(output.resolve("baseline.json"))).getAsJsonObject();
+        var latest=JsonParser.parseString(Files.readString(output.resolve("latest.json"))).getAsJsonObject();
+        if(Files.exists(output.resolve("final.json")))throw new IllegalStateException("Completed observation requires reopen verification, not another simulation");
+        baseTick=baseline.get("baseTick").getAsLong();baseDay=baseline.get("baseDayTime").getAsLong();previousTick=level.getGameTime();previousDay=level.getDayTime();observedTicks=previousTick-baseTick;lastSnapshot=latest.get("relativeDay").getAsInt();
+        if(observedTicks<latest.get("observedTicks").getAsLong()||previousDay-baseDay!=observedTicks||observedTicks>=7200000||observedTicks/24000!=lastSnapshot)throw new IllegalStateException("Saved clock is inconsistent with recorded daily samples; preserve evidence");
+        for(var line:Files.readAllLines(output.resolve("generation.jsonl")))if(!line.isBlank())knownVillages.add(UUID.fromString(JsonParser.parseString(line).getAsJsonObject().get("id").getAsString()));
+        if(Files.exists(output.resolve("history.jsonl")))for(var line:Files.readAllLines(output.resolve("history.jsonl")))if(!line.isBlank())knownHistory.add(UUID.fromString(JsonParser.parseString(line).getAsJsonObject().get("id").getAsString()));
+        var all=politicalVillages().stream().map(v->v.getId().uuid()).collect(Collectors.toSet());if(!all.containsAll(knownVillages))throw new IllegalStateException("Recorded naturally generated village missing from reopened native save");
+        var initialCapitals=new ArrayList<Village>();var data=KingdomSavedData.get(level);
+        for(var entry:baseline.getAsJsonArray("kingdoms")){var k=entry.getAsJsonObject();if(data.kingdom(UUID.fromString(k.get("id").getAsString()))==null)throw new IllegalStateException("Initial natural kingdom missing");var v=village(UUID.fromString(k.get("capital").getAsString()));if(v==null)throw new IllegalStateException("Initial natural capital missing");initialCapitals.add(v);}
+        var capital=initialCapitals.stream().min(Comparator.comparingDouble(v->v.getCenter().distSqr(level.getSharedSpawnPos()))).orElseThrow();anchor=capital.getId().uuid();
+        observer=TestPlayerManager.spawn(level.getServer(),level,capital.getCenter().above(3));observer.setGameMode(GameType.CREATIVE);observer.setInvulnerable(true);channel=(EmbeddedChannel)field(field(observer.connection,"connection"),"channel");
+        resumedAtElapsedTicks=observedTicks;baselineWall=System.nanoTime();phase="OBSERVE";
+        var receipt=Map.of("savedGameTime",previousTick,"savedDayTime",previousDay,"originalBaseTick",baseTick,"originalBaseDayTime",baseDay,"elapsedWorldTicksAtResume",observedTicks,"lastCompletedDailySample",lastSnapshot,"anchor",anchor,"observerTickets",explorationTickets.size());write("resume-"+previousTick+".json",receipt);write("resume-state-"+previousTick+".json",snapshot(lastSnapshot));log("RESUMED",receipt);command("tick sprint 100000000");
+    }
+    private void beforePoliticalDay(LevelTickEvent.Post event){
+        if(event.getLevel()!=level||!phase.equals("OBSERVE")||level.getGameTime()%20!=0)return;
+        var data=KingdomSavedData.get(level);long day=level.getDayTime()/24000;
+        if(day<=data.day())return;
+        try{
+            var row=new LinkedHashMap<String,Object>();row.put("worldDay",day);row.put("gameTime",level.getGameTime());row.put("elapsedTicks",level.getGameTime()-baseTick);row.put("previousBookedDay",data.day());row.put("nextDecisionDay",data.nextDecisionDay());row.put("politicalRoundDue",AutonomyConfig.current().autonomy()&&data.nextDecisionDay()>=0&&day>=data.nextDecisionDay());
+            var candidates=new ArrayList<Map<String,Object>>();
+            for(var v:politicalVillages())if(data.owner(v.getId().uuid())==null){
+                var entry=new LinkedHashMap<String,Object>();entry.put("village",v.getId().uuid());entry.put("name",v.getVillageName());entry.put("parent",v.getParentVillageId()==null?null:v.getParentVillageId().uuid());entry.put("localOwner",v.getOwnerUUID());entry.put("nativeMilitaryBusy",Military.busy(v));entry.put("pendingPoliticalOrder",data.orderAgainst(v.getId().uuid())!=null);entry.put("pendingApplication",data.joinRequest(v.getId().uuid())!=null);
+                var target=AutonomyService.joinTarget(level,data,v);entry.put("eligibleTarget",target==null?null:target.id());entry.put("actualJoinChance",target==null?null:AutonomyService.joinChance(level,data,target,v));
+                var relations=new ArrayList<Map<String,Object>>();for(var k:data.kingdoms())if(!k.fallen()&&k.active()){var c=village(k.capital());if(c!=null){var r=new LinkedHashMap<String,Object>();r.put("kingdom",k.id());r.put("relation",c.getRelations().get(v.getId()));r.put("distance",Math.sqrt(c.getCenter().distSqr(v.getCenter())));r.put("relationRadius",AutonomyService.joinRadius());relations.add(r);}}entry.put("capitalRelations",relations);candidates.add(entry);
+            }
+            row.put("independentCandidates",candidates);row.put("warsBeforeRound",List.copyOf(data.wars()));append("political-before-day.jsonl",row);
+        }catch(Exception failure){throw new IllegalStateException("Read-only political observation failed",failure);}
     }
     private void visit(){
         if(stops>=route.size())throw new IllegalStateException("Exploration bound reached without two natural capitals and nearby independent villages");
@@ -150,7 +186,7 @@ public final class NaturalObservation {
             try{r.put("spendableCoins",RoyalTreasurySnapshot.forNpc(level,k.id()).spendableValue());}catch(RuntimeException unavailable){r.put("spendableCoins",null);r.put("coinReason",unavailable.getMessage());}
             r.put("strategy",new RoyalStrategyStore(level).read(k.id()));kingdoms.add(r);
         }
-        row.put("kingdoms",kingdoms);row.put("wars",data.wars());row.put("activeRaids",data.activeRaids());
+        row.put("kingdoms",kingdoms);row.put("wars",List.copyOf(data.wars()));row.put("activeRaids",List.copyOf(data.activeRaids()));
         var root=level.getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms");
         if(Files.exists(root.resolve("royal-construction/orders.dat")))row.put("construction",new RoyalConstructionStore(root.resolve("royal-construction")).entries().stream().map(e->Map.of("id",e.intent().id(),"kingdom",e.intent().kingdom(),"village",e.intent().village(),"plan",e.intent().planSet().toString(),"stage",e.stage().name(),"reason",e.blocked().name())).toList());
         if(Files.exists(RoyalShipmentService.directory(level).resolve("shipments.dat")))row.put("shipments",new RoyalShipmentStore(RoyalShipmentService.directory(level)).entries().stream().map(e->Map.of("id",e.intent().id(),"kingdom",e.intent().kingdom(),"stage",e.stage().name(),"delivered",e.delivered(),"held",e.escrow(),"returned",e.returned())).toList());
