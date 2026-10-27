@@ -1,0 +1,1510 @@
+{
+  "baseline_commit": "f31801644b724c58581c69f73b1cd0a23a3d785f",
+  "artifact_sha256": "b7ae9fc2f208588962bac8739021b4e4169322443d475b65c672791a53a3e8dd",
+  "production_java_files": 114,
+  "total_lines": 12774,
+  "explicit_package_dependencies": [
+    [
+      "atlas",
+      "economy"
+    ],
+    [
+      "atlas",
+      "history"
+    ],
+    [
+      "atlas",
+      "kingdom"
+    ],
+    [
+      "atlas",
+      "network"
+    ],
+    [
+      "atlas",
+      "personality"
+    ],
+    [
+      "atlas",
+      "politics"
+    ],
+    [
+      "autonomy",
+      "conquest"
+    ],
+    [
+      "autonomy",
+      "construction"
+    ],
+    [
+      "autonomy",
+      "economy"
+    ],
+    [
+      "autonomy",
+      "history"
+    ],
+    [
+      "autonomy",
+      "kingdom"
+    ],
+    [
+      "autonomy",
+      "localization"
+    ],
+    [
+      "autonomy",
+      "personality"
+    ],
+    [
+      "autonomy",
+      "politics"
+    ],
+    [
+      "autonomy",
+      "shipping"
+    ],
+    [
+      "autonomy",
+      "util"
+    ],
+    [
+      "capital",
+      "atlas"
+    ],
+    [
+      "capital",
+      "autonomy"
+    ],
+    [
+      "capital",
+      "construction"
+    ],
+    [
+      "capital",
+      "economy"
+    ],
+    [
+      "capital",
+      "kingdom"
+    ],
+    [
+      "capital",
+      "shipping"
+    ],
+    [
+      "client",
+      "atlas"
+    ],
+    [
+      "client",
+      "history"
+    ],
+    [
+      "client",
+      "localization"
+    ],
+    [
+      "client",
+      "network"
+    ],
+    [
+      "command",
+      "autonomy"
+    ],
+    [
+      "command",
+      "capital"
+    ],
+    [
+      "command",
+      "conquest"
+    ],
+    [
+      "command",
+      "construction"
+    ],
+    [
+      "command",
+      "economy"
+    ],
+    [
+      "command",
+      "gui"
+    ],
+    [
+      "command",
+      "kingdom"
+    ],
+    [
+      "command",
+      "localization"
+    ],
+    [
+      "command",
+      "personality"
+    ],
+    [
+      "command",
+      "politics"
+    ],
+    [
+      "command",
+      "util"
+    ],
+    [
+      "conquest",
+      "autonomy"
+    ],
+    [
+      "conquest",
+      "kingdom"
+    ],
+    [
+      "conquest",
+      "localization"
+    ],
+    [
+      "conquest",
+      "politics"
+    ],
+    [
+      "construction",
+      "economy"
+    ],
+    [
+      "construction",
+      "history"
+    ],
+    [
+      "construction",
+      "kingdom"
+    ],
+    [
+      "construction",
+      "politics"
+    ],
+    [
+      "construction",
+      "util"
+    ],
+    [
+      "economy",
+      "autonomy"
+    ],
+    [
+      "economy",
+      "construction"
+    ],
+    [
+      "economy",
+      "kingdom"
+    ],
+    [
+      "economy",
+      "localization"
+    ],
+    [
+      "economy",
+      "personality"
+    ],
+    [
+      "economy",
+      "politics"
+    ],
+    [
+      "economy",
+      "shipping"
+    ],
+    [
+      "economy",
+      "util"
+    ],
+    [
+      "gui",
+      "autonomy"
+    ],
+    [
+      "gui",
+      "conquest"
+    ],
+    [
+      "gui",
+      "construction"
+    ],
+    [
+      "gui",
+      "economy"
+    ],
+    [
+      "gui",
+      "history"
+    ],
+    [
+      "gui",
+      "kingdom"
+    ],
+    [
+      "gui",
+      "network"
+    ],
+    [
+      "gui",
+      "personality"
+    ],
+    [
+      "gui",
+      "politics"
+    ],
+    [
+      "gui",
+      "shipping"
+    ],
+    [
+      "gui",
+      "util"
+    ],
+    [
+      "history",
+      "atlas"
+    ],
+    [
+      "history",
+      "construction"
+    ],
+    [
+      "history",
+      "economy"
+    ],
+    [
+      "history",
+      "kingdom"
+    ],
+    [
+      "history",
+      "localization"
+    ],
+    [
+      "history",
+      "network"
+    ],
+    [
+      "history",
+      "personality"
+    ],
+    [
+      "history",
+      "politics"
+    ],
+    [
+      "history",
+      "shipping"
+    ],
+    [
+      "kingdom",
+      "conquest"
+    ],
+    [
+      "kingdom",
+      "construction"
+    ],
+    [
+      "kingdom",
+      "history"
+    ],
+    [
+      "kingdom",
+      "shipping"
+    ],
+    [
+      "mixin",
+      "capital"
+    ],
+    [
+      "mixin",
+      "conquest"
+    ],
+    [
+      "mixin",
+      "construction"
+    ],
+    [
+      "network",
+      "client"
+    ],
+    [
+      "network",
+      "gui"
+    ],
+    [
+      "network",
+      "history"
+    ],
+    [
+      "personality",
+      "kingdom"
+    ],
+    [
+      "personality",
+      "politics"
+    ],
+    [
+      "politics",
+      "autonomy"
+    ],
+    [
+      "politics",
+      "capital"
+    ],
+    [
+      "politics",
+      "conquest"
+    ],
+    [
+      "politics",
+      "economy"
+    ],
+    [
+      "politics",
+      "kingdom"
+    ],
+    [
+      "politics",
+      "localization"
+    ],
+    [
+      "politics",
+      "util"
+    ],
+    [
+      "root",
+      "autonomy"
+    ],
+    [
+      "root",
+      "capital"
+    ],
+    [
+      "root",
+      "command"
+    ],
+    [
+      "root",
+      "conquest"
+    ],
+    [
+      "root",
+      "construction"
+    ],
+    [
+      "root",
+      "economy"
+    ],
+    [
+      "root",
+      "gui"
+    ],
+    [
+      "root",
+      "history"
+    ],
+    [
+      "root",
+      "kingdom"
+    ],
+    [
+      "root",
+      "network"
+    ],
+    [
+      "root",
+      "politics"
+    ],
+    [
+      "root",
+      "shipping"
+    ],
+    [
+      "shipping",
+      "economy"
+    ],
+    [
+      "shipping",
+      "history"
+    ],
+    [
+      "shipping",
+      "kingdom"
+    ],
+    [
+      "shipping",
+      "politics"
+    ],
+    [
+      "util",
+      "localization"
+    ]
+  ],
+  "strongly_connected_packages": [
+    [
+      "atlas",
+      "autonomy",
+      "capital",
+      "client",
+      "conquest",
+      "construction",
+      "economy",
+      "gui",
+      "history",
+      "kingdom",
+      "network",
+      "personality",
+      "politics",
+      "shipping"
+    ],
+    [
+      "command"
+    ],
+    [
+      "localization"
+    ],
+    [
+      "mixin"
+    ],
+    [
+      "root"
+    ],
+    [
+      "util"
+    ]
+  ],
+  "scope": "Explicit fully qualified source references and imports; package SCCs are coupling evidence, not proof of runtime calls or defects. Branch-token counts are rough size indicators, not cyclomatic complexity.",
+  "files": [
+    {
+      "path": "src/main/java/com/millenairekingdoms/MillenaireKingdoms.java",
+      "module": "root",
+      "lines": 77,
+      "chars": 5613,
+      "semicolons": 60,
+      "branch_tokens": 2,
+      "sha256": "627a6d4aee7b5565aa2deb7c0b841b343b2d590a139c7c5843870b4d46b48fd2"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/atlas/AtlasColors.java",
+      "module": "atlas",
+      "lines": 85,
+      "chars": 6668,
+      "semicolons": 114,
+      "branch_tokens": 31,
+      "sha256": "927759a82c5a956ce19ad1e020574cd4606c31b438891c3964f2b0fcfdcf46b8"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/atlas/AtlasConfig.java",
+      "module": "atlas",
+      "lines": 16,
+      "chars": 1203,
+      "semicolons": 12,
+      "branch_tokens": 0,
+      "sha256": "0de7afa0eeffcae2b722b62c3182e324753bb0124d9e92d144c1a778eb47dc4b"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/atlas/AtlasDiscovery.java",
+      "module": "atlas",
+      "lines": 30,
+      "chars": 2671,
+      "semicolons": 39,
+      "branch_tokens": 12,
+      "sha256": "a7854c25507efba21b88807e2b225c3a5c01c40e036e0c8320130a51fdc18bc0"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/atlas/AtlasLabels.java",
+      "module": "atlas",
+      "lines": 22,
+      "chars": 1136,
+      "semicolons": 18,
+      "branch_tokens": 5,
+      "sha256": "9d1189a0df19bd657b921c549ed57d26c9a03c42a56e5eabc8d9695e0b95e0c2"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/atlas/AtlasSnapshotAssembler.java",
+      "module": "atlas",
+      "lines": 44,
+      "chars": 5631,
+      "semicolons": 66,
+      "branch_tokens": 27,
+      "sha256": "c2b8dd8fd4f657e32b1c0f650f1b8ea180ddb568ac768448f14b00d97b5509d5"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/atlas/AtlasViews.java",
+      "module": "atlas",
+      "lines": 77,
+      "chars": 11300,
+      "semicolons": 172,
+      "branch_tokens": 31,
+      "sha256": "dae135d0593f0b2fb743592f01e6620c527c0f6fe0e87f70e201e094de3a9d65"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/autonomy/AutonomyConfig.java",
+      "module": "autonomy",
+      "lines": 69,
+      "chars": 4551,
+      "semicolons": 32,
+      "branch_tokens": 4,
+      "sha256": "0bbc9842451f9d1b6ce21926c2fbeb68926873ae9b583c9531553cc2402b4be7"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/autonomy/AutonomyService.java",
+      "module": "autonomy",
+      "lines": 355,
+      "chars": 23807,
+      "semicolons": 222,
+      "branch_tokens": 72,
+      "sha256": "b1f35aa50f12c4c11c655f51cbbf4176a1c108c2206fe6a5c3bff5c8a13a4f9c"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/autonomy/Military.java",
+      "module": "autonomy",
+      "lines": 90,
+      "chars": 4986,
+      "semicolons": 34,
+      "branch_tokens": 14,
+      "sha256": "067b6fabb82929e84e9f1dc95265e92bac4dfdaa4e92743a70b55f3a97c199eb"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/autonomy/MilitarySnapshot.java",
+      "module": "autonomy",
+      "lines": 38,
+      "chars": 5694,
+      "semicolons": 69,
+      "branch_tokens": 19,
+      "sha256": "46695a6450fc7161ffe01fc86bc1cce02fb8cd6cdac5e1a8e54cde5c4af34a97"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/autonomy/OpposedDice.java",
+      "module": "autonomy",
+      "lines": 27,
+      "chars": 2247,
+      "semicolons": 19,
+      "branch_tokens": 6,
+      "sha256": "f137d8d9f83e238f89db62f9d8c7f020dc5403bed5e4b22fb0eae2115b47596c"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/autonomy/RaidOrderService.java",
+      "module": "autonomy",
+      "lines": 210,
+      "chars": 15167,
+      "semicolons": 135,
+      "branch_tokens": 38,
+      "sha256": "07a17164a907334853a94dd933895e264d2672e51c5db0324a742d86660b23d9"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/autonomy/RoyalInvestmentPolicy.java",
+      "module": "autonomy",
+      "lines": 88,
+      "chars": 8096,
+      "semicolons": 75,
+      "branch_tokens": 13,
+      "sha256": "0417560af4bfbd5d755c97d3c9a11712001d95b5e8f6267d83c12745be9c9f70"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/autonomy/RoyalNpcConfig.java",
+      "module": "autonomy",
+      "lines": 72,
+      "chars": 7763,
+      "semicolons": 62,
+      "branch_tokens": 22,
+      "sha256": "d185461d32a8a7fa203d2fe3bc57afb78d69c02d2ae54f4f62ee0f74d93da88a"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/autonomy/RoyalNpcDiagnostics.java",
+      "module": "autonomy",
+      "lines": 26,
+      "chars": 2204,
+      "semicolons": 16,
+      "branch_tokens": 0,
+      "sha256": "b46b3ef0deee2ae4e4e00be5f6993fd554c8bbcf2764c05b3bdea757fc91bf39"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/autonomy/RoyalNpcEconomyService.java",
+      "module": "autonomy",
+      "lines": 217,
+      "chars": 23649,
+      "semicolons": 260,
+      "branch_tokens": 65,
+      "sha256": "4cfe56e23a13589fef8d6c7b3fc6ae80952636c662424c8a2aa4130bb97a7676"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/autonomy/RoyalNpcRuntime.java",
+      "module": "autonomy",
+      "lines": 72,
+      "chars": 5894,
+      "semicolons": 81,
+      "branch_tokens": 17,
+      "sha256": "b05aea1d0fa2c544d1e4d9fcb638df7131bcb203c55d5c7007340c750a740816"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/autonomy/RoyalStrategyService.java",
+      "module": "autonomy",
+      "lines": 111,
+      "chars": 12550,
+      "semicolons": 138,
+      "branch_tokens": 43,
+      "sha256": "2761018f1de4e17252d674c5bd7d6542fe81fe274a244f346fb2d13312c40574"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/autonomy/RoyalStrategyStore.java",
+      "module": "autonomy",
+      "lines": 50,
+      "chars": 5571,
+      "semicolons": 60,
+      "branch_tokens": 16,
+      "sha256": "62dc66fee56048d1f3749f3f7c54f18b4ae2dc4edc3d06a5bca153c97b970821"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/autonomy/StrategicBattleService.java",
+      "module": "autonomy",
+      "lines": 120,
+      "chars": 16467,
+      "semicolons": 189,
+      "branch_tokens": 57,
+      "sha256": "78fba195fce0c219310c7d80e113fb9c5345b9338da1c73e887381350bca764e"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/autonomy/StrategicBattleStore.java",
+      "module": "autonomy",
+      "lines": 59,
+      "chars": 8907,
+      "semicolons": 115,
+      "branch_tokens": 27,
+      "sha256": "b3133d887ec7322dc96f196be4e6397f69796c42a86b84550a3107ebcb0e6dc9"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/autonomy/StrategicCombatConfig.java",
+      "module": "autonomy",
+      "lines": 16,
+      "chars": 1069,
+      "semicolons": 12,
+      "branch_tokens": 0,
+      "sha256": "1fac4562639d78b4446a093c58ef6c2e8473b0b41497f4ae9d8c87139824890f"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/capital/CapitalConfig.java",
+      "module": "capital",
+      "lines": 37,
+      "chars": 1927,
+      "semicolons": 24,
+      "branch_tokens": 1,
+      "sha256": "8e94ae50e5894d5c9bc4bf2bb85d6964cce56a5ac832880080e8480c33a64f61"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/capital/DynamicFounding.java",
+      "module": "capital",
+      "lines": 178,
+      "chars": 12166,
+      "semicolons": 93,
+      "branch_tokens": 31,
+      "sha256": "45efe434b6a52311a8f7b2658a9da8494368c874ffde0d33724946830be5db37"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/capital/FoundingConfig.java",
+      "module": "capital",
+      "lines": 55,
+      "chars": 3582,
+      "semicolons": 21,
+      "branch_tokens": 4,
+      "sha256": "2cfdf9de327ea60005e77d215885a11022df02fb9ecb42519a0b09738609e809"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/capital/NaturalCapitalGrowth.java",
+      "module": "capital",
+      "lines": 49,
+      "chars": 3081,
+      "semicolons": 31,
+      "branch_tokens": 8,
+      "sha256": "e926631ee1908a64da291bd145adf745bbe2addd555f94f53214165c15e4e349"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/capital/NaturalCapitals.java",
+      "module": "capital",
+      "lines": 296,
+      "chars": 19191,
+      "semicolons": 171,
+      "branch_tokens": 76,
+      "sha256": "f044b8f7cecbf8fc0a1651e3abb7a9eeb4ff1f9599a9bf79d1642ab8b4697fd6"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/client/AtlasScreen.java",
+      "module": "client",
+      "lines": 151,
+      "chars": 18931,
+      "semicolons": 307,
+      "branch_tokens": 72,
+      "sha256": "f2fc869815507048bf0ca8e922c3903e627903eefc6b3eb0c07eb6ae05657fd0"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/client/ChronicleFilterScreen.java",
+      "module": "client",
+      "lines": 51,
+      "chars": 5857,
+      "semicolons": 107,
+      "branch_tokens": 13,
+      "sha256": "67b0c9f42dcb039c0e15f1e45d40da8b397a5d8f00cbae11e65deba2375dc2d6"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/client/ChronicleScreen.java",
+      "module": "client",
+      "lines": 65,
+      "chars": 7173,
+      "semicolons": 113,
+      "branch_tokens": 11,
+      "sha256": "2791c995b0ad9883846437fd23aaf965ccf5004c612719c439e22af8cd69a127"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/client/ClientText.java",
+      "module": "client",
+      "lines": 15,
+      "chars": 1462,
+      "semicolons": 13,
+      "branch_tokens": 0,
+      "sha256": "6e3640d59d66c9dd331e2c60180cbe9a70f2b9980b64de59fe989855e5ddf457"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/client/HistoryClient.java",
+      "module": "client",
+      "lines": 27,
+      "chars": 2086,
+      "semicolons": 32,
+      "branch_tokens": 10,
+      "sha256": "365940b1aa49d8f7c7b93e98673d98a3024659f130913a34f1cd5e4831ef1c83"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/client/KingdomClient.java",
+      "module": "client",
+      "lines": 19,
+      "chars": 814,
+      "semicolons": 11,
+      "branch_tokens": 2,
+      "sha256": "12ab7739d9ff30cbf367aec5bf5b2e7baa2bb30b7250c42042a1237849933f7e"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/client/KingdomKeys.java",
+      "module": "client",
+      "lines": 62,
+      "chars": 3212,
+      "semicolons": 40,
+      "branch_tokens": 10,
+      "sha256": "dd89459253e1ac98c800179c26f756872aa1e494dd40c56b3da2f3d121853b44"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/client/KingdomScreen.java",
+      "module": "client",
+      "lines": 733,
+      "chars": 51675,
+      "semicolons": 632,
+      "branch_tokens": 148,
+      "sha256": "910b8df03dc6843758a8a886047086aa97d7877c9d3a34d79d82abf5043ccbe9"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/client/MillenaireKingdomsClient.java",
+      "module": "client",
+      "lines": 16,
+      "chars": 681,
+      "semicolons": 8,
+      "branch_tokens": 0,
+      "sha256": "ec476356451a9d32caa8e0cc971f3b4e8614e88fad1083d5f0ce4675b1e386cb"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/client/ShipmentProductScreen.java",
+      "module": "client",
+      "lines": 62,
+      "chars": 4156,
+      "semicolons": 66,
+      "branch_tokens": 6,
+      "sha256": "f139fe7c66b42b0487aa6e5bbbe54e86ed6f1dba89ce465f8820cf9e1800deea"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/command/KingdomCommands.java",
+      "module": "command",
+      "lines": 107,
+      "chars": 9775,
+      "semicolons": 58,
+      "branch_tokens": 4,
+      "sha256": "c535589b912731d3b3a1e724e693e9a6456ffd7c0bee1f15154af8362cadf666"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/command/KingdomsCommands.java",
+      "module": "command",
+      "lines": 242,
+      "chars": 24266,
+      "semicolons": 154,
+      "branch_tokens": 14,
+      "sha256": "d0b8010e241389f9b5729369a24f05fac95ae54c5d8051dbaadffe6ab5ca7c4c"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/command/PoliticalArguments.java",
+      "module": "command",
+      "lines": 54,
+      "chars": 3395,
+      "semicolons": 29,
+      "branch_tokens": 4,
+      "sha256": "7c1a3ae0af1aeeb946827573e1dabac14a3c964f13be077b9458e67e3d278239"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/command/RoyalNpcCommands.java",
+      "module": "command",
+      "lines": 43,
+      "chars": 4367,
+      "semicolons": 42,
+      "branch_tokens": 3,
+      "sha256": "1185aba3c8378202d7f9bb70430cc891d07090e3762ae5a089e35c6356b559e0"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/command/RoyalRecoveryCommands.java",
+      "module": "command",
+      "lines": 67,
+      "chars": 5956,
+      "semicolons": 40,
+      "branch_tokens": 3,
+      "sha256": "79c4cb1746ce34036b2c93b09f4b3e2f334705e6ae04b262d295448a0e9a4819"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/conquest/ConquestSavedData.java",
+      "module": "conquest",
+      "lines": 142,
+      "chars": 6688,
+      "semicolons": 83,
+      "branch_tokens": 11,
+      "sha256": "ec68dd2befb609abe97aaba5ddf8cc7dc32d0f8f33fdffe6a7a747438b606b84"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/conquest/ConquestService.java",
+      "module": "conquest",
+      "lines": 204,
+      "chars": 14440,
+      "semicolons": 128,
+      "branch_tokens": 33,
+      "sha256": "1558261cf124144117167dbbfbdfb50d6f6845772ffdef344ecd0db08874b29e"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/construction/NormalGrowthBridge.java",
+      "module": "construction",
+      "lines": 59,
+      "chars": 4225,
+      "semicolons": 33,
+      "branch_tokens": 7,
+      "sha256": "1a68ce91b825c74b33be6ad3cfe10b1147e9e2117bf22ef2e82c6e41d4211239"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/construction/RoyalConstructionCatalog.java",
+      "module": "construction",
+      "lines": 84,
+      "chars": 6170,
+      "semicolons": 50,
+      "branch_tokens": 11,
+      "sha256": "a7eb932ee749cccb9672c59ec8bc41a0ec2bdf056650df9b871e44d8047526e3"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/construction/RoyalConstructionConfig.java",
+      "module": "construction",
+      "lines": 17,
+      "chars": 1109,
+      "semicolons": 11,
+      "branch_tokens": 0,
+      "sha256": "1a05a00fef28f6d28db6f40ef6f46a3241ac2b8fb36f441d19444045444a4414"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/construction/RoyalConstructionGovernance.java",
+      "module": "construction",
+      "lines": 21,
+      "chars": 1241,
+      "semicolons": 9,
+      "branch_tokens": 2,
+      "sha256": "a292ce9773730631a6c00fbe2991c50966ebffb66ce1f26ea164b41d6263f41a"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/construction/RoyalConstructionMonitor.java",
+      "module": "construction",
+      "lines": 132,
+      "chars": 10742,
+      "semicolons": 90,
+      "branch_tokens": 31,
+      "sha256": "3197de2dc2a99f8fa9c19ad26e642e47e9641bfa4f5d7e11c68b022770dfc437"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/construction/RoyalConstructionPersistence.java",
+      "module": "construction",
+      "lines": 187,
+      "chars": 13838,
+      "semicolons": 161,
+      "branch_tokens": 48,
+      "sha256": "1d82ef8d41ea7b0892c159e707f4179c3bf6587168e8ca5d1d54c89baa187a85"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/construction/RoyalConstructionRuntime.java",
+      "module": "construction",
+      "lines": 158,
+      "chars": 10224,
+      "semicolons": 115,
+      "branch_tokens": 42,
+      "sha256": "57ff61a649821e104b78f9a1984ed82ef426ac040ddb6d235c20b251f2c2b6f8"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/construction/RoyalConstructionService.java",
+      "module": "construction",
+      "lines": 383,
+      "chars": 29866,
+      "semicolons": 290,
+      "branch_tokens": 105,
+      "sha256": "db373763e12760094c5a42442600f6ad5f59a37af50dd47254a89870f49cb846"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/construction/RoyalConstructionStore.java",
+      "module": "construction",
+      "lines": 284,
+      "chars": 22704,
+      "semicolons": 226,
+      "branch_tokens": 75,
+      "sha256": "f160d518c32ee84f048b4e0be766895ee765feab9342e18a83f1886be85668aa"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/construction/RoyalRecoveryService.java",
+      "module": "construction",
+      "lines": 152,
+      "chars": 11973,
+      "semicolons": 122,
+      "branch_tokens": 26,
+      "sha256": "2bb6dafde0092d7ab22ec6374ede07d11b792538e8db46141c445a996dc2d4c0"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/construction/RoyalRecoveryStore.java",
+      "module": "construction",
+      "lines": 135,
+      "chars": 10680,
+      "semicolons": 141,
+      "branch_tokens": 36,
+      "sha256": "55fd80e0455b16afecd916cd12069d98085aabad7393b8bff7d1285730af9c2a"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/construction/RoyalVillagePersistence.java",
+      "module": "construction",
+      "lines": 125,
+      "chars": 8387,
+      "semicolons": 84,
+      "branch_tokens": 22,
+      "sha256": "6c8352ae30712ce27b557072b5fcf6ee38ca6bb33ed7540bc272cfc2917f3987"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/EconomyService.java",
+      "module": "economy",
+      "lines": 122,
+      "chars": 6712,
+      "semicolons": 69,
+      "branch_tokens": 22,
+      "sha256": "ecdd10cc2018ba3910062b3249bac5c7ecc33f5b7f828aec9fe337fb4d12714e"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/RoyalCargoContainers.java",
+      "module": "economy",
+      "lines": 146,
+      "chars": 13789,
+      "semicolons": 164,
+      "branch_tokens": 41,
+      "sha256": "e28869a9bcc342cb453b2d63addc7f7e15e1269fcb5b436fda2c4e276c6457de"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/RoyalCoinPlan.java",
+      "module": "economy",
+      "lines": 111,
+      "chars": 5692,
+      "semicolons": 80,
+      "branch_tokens": 21,
+      "sha256": "7a561475587f29d2a5b36329ced2808ce738aa48c50d116dadc7f1f3f9a3e219"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/RoyalConsolidationConfig.java",
+      "module": "economy",
+      "lines": 14,
+      "chars": 908,
+      "semicolons": 10,
+      "branch_tokens": 0,
+      "sha256": "1ff0a39d6a0ec777518fbd93ccff6e7e94e15da2b4f2d7c7346bf6758a26678d"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/RoyalConsolidationRuntime.java",
+      "module": "economy",
+      "lines": 39,
+      "chars": 4563,
+      "semicolons": 65,
+      "branch_tokens": 19,
+      "sha256": "df0cf0e8d835f17fdab8bf03f725ff4ad9b5f06547878061e5a977e2bdfe752d"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/RoyalConsolidationService.java",
+      "module": "economy",
+      "lines": 96,
+      "chars": 13012,
+      "semicolons": 168,
+      "branch_tokens": 37,
+      "sha256": "04a1f8caa81841db60e983d3652e09bb4b4e535777d44a5ad6255d2e4649f41c"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/RoyalContainerReceipts.java",
+      "module": "economy",
+      "lines": 77,
+      "chars": 3882,
+      "semicolons": 49,
+      "branch_tokens": 13,
+      "sha256": "36f91c20d05ad0f5893f8f4e829f333c87033092bf3a2a4976457e7e789a26b2"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/RoyalEconomicReservations.java",
+      "module": "economy",
+      "lines": 58,
+      "chars": 4013,
+      "semicolons": 39,
+      "branch_tokens": 15,
+      "sha256": "3c0ddd83f187a1a94e4b426c9bf67055e7fea67c0995615d0be4167bd8286da1"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/RoyalEconomyConfig.java",
+      "module": "economy",
+      "lines": 38,
+      "chars": 2321,
+      "semicolons": 15,
+      "branch_tokens": 5,
+      "sha256": "aa12d14b88b50fd5d83c33b79a77f8fd6403ab66e5006480227ca93c93e53f92"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/RoyalNpcBudget.java",
+      "module": "economy",
+      "lines": 52,
+      "chars": 5140,
+      "semicolons": 37,
+      "branch_tokens": 12,
+      "sha256": "8b82c676da18306d73bc3c36450a79b3ef8f4afc9e87b9ad4a3b23264b4174fc"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/RoyalNpcDecisionStore.java",
+      "module": "economy",
+      "lines": 138,
+      "chars": 13287,
+      "semicolons": 166,
+      "branch_tokens": 38,
+      "sha256": "26df11b25d85dd039d258e59cf42be4fbd519e1c66420b40d37f3436edf5091c"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/RoyalPaymentJournal.java",
+      "module": "economy",
+      "lines": 157,
+      "chars": 8287,
+      "semicolons": 105,
+      "branch_tokens": 22,
+      "sha256": "059941242f23f1951e0dfbfc6d99c62778a1f1bdb89d345322284fbb52b76240"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/RoyalPaymentService.java",
+      "module": "economy",
+      "lines": 315,
+      "chars": 22044,
+      "semicolons": 220,
+      "branch_tokens": 62,
+      "sha256": "47c9fe29de0fa6ef85cce59924abbaf6f9887a3febd6cebfd21f78f6143bd941"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/RoyalPrices.java",
+      "module": "economy",
+      "lines": 21,
+      "chars": 1521,
+      "semicolons": 12,
+      "branch_tokens": 3,
+      "sha256": "4e8320be5a1fda9f31754f67ccdafd5a99bd02c40e7175de115573cbf64fab38"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/RoyalTreasuryImage.java",
+      "module": "economy",
+      "lines": 227,
+      "chars": 14559,
+      "semicolons": 173,
+      "branch_tokens": 54,
+      "sha256": "76d6db8c06829f0458a369ff1b13b0e781251e7c5e65b727b7ff5039aa365a9c"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/RoyalTreasuryPersistence.java",
+      "module": "economy",
+      "lines": 84,
+      "chars": 4544,
+      "semicolons": 46,
+      "branch_tokens": 9,
+      "sha256": "aa63f1a3234058511635b688ad1fb9949cf6eaa4afa5cc685b599ae6361daf5a"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/RoyalTreasurySnapshot.java",
+      "module": "economy",
+      "lines": 162,
+      "chars": 10499,
+      "semicolons": 133,
+      "branch_tokens": 42,
+      "sha256": "402b725379030a360b93d645dab4d5f4f056e27ae0e5fbfc9ff0809e537f96e2"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/economy/TreasuryService.java",
+      "module": "economy",
+      "lines": 196,
+      "chars": 13183,
+      "semicolons": 146,
+      "branch_tokens": 26,
+      "sha256": "d5c36fb46855868c9618a78daf106edfabc35fc192ad3791783b9328086f44be"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/gui/KingdomActions.java",
+      "module": "gui",
+      "lines": 137,
+      "chars": 9828,
+      "semicolons": 95,
+      "branch_tokens": 31,
+      "sha256": "47af8ab5b2c74325f4709878086c9ef903b315f327d2d3946e09d475b053e9e3"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/gui/KingdomScreens.java",
+      "module": "gui",
+      "lines": 332,
+      "chars": 20124,
+      "semicolons": 268,
+      "branch_tokens": 36,
+      "sha256": "eb0c04a9cc45f327dbdf4d50c0e6f2cf0ee6b95c14b933423681a3d099bf6895"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/gui/RoyalConstructionView.java",
+      "module": "gui",
+      "lines": 145,
+      "chars": 12321,
+      "semicolons": 156,
+      "branch_tokens": 28,
+      "sha256": "bbac541bc7d639a5cf2d108b9e6fe20058429059df1e2fc462a4703ad75cc1a7"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/gui/RoyalShipmentView.java",
+      "module": "gui",
+      "lines": 156,
+      "chars": 13328,
+      "semicolons": 196,
+      "branch_tokens": 33,
+      "sha256": "d11f284e93263528105d6314b1d2644e1ec39d4f0e4cd0317c8600dacb7af718"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/history/ChronicleNarrator.java",
+      "module": "history",
+      "lines": 43,
+      "chars": 4186,
+      "semicolons": 34,
+      "branch_tokens": 3,
+      "sha256": "7bc247b2cc3e0e9e1551ae958f19245c23e24354d5c7cabb66824933140f2d4a"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/history/ChronicleViews.java",
+      "module": "history",
+      "lines": 49,
+      "chars": 5308,
+      "semicolons": 81,
+      "branch_tokens": 18,
+      "sha256": "0b74f1d768ae4791688fc2a44e55e41a67abd84452357bc3e0bcd698b0706324"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/history/HistoryDomain.java",
+      "module": "history",
+      "lines": 98,
+      "chars": 12265,
+      "semicolons": 129,
+      "branch_tokens": 42,
+      "sha256": "286ad8fc3f7e7ce02389e342831c3523ed677951adca81ebcda734e3c49d8262"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/history/HistoryEvent.java",
+      "module": "history",
+      "lines": 63,
+      "chars": 6875,
+      "semicolons": 103,
+      "branch_tokens": 24,
+      "sha256": "16499c432cc4fa3dc362a895763256059724511672888fcbb5a0680ea7ba99e0"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/history/HistoryFiles.java",
+      "module": "history",
+      "lines": 43,
+      "chars": 2502,
+      "semicolons": 30,
+      "branch_tokens": 6,
+      "sha256": "9698b79705a73e825498f79a4589b71cdde88200477882ea0e6f39151e9530ad"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/history/HistoryHooks.java",
+      "module": "history",
+      "lines": 142,
+      "chars": 14533,
+      "semicolons": 166,
+      "branch_tokens": 52,
+      "sha256": "f2989eedc73ef1c50fb0df21a5275b9b4541c230044603def01ae2794cfdddfd"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/history/HistoryRecovery.java",
+      "module": "history",
+      "lines": 28,
+      "chars": 2666,
+      "semicolons": 45,
+      "branch_tokens": 10,
+      "sha256": "3b6299ec178d09215258bb12f4259ae893ac9cee60a60b762b9db12d9dad0a73"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/history/HistoryStore.java",
+      "module": "history",
+      "lines": 95,
+      "chars": 7433,
+      "semicolons": 101,
+      "branch_tokens": 34,
+      "sha256": "9017d9160b96bf479ca523ccf653df4317e527ffd728493cc573669bb11bfca0"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/history/HistoryVisibility.java",
+      "module": "history",
+      "lines": 21,
+      "chars": 1159,
+      "semicolons": 13,
+      "branch_tokens": 1,
+      "sha256": "ae32ef0716800dd5828ef3a38f04408402560c2b2390e7050142c16ad7f07e5b"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/kingdom/KingdomSavedData.java",
+      "module": "kingdom",
+      "lines": 1010,
+      "chars": 74370,
+      "semicolons": 780,
+      "branch_tokens": 99,
+      "sha256": "e2eea41db62b190b062e35c850290235d9793c058737fb3c6c8910f241b2a2f0"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/localization/LocalizedComponents.java",
+      "module": "localization",
+      "lines": 21,
+      "chars": 1432,
+      "semicolons": 19,
+      "branch_tokens": 9,
+      "sha256": "239c128252d37557552a020a844099f0eaba01a1b416fed24b16c93e6df0ba12"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/localization/LocalizedResources.java",
+      "module": "localization",
+      "lines": 42,
+      "chars": 3833,
+      "semicolons": 45,
+      "branch_tokens": 9,
+      "sha256": "ab4247a50a614d4639ffbb5c6edd4afcc9012d3786cfa85e38ad7e2bd6e5b741"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/localization/PublicText.java",
+      "module": "localization",
+      "lines": 38,
+      "chars": 3611,
+      "semicolons": 49,
+      "branch_tokens": 16,
+      "sha256": "f7d5d324b7747a43add996d9496b4dac6530e744f24c66f6ad03abbda52cfde7"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/mixin/RaidManagerMixin.java",
+      "module": "mixin",
+      "lines": 30,
+      "chars": 1745,
+      "semicolons": 22,
+      "branch_tokens": 1,
+      "sha256": "631d06226821ba4fcd6f3a55048b0028dcd52fe44a7c767a3b97f1c861ece394"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/mixin/VillageGrowthQueueMixin.java",
+      "module": "mixin",
+      "lines": 20,
+      "chars": 1100,
+      "semicolons": 13,
+      "branch_tokens": 0,
+      "sha256": "74d1538f476488999bee9bb2429588af8210a7aac07d9141d5cf0546a1ed6bef"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/mixin/VillageSpawnQueueMixin.java",
+      "module": "mixin",
+      "lines": 25,
+      "chars": 1615,
+      "semicolons": 18,
+      "branch_tokens": 2,
+      "sha256": "c1371d1b35c018b4adc22435c53502665c20e75d22aa3cb04b35a9a1a420fc49"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/network/ChronicleRequestPayload.java",
+      "module": "network",
+      "lines": 29,
+      "chars": 2625,
+      "semicolons": 31,
+      "branch_tokens": 2,
+      "sha256": "43ee23edf9b66436ac8e2e41540a17c74138c7d733033e6435e0b2cc875fee16"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/network/ChronicleViewPayload.java",
+      "module": "network",
+      "lines": 19,
+      "chars": 1481,
+      "semicolons": 19,
+      "branch_tokens": 2,
+      "sha256": "6a5e72d2f79521ecd3c33b3011a3f0f36f5a6b71d612c5a1e123273d63e2b089"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/network/KingdomActionPayload.java",
+      "module": "network",
+      "lines": 31,
+      "chars": 2133,
+      "semicolons": 17,
+      "branch_tokens": 0,
+      "sha256": "cc1e42894dce1e5f72173d2bc0b255a0127bc990d7b0c596db01ed778005be59"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/network/KingdomNetwork.java",
+      "module": "network",
+      "lines": 30,
+      "chars": 1767,
+      "semicolons": 15,
+      "branch_tokens": 2,
+      "sha256": "31e0753cbddee04645db6730fa343106e6c4d65dd4846078be21ec79133cc13f"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/network/KingdomViewPayload.java",
+      "module": "network",
+      "lines": 18,
+      "chars": 1134,
+      "semicolons": 12,
+      "branch_tokens": 1,
+      "sha256": "0e2d7a4c52d5fca375c9b14fcc0cc8d1c00063f0c405bd13ed1b3873e31a7288"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/personality/KingdomPersonality.java",
+      "module": "personality",
+      "lines": 55,
+      "chars": 4390,
+      "semicolons": 31,
+      "branch_tokens": 4,
+      "sha256": "20a095e09da7910333d179c22b0dc3541bb4c6e3f24e5c12d9351cee53ad0347"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/politics/ChiefInteraction.java",
+      "module": "politics",
+      "lines": 42,
+      "chars": 2227,
+      "semicolons": 28,
+      "branch_tokens": 7,
+      "sha256": "22e11cf217ce4edec8564c41656e1ede6c3b8bec2edf2033f8bc43812728b7fe"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/politics/DiplomacyService.java",
+      "module": "politics",
+      "lines": 145,
+      "chars": 9314,
+      "semicolons": 96,
+      "branch_tokens": 24,
+      "sha256": "6225d4d31beba146dedce191ff6acd76985731b6f0ebfd51e75bb3d6517deb2e"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/politics/KingdomDay.java",
+      "module": "politics",
+      "lines": 64,
+      "chars": 4473,
+      "semicolons": 41,
+      "branch_tokens": 13,
+      "sha256": "e64b32dd67261bf485fa980a916dac79625a16eef67bdb205510b9030bf2c8a2"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/politics/PoliticsService.java",
+      "module": "politics",
+      "lines": 378,
+      "chars": 30327,
+      "semicolons": 243,
+      "branch_tokens": 38,
+      "sha256": "2957f607d6180d4778108ae29cd86ca9ac507244d2ef9eb087a49d1dd7af8141"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/shipping/NativeStockBridge.java",
+      "module": "shipping",
+      "lines": 34,
+      "chars": 2294,
+      "semicolons": 26,
+      "branch_tokens": 7,
+      "sha256": "6b24624233b911b36c825577eba39c0870e69614bd3866d79eab342f907748fc"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/shipping/RoyalGoodsPlan.java",
+      "module": "shipping",
+      "lines": 78,
+      "chars": 4849,
+      "semicolons": 67,
+      "branch_tokens": 20,
+      "sha256": "9b1dcf6ddae2af619393c0fad9e182c42a3cac02487c91de4b4e044a5067b210"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/shipping/RoyalShipmentConfig.java",
+      "module": "shipping",
+      "lines": 45,
+      "chars": 3493,
+      "semicolons": 31,
+      "branch_tokens": 9,
+      "sha256": "4cb3f3a90e8b815b7bc72b572eb8c2e66303d8270f3f3c507c781de10a756c0a"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/shipping/RoyalShipmentGovernance.java",
+      "module": "shipping",
+      "lines": 16,
+      "chars": 1023,
+      "semicolons": 9,
+      "branch_tokens": 2,
+      "sha256": "8ba1f8a32646d0a016e7a5658607a1563911a0c11c9f5b64adfd8aed0eab6fb0"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/shipping/RoyalShipmentRuntime.java",
+      "module": "shipping",
+      "lines": 56,
+      "chars": 4427,
+      "semicolons": 62,
+      "branch_tokens": 15,
+      "sha256": "b8f9c88819b00790ab90db5a247279f7ff1e2e2d10e6d1c447c00baeac51da69"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/shipping/RoyalShipmentService.java",
+      "module": "shipping",
+      "lines": 260,
+      "chars": 25515,
+      "semicolons": 288,
+      "branch_tokens": 84,
+      "sha256": "27022e76cead3ac4a60231a98f65bfaa9c7f89184fb27f6982ddb0138b3abfce"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/shipping/RoyalShipmentStore.java",
+      "module": "shipping",
+      "lines": 256,
+      "chars": 26798,
+      "semicolons": 304,
+      "branch_tokens": 73,
+      "sha256": "8e63e4aaf241cfde23f0ec40fccf807b6aec375949a4f37ebaf69585c77b8e40"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/shipping/RoyalVillageStock.java",
+      "module": "shipping",
+      "lines": 218,
+      "chars": 17709,
+      "semicolons": 186,
+      "branch_tokens": 53,
+      "sha256": "3d919b8f1f1cbfc5c1a920c3a2dbdbe4680ed5c7e26a967ecda4213a79233909"
+    },
+    {
+      "path": "src/main/java/com/millenairekingdoms/util/KingdomException.java",
+      "module": "util",
+      "lines": 26,
+      "chars": 1481,
+      "semicolons": 13,
+      "branch_tokens": 1,
+      "sha256": "15e7c16c6b757ca2ba4101e116004f84fa10f677de0573a4011c01d03eef0d65"
+    }
+  ]
+}
