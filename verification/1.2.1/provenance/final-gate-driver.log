@@ -1,0 +1,10 @@
+START maintenance-ab-baseline-01
+COMPLETE maintenance-ab-baseline-01 exit 0
+BENCHMARK_VALID True
+START independent-cuts-runner
+COMPLETE independent-cuts-runner exit 0
+START consolidation-cuts-runner
+COMPLETE consolidation-cuts-runner exit 0
+START production-runner
+COMPLETE production-runner exit 0
+ALL_FINAL_GATES_COMPLETE

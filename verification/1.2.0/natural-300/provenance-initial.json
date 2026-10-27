@@ -1,0 +1,12 @@
+{
+  "seed": 20261027300,
+  "world": "/workspace/millenairekingdoms/run/natural-300-world-03",
+  "production_jar_sha256": "b7ae9fc2f208588962bac8739021b4e4169322443d475b65c672791a53a3e8dd",
+  "native_jar_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "observer_jar_sha256": "b81df3145142f8eb206d21bcdd3f28b4c76eda9b1dbf56b4841a0149473536ec",
+  "git_commit": "2e1a6c08af87700129c51db972b1731545bc6cba",
+  "gameplay_changes": "None. Default addon/native config. No injected relations, money, materials, buildings, villages, kings, victories or Ethos. Native mock connection is used for passive exploration/chunk presence. Before baseline, normal terrain chunks in each 17x17 exploration window are generated explicitly because an embedded connection lacks a graphical client chunk view. Original ChunkEvent.Load and VillageSpawnQueue alone select/place villages and capitals. Temporary test-only exploration region tickets keep the normal view resident until the original spawn queue processes it; all observer tickets are removed before the measurement baseline. During the 300days, only original native village activation manages village chunks.",
+  "clock": "Vanilla tick sprint; every game tick and dayTime increment is checked. 300days=7200000 actual ticks after baseline.",
+  "production_classes_modified": false,
+  "stages": []
+}

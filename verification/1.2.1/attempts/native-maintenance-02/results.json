@@ -1,0 +1,44 @@
+[
+  {
+    "suite": "verifyMaintenance",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      1,
+      1
+    ],
+    "expected_per_pass": 1,
+    "launches": [
+      [
+        "runMaintenanceGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261027-143627-36374646/verifyMaintenance"
+      ],
+      [
+        "runMaintenanceGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261027-143627-36374646/verifyMaintenance"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyIndependentNative",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      1,
+      1
+    ],
+    "expected_per_pass": 1,
+    "launches": [
+      [
+        "runIndependentNativeGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261027-143627-36374646/verifyIndependentNative"
+      ],
+      [
+        "runIndependentNativeGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261027-143627-36374646/verifyIndependentNative"
+      ]
+    ],
+    "passed": true
+  }
+]

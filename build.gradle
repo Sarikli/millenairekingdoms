@@ -654,6 +654,7 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_strategic_crash_tests'
             systemProperty 'kingdoms.tests.strategicCrashPhase', System.getProperty('kingdoms.strategicCrashPhase', 'prepare')
             systemProperty 'kingdoms.tests.strategicCut', System.getProperty('kingdoms.strategicCut', 'after-roll')
+            systemProperty 'kingdoms.tests.strategicIndependent', System.getProperty('kingdoms.strategicIndependent', 'false')
         }
         royalNpcEconomyGameTestServer {
             type = 'gameTestServer'
@@ -929,6 +930,46 @@ neoForge {
             systemProperty 'kingdoms.tests.persistence', 'read'
             systemProperty 'kingdoms.tests.historyBoundary', System.getProperty('kingdoms.historyBoundary','')
         }
+        maintenanceGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_maintenance_tests'
+            systemProperty 'kingdoms.tests.scaleCapitals', System.getProperty('kingdoms.scaleCapitals','50')
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        maintenanceGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_maintenance_tests'
+            systemProperty 'kingdoms.tests.scaleCapitals', System.getProperty('kingdoms.scaleCapitals','50')
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
+        independentNativeGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_independent_native_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+            systemProperty 'kingdoms.tests.historyWorld', 'true'
+        }
+        independentNativeGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_independent_native_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+            systemProperty 'kingdoms.tests.historyWorld', 'true'
+        }
         configureEach {
             logLevel = org.slf4j.event.Level.INFO
             jvmArguments.addAll '-Xms512m', '-Xmx3G'
@@ -1012,6 +1053,9 @@ tasks.register('verifyConquest') {
 tasks.named('jar', Jar) {
     preserveFileTimestamps = false
     reproducibleFileOrder = true
+    filePermissions { unix(0644) }
+    dirPermissions { unix(0755) }
+    from('LICENSE') { into 'META-INF' }
     manifest.attributes('Implementation-Title': mod_name, 'Implementation-Version': mod_version)
 }
 
@@ -1255,3 +1299,9 @@ tasks.register('verifyConsolidationLive') { group = 'verification'; dependsOn ta
 
 tasks.named('runStrategyRecoveryGameTestServerReload') { dependsOn tasks.named('runStrategyRecoveryGameTestServer') }
 tasks.register('verifyStrategyRecovery') { group = 'verification'; dependsOn tasks.named('runStrategyRecoveryGameTestServerReload') }
+
+tasks.named('runMaintenanceGameTestServerReload') { dependsOn tasks.named('runMaintenanceGameTestServer') }
+tasks.register('verifyMaintenance') { group = 'verification'; dependsOn tasks.named('runMaintenanceGameTestServerReload') }
+
+tasks.named('runIndependentNativeGameTestServerReload') { dependsOn tasks.named('runIndependentNativeGameTestServer') }
+tasks.register('verifyIndependentNative') { group = 'verification'; dependsOn tasks.named('runIndependentNativeGameTestServerReload') }

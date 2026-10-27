@@ -68,8 +68,9 @@ public final class RaidOrderService {
             if (attempt.status() == Status.STARTED || attempt.status()==Status.RESOLVED) { started++; WAITING.remove(order.id()); continue; }
             if (attempt.status() == Status.DROPPED || now >= order.expiresGameTime()) {
                 data.removeOrder(order.id());
-                WAITING.remove(order.id());
+                String previous = WAITING.remove(order.id());
                 String why = attempt.status() == Status.DROPPED ? attempt.reason() : "expired while waiting: " + attempt.reason();
+                if ("the order expired".equals(why) && previous != null) why = "expired while waiting: " + previous;
                 LOGGER.info("[Kingdoms] Conquest order {} of {} on {} dropped ({}).", order.id(), data.kingdom(order.kingdom()) == null ? order.kingdom()
                         : data.kingdom(order.kingdom()).name(), order.target(), why);
                 tell(level, data, order, com.millenairekingdoms.localization.PublicText.of("[Kingdoms] The conquest raid on %s was called off: %s.", targetName(level, order), attempt.status()==Status.DROPPED?com.millenairekingdoms.localization.PublicText.error(why):com.millenairekingdoms.localization.PublicText.of("expired while waiting: %s",com.millenairekingdoms.localization.PublicText.error(attempt.reason())))

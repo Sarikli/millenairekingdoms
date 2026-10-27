@@ -1,0 +1,83 @@
+{
+  "observation_complete": false,
+  "separate_jvm_reopen_verified": false,
+  "completed_actual_days": 100,
+  "actual_observed_ticks": 2400000,
+  "baseline_world_day_time": 22200,
+  "final_world_day_time": 2422200,
+  "initial_kingdoms": 2,
+  "final_living_kingdoms": 2,
+  "final_fallen_kingdoms": 0,
+  "initial_villages": 14,
+  "final_villages": 14,
+  "initial_independent_non_hamlets": 12,
+  "final_independent_non_hamlets": 7,
+  "event_counts_with_causal_times_inside_observation": {
+    "INCORPORATION": 5,
+    "WAR": 3,
+    "STRATEGIC_BATTLE": 5,
+    "PEACE": 3,
+    "VILLAGE_CONQUEST": 1
+  },
+  "final_construction_stages": {},
+  "final_shipment_stages": {},
+  "native_building_records_upgraded": 54,
+  "new_native_complete_building_records": 8,
+  "resident_records_initial": 171,
+  "resident_records_final": 194,
+  "initial_active_villages": 1,
+  "final_active_villages": 1,
+  "observer_exploration_tickets_during_measurement": [
+    0
+  ],
+  "daily_snapshots": 101,
+  "kingdoms": [
+    {
+      "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+      "name": "Kingdom of Saga",
+      "ethos": "AGRICULTURAL",
+      "capital": "Saga",
+      "initial_members_including_capital": 1,
+      "final_members_including_capital": 1,
+      "fallen": false,
+      "initial_physical_coins": null,
+      "final_physical_coins": null,
+      "final_coin_unavailability": "Treasury chunk is unloaded; postpone the operation",
+      "initial_owed": 0,
+      "final_owed": 3048,
+      "events_involving_realm": {
+        "INCORPORATION": 1,
+        "WAR": 3,
+        "STRATEGIC_BATTLE": 5,
+        "PEACE": 3,
+        "VILLAGE_CONQUEST": 1
+      }
+    },
+    {
+      "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+      "name": "Kingdom of Sainte-Marguerite les-mines",
+      "ethos": "ARTISAN",
+      "capital": "Sainte-Marguerite les-mines",
+      "initial_members_including_capital": 1,
+      "final_members_including_capital": 6,
+      "fallen": false,
+      "initial_physical_coins": 0,
+      "final_physical_coins": 5352,
+      "final_coin_unavailability": null,
+      "initial_owed": 0,
+      "final_owed": 0,
+      "events_involving_realm": {
+        "INCORPORATION": 4,
+        "WAR": 3,
+        "STRATEGIC_BATTLE": 5,
+        "PEACE": 3,
+        "VILLAGE_CONQUEST": 1
+      }
+    }
+  ],
+  "relationship_sample_count": 1614,
+  "relationship_and_distance_qualified_samples": 92,
+  "relationship_samples_scope": "Daily samples, not exact per-evaluation eligibility; native control/raid/order guards also apply.",
+  "resident_scope": "Persistent native resident records; not a count of simultaneously loaded living NPC entities.",
+  "native_building_scope": "Native building records include original wall/sub-building records; no template-block completion proof inferred here."
+}

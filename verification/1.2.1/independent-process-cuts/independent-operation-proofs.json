@@ -1,0 +1,50 @@
+[
+  {
+    "cut": "after-roll",
+    "actual_operation_format": 2,
+    "defender_has_no_invented_kingdom": true,
+    "write_required_pass_counts": [
+      1
+    ],
+    "recovery_required_pass_counts": [
+      1
+    ],
+    "intentional_cut_not_counted_as_test_success": true
+  },
+  {
+    "cut": "after-begin",
+    "actual_operation_format": 2,
+    "defender_has_no_invented_kingdom": true,
+    "write_required_pass_counts": [
+      1
+    ],
+    "recovery_required_pass_counts": [
+      1
+    ],
+    "intentional_cut_not_counted_as_test_success": true
+  },
+  {
+    "cut": "after-victory",
+    "actual_operation_format": 2,
+    "defender_has_no_invented_kingdom": true,
+    "write_required_pass_counts": [
+      1
+    ],
+    "recovery_required_pass_counts": [
+      1
+    ],
+    "intentional_cut_not_counted_as_test_success": true
+  },
+  {
+    "cut": "after-political-ack",
+    "actual_operation_format": 2,
+    "defender_has_no_invented_kingdom": true,
+    "write_required_pass_counts": [
+      1
+    ],
+    "recovery_required_pass_counts": [
+      1
+    ],
+    "intentional_cut_not_counted_as_test_success": true
+  }
+]

@@ -1,0 +1,391 @@
+{
+  "attempt-03/write": {
+    "error_headings": 11,
+    "error_categories": {
+      "Yggdrasil public-key fetch": 3,
+      "Native POI mismatch": 8
+    },
+    "warning_headings": 103,
+    "native_no_building_location": 0,
+    "unloaded_treasury_deferrals": 31,
+    "native_goal_watchdogs": 0,
+    "native_raid_timeouts": 0,
+    "native_pathfinding_budget_failures": 20,
+    "native_waypoint_rebuild_slow": 3,
+    "most_frequent_normalized_warnings": [
+      {
+        "count": 20,
+        "message": "[or.mi.vi.pa.VillagePathManager/]: Path A* failed from BlockPos{x=N, y=N, z=N} to BlockPos{x=N, y=N, z=N} (distance: N). default=N nodes, reason=budget_exhausted; relaxed=N nodes, reason=budget_exhausted; permissive=N nodes, reason=budget_exhausted"
+      },
+      {
+        "count": 20,
+        "message": "[co.mi.ec.RoyalConsolidationRuntime/]: [Kingdoms] Conserving treasury maintenance capital/NcbeaNed-efbbNbNNaNNedfNaN deferred; original evidence retained: Treasury chunk is unloaded; postpone the operation"
+      },
+      {
+        "count": 12,
+        "message": "[or.mi.vi.VillageBannerApplier/]: [banner] expected a banner block at BlockPos{x=N, y=N, z=N}, found Block{minecraft:cobblestone}"
+      },
+      {
+        "count": 11,
+        "message": "[co.mi.ec.RoyalConsolidationRuntime/]: [Kingdoms] Conserving treasury maintenance capital/NbNe-ecNNbN-bNeN-cNceNdNfN deferred; original evidence retained: Treasury chunk is unloaded; postpone the operation"
+      },
+      {
+        "count": 8,
+        "message": "[or.mi.vi.pa.VillagePathManager/]: Path autobuild: N of N routes failed A*"
+      },
+      {
+        "count": 8,
+        "message": "[or.mi.vi.VillageBannerApplier/]: [banner] expected a banner block at BlockPos{x=N, y=N, z=N}, found Block{minecraft:air}"
+      },
+      {
+        "count": 3,
+        "message": "[or.mi.vi.VillageWaypointGraph/]: [Millenaire] Waypoint graph rebuild SLOW: N ms (>= N ms threshold) for N nodes — see PERF roadmap"
+      },
+      {
+        "count": 2,
+        "message": "[or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/watchtower_a_soldierN: parent building plan millenaire:seljuk/watchtower does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings."
+      },
+      {
+        "count": 2,
+        "message": "[or.mi.vi.pa.VillagePathManager/]: Path A* failed from BlockPos{x=N, y=N, z=N} to BlockPos{x=N, y=N, z=N} (distance: N). default=N nodes, reason=frontier_empty (rejectedStep=N, rejectedTraversable=N); relaxed=N nodes, reason=frontier_empty (rejectedStep=N, rejectedTraversable=N); permissive=N nodes, reason=frontier_empty (rejectedStep=N, rejectedTraversable=N)"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [N N .N, N N N]"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [N N .N, N N N]"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, N, @e, ddNbeNNaNNaN-aNaNNcNeN]"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, N, ddNbeNNaNNaN-aNaNNcNeN]"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [N N .N, N N N]"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/workspace/millenairekingdoms/build/moddev/artifacts/neoforgeN.N.jar%N!/assets/.mcassetsroot' uses unexpected schema"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/workspace/millenairekingdoms/build/moddev/artifacts/neoforgeN.N.jar%N!/data/.mcassetsroot' uses unexpected schema"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/DedicatedServer]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/DedicatedServer]: The server will make no attempt to authenticate usernames. Beware."
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/DedicatedServer]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose."
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/DedicatedServer]: To change this, set \"online-mode\" to \"true\" in the server.properties file."
+      }
+    ],
+    "build_successful": false,
+    "all_dimensions_saved": false,
+    "matching_runtime_failure_lines": []
+  },
+  "attempt-04/resume": {
+    "error_headings": 1,
+    "error_categories": {
+      "Yggdrasil public-key fetch": 1
+    },
+    "warning_headings": 86,
+    "native_no_building_location": 0,
+    "unloaded_treasury_deferrals": 25,
+    "native_goal_watchdogs": 0,
+    "native_raid_timeouts": 0,
+    "native_pathfinding_budget_failures": 21,
+    "native_waypoint_rebuild_slow": 7,
+    "most_frequent_normalized_warnings": [
+      {
+        "count": 25,
+        "message": "[co.mi.ec.RoyalConsolidationRuntime/]: [Kingdoms] Conserving treasury maintenance capital/NcbeaNed-efbbNbNNaNNedfNaN deferred; original evidence retained: Treasury chunk is unloaded; postpone the operation"
+      },
+      {
+        "count": 21,
+        "message": "[or.mi.vi.pa.VillagePathManager/]: Path A* failed from BlockPos{x=N, y=N, z=N} to BlockPos{x=N, y=N, z=N} (distance: N). default=N nodes, reason=budget_exhausted; relaxed=N nodes, reason=budget_exhausted; permissive=N nodes, reason=budget_exhausted"
+      },
+      {
+        "count": 7,
+        "message": "[or.mi.vi.VillageWaypointGraph/]: [Millenaire] Waypoint graph rebuild SLOW: N ms (>= N ms threshold) for N nodes — see PERF roadmap"
+      },
+      {
+        "count": 3,
+        "message": "[or.mi.go.WaypointNavigator/]: [Millenaire] Navigation abandoned after N teleportations — villager stuck"
+      },
+      {
+        "count": 2,
+        "message": "[or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/watchtower_a_soldierN: parent building plan millenaire:seljuk/watchtower does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings."
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [N N .N, N N N]"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [N N .N, N N N]"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, N, @e, ddNbeNNaNNaN-aNaNNcNeN]"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, N, ddNbeNNaNNaN-aNaNNcNeN]"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [N N .N, N N N]"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/workspace/millenairekingdoms/build/moddev/artifacts/neoforgeN.N.jar%N!/assets/.mcassetsroot' uses unexpected schema"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/workspace/millenairekingdoms/build/moddev/artifacts/neoforgeN.N.jar%N!/data/.mcassetsroot' uses unexpected schema"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/DedicatedServer]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/DedicatedServer]: The server will make no attempt to authenticate usernames. Beware."
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/DedicatedServer]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose."
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/DedicatedServer]: To change this, set \"online-mode\" to \"true\" in the server.properties file."
+      },
+      {
+        "count": 1,
+        "message": "[or.mi.co.VillagerConfig/]: Unknown villager_config 'japaneseweaponpriority' (no villager_config/japaneseweaponpriority.json in any content layer); using the default config"
+      },
+      {
+        "count": 1,
+        "message": "[or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:byzantines/playerfortress_a_armyforge: parent building plan millenaire:byzantines/fortress does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings."
+      },
+      {
+        "count": 1,
+        "message": "[or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/thmosque_a_femaleside: parent building plan millenaire:seljuk/mosque does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings."
+      },
+      {
+        "count": 1,
+        "message": "[or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/barrackssmall_a_bedN: parent building plan millenaire:seljuk/barrackssmall does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings."
+      }
+    ],
+    "build_successful": true,
+    "all_dimensions_saved": true,
+    "matching_runtime_failure_lines": []
+  },
+  "attempt-05/resume": {
+    "error_headings": 7,
+    "error_categories": {
+      "Yggdrasil public-key fetch": 7
+    },
+    "warning_headings": 9529,
+    "native_no_building_location": 3860,
+    "unloaded_treasury_deferrals": 2958,
+    "native_goal_watchdogs": 1362,
+    "native_raid_timeouts": 250,
+    "native_pathfinding_budget_failures": 187,
+    "native_waypoint_rebuild_slow": 64,
+    "most_frequent_normalized_warnings": [
+      {
+        "count": 3860,
+        "message": "[or.mi.vi.VillageGrowthManager/]: [Millenaire] Growth: no location found for millenaire:norman/church, cooldown Ns"
+      },
+      {
+        "count": 2958,
+        "message": "[co.mi.ec.RoyalConsolidationRuntime/]: [Kingdoms] Conserving treasury maintenance capital/NcbeaNed-efbbNbNNaNNedfNaN deferred; original evidence retained: Treasury chunk is unloaded; postpone the operation"
+      },
+      {
+        "count": 891,
+        "message": "[or.mi.go.GoalScheduler/]: Watchdog: task without progress (taskTicks=N, taskAgeTicks=N), goal=millenaire:play — forced stop"
+      },
+      {
+        "count": 296,
+        "message": "[or.mi.go.im.BuildPathGoal/]: Path builder reached N remote placements — path queue may be broken"
+      },
+      {
+        "count": 187,
+        "message": "[or.mi.vi.pa.VillagePathManager/]: Path A* failed from BlockPos{x=N, y=N, z=N} to BlockPos{x=N, y=N, z=N} (distance: N). default=N nodes, reason=budget_exhausted; relaxed=N nodes, reason=budget_exhausted; permissive=N nodes, reason=budget_exhausted"
+      },
+      {
+        "count": 167,
+        "message": "[or.mi.go.WaypointNavigator/]: [Millenaire] Navigation abandoned after N teleportations — villager stuck"
+      },
+      {
+        "count": 125,
+        "message": "[or.mi.en.VillagerNavigationManager/]: [Millenaire] NavManager — millenaire:norman/wife TP #N ineffective (stayed at N, N, N), dest=N, N, N"
+      },
+      {
+        "count": 120,
+        "message": "[or.mi.go.GoalScheduler/]: Watchdog: task without progress (taskTicks=N, taskAgeTicks=N), goal=null — forced stop"
+      },
+      {
+        "count": 99,
+        "message": "[or.mi.co.ra.RaidManager/]: [Millenaire] Raid timeout on Ho-Chunk (under attack for N game ticks)"
+      },
+      {
+        "count": 74,
+        "message": "[or.mi.go.GoalScheduler/]: Watchdog: task without progress (taskTicks=N, taskAgeTicks=N), goal=millenaire:child_become_adult — forced stop"
+      },
+      {
+        "count": 66,
+        "message": "[or.mi.co.ra.RaidManager/]: [Millenaire] Raid timeout on Yavapai (under attack for N game ticks)"
+      },
+      {
+        "count": 64,
+        "message": "[or.mi.vi.VillageWaypointGraph/]: [Millenaire] Waypoint graph rebuild SLOW: N ms (>= N ms threshold) for N nodes — see PERF roadmap"
+      },
+      {
+        "count": 54,
+        "message": "[or.mi.go.GoalScheduler/]: Watchdog: task without progress (taskTicks=N, taskAgeTicks=N), goal=millenaire:hide — forced stop"
+      },
+      {
+        "count": 52,
+        "message": "[or.mi.en.VillagerNavigationManager/]: [Millenaire] NavManager — millenaire:norman/lumberman abandon after N TPs toward N, N, N"
+      },
+      {
+        "count": 49,
+        "message": "[or.mi.co.ra.RaidManager/]: [Millenaire] Raid timeout on Saga (under attack for N game ticks)"
+      },
+      {
+        "count": 37,
+        "message": "[or.mi.go.GoalScheduler/]: Watchdog: task without progress (taskTicks=N, taskAgeTicks=N), goal=millenaire:socialise — forced stop"
+      },
+      {
+        "count": 34,
+        "message": "[or.mi.go.GoalScheduler/]: Watchdog: task without progress (taskTicks=N, taskAgeTicks=N), goal=millenaire:chop_trees — forced stop"
+      },
+      {
+        "count": 32,
+        "message": "[or.mi.en.VillagerNavigationManager/]: [Millenaire] NavManager — millenaire:norman/wife abandon after N TPs toward N, N, N"
+      },
+      {
+        "count": 31,
+        "message": "[or.mi.go.GoalScheduler/]: Watchdog: task without progress (taskTicks=N, taskAgeTicks=N), goal=millenaire:play_with_friends — forced stop"
+      },
+      {
+        "count": 22,
+        "message": "[or.mi.co.ra.RaidManager/]: [Millenaire] Raid timeout on Numazu (under attack for N game ticks)"
+      }
+    ],
+    "build_successful": true,
+    "all_dimensions_saved": true,
+    "matching_runtime_failure_lines": []
+  },
+  "attempt-05/reopen": {
+    "error_headings": 1,
+    "error_categories": {
+      "Yggdrasil public-key fetch": 1
+    },
+    "warning_headings": 24,
+    "native_no_building_location": 0,
+    "unloaded_treasury_deferrals": 0,
+    "native_goal_watchdogs": 0,
+    "native_raid_timeouts": 0,
+    "native_pathfinding_budget_failures": 0,
+    "native_waypoint_rebuild_slow": 5,
+    "most_frequent_normalized_warnings": [
+      {
+        "count": 5,
+        "message": "[or.mi.vi.VillageWaypointGraph/]: [Millenaire] Waypoint graph rebuild SLOW: N ms (>= N ms threshold) for N nodes — see PERF roadmap"
+      },
+      {
+        "count": 2,
+        "message": "[or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/watchtower_a_soldierN: parent building plan millenaire:seljuk/watchtower does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings."
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [N N .N, N N N]"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/Commands]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [N N .N, N N N]"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/Commands]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, N, @e, ddNbeNNaNNaN-aNaNNcNeN]"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/Commands]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, N, ddNbeNNaNNaN-aNaNNcNeN]"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/Commands]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [N N .N, N N N]"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/workspace/millenairekingdoms/build/moddev/artifacts/neoforgeN.N.jar%N!/assets/.mcassetsroot' uses unexpected schema"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/workspace/millenairekingdoms/build/moddev/artifacts/neoforgeN.N.jar%N!/data/.mcassetsroot' uses unexpected schema"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/DedicatedServer]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!"
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/DedicatedServer]: The server will make no attempt to authenticate usernames. Beware."
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/DedicatedServer]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose."
+      },
+      {
+        "count": 1,
+        "message": "[minecraft/DedicatedServer]: To change this, set \"online-mode\" to \"true\" in the server.properties file."
+      },
+      {
+        "count": 1,
+        "message": "[or.mi.co.VillagerConfig/]: Unknown villager_config 'japaneseweaponpriority' (no villager_config/japaneseweaponpriority.json in any content layer); using the default config"
+      },
+      {
+        "count": 1,
+        "message": "[or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:byzantines/playerfortress_a_armyforge: parent building plan millenaire:byzantines/fortress does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings."
+      },
+      {
+        "count": 1,
+        "message": "[or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/thmosque_a_femaleside: parent building plan millenaire:seljuk/mosque does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings."
+      },
+      {
+        "count": 1,
+        "message": "[or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/barrackssmall_a_bedN: parent building plan millenaire:seljuk/barrackssmall does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings."
+      },
+      {
+        "count": 1,
+        "message": "[or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:byzantines/playerfortress_a_barracks: parent building plan millenaire:byzantines/fortress does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings."
+      },
+      {
+        "count": 1,
+        "message": "[or.mi.cu.CultureLoader/]: BuildingPlanSet millenaire:seljuk/hamlettownhallplayer_a_inn: parent building plan millenaire:seljuk/hamlettownhallplayer does not list this sub-building in starting_sub_buildings or any levels[].sub_buildings."
+      }
+    ],
+    "build_successful": true,
+    "all_dimensions_saved": true,
+    "matching_runtime_failure_lines": []
+  }
+}

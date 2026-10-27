@@ -1,0 +1,49 @@
+name: Build and focused maintenance checks
+on:
+  pull_request:
+  push:
+    branches: [maintenance/1.2.1-strategic-villages]
+    paths: ["src/**", "scripts/**", "gradle/**", "*.gradle", "gradle.properties", ".github/workflows/verify.yml", "LICENSE"]
+  workflow_dispatch:
+concurrency:
+  group: maintenance-checks-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          sparse-checkout: |
+            src
+            scripts
+            gradle
+            releases/1.2.0-rc8-alpha.dev8
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+      - name: Verify whitespace and obtain the pinned native dependency
+        run: |
+          git show --format= --check HEAD -- src scripts .github docs build.gradle settings.gradle gradle.properties README.md CHANGELOG.md CONTRIBUTING.md .editorconfig LICENSE
+          bash scripts/setup-millenaire.sh
+      - name: Build and audit packaged resources
+        run: |
+          bash gradlew --no-daemon build compileGametestJava
+          python3 scripts/check-localization.py --jar build/libs/millenairekingdoms-1.2.1.jar
+          python3 scripts/check-project.py --jar build/libs/millenairekingdoms-1.2.1.jar
+      - name: Focused isolated write and separate-JVM reopen gates
+        run: python3 scripts/verify-regression.py --suites verifyStrategicMilitary,verifyStrategicRestart,verifyMaintenance -- bash gradlew --no-daemon
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: focused-verification-logs-and-addon
+          path: |
+            build/verification
+            build/libs/millenairekingdoms-1.2.1.jar
+          if-no-files-found: ignore

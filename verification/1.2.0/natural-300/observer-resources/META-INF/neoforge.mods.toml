@@ -1,0 +1,13 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+[[mods]]
+modId="kingdoms_natural_observer"
+version="1.0"
+displayName="Natural-world 300-day observer (test only)"
+[[dependencies.kingdoms_natural_observer]]
+modId="millenairekingdoms"
+type="required"
+versionRange="[1.2.0]"
+ordering="AFTER"
+side="SERVER"

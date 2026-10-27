@@ -1,0 +1,11 @@
+{
+  "source_commit": "cabb3db",
+  "final_production_jar_sha256": "28043afee58e95a3d653ac20dc0110b6a47dae67624755ee0c7f6c8f0253c0f5",
+  "exact_source_archive_preserved_locally": "/workspace/royal-decree/1.2.1/final-source-pre-cuts.tar.gz",
+  "source_archive_sha256": "eca8a7956a5df758bfb4f404a631dfbcc61eb39cf15d85b806077904e278d408",
+  "native_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "java": "21.0.13+9",
+  "minecraft": "1.21.1",
+  "neoforge": "21.1.259",
+  "gradle": "8.14.3"
+}

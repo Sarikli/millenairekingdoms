@@ -1,0 +1,178 @@
+{
+  "source": "after-reopen/data/millenairekingdoms_kingdoms.dat",
+  "source_sha256": "c779e4edeb70f476b9a20556405bc449fd84a7dfaa9726bd004cbcdf42472a59",
+  "entire_parsed_political_state_equals_day300_sample": true,
+  "receipts": [
+    {
+      "operation": "4c79d35e-a762-4989-9cc0-4824af1da49d",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "LOST",
+      "transferred": false
+    },
+    {
+      "operation": "202a800e-af2b-4b07-a09d-e049a2f2a591",
+      "attacker": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "LOST",
+      "transferred": false
+    },
+    {
+      "operation": "393463e8-c14e-4092-91d2-89492a28d331",
+      "attacker": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "LOST",
+      "transferred": false
+    },
+    {
+      "operation": "1c5292a0-e379-4204-8772-5f797166fe5c",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "LOST",
+      "transferred": false
+    },
+    {
+      "operation": "de0148db-da9a-4b1d-b4ec-7a24f6717190",
+      "attacker": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "LOST",
+      "transferred": false
+    },
+    {
+      "operation": "458dc805-1b61-4858-b747-21a044c43d70",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "WON",
+      "transferred": false
+    },
+    {
+      "operation": "bcc5e4f2-8474-41c4-b4f6-5c15014a64bd",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "LOST",
+      "transferred": false
+    },
+    {
+      "operation": "91c891c2-321f-40ff-8843-deed6cd333c9",
+      "attacker": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "LOST",
+      "transferred": false
+    },
+    {
+      "operation": "edcf9d30-3aa4-4215-8936-2e05f54ab96d",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "LOST",
+      "transferred": false
+    },
+    {
+      "operation": "c8375e96-b7c7-4150-98f6-883e548b2689",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "6ed0a901-afb6-4b56-9da7-205eee36faf9",
+      "outcome": "WON",
+      "transferred": false
+    },
+    {
+      "operation": "53af4edb-f50d-4c44-8762-943ed95ca34c",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "36192a82-c722-47f6-a6b6-ea099e584b73",
+      "outcome": "WON",
+      "transferred": false
+    },
+    {
+      "operation": "6170020d-232f-4917-9633-312ed98e8a61",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "WON",
+      "transferred": false
+    },
+    {
+      "operation": "b3b86729-9f61-40fa-9ae5-4b395b59722d",
+      "attacker": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "LOST",
+      "transferred": false
+    },
+    {
+      "operation": "89102861-3d42-40d4-87d9-30afe5e1cbc2",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "WON",
+      "transferred": false
+    },
+    {
+      "operation": "1130a7d2-8f32-4a37-aee8-3e35ebcfade3",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "LOST",
+      "transferred": false
+    },
+    {
+      "operation": "370b47f3-b0a0-474f-b432-c48d02337028",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "WON",
+      "transferred": false
+    },
+    {
+      "operation": "a64dfdf0-d353-4d6e-b811-336db40b0909",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "LOST",
+      "transferred": false
+    },
+    {
+      "operation": "7e56064d-951e-463f-bf9a-c7311b1fa718",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "36192a82-c722-47f6-a6b6-ea099e584b73",
+      "outcome": "WON",
+      "transferred": false
+    },
+    {
+      "operation": "4108352a-3aa7-4a8c-a754-f4ba28d8c0af",
+      "attacker": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "LOST",
+      "transferred": false
+    },
+    {
+      "operation": "34dddaa8-548e-43b4-b1ef-b254a23c7798",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "6ed0a901-afb6-4b56-9da7-205eee36faf9",
+      "outcome": "WON",
+      "transferred": false
+    },
+    {
+      "operation": "cf47e0ec-8537-47fb-ab10-be3f1cbe31f3",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "LOST",
+      "transferred": false
+    },
+    {
+      "operation": "ed0968c0-5d5e-4b50-87a0-349e31db8d94",
+      "attacker": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "LOST",
+      "transferred": false
+    },
+    {
+      "operation": "67bf52d2-a5c3-4777-a9bc-ee98c2d479ea",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "36192a82-c722-47f6-a6b6-ea099e584b73",
+      "outcome": "WON",
+      "transferred": true
+    }
+  ],
+  "native_saved_membership": {
+    "b8457b41-b274-4fc2-9ad7-f7cd1f99fcc8": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+    "1371aae7-4fe4-4a89-b88e-873c00779010": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+    "6ed0a901-afb6-4b56-9da7-205eee36faf9": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+    "36192a82-c722-47f6-a6b6-ea099e584b73": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+    "1fd4ed41-2536-410d-ab59-6e17b4129916": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+    "5016b8cd-afa0-46c7-a087-8dbf399ca33d": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+    "0065973b-748f-4109-a76e-f974275ce29e": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+    "4b4fd10a-ad0a-4300-b746-64181ddccb85": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5"
+  }
+}

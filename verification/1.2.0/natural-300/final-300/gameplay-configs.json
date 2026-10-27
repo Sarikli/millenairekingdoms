@@ -1,0 +1,140 @@
+{
+  "millenairekingdoms-server.toml": {
+    "sha256": "47737ab3740575020c93f8de2704889c8740a78fb64b14094444d0fed6901de8",
+    "values": {
+      "naturalCapitals": {
+        "enabled": true,
+        "chancePercent": 10.0,
+        "minCapitalDistance": 1000
+      },
+      "npcAutonomy": {
+        "enabled": true,
+        "diplomaticJoining": true,
+        "warFrequency": "BALANCED",
+        "decisionIntervalDays": 1,
+        "warRelationThreshold": -70,
+        "raidCooldownDays": 1,
+        "truceDays": 5,
+        "automaticCampaigns": true
+      },
+      "strategicWarfare": {
+        "enabled": true,
+        "relativeStrengthScale": 6.0,
+        "maximumDiceModifier": 8,
+        "defenderHomeAdvantage": 2
+      },
+      "royalNpcPolicy": {
+        "ordinaryWeight": 1,
+        "preferredWeight": 4,
+        "warMilitaryBonus": 6,
+        "threatenedBorderBonus": 4,
+        "militaryAggressionFactor": 1.5,
+        "agriculturalAggressionFactor": 0.85,
+        "religiousAggressionFactor": 1.0,
+        "artisanAggressionFactor": 0.9,
+        "economicDecisionsEnabled": true,
+        "treasuryReserveDeniers": 128,
+        "maximumFeeSharePermille": 250,
+        "attemptIntervalDays": 1,
+        "projectCooldownDays": 3,
+        "villageProjectCooldownDays": 6,
+        "routeCooldownDays": 3,
+        "maximumVillagesPerDecision": 8,
+        "maximumCargoPerDecision": 64,
+        "maximumShipmentDistance": 2048,
+        "checkIntervalTicks": 600,
+        "maximumKingdomsPerCheck": 2
+      },
+      "dynamicFounding": {
+        "enabled": true,
+        "minimumTownhallLevel": 3,
+        "checkIntervalDays": 3,
+        "baseChancePercent": 5.0,
+        "chanceIncreasePerLevel": 5.0,
+        "minCapitalDistance": 1000
+      },
+      "royalEconomy": {
+        "constructionFeeDeniers": 64,
+        "shipmentBaseFeeDeniers": 4,
+        "shipmentFeePer128Blocks": 1,
+        "shipmentFeePer64Items": 1
+      },
+      "treasuryConsolidation": {
+        "enabled": true,
+        "checkIntervalTicks": 1200,
+        "maximumCapitalsPerCheck": 1
+      },
+      "royalConstruction": {
+        "trackingEnabled": true,
+        "trackingIntervalTicks": 100,
+        "maximumOrdersPerStep": 2
+      },
+      "royalShipments": {
+        "minimumStockRemaining": 16,
+        "maximumQuantity": 4096,
+        "baseTravelTicks": 1200,
+        "travelTicksPer128Blocks": 600,
+        "trackingEnabled": true,
+        "trackingIntervalTicks": 100,
+        "maximumShipmentsPerStep": 2
+      },
+      "politicalAtlas": {
+        "influenceRadiusBlocks": 500,
+        "discoveryRadiusBlocks": 512,
+        "revealAllRegisteredSettlements": false
+      }
+    }
+  },
+  "millenaire-server.toml": {
+    "sha256": "c011cd41fc9dcddcad33889d956d23379a0b55a748f0d758ac036287a54bf4d6",
+    "values": {
+      "generation": {
+        "generateVillages": true,
+        "generateLoneBuildings": true,
+        "generateHamlets": false,
+        "minVillageDistance": 500,
+        "minLoneBuildingDistance": 500,
+        "minVillageLoneBuildingDistance": 250,
+        "spawnProtectionRadius": 250,
+        "completion": {
+          "maxPercentage": 25,
+          "minDistance": 2000,
+          "maxDistance": 10000
+        }
+      },
+      "debug": {
+        "logSpawnAttempts": false
+      },
+      "village": {
+        "forceLoadVillages": true,
+        "keepActiveRadius": 200,
+        "villageRadiusOverride": -1,
+        "minBuildingSpacing": 5,
+        "buildPaths": true,
+        "maxChildren": 10,
+        "backgroundRadius": 2000,
+        "navDriver": "WAYPOINT"
+      },
+      "gameplay": {
+        "languageLearning": true,
+        "travelBookLearning": true,
+        "sentenceDistanceSingleplayer": 6,
+        "sentenceDistanceMultiplayer": 0,
+        "ignoreResourceCost": false
+      },
+      "statistics": {
+        "sendStatistics": true,
+        "sendPlayerName": false,
+        "apiBaseUrlOverride": ""
+      },
+      "raids": {
+        "banditRaidRadius": 1500,
+        "raidingRate": 20
+      },
+      "legacy": {
+        "legacyAutoConvert": true,
+        "legacyAutoConvertMaxPngs": 2500
+      }
+    }
+  }
+}

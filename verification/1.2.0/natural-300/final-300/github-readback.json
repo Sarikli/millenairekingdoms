@@ -1,0 +1,22 @@
+{
+  "read_at_utc": "2026-10-27T08:45:47.292540+00:00",
+  "read_only": true,
+  "pull_request": {
+    "url": "https://github.com/Sarikli/millenairekingdoms/pull/3",
+    "state": "closed",
+    "draft": false,
+    "merged": true,
+    "merged_at": "2026-10-26T21:45:08Z",
+    "merge_commit_sha": "388dba0af9745d4ba4b0186ab56f5f1b25f62038",
+    "historical_pr_head_sha": "2e1a6c08af87700129c51db972b1731545bc6cba",
+    "head_ref": "feature/1.2.0-by-royal-decree",
+    "base_sha_at_merge": "52a6bc3a4ca4b717775dbd319bbe1df6f733ee0b"
+  },
+  "remote_refs": {
+    "refs/heads/feature/1.2.0-by-royal-decree": "9318d22ddc0101db0f28d00851939dd532e89e52",
+    "refs/heads/main": "388dba0af9745d4ba4b0186ab56f5f1b25f62038",
+    "refs/tags/1.2.0": "3902eaac7f7ce021c8f79c00ce180fb94102e4f5",
+    "refs/tags/1.2.0^{}": "f31801644b724c58581c69f73b1cd0a23a3d785f"
+  },
+  "scope": "PR3 was already merged upstream before the observation. This task pushes only the existing feature branch, with no main/tag mutation or replacement PR."
+}

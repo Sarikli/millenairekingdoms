@@ -1,0 +1,8 @@
+# Natural-world observation: day7 checkpoint, incomplete
++
++Actual baseline: two naturally generated capitals and twelve independent villages. Eight daily rows cover relative days0–7 and168000actual ticks, with no observer exploration tickets. One diplomatic incorporation is recorded: Numazu joined Saga at gameTime144000, relative day5.075, relation50 and actual pre-round chance≈0.031. This is not a completed300-day test and no GameTest pass line is claimed.
++
++The original segment was interrupted after day1; its saved clock61571 and original baseline22200 were preserved. Segment04 resumed the same world and later saved/stopped normally at122371 (100171elapsed ticks). Its normal server/Gradle logs and clock proof are retained. A subsequent observer fixes collection-view serialization and logs pre-round eligibility; current observations continue in detached attempt05. Early null wars/raids fields remain unavailable instead of being rewritten as zero. Native defaults, the stable addon/native JARs, release tag/assets and main are unchanged.
++
++The original observer image/source manifest remains tied to commitc7017df. The resumed image has its own source manifest. The before-resume complete-world archive remains external and byte-verified; this checkpoint stores its receipt without redistributing native assets. A normal-world NBT snapshot and the actual gameplay configuration values support the fixture's provenance.
++

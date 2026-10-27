@@ -1,0 +1,54 @@
+name: Upload verified 1.2.1 release assets
+
+on:
+  push:
+    branches: [maintenance/1.2.1-strategic-villages]
+    paths: [.github/workflows/publish-1.2.1.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-1.2.1-assets
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    if: github.repository == 'Sarikli/millenairekingdoms' && github.ref == 'refs/heads/maintenance/1.2.1-strategic-villages'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refs/tags/1.2.1
+          persist-credentials: false
+          sparse-checkout: releases/1.2.1
+      - name: Verify the immutable release commit and artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 4faf06d621c53f9bba5533aa343f80510e9f58cd
+          cd releases/1.2.1
+          test "$(sha256sum millenairekingdoms-1.2.1.jar | cut -d ' ' -f 1)" = 28043afee58e95a3d653ac20dc0110b6a47dae67624755ee0c7f6c8f0253c0f5
+          sha256sum --check SHA256SUMS
+      - name: Upload exact assets to the existing draft without replacing files
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: Sarikli/millenairekingdoms
+        run: |
+          set -euo pipefail
+          test "$(gh api repos/$GH_REPO/releases/425658914 --jq '.tag_name + " " + (.draft | tostring)')" = '1.2.1 true'
+          cd releases/1.2.1
+          for file in millenairekingdoms-1.2.1.jar SHA256SUMS RELEASE_NOTES.md; do
+            expected="sha256:$(sha256sum "$file" | cut -d ' ' -f 1)"
+            existing="$(gh api repos/$GH_REPO/releases/425658914/assets --jq ".[] | select(.name == \"$file\") | .digest")"
+            if test -n "$existing"; then
+              test "$existing" = "$expected"
+            else
+              gh release upload 1.2.1 "$file"
+            fi
+            actual="$(gh api repos/$GH_REPO/releases/425658914/assets --jq ".[] | select(.name == \"$file\") | .digest")"
+            test "$actual" = "$expected"
+          done

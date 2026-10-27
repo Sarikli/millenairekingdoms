@@ -1,0 +1,52 @@
+{
+  "source": "day-100/data/millenairekingdoms_kingdoms.dat",
+  "source_sha256": "fffc318ad291eb40a88d11a86c19c5ff45219f74f8e416bac7513460e75b9a0c",
+  "receipts": [
+    {
+      "operation": "53af4edb-f50d-4c44-8762-943ed95ca34c",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "36192a82-c722-47f6-a6b6-ea099e584b73",
+      "outcome": "WON",
+      "transferred": false
+    },
+    {
+      "operation": "7e56064d-951e-463f-bf9a-c7311b1fa718",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "36192a82-c722-47f6-a6b6-ea099e584b73",
+      "outcome": "WON",
+      "transferred": false
+    },
+    {
+      "operation": "4108352a-3aa7-4a8c-a754-f4ba28d8c0af",
+      "attacker": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "LOST",
+      "transferred": false
+    },
+    {
+      "operation": "458dc805-1b61-4858-b747-21a044c43d70",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "1371aae7-4fe4-4a89-b88e-873c00779010",
+      "outcome": "WON",
+      "transferred": false
+    },
+    {
+      "operation": "67bf52d2-a5c3-4777-a9bc-ee98c2d479ea",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "36192a82-c722-47f6-a6b6-ea099e584b73",
+      "outcome": "WON",
+      "transferred": true
+    }
+  ],
+  "native_saved_membership": {
+    "36192a82-c722-47f6-a6b6-ea099e584b73": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+    "b8457b41-b274-4fc2-9ad7-f7cd1f99fcc8": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+    "5016b8cd-afa0-46c7-a087-8dbf399ca33d": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+    "0065973b-748f-4109-a76e-f974275ce29e": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+    "1fd4ed41-2536-410d-ab59-6e17b4129916": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+    "1371aae7-4fe4-4a89-b88e-873c00779010": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+    "4b4fd10a-ad0a-4300-b746-64181ddccb85": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5"
+  },
+  "numazu_owner": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+  "scope": "Readback of retained saved political file. One actual transfer is corroborated by the Chronicle and daily native village ownership."
+}

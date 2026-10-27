@@ -1,0 +1,9 @@
+{
+  "runner_pid": 409092,
+  "mode": "same-world resume from recorded saved clock; no clock mutation",
+  "world": "/workspace/millenairekingdoms/run/natural-300-world-03",
+  "production_jar_sha256": "b7ae9fc2f208588962bac8739021b4e4169322443d475b65c672791a53a3e8dd",
+  "native_jar_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "observer_sha256": "10dea462ab32668a45b114813c8cd7349d1afaa394f1669ed6e0661174c72bed",
+  "stages": []
+}

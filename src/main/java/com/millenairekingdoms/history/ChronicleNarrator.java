@@ -18,6 +18,11 @@ public final class ChronicleNarrator {
         boolean opposing=event.realms().size()>1 && voice.id().equals(event.realms().get(1).id());int variant=Math.floorMod(event.id().hashCode() ^ voice.id().hashCode(),3);
         String a=event.realms().getFirst().name(),b=event.realms().size()>1?event.realms().get(1).name():"";
         String village=event.places().isEmpty()?text.resolve(P+"settlement.unknown"):event.places().getFirst().name();String target=event.places().size()>1?event.places().get(1).name():village;
+        // An independent defender is a real settlement, never an invented second kingdom.
+        if(event.kind()==HistoryEvent.Kind.STRATEGIC_BATTLE && event.realms().size()==1 && "true".equals(event.facts().get("independentTarget"))){
+            if("ATTACKER_VICTORY".equals(event.outcome()))b=target;
+            else if("DEFENDED".equals(event.outcome())){b=a;a=target;opposing=true;}
+        }
         var name=event.facts().getOrDefault("buildingName","");String structure=name.isBlank()?text.resolve(P+"compact.structure.unknown"):text.resolve(P+"compact.structure.known",name);
         String actor=event.actorName().isBlank()?text.resolve(P+"compact.actor.unknown"):event.actorName();
         String culture=culture(voice.culture());String ethos=ETHOS.contains(voice.ethos())?voice.ethos():"GENERAL";
