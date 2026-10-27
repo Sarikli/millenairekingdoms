@@ -1,0 +1,162 @@
+{
+  "README.md": {
+    "bytes": 2849,
+    "sha256": "fa933a5809ebac33c42281a3d7b469fad5a76bfa268251bcaf8f028cd5897457"
+  },
+  "after-reopen/data/millenaire_villages.dat": {
+    "bytes": 262382,
+    "sha256": "c4d50d202f7cef0434f5f5ebf2d226f758448ecaafd5153ec7749c7be6172a2f"
+  },
+  "after-reopen/data/millenairekingdoms_kingdoms.dat": {
+    "bytes": 2007,
+    "sha256": "c779e4edeb70f476b9a20556405bc449fd84a7dfaa9726bd004cbcdf42472a59"
+  },
+  "after-reopen/level.dat": {
+    "bytes": 1714,
+    "sha256": "7ff1ac9d40eaf4cf7b6a7284a79d91938d206b3047beaf976c3bf977678e7f23"
+  },
+  "analysis/analysis.log": {
+    "bytes": 2910,
+    "sha256": "324c5df3b2679e42222bed8a389a4d4ea6851167c98990f7b1d345cac05f16e0"
+  },
+  "analysis/daily.csv": {
+    "bytes": 11422,
+    "sha256": "a22e91cfcf0aaface3b83d72b3a387f2ef578c931228fae5bbe940b4edf5fd94"
+  },
+  "analysis/decisions-summary.json": {
+    "bytes": 38198,
+    "sha256": "99f3b78f8c3cfe4d13109ac994cfdd6a1508bf6c75a0c4978a2663ba68092161"
+  },
+  "analysis/plots.log": {
+    "bytes": 76,
+    "sha256": "c84dd090e8a4e7e3c8c1eb62f35866f70e800de1915695d1a88c01a36ec149f5"
+  },
+  "analysis/relationship-samples.csv": {
+    "bytes": 686261,
+    "sha256": "c0e8c15c1c0b94e5278d65396297d0a1de5c2f705b9cf7288ebe1d2905d0014c"
+  },
+  "analysis/settlement-ownership.png": {
+    "bytes": 81920,
+    "sha256": "62b0bb934f40e0ce1795fc6888866a8b26f5b7a76599d7ec2e65b3ed62966b86"
+  },
+  "analysis/strategy-samples.csv": {
+    "bytes": 198654,
+    "sha256": "fb0ac218845ff3291afcc056aabde5da51778c6c3b1d8c199fefbfde01568eff"
+  },
+  "analysis/summary.json": {
+    "bytes": 75647,
+    "sha256": "633727a45be3c0726f68bbf1900068aaecde46c841dc54e52121dbec8bad7f73"
+  },
+  "analysis/timeline.png": {
+    "bytes": 189889,
+    "sha256": "6bbc23aebe89433be7af70e09a031a38ab9ec23983035580f6341311eaf25754"
+  },
+  "baseline.json": {
+    "bytes": 86354,
+    "sha256": "0f4231bd2d2f13bc0aaae1ba59c4acaeccd31dd1432e234ae189b081e58b2465"
+  },
+  "clean-pause-proof.json": {
+    "bytes": 272,
+    "sha256": "43664334d5b021378314903e86133b093dc2488ddf9bcf83163c1e1cfcbc70f3"
+  },
+  "daily.jsonl.gz": {
+    "bytes": 5411830,
+    "sha256": "c8f3b3a3d267464eb03cdc75633060f802b38dc6af2bacaf3af13577fcc641e1"
+  },
+  "final.json": {
+    "bytes": 92935,
+    "sha256": "05cc59effaa6cda15ec7a659978f79517bb0f919fe57756b9818774fb7863aba"
+  },
+  "gameplay-configs.json": {
+    "bytes": 4113,
+    "sha256": "83ef4b95dfc524addfc740e1d86dbecbc61b8a17f0439e9e03d2bf1e15f74cde"
+  },
+  "generation.jsonl.gz": {
+    "bytes": 17084,
+    "sha256": "3ee7a7baa41acd99b42a7094b177e6c28fb091387935f94f7e068fe8e83b4189"
+  },
+  "github-readback.json": {
+    "bytes": 1017,
+    "sha256": "f33fc96eae90deb2e95be4a6f375f5165c7bd5b195676ea0c0bdddcdf0be7e39"
+  },
+  "history.jsonl.gz": {
+    "bytes": 4595,
+    "sha256": "c183fedfc962f422ac4e562e51eb1b7120459eb97f5e62f308805ce9d1d908f9"
+  },
+  "interruption.json": {
+    "bytes": 995,
+    "sha256": "efdcf6259970cee4693c76069a6c49e981156220da056cf2f87442c3da4a64ed"
+  },
+  "latest.json": {
+    "bytes": 92706,
+    "sha256": "ae64a4db3c075bd34a836a6c87f6ea1fd616e1ca453cc05920e8e294592b79e4"
+  },
+  "lifecycle-results.json": {
+    "bytes": 166012,
+    "sha256": "262731822427ebd1eb09cc5b4f403310c75031830996dfb340dcecc2e441f648"
+  },
+  "log-audit.json": {
+    "bytes": 19090,
+    "sha256": "dae206b3c627f927bf5502866ecfb6a991a8b344830687dade23ec5679da499d"
+  },
+  "logs/attempt-03-write.log.gz": {
+    "bytes": 16545,
+    "sha256": "d84c02dfcd9fedb39c2bd646cb67dcee8c7dec881f88eae0f4bd44af6ff6efa3"
+  },
+  "logs/attempt-04-resume.log.gz": {
+    "bytes": 10263,
+    "sha256": "999fe9fc72fd633083b0a2ea23ac7ce41433a472da5e051c1c4edd29b6294c5c"
+  },
+  "logs/attempt-05-reopen.log.gz": {
+    "bytes": 6854,
+    "sha256": "6bdd49eb8bb408136c306ae7d97b2b68ac68d9a2432a61b06e6b911a7527fc74"
+  },
+  "logs/attempt-05-resume.log.gz": {
+    "bytes": 176783,
+    "sha256": "937953ddb6df36f029fad2c587368a42bef71a76ffe160b0b4da9fad5faff608"
+  },
+  "military-receipt-readback.json": {
+    "bytes": 6408,
+    "sha256": "ab52dd8d14d31da5438a8c2fb8c741cef065317c653b847b4074191ca8a2f0ee"
+  },
+  "native-state-day-300.tar.gz": {
+    "bytes": 270249,
+    "sha256": "33f219d955fe96e3847f06dcc0c362f77a094fe6f7f56e4d41e19af00f09a178"
+  },
+  "normal-world-proof.json": {
+    "bytes": 406,
+    "sha256": "5e76ee2aa60766f2283e619be59ab4307f1c59516b36c2c6c0fcda6bd148e9b8"
+  },
+  "paused-122371.json": {
+    "bytes": 86486,
+    "sha256": "72172ea9422be4c75320f4b13ab15a8ea00d6db7460754fbd82b6a4fa4c5cf11"
+  },
+  "political-before-day.jsonl.gz": {
+    "bytes": 20062,
+    "sha256": "8286a9026a6fbe98265e70a920b65a42e45a9e26e8ab1eb54833cefc6a8025e8"
+  },
+  "preparer-original-receipt.json": {
+    "bytes": 937,
+    "sha256": "94971899b7a03f5a73bdbeef033069e6d732d370356dbef8fc6fd370932f1094"
+  },
+  "provenance.json": {
+    "bytes": 2918,
+    "sha256": "613b5463b89653c8d97ba79a5044c689e30e40714fbf8d05d7a5e532484822f9"
+  },
+  "reopen.json": {
+    "bytes": 145,
+    "sha256": "43a1fcf9f79ada4bf21ae4b95977586fdd7b49b91f83094da06bfe99dd6db54d"
+  },
+  "resume-122371.json": {
+    "bytes": 232,
+    "sha256": "1cca774efc53f4abdbe7ef812cc07576c31133ec3496c7c05ff4f74a27c236b9"
+  },
+  "resume-61571.json": {
+    "bytes": 229,
+    "sha256": "17649830bffc91a10180197b1d4e35ea95c5dde830eeb554a449d2d9c616b0d2"
+  },
+  "runner-provenance.json": {
+    "bytes": 463,
+    "sha256": "6b2d725f5a677c6435832319171a622fdc52c64f0c97efa031ac5830f122d640"
+  }
+}

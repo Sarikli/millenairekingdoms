@@ -1,0 +1,2731 @@
+{
+  "observation_complete": true,
+  "separate_jvm_reopen_verified": true,
+  "completed_actual_days": 300,
+  "actual_observed_ticks": 7200000,
+  "baseline_world_day_time": 22200,
+  "final_world_day_time": 7222200,
+  "initial_kingdoms": 2,
+  "final_living_kingdoms": 2,
+  "final_fallen_kingdoms": 0,
+  "initial_villages": 14,
+  "final_villages": 14,
+  "initial_independent_non_hamlets": 12,
+  "final_independent_non_hamlets": 6,
+  "event_counts_with_causal_times_inside_observation": {
+    "INCORPORATION": 6,
+    "WAR": 17,
+    "STRATEGIC_BATTLE": 23,
+    "PEACE": 17,
+    "VILLAGE_CONQUEST": 1
+  },
+  "final_construction_stages": {},
+  "final_shipment_stages": {},
+  "native_building_records_upgraded": 54,
+  "new_native_complete_building_records": 8,
+  "resident_records_initial": 171,
+  "resident_records_final": 193,
+  "initial_active_villages": 1,
+  "final_active_villages": 1,
+  "observer_exploration_tickets_during_measurement": [
+    0
+  ],
+  "daily_snapshots": 301,
+  "kingdoms": [
+    {
+      "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+      "name": "Kingdom of Saga",
+      "ethos": "AGRICULTURAL",
+      "capital": "Saga",
+      "initial_members_including_capital": 1,
+      "final_members_including_capital": 2,
+      "fallen": false,
+      "initial_physical_coins": null,
+      "final_physical_coins": null,
+      "final_coin_unavailability": "Treasury chunk is unloaded; postpone the operation",
+      "initial_owed": 0,
+      "final_owed": 9048,
+      "events_involving_realm": {
+        "INCORPORATION": 2,
+        "WAR": 17,
+        "STRATEGIC_BATTLE": 23,
+        "PEACE": 17,
+        "VILLAGE_CONQUEST": 1
+      }
+    },
+    {
+      "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+      "name": "Kingdom of Sainte-Marguerite les-mines",
+      "ethos": "ARTISAN",
+      "capital": "Sainte-Marguerite les-mines",
+      "initial_members_including_capital": 1,
+      "final_members_including_capital": 6,
+      "fallen": false,
+      "initial_physical_coins": 0,
+      "final_physical_coins": 17352,
+      "final_coin_unavailability": null,
+      "initial_owed": 0,
+      "final_owed": 0,
+      "events_involving_realm": {
+        "INCORPORATION": 4,
+        "WAR": 17,
+        "STRATEGIC_BATTLE": 23,
+        "PEACE": 17,
+        "VILLAGE_CONQUEST": 1
+      }
+    }
+  ],
+  "relationship_sample_count": 4212,
+  "relationship_and_distance_qualified_samples": 135,
+  "relationship_samples_scope": "Daily samples, not exact per-evaluation eligibility; native control/raid/order guards also apply.",
+  "resident_scope": "Persistent native resident records; not a count of simultaneously loaded living NPC entities.",
+  "native_building_scope": "Native building records include original wall/sub-building records; no template-block completion proof inferred here.",
+  "new_native_upgrades": [
+    {
+      "id": "635f0c04-c334-406e-b78d-f2e433d46ae6",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "dd81bc8d-842b-4a65-a917-840f157df9fd",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "2d0d2dfb-6cb9-427f-a055-447ef9e0da35",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "17d03944-52fa-498b-8434-b5a402cc56dd",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_tower_a_1"
+    },
+    {
+      "id": "1aa477b9-6c24-46de-8cdd-e71c9dc232fb",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "2550bd44-ea29-4da9-ac0e-c9137f32b934",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "0b8d59a1-6837-42ef-9115-0a634ab4fa59",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_right2_a_1"
+    },
+    {
+      "id": "d861a490-3f86-48a1-8642-3a8381a20b3f",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_right2_a_1"
+    },
+    {
+      "id": "c1c204da-71e0-4454-baff-bc5a0fc58181",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_right2_a_1"
+    },
+    {
+      "id": "0b49c98e-f75d-4d76-9180-e08e93756c08",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_right3_a_1"
+    },
+    {
+      "id": "22e11b8d-6f37-42ba-ae3e-ea240c4802af",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_tower_a_1"
+    },
+    {
+      "id": "ba6ed507-7855-41b0-85b7-a5804541d453",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "ef79f4cb-181b-48e5-95e0-323a9c66d1ca",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "28ceeb41-cbeb-470e-b567-2c76acc0aedd",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left1_a_1"
+    },
+    {
+      "id": "12ea3f4e-4693-4989-a302-e2cac2b2adbe",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_corner_a_1"
+    },
+    {
+      "id": "3c950451-5bb4-44c9-b9e7-91df532b3b03",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_tower_a_1"
+    },
+    {
+      "id": "0593543e-ee3d-4058-9863-119dfb0aab81",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "61e2a600-38e9-425b-89ef-d552fb517a37",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "0a7ae4d8-f286-44f2-aa3a-658f83bc3c92",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "3fbaac7f-90a4-45f1-ae3c-591f5db7f1bb",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_tower_a_1"
+    },
+    {
+      "id": "df25adeb-f57e-4809-8fff-7752879c98bb",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left1_a_1"
+    },
+    {
+      "id": "e3e510e6-c43f-4f85-b325-dd2cc57edb2b",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "3185245c-71bd-468e-ac04-48972349a1fa",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "d04541b6-8fa6-47bd-ba9d-be028bcb1480",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_corner_a_1"
+    },
+    {
+      "id": "2d14b280-75d3-4ac6-9339-a9f57caababd",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left1_a_1"
+    },
+    {
+      "id": "6edf2b81-b4c3-49a8-9f54-7aaa76a8cffd",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "5686f4f5-ce65-4b1a-bc07-e430abdc34e4",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "ea9c9ef4-afc2-4dcb-9462-5839a12e75de",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_tower_a_1"
+    },
+    {
+      "id": "cfb65dd5-7667-49f3-a5bc-f3ce7bd06a68",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "4a84d827-0aeb-46da-9e50-fd03c7024813",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "739c56e8-2c24-4e4b-9987-948bc03122fc",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_right1_a_1"
+    },
+    {
+      "id": "c42437d5-b70b-401a-b2dc-ab99a5f713c5",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "3d895c65-4200-43ae-bde7-f023d11737c9",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left1_a_1"
+    },
+    {
+      "id": "cf0c1d39-a1a5-451f-b8f6-99a7076f71d2",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left2_a_1"
+    },
+    {
+      "id": "43243825-f3b9-4848-86e7-455048993c10",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_tower_a_1"
+    },
+    {
+      "id": "75cdfc48-8835-4b6a-a041-659d6ef99cca",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left3_a_1"
+    },
+    {
+      "id": "89edc4b6-1894-48d7-89f0-9f8303762124",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left1_a_1"
+    },
+    {
+      "id": "ddfe54ff-69fc-49b7-ba9f-bf83f0248250",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left1_a_1"
+    },
+    {
+      "id": "99fa9ae9-10c3-4278-8c4e-0e8c48425f1b",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_corner_a_1"
+    },
+    {
+      "id": "72e30f28-97df-4b71-91aa-9d84ca9ece13",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "819d354f-542f-4b69-829d-8f1f5bc96092",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_right1_a_1"
+    },
+    {
+      "id": "e1fc5c2d-8471-4961-887d-c5f0dec4ff47",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_right1_a_1"
+    },
+    {
+      "id": "2e897015-1582-46f3-9991-e962703af4aa",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_tower_a_1"
+    },
+    {
+      "id": "78cb7d8c-ded0-437d-b016-d3c141afdd50",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "e8b714e5-9836-4a12-8978-8769b274453f",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_right1_a_1"
+    },
+    {
+      "id": "e847cb90-9c15-4716-a7f3-3edba8f353a7",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_right1_a_1"
+    },
+    {
+      "id": "83e9e112-f98a-4921-bcec-cee7229da702",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left1_a_1"
+    },
+    {
+      "id": "15da8863-2db5-4795-aa12-ecaae65bcaff",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left1_a_1"
+    },
+    {
+      "id": "826578b3-ff8a-47e5-851d-02088429fe05",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left1_a_1"
+    },
+    {
+      "id": "d44144c3-84b8-46a6-a7b6-8fd18dee9d26",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_tower_a_1"
+    },
+    {
+      "id": "75f5ea26-0abf-4264-9778-35fc30cc3932",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "92eecb56-54e0-42ac-90b8-7952d598dcd9",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "68f6153a-4944-427f-ada2-bf870a5cc4d3",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "7c9914ad-74b5-49f6-94fb-d598841d379d",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_corner_a_1"
+    }
+  ],
+  "events": [
+    {
+      "id": "1f837e8e-a350-3b0e-82a1-02473f4f9fc9",
+      "kind": "INCORPORATION",
+      "day": 6,
+      "gameTime": 144000,
+      "dimension": "minecraft:overworld",
+      "source": "36192a82-c722-47f6-a6b6-ea099e584b73/1",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "36192a82-c722-47f6-a6b6-ea099e584b73",
+          "name": "Numazu",
+          "located": true,
+          "x": 1513,
+          "z": -43
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "RECORDED_ATTACHMENT",
+      "outcome": "INCORPORATED",
+      "facts": {}
+    },
+    {
+      "id": "aca8f692-3453-36e4-8a33-bf78a55e6d5e",
+      "kind": "INCORPORATION",
+      "day": 11,
+      "gameTime": 264000,
+      "dimension": "minecraft:overworld",
+      "source": "b8457b41-b274-4fc2-9ad7-f7cd1f99fcc8/1",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "b8457b41-b274-4fc2-9ad7-f7cd1f99fcc8",
+          "name": "Saint-Charles l'abbaye",
+          "located": true,
+          "x": 8,
+          "z": 744
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "RECORDED_ATTACHMENT",
+      "outcome": "INCORPORATED",
+      "facts": {}
+    },
+    {
+      "id": "82b6dbc8-16f3-3c0b-ad31-91855c9c8d43",
+      "kind": "INCORPORATION",
+      "day": 12,
+      "gameTime": 288000,
+      "dimension": "minecraft:overworld",
+      "source": "4b4fd10a-ad0a-4300-b746-64181ddccb85/1",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+          "name": "Marolles la-fôret",
+          "located": true,
+          "x": -777,
+          "z": -39
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "RECORDED_ATTACHMENT",
+      "outcome": "INCORPORATED",
+      "facts": {}
+    },
+    {
+      "id": "8502bf4b-23a3-35d0-adb7-53b5c83c27a8",
+      "kind": "INCORPORATION",
+      "day": 17,
+      "gameTime": 408000,
+      "dimension": "minecraft:overworld",
+      "source": "5016b8cd-afa0-46c7-a087-8dbf399ca33d/1",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "RECORDED_ATTACHMENT",
+      "outcome": "INCORPORATED",
+      "facts": {}
+    },
+    {
+      "id": "27e347d5-e63a-3f48-abca-f40c904871b8",
+      "kind": "WAR",
+      "day": 49,
+      "gameTime": 1176000,
+      "dimension": "minecraft:overworld",
+      "source": "91aaeee5-ef05-43cb-9927-38b7f5f82a42",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "c2ffb7ff-4594-3512-bf34-596bf821b2bc",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 49,
+      "gameTime": 1179000,
+      "dimension": "minecraft:overworld",
+      "source": "53af4edb-f50d-4c44-8762-943ed95ca34c",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "36192a82-c722-47f6-a6b6-ea099e584b73",
+          "name": "Numazu",
+          "located": true,
+          "x": 1513,
+          "z": -43
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "ATTACKER_VICTORY",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "9",
+        "attackerDie": "17",
+        "modifier": "-4",
+        "mode": "STRATEGIC",
+        "defendingStrength": "96"
+      }
+    },
+    {
+      "id": "a9aa1f5c-ee03-3d47-8944-06a8b5355d76",
+      "kind": "INCORPORATION",
+      "day": 54,
+      "gameTime": 1296000,
+      "dimension": "minecraft:overworld",
+      "source": "1fd4ed41-2536-410d-ab59-6e17b4129916/1",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "1fd4ed41-2536-410d-ab59-6e17b4129916",
+          "name": "Périgny la-montagne",
+          "located": true,
+          "x": 87,
+          "z": -1495
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "RECORDED_ATTACHMENT",
+      "outcome": "INCORPORATED",
+      "facts": {}
+    },
+    {
+      "id": "991a7de5-411b-3679-9e7f-a13166ac6882",
+      "kind": "PEACE",
+      "day": 56,
+      "gameTime": 1344000,
+      "dimension": "minecraft:overworld",
+      "source": "91aaeee5-ef05-43cb-9927-38b7f5f82a42",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "NPC_PEACE",
+      "outcome": "PEACE",
+      "facts": {}
+    },
+    {
+      "id": "315610fd-208e-3ab6-880d-0ab9bbd7eeee",
+      "kind": "WAR",
+      "day": 63,
+      "gameTime": 1512000,
+      "dimension": "minecraft:overworld",
+      "source": "af1e512e-05ca-4df4-8f11-99202d55aff6",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "55a00b39-f4a2-3569-bad5-25b42247caa1",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 65,
+      "gameTime": 1563000,
+      "dimension": "minecraft:overworld",
+      "source": "7e56064d-951e-463f-bf9a-c7311b1fa718",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "36192a82-c722-47f6-a6b6-ea099e584b73",
+          "name": "Numazu",
+          "located": true,
+          "x": 1513,
+          "z": -43
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "ATTACKER_VICTORY",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "6",
+        "attackerDie": "17",
+        "modifier": "-4",
+        "mode": "STRATEGIC",
+        "defendingStrength": "96"
+      }
+    },
+    {
+      "id": "e62592a6-eed7-3a5b-90d4-9ae520f61c71",
+      "kind": "VILLAGE_CONQUEST",
+      "day": 68,
+      "gameTime": 1635000,
+      "dimension": "minecraft:overworld",
+      "source": "67bf52d2-a5c3-4777-a9bc-ee98c2d479ea",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "36192a82-c722-47f6-a6b6-ea099e584b73",
+          "name": "Numazu",
+          "located": true,
+          "x": 1513,
+          "z": -43
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "RECORDED_CONQUEST",
+      "outcome": "WON",
+      "facts": {}
+    },
+    {
+      "id": "ee81c561-bff5-34e2-b648-dff6f63e32de",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 68,
+      "gameTime": 1635000,
+      "dimension": "minecraft:overworld",
+      "source": "67bf52d2-a5c3-4777-a9bc-ee98c2d479ea",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "36192a82-c722-47f6-a6b6-ea099e584b73",
+          "name": "Numazu",
+          "located": true,
+          "x": 1513,
+          "z": -43
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "ATTACKER_VICTORY",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "5",
+        "attackerDie": "20",
+        "modifier": "-4",
+        "mode": "STRATEGIC",
+        "defendingStrength": "96"
+      }
+    },
+    {
+      "id": "d1b66372-bd77-3dbb-ba75-8566b75b76a7",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 70,
+      "gameTime": 1683000,
+      "dimension": "minecraft:overworld",
+      "source": "4108352a-3aa7-4a8c-a754-f4ba28d8c0af",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        },
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+          "name": "Marolles la-fôret",
+          "located": true,
+          "x": -777,
+          "z": -39
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "DEFENDED",
+      "facts": {
+        "attackingStrength": "40",
+        "defenderDie": "18",
+        "attackerDie": "10",
+        "modifier": "-5",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "1ff167dd-a8ba-3344-a08d-f1a355bc7aef",
+      "kind": "PEACE",
+      "day": 74,
+      "gameTime": 1776000,
+      "dimension": "minecraft:overworld",
+      "source": "af1e512e-05ca-4df4-8f11-99202d55aff6",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "NPC_PEACE",
+      "outcome": "PEACE",
+      "facts": {}
+    },
+    {
+      "id": "477ba7c0-7dd5-38c8-a24e-e90f240b26ae",
+      "kind": "WAR",
+      "day": 80,
+      "gameTime": 1920000,
+      "dimension": "minecraft:overworld",
+      "source": "e0180ef6-1874-48e0-9403-77b83bde72d0",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "e432e13a-f1c3-3d63-9d72-23bcb9fc43c8",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 81,
+      "gameTime": 1947000,
+      "dimension": "minecraft:overworld",
+      "source": "458dc805-1b61-4858-b747-21a044c43d70",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "ATTACKER_VICTORY",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "1",
+        "attackerDie": "11",
+        "modifier": "-2",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "6706cc1f-6288-3d75-bd4b-a0d54a938fba",
+      "kind": "PEACE",
+      "day": 86,
+      "gameTime": 2064000,
+      "dimension": "minecraft:overworld",
+      "source": "e0180ef6-1874-48e0-9403-77b83bde72d0",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "NPC_PEACE",
+      "outcome": "PEACE",
+      "facts": {}
+    },
+    {
+      "id": "04ed7642-4735-31f0-8c1d-693804fb8b25",
+      "kind": "WAR",
+      "day": 101,
+      "gameTime": 2424000,
+      "dimension": "minecraft:overworld",
+      "source": "03d5c736-a2cd-4145-87b8-602f71cbaa4b",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "d3ace9e8-a3a8-3cee-a675-53dd46ea42ab",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 102,
+      "gameTime": 2451000,
+      "dimension": "minecraft:overworld",
+      "source": "bcc5e4f2-8474-41c4-b4f6-5c15014a64bd",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        },
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "DEFENDED",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "8",
+        "attackerDie": "8",
+        "modifier": "-2",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "db18ce65-2fef-375c-880e-2f3be8aae46c",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 105,
+      "gameTime": 2523000,
+      "dimension": "minecraft:overworld",
+      "source": "a64dfdf0-d353-4d6e-b811-336db40b0909",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        },
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "DEFENDED",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "6",
+        "attackerDie": "9",
+        "modifier": "-2",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "192f66e4-c683-37fe-a3f5-e5c7beaf894c",
+      "kind": "PEACE",
+      "day": 107,
+      "gameTime": 2568000,
+      "dimension": "minecraft:overworld",
+      "source": "03d5c736-a2cd-4145-87b8-602f71cbaa4b",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "NPC_PEACE",
+      "outcome": "PEACE",
+      "facts": {}
+    },
+    {
+      "id": "0c8bc74a-70b0-3dd1-a6f2-aa1e8a86c691",
+      "kind": "WAR",
+      "day": 112,
+      "gameTime": 2688000,
+      "dimension": "minecraft:overworld",
+      "source": "74196180-7565-4760-9871-21beaedc4c5f",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "e693a7e8-1634-3eb0-8f85-1378e6ee4c50",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 113,
+      "gameTime": 2715000,
+      "dimension": "minecraft:overworld",
+      "source": "91c891c2-321f-40ff-8843-deed6cd333c9",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        },
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+          "name": "Marolles la-fôret",
+          "located": true,
+          "x": -777,
+          "z": -39
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "DEFENDED",
+      "facts": {
+        "attackingStrength": "40",
+        "defenderDie": "2",
+        "attackerDie": "1",
+        "modifier": "-5",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "9abeb371-ce10-3edc-99e2-4327b54a7616",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 116,
+      "gameTime": 2787000,
+      "dimension": "minecraft:overworld",
+      "source": "b3b86729-9f61-40fa-9ae5-4b395b59722d",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        },
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+          "name": "Marolles la-fôret",
+          "located": true,
+          "x": -777,
+          "z": -39
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "DEFENDED",
+      "facts": {
+        "attackingStrength": "40",
+        "defenderDie": "15",
+        "attackerDie": "19",
+        "modifier": "-5",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "8bc17038-ae49-3584-aae5-2bca917d2245",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 117,
+      "gameTime": 2811000,
+      "dimension": "minecraft:overworld",
+      "source": "ed0968c0-5d5e-4b50-87a0-349e31db8d94",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        },
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+          "name": "Marolles la-fôret",
+          "located": true,
+          "x": -777,
+          "z": -39
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "DEFENDED",
+      "facts": {
+        "attackingStrength": "40",
+        "defenderDie": "16",
+        "attackerDie": "14",
+        "modifier": "-5",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "fffce2f2-fd37-3dfb-88df-a0ff7ae9cd1a",
+      "kind": "PEACE",
+      "day": 118,
+      "gameTime": 2832000,
+      "dimension": "minecraft:overworld",
+      "source": "74196180-7565-4760-9871-21beaedc4c5f",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "NPC_PEACE",
+      "outcome": "PEACE",
+      "facts": {}
+    },
+    {
+      "id": "b00a1491-3caa-3c9f-a172-63415b3c3dd1",
+      "kind": "WAR",
+      "day": 127,
+      "gameTime": 3048000,
+      "dimension": "minecraft:overworld",
+      "source": "85402575-66fa-4cc5-894c-fc814181e989",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "063437d5-33bd-380c-be70-be3aac7a328d",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 128,
+      "gameTime": 3075000,
+      "dimension": "minecraft:overworld",
+      "source": "edcf9d30-3aa4-4215-8936-2e05f54ab96d",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        },
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "DEFENDED",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "12",
+        "attackerDie": "6",
+        "modifier": "-2",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "f1c884c7-e95c-3afb-93c7-931ff2a61597",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 130,
+      "gameTime": 3123000,
+      "dimension": "minecraft:overworld",
+      "source": "202a800e-af2b-4b07-a09d-e049a2f2a591",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        },
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+          "name": "Marolles la-fôret",
+          "located": true,
+          "x": -777,
+          "z": -39
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "DEFENDED",
+      "facts": {
+        "attackingStrength": "40",
+        "defenderDie": "17",
+        "attackerDie": "1",
+        "modifier": "-5",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "4c3a5f37-85c1-35ef-9122-102395ed824b",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 131,
+      "gameTime": 3147000,
+      "dimension": "minecraft:overworld",
+      "source": "de0148db-da9a-4b1d-b4ec-7a24f6717190",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        },
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+          "name": "Marolles la-fôret",
+          "located": true,
+          "x": -777,
+          "z": -39
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "DEFENDED",
+      "facts": {
+        "attackingStrength": "40",
+        "defenderDie": "10",
+        "attackerDie": "15",
+        "modifier": "-5",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "c061dc5a-e416-35c8-bd54-643c1721ae7f",
+      "kind": "PEACE",
+      "day": 134,
+      "gameTime": 3216000,
+      "dimension": "minecraft:overworld",
+      "source": "85402575-66fa-4cc5-894c-fc814181e989",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "NPC_PEACE",
+      "outcome": "PEACE",
+      "facts": {}
+    },
+    {
+      "id": "8873c488-fb88-367c-b9f1-2f4f7f2858c7",
+      "kind": "WAR",
+      "day": 141,
+      "gameTime": 3384000,
+      "dimension": "minecraft:overworld",
+      "source": "d3477912-3f36-4f8b-9d9b-4c10169a0ac8",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "cff78d3c-ec11-3863-ac2a-60abb5c2a4a5",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 141,
+      "gameTime": 3387000,
+      "dimension": "minecraft:overworld",
+      "source": "6170020d-232f-4917-9633-312ed98e8a61",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "ATTACKER_VICTORY",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "8",
+        "attackerDie": "18",
+        "modifier": "-2",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "940af894-77d5-3c65-b457-6d1e807050b7",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 142,
+      "gameTime": 3411000,
+      "dimension": "minecraft:overworld",
+      "source": "4c79d35e-a762-4989-9cc0-4824af1da49d",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        },
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "DEFENDED",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "9",
+        "attackerDie": "12",
+        "modifier": "-2",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "48b744ce-a053-3b1a-bfe6-68cad8a0b814",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 143,
+      "gameTime": 3435000,
+      "dimension": "minecraft:overworld",
+      "source": "1c5292a0-e379-4204-8772-5f797166fe5c",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        },
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "DEFENDED",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "13",
+        "attackerDie": "3",
+        "modifier": "-2",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "f71e31a1-b91b-3489-bdfb-ac715b8000da",
+      "kind": "PEACE",
+      "day": 147,
+      "gameTime": 3528000,
+      "dimension": "minecraft:overworld",
+      "source": "d3477912-3f36-4f8b-9d9b-4c10169a0ac8",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "NPC_PEACE",
+      "outcome": "PEACE",
+      "facts": {}
+    },
+    {
+      "id": "ee865737-958b-3237-9a6b-877b646eb52e",
+      "kind": "WAR",
+      "day": 152,
+      "gameTime": 3648000,
+      "dimension": "minecraft:overworld",
+      "source": "41d3269a-56a9-467e-b8e3-972c71182a0e",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "979ac8b5-0616-3012-97fd-ca475747edf4",
+      "kind": "PEACE",
+      "day": 158,
+      "gameTime": 3792000,
+      "dimension": "minecraft:overworld",
+      "source": "41d3269a-56a9-467e-b8e3-972c71182a0e",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "NPC_PEACE",
+      "outcome": "PEACE",
+      "facts": {}
+    },
+    {
+      "id": "15785365-6682-3bbf-b106-5dd5c1c8653b",
+      "kind": "WAR",
+      "day": 176,
+      "gameTime": 4224000,
+      "dimension": "minecraft:overworld",
+      "source": "e3f59d73-70ac-4c7a-b712-ccaccf936e1f",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "c9faa4da-4406-3412-959e-79aa5f33caea",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 176,
+      "gameTime": 4227000,
+      "dimension": "minecraft:overworld",
+      "source": "370b47f3-b0a0-474f-b432-c48d02337028",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "ATTACKER_VICTORY",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "4",
+        "attackerDie": "10",
+        "modifier": "-2",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "6235686e-c971-3c61-a1c2-20b88d20fbe1",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 178,
+      "gameTime": 4275000,
+      "dimension": "minecraft:overworld",
+      "source": "1130a7d2-8f32-4a37-aee8-3e35ebcfade3",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        },
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "DEFENDED",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "15",
+        "attackerDie": "7",
+        "modifier": "-2",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "2802ae41-346a-3ebb-881a-46b44f85a828",
+      "kind": "PEACE",
+      "day": 182,
+      "gameTime": 4368000,
+      "dimension": "minecraft:overworld",
+      "source": "e3f59d73-70ac-4c7a-b712-ccaccf936e1f",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "NPC_PEACE",
+      "outcome": "PEACE",
+      "facts": {}
+    },
+    {
+      "id": "d4376323-b629-365c-8fa5-164a9547b471",
+      "kind": "WAR",
+      "day": 187,
+      "gameTime": 4488000,
+      "dimension": "minecraft:overworld",
+      "source": "0f9b3148-5e0f-4eaa-9e1e-ab34820ad85b",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "ecd1acdf-6229-3524-b2f0-229edc7d1e14",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 188,
+      "gameTime": 4515000,
+      "dimension": "minecraft:overworld",
+      "source": "393463e8-c14e-4092-91d2-89492a28d331",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        },
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+          "name": "Marolles la-fôret",
+          "located": true,
+          "x": -777,
+          "z": -39
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "DEFENDED",
+      "facts": {
+        "attackingStrength": "40",
+        "defenderDie": "4",
+        "attackerDie": "6",
+        "modifier": "-5",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "2f88f3a7-02ec-34c4-9fc7-aef53b3ab210",
+      "kind": "PEACE",
+      "day": 195,
+      "gameTime": 4680000,
+      "dimension": "minecraft:overworld",
+      "source": "0f9b3148-5e0f-4eaa-9e1e-ab34820ad85b",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "NPC_PEACE",
+      "outcome": "PEACE",
+      "facts": {}
+    },
+    {
+      "id": "c4f12c32-d53b-3922-b0c9-4c7e9829cbe6",
+      "kind": "INCORPORATION",
+      "day": 200,
+      "gameTime": 4800000,
+      "dimension": "minecraft:overworld",
+      "source": "6ed0a901-afb6-4b56-9da7-205eee36faf9/1",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "6ed0a901-afb6-4b56-9da7-205eee36faf9",
+          "name": "Yavapai",
+          "located": true,
+          "x": 1232,
+          "z": 429
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "RECORDED_ATTACHMENT",
+      "outcome": "INCORPORATED",
+      "facts": {}
+    },
+    {
+      "id": "ad119288-e7be-3840-b5a7-ec13504d8496",
+      "kind": "WAR",
+      "day": 200,
+      "gameTime": 4800000,
+      "dimension": "minecraft:overworld",
+      "source": "f15ed2e8-ca5a-49fa-8bbb-4c4d5ad70f44",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "e4d32f38-0136-38c2-924f-fdd844987768",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 201,
+      "gameTime": 4827000,
+      "dimension": "minecraft:overworld",
+      "source": "cf47e0ec-8537-47fb-ab10-be3f1cbe31f3",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        },
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "DEFENDED",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "17",
+        "attackerDie": "2",
+        "modifier": "-2",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "6f0d5760-fd53-3be0-85fb-bffbace5e4b6",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 203,
+      "gameTime": 4875000,
+      "dimension": "minecraft:overworld",
+      "source": "89102861-3d42-40d4-87d9-30afe5e1cbc2",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "ATTACKER_VICTORY",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "2",
+        "attackerDie": "12",
+        "modifier": "-2",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "f2417585-6389-375b-a970-3b568390b30e",
+      "kind": "PEACE",
+      "day": 206,
+      "gameTime": 4944000,
+      "dimension": "minecraft:overworld",
+      "source": "f15ed2e8-ca5a-49fa-8bbb-4c4d5ad70f44",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "NPC_PEACE",
+      "outcome": "PEACE",
+      "facts": {}
+    },
+    {
+      "id": "096bc234-ec86-37fb-93f9-ef5c776f4d4f",
+      "kind": "WAR",
+      "day": 215,
+      "gameTime": 5160000,
+      "dimension": "minecraft:overworld",
+      "source": "29c8d391-652b-4a11-a9f4-3efb06117129",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "fd536d26-18be-38a4-aa21-735c23498ece",
+      "kind": "PEACE",
+      "day": 222,
+      "gameTime": 5328000,
+      "dimension": "minecraft:overworld",
+      "source": "29c8d391-652b-4a11-a9f4-3efb06117129",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "NPC_PEACE",
+      "outcome": "PEACE",
+      "facts": {}
+    },
+    {
+      "id": "f953d21d-b497-35a3-9511-ad2ffe16a7d2",
+      "kind": "WAR",
+      "day": 227,
+      "gameTime": 5448000,
+      "dimension": "minecraft:overworld",
+      "source": "26bba650-d365-41a6-8dfe-f2e3979b36c0",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "8b7edcad-4e20-3aa9-a773-d01369fed370",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 231,
+      "gameTime": 5547000,
+      "dimension": "minecraft:overworld",
+      "source": "34dddaa8-548e-43b4-b1ef-b254a23c7798",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "6ed0a901-afb6-4b56-9da7-205eee36faf9",
+          "name": "Yavapai",
+          "located": true,
+          "x": 1232,
+          "z": 429
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "ATTACKER_VICTORY",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "5",
+        "attackerDie": "9",
+        "modifier": "8",
+        "mode": "STRATEGIC",
+        "defendingStrength": "20"
+      }
+    },
+    {
+      "id": "9719ac7a-af46-37b4-9d27-912affcc9255",
+      "kind": "PEACE",
+      "day": 234,
+      "gameTime": 5616000,
+      "dimension": "minecraft:overworld",
+      "source": "26bba650-d365-41a6-8dfe-f2e3979b36c0",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "NPC_PEACE",
+      "outcome": "PEACE",
+      "facts": {}
+    },
+    {
+      "id": "a2b7e098-17ae-389c-91d9-4f10af0202be",
+      "kind": "WAR",
+      "day": 240,
+      "gameTime": 5760000,
+      "dimension": "minecraft:overworld",
+      "source": "feeef44b-9377-4b75-b696-24edab26af53",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "463795b9-a060-3c95-8353-ec70b5945e07",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 245,
+      "gameTime": 5883000,
+      "dimension": "minecraft:overworld",
+      "source": "c8375e96-b7c7-4150-98f6-883e548b2689",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "6ed0a901-afb6-4b56-9da7-205eee36faf9",
+          "name": "Yavapai",
+          "located": true,
+          "x": 1232,
+          "z": 429
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "ATTACKER_VICTORY",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "3",
+        "attackerDie": "20",
+        "modifier": "8",
+        "mode": "STRATEGIC",
+        "defendingStrength": "20"
+      }
+    },
+    {
+      "id": "a2801631-502b-3f2c-9acc-3d03b3663d72",
+      "kind": "PEACE",
+      "day": 248,
+      "gameTime": 5952000,
+      "dimension": "minecraft:overworld",
+      "source": "feeef44b-9377-4b75-b696-24edab26af53",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "NPC_PEACE",
+      "outcome": "PEACE",
+      "facts": {}
+    },
+    {
+      "id": "bb5438d7-e885-3109-bacf-8084c8ff35da",
+      "kind": "WAR",
+      "day": 261,
+      "gameTime": 6264000,
+      "dimension": "minecraft:overworld",
+      "source": "52d18d34-05b5-4708-84e8-f043fad2b165",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "94d28b26-de94-3bea-89cb-9f908ba947cb",
+      "kind": "PEACE",
+      "day": 267,
+      "gameTime": 6408000,
+      "dimension": "minecraft:overworld",
+      "source": "52d18d34-05b5-4708-84e8-f043fad2b165",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "NPC_PEACE",
+      "outcome": "PEACE",
+      "facts": {}
+    },
+    {
+      "id": "0528eaba-d9f4-3d84-a542-1bcd9fb518be",
+      "kind": "WAR",
+      "day": 274,
+      "gameTime": 6576000,
+      "dimension": "minecraft:overworld",
+      "source": "5dde8aaa-a100-4f18-9757-f814939ae3e6",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "e7005d79-437b-359d-9c7e-42c48ca18428",
+      "kind": "PEACE",
+      "day": 284,
+      "gameTime": 6816000,
+      "dimension": "minecraft:overworld",
+      "source": "5dde8aaa-a100-4f18-9757-f814939ae3e6",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "NPC_PEACE",
+      "outcome": "PEACE",
+      "facts": {}
+    },
+    {
+      "id": "98480636-2baa-32a8-a691-c2d7ca64416c",
+      "kind": "WAR",
+      "day": 293,
+      "gameTime": 7032000,
+      "dimension": "minecraft:overworld",
+      "source": "b7cca4a1-9b43-4af3-b960-c0086322563b",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "67f9813f-51d1-3589-ab4e-7359ce117e38",
+      "kind": "PEACE",
+      "day": 299,
+      "gameTime": 7176000,
+      "dimension": "minecraft:overworld",
+      "source": "b7cca4a1-9b43-4af3-b960-c0086322563b",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "NPC_PEACE",
+      "outcome": "PEACE",
+      "facts": {}
+    }
+  ],
+  "observation_wall_seconds": 29901.436761099,
+  "wall_time_scope": "final JVM segment only; earlier interrupted segment excluded"
+}
