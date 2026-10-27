@@ -1,0 +1,25 @@
+{
+  "suite": "verifyAtlas",
+  "exit_code": 0,
+  "timed_out": false,
+  "required_pass_counts": [
+    22,
+    22
+  ],
+  "expected_per_pass": 21,
+  "launches": [
+    [
+      "runAtlasGameTestServer",
+      "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyAtlas"
+    ],
+    [
+      "runAtlasGameTestServerReload",
+      "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyAtlas"
+    ]
+  ],
+  "passed": false,
+  "original_runner_expected": 21,
+  "verified_expected_per_pass": 22,
+  "adjudicated_passed": true,
+  "reason": "Actual source registers22 required atlas cases; both actual JVMs loggedAll22 and normal exit. Stale runner expected21, not a failed GameTest. Original results.json retained; do not rerun an already successful package."
+}

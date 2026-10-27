@@ -1,0 +1,29 @@
+[
+  {
+    "suite": "verifyNativeWar",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      1,
+      1
+    ],
+    "expected_per_pass": 1,
+    "launches": [
+      [
+        "runNativeWarGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261027-151239-221bd3be/verifyNativeWar"
+      ],
+      [
+        "runNativeWarGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261027-151239-221bd3be/verifyNativeWar"
+      ]
+    ],
+    "jar_sha256": "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+    "staged_sha256": [
+      "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+      "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f"
+    ],
+    "image_matches": true,
+    "passed": true
+  }
+]

@@ -1053,6 +1053,8 @@ tasks.register('verifyConquest') {
 tasks.named('jar', Jar) {
     preserveFileTimestamps = false
     reproducibleFileOrder = true
+    filePermissions { unix(0644) }
+    dirPermissions { unix(0755) }
     from('LICENSE') { into 'META-INF' }
     manifest.attributes('Implementation-Title': mod_name, 'Implementation-Version': mod_version)
 }

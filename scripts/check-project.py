@@ -26,6 +26,10 @@ report = {'production_java_files': len(files), 'java_release': 21,
           'native_checksum_verified': native.exists(), 'version': properties['mod_version']}
 if args.jar:
     with zipfile.ZipFile(args.jar) as archive:
+        for entry in archive.infolist():
+            expected_mode = 0o755 if entry.is_dir() else 0o644
+            if (entry.external_attr >> 16) & 0o777 != expected_mode:
+                raise ValueError('Noncanonical ZIP permissions: ' + entry.filename)
         names = archive.namelist()
         classes = [name for name in names if name.endswith('.class')]
         if not classes or any(not name.startswith('com/millenairekingdoms/') or '/test/' in name for name in classes):
@@ -40,6 +44,6 @@ if args.jar:
         metadata = archive.read('META-INF/neoforge.mods.toml').decode()
         if 'version="' + properties['mod_version'] + '"' not in metadata.replace(' ', ''):
             raise ValueError('Packaged mod version differs from checkout')
-        report.update(jar_classes=len(classes), license_verified=True,
+        report.update(jar_classes=len(classes), license_verified=True, canonical_zip_permissions=True,
                       jar_sha256=hashlib.sha256(args.jar.read_bytes()).hexdigest())
 print(json.dumps(report, indent=2))

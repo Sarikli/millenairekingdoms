@@ -1,0 +1,8 @@
+{
+  "final_jar_sha256": "28043afee58e95a3d653ac20dc0110b6a47dae67624755ee0c7f6c8f0253c0f5",
+  "earlier_local_tested_archive_sha256": "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+  "all_entry_names_and_uncompressed_bytes_equal": true,
+  "only_change": "ZIP external permission attributes normalized from host0600/0700 to0644/0755",
+  "cross_worker_final_jar_equals_ci_21_0_12_build": true,
+  "entries": 328
+}

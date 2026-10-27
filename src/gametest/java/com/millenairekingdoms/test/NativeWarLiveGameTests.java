@@ -40,14 +40,14 @@ public final class NativeWarLiveGameTests {
     private static final class Probe {
         final GameTestHelper h;final ServerLevel level;final boolean read,physical,daylight,oldCampaigns,oldEconomics;final Path marker;
         final List<BlockPos> anchors=new ArrayList<>();final List<Village> villages=new ArrayList<>();
-        UUID a,b,raid;int phase,ticks,combatDeaths;long coldTick=-1,baseDay,startTick;boolean closed;int aColor;
+        UUID a,b,raid,observedWar;int phase,ticks,combatDeaths;long coldTick=-1,baseDay,startTick;boolean closed;int aColor;
         Probe(GameTestHelper h,boolean physical){this.h=h;level=h.getLevel();this.physical=physical;read=RoyalShipmentSupport.read();marker=level.getServer().getWorldPath(LevelResource.ROOT).resolve(physical?"native-battle.dat":"native-unattended-war.dat");daylight=level.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT);oldCampaigns=AutonomyConfig.CAMPAIGNS.get();oldEconomics=RoyalNpcConfig.ECONOMIC_ENABLED.get();AutonomyConfig.CAMPAIGNS.set(!physical);RoyalNpcConfig.ECONOMIC_ENABLED.set(false);level.getGameRules().getRule(GameRules.RULE_DAYLIGHT).set(true,level.getServer());level.getServer().tickRateManager().requestGameToSprint(physical?58000:690000);}
         void tick()throws Exception{
             if(closed)return;if(++ticks>(physical?59000:695000)){h.fail("Native military runtime timed out: "+diagnostic());close();return;}
             if(phase==0){
-                if(read){var saved=HistoryFiles.read(marker);a=saved.getUUID("a");b=saved.getUUID("b");baseDay=saved.getLong("day");aColor=saved.getInt("aColor");for(var raw:saved.getList("villages",10)){var id=((CompoundTag)raw).getUUID("id");var v=VillageSavedData.get(level).getVillageManager().getVillage(new VillageId(id));h.assertTrue(v!=null,"Original generated village records reopen without plan or population repair");villages.add(v);anchors.add(v.getCenter());}
+                if(read){var saved=HistoryFiles.read(marker);a=saved.getUUID("a");b=saved.getUUID("b");baseDay=saved.getLong("day");aColor=saved.getInt("aColor");if(!physical)observedWar=saved.getUUID("observedWar");for(var raw:saved.getList("villages",10)){var id=((CompoundTag)raw).getUUID("id");var v=VillageSavedData.get(level).getVillageManager().getVillage(new VillageId(id));h.assertTrue(v!=null,"Original generated village records reopen without plan or population repair");villages.add(v);anchors.add(v.getCenter());}
                     if(physical){raid=saved.getUUID("raid");var receipt=KingdomSavedData.get(level).receipt(raid);h.assertTrue(receipt!=null && receipt.outcome().name().equals(saved.getString("outcome")) && saved.getInt("combatDeaths")>0 && !new StrategicBattleStore(level).owns(raid) && !villages.get(1).isUnderAttack(),"Actual NPC-caused native deaths, native cleanup and one physical outcome survive separate JVM; no strategic substitution");System.out.println("NATIVE_BATTLE_REOPEN operation="+raid+" outcome="+receipt.outcome()+" observedNpcCombatDeaths="+saved.getInt("combatDeaths"));close();h.succeed();return;}
-                    verifySavedMilitary(saved);var data=KingdomSavedData.get(level);h.assertTrue(data.wars().stream().anyMatch(w->w.attackerKingdom().equals(a) && w.defenderKingdom().equals(b)) && data.members(b).contains(villages.get(1).getId().uuid()),"Real automatic war/first victory and original defender ownership reopen before final conquest");RoyalNpcConfig.ECONOMIC_ENABLED.set(true);phase=4;return;
+                    verifySavedMilitary(saved);var data=KingdomSavedData.get(level);h.assertTrue(data.war(observedWar)!=null && data.war(observedWar).status()==KingdomSavedData.WarStatus.ACTIVE && data.war(observedWar).attackerKingdom().equals(a) && data.war(observedWar).defenderKingdom().equals(b) && data.members(b).contains(villages.get(1).getId().uuid()),"The exact observed automatic war, first actual battle and original defender ownership reopen before its terminal outcome");RoyalNpcConfig.ECONOMIC_ENABLED.set(true);phase=4;return;
                 }
                 var origin=new BlockPos(440000,-60,480000);anchors.add(origin);anchors.add(origin.offset(1500,0,0));if(!physical){anchors.add(origin.offset(0,0,1500));anchors.add(origin.offset(1500,0,1500));anchors.add(origin.offset(3000,0,1500));}level.setDayTime(6000);force(true);phase=1;return;
             }
@@ -76,12 +76,19 @@ public final class NativeWarLiveGameTests {
                 if(ticks%50!=0)return;
                 var wars=data.wars().stream().filter(w->w.attackerKingdom().equals(a) && w.defenderKingdom().equals(b)).toList();var strategic=events().stream().filter(e->e.kind()==HistoryEvent.Kind.STRATEGIC_BATTLE).toList();
                 if(ticks%12000==0)System.out.println("NATIVE_UNATTENDED_PROGRESS "+diagnostic()+" strategicResults="+strategic.size()+" mainNanos="+StrategicBattleService.lastNanos(level));
-                if(!read && cold && List.of(a,b).stream().allMatch(id->{var plan=new RoyalStrategyStore(level).read(id);return plan!=null && plan.metadataObservedTick()>=coldTick;}) && strategic.stream().anyMatch(e->e.outcome().equals("ATTACKER_VICTORY")) && !data.kingdom(b).fallen()){
-                    h.assertTrue(!wars.isEmpty() && data.members(b).contains(villages.get(1).getId().uuid()),"An actual automatic first military victory cannot prematurely conquer the capital");
-                    checkColdPlanning();save("");System.out.println("NATIVE_UNATTENDED_WRITE coldTick="+coldTick+" actualDay="+data.day()+" wars="+wars.size()+" strategicResults="+strategic.size()+" firstVictoryBeforeConquest=true");close();h.succeed();return;
+                var ongoingBattles = strategic.stream()
+                        .map(e -> new StrategicBattleStore(level).read(UUID.fromString(e.source())))
+                        .filter(op -> op.order().warId() != null && data.war(op.order().warId()) != null)
+                        .filter(op -> data.war(op.order().warId()).status() == KingdomSavedData.WarStatus.ACTIVE
+                                && data.war(op.order().warId()).attackerKingdom().equals(a)
+                                && data.war(op.order().warId()).defenderKingdom().equals(b)).toList();
+                if(!read && cold && List.of(a,b).stream().allMatch(id->{var plan=new RoyalStrategyStore(level).read(id);return plan!=null && plan.metadataObservedTick()>=coldTick;}) && !ongoingBattles.isEmpty() && !data.kingdom(b).fallen()){
+                    observedWar = ongoingBattles.getFirst().order().warId();
+                    h.assertTrue(!wars.isEmpty() && data.members(b).contains(villages.get(1).getId().uuid()),"An actual first military result cannot prematurely conquer the capital");
+                    checkColdPlanning();save("");System.out.println("NATIVE_UNATTENDED_WRITE coldTick="+coldTick+" actualDay="+data.day()+" wars="+wars.size()+" strategicResults="+strategic.size()+" observedWar="+observedWar+" firstBattleBeforeTerminalOutcome=true");close();h.succeed();return;
                 }
                 if (read && cold && !data.kingdom(b).fallen()) {
-                    var peace = wars.stream().filter(w -> w.status() == KingdomSavedData.WarStatus.PEACE
+                    var peace = wars.stream().filter(w -> w.id().equals(observedWar) && w.status() == KingdomSavedData.WarStatus.PEACE
                             && w.endReason().equals("NPC_PEACE")).findFirst();
                     if (peace.isPresent()) {
                         var ended = peace.get();
@@ -112,6 +119,7 @@ public final class NativeWarLiveGameTests {
                     }
                 }
                 if(read && cold && data.kingdom(b).fallen()){
+                    h.assertTrue(data.war(observedWar).status()==KingdomSavedData.WarStatus.CONQUERED,"The exact observed war, rather than unrelated history, caused capital collapse");
                     h.assertTrue(data.owner(villages.get(1).getId().uuid()).equals(a) && strategic.stream().filter(e->e.outcome().equals("ATTACKER_VICTORY")).count()>=2 && strategic.stream().map(HistoryEvent::id).distinct().count()==strategic.size(),"Normal unloaded runtime reaches legitimate two-win capital conquest/collapse with no duplicate battle Chronicle");
                     h.assertTrue(AtlasColors.get(level).color(a)==aColor,"Original kingdom color survives real native-world restart and conquest");checkAtlas();save("");System.out.println("NATIVE_UNATTENDED_REOPEN actualDay="+data.day()+" wars="+wars.size()+" strategicResults="+strategic.size()+" legitimateCapitalConquest=true players=0 forcedVillageChunks=0");close();h.succeed();
                 }
@@ -134,7 +142,7 @@ public final class NativeWarLiveGameTests {
             h.assertTrue(!receipts.isEmpty() && current.containsAll(receipts),
                     "All original political result receipts reopen unchanged before further autonomous simulation");
         }
-        void save(String outcome){var saved=new CompoundTag();saved.putUUID("a",a);saved.putUUID("b",b);saved.putLong("day",Math.max(0,KingdomSavedData.get(level).day()));saved.putInt("aColor",aColor);var list=new ListTag();for(var v:villages){var t=new CompoundTag();t.putUUID("id",v.getId().uuid());list.add(t);}saved.put("villages",list);if(raid!=null)saved.putUUID("raid",raid);saved.putInt("combatDeaths",combatDeaths);saved.putString("outcome",outcome);if(!physical){
+        void save(String outcome){var saved=new CompoundTag();saved.putUUID("a",a);saved.putUUID("b",b);saved.putLong("day",Math.max(0,KingdomSavedData.get(level).day()));saved.putInt("aColor",aColor);var list=new ListTag();for(var v:villages){var t=new CompoundTag();t.putUUID("id",v.getId().uuid());list.add(t);}saved.put("villages",list);if(raid!=null)saved.putUUID("raid",raid);saved.putInt("combatDeaths",combatDeaths);saved.putString("outcome",outcome);if(!physical){saved.putUUID("observedWar",observedWar);
                 var operations=new ListTag();var store=new StrategicBattleStore(level);
                 for(var event:events())if(event.kind()==HistoryEvent.Kind.STRATEGIC_BATTLE)operations.add(StrategicBattleStore.encode(store.read(UUID.fromString(event.source()))));
                 saved.put("militaryOperations",operations);saved.put("militaryReceipts",KingdomSavedData.get(level).save(new CompoundTag(),level.registryAccess()).getList("receipts",Tag.TAG_COMPOUND).copy());
