@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.1 — 2026-10-27 — By Royal Decree
+
+- Resolve eligible unloaded independent-village conquest orders through persistent strategic conflicts, using actual native military records, current hostility and the existing one-victory rule. Loaded participants keep original native combat; balance probabilities and cooldowns are unchanged.
+- Persist independent operations as strict format 2 with no invented defending kingdom; preserve actual format 1 war operations, committed dice, political receipts and truthful localized Chronicles across restart/interruption. Require network protocol 11 on matching clients/servers.
+- Retain the real blocker when an order expires instead of reporting an unrelated inspection-budget wait.
+- Refactor the small treasury maintenance scheduler, quietly defer expected cold-capital new work, and preserve separate recovery and every financial durability barrier. Package the unchanged MIT notice.
+- Add source/package checks, bounded fail-fast focused and process-cut runners, contributor templates, current architecture and read-only CI. Preserve all earlier release artifacts and evidence.
+- Publish the [baseline audit, measured limitations and deferred financial/architectural work](docs/1.2.1_ENGINEERING_REVIEW.md); see [exact validation](docs/1.2.1_PROGRESS.md).
+
 ## 1.2.0 — 2026-10-27 — By Royal Decree
 
 - Finalize the verified RC.10 gameplay and language payload as stable 1.2.0; only JAR version metadata changes.

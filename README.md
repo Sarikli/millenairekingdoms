@@ -1,19 +1,19 @@
 # Millénaire Kingdoms
 
-> **1.2.0 — By Royal Decree.** [Stable release](https://github.com/Sarikli/millenairekingdoms/releases/tag/1.2.0) · [JAR, checksum and bilingual release notes](releases/1.2.0-final/) · [final verification](docs/1.2.0_FINAL_RELEASE.md).
-> Royal construction and upgrades, paid shipments, autonomous kingdoms, village-only political atlas and revised chronicles. [Actual EN/TR examples](docs/1.2.0_NARRATIVE_EXAMPLES.md) · [player guide](docs/1.2.0_USER_GUIDE.md) · [progress](docs/1.2.0_PROGRESS.md). Previous artifacts and their verification remain preserved. PR3 continues separately; `main` is not merged.
+> **1.2.1 — By Royal Decree.** [Release](https://github.com/Sarikli/millenairekingdoms/releases/tag/1.2.1) · [JAR, checksum and bilingual notes](releases/1.2.1/) · [engineering review](docs/1.2.1_ENGINEERING_REVIEW.md).
+> Unattended strategic conflicts now include hostile independent villages. Focused maintenance retains real order blockers, quietly defers cold-capital treasury work and improves contributor checks. [Current architecture](docs/ARCHITECTURE.md) · [contributing](CONTRIBUTING.md) · [1.2.1 validation](docs/1.2.1_PROGRESS.md). The released 1.2.0 artifact, earlier verification and original PR #3 remain preserved. The maintenance work is reviewed in [Draft PR #4](https://github.com/Sarikli/millenairekingdoms/pull/4); this task does not merge `main`.
 
 A medieval kingdom layer for [Millénaire](https://millenaire.org) villages: NPC kingdoms with their own capitals,
 player rulers, diplomacy, war and peace, conquest through native raids and persistent unattended strategic engagements, daily taxes paid into a capital
 treasury, and independent villages that grow into kingdoms of their own. Everything is managed from an in-game
 kingdom screen, so no commands need to be memorised.
 
-Millénaire's own village simulation (villagers, buildings, cultures, village ownership, trade and its own raids) is
-left untouched, and the original Millénaire JAR is never modified.
+Original village ownership, inventories, builders and physical combat remain authoritative in Millénaire.
+Addon generation hooks use original building plans to complete natural capitals; the original dependency JAR is never modified.
 
 | | |
 |---|---|
-| Stable version | 1.2.0 — By Royal Decree |
+| Stable version | 1.2.1 — By Royal Decree |
 | Minecraft | 1.21.1 |
 | Loader | NeoForge 21.1.259 |
 | Required dependency | Millénaire 9.0.3 |
@@ -21,7 +21,7 @@ left untouched, and the original Millénaire JAR is never modified.
 | Mod ID | `millenairekingdoms` |
 | Languages | All26 original Millénaire9.0.3 locales; new translations are AI/machine-assisted drafts pending native review |
 
-See the [bilingual release notes](releases/1.2.0-final/RELEASE_NOTES.md) and [changelog](CHANGELOG.md). The final package includes the RC.10 prose revision; the earlier staged `releases/1.2.0/` image is retained only as historical evidence.
+See the [bilingual release notes](releases/1.2.1/RELEASE_NOTES.md), [changelog](CHANGELOG.md) and [audit findings and limits](docs/1.2.1_ENGINEERING_REVIEW.md). The [immutable 1.2.0 release](releases/1.2.0-final/) remains available.
 
 ## Features
 
@@ -31,7 +31,7 @@ See the [bilingual release notes](releases/1.2.0-final/RELEASE_NOTES.md) and [ch
 - **Chronicles and political atlas.** Open History/Tarihçe at the kingdom screen's bottom-left. Read kingdom/world events, search fallen archives, filter dates/types and locate known historical places on a separate full-screen political atlas. All settlements of one kingdom share a persistent color/name; native village icons, capital crowns, zoom/pan and information connect to village/kingdom history. Ocean scanning and territorial polygon rendering are removed. Old founding dates stay unknown; original NPC work and real financial/cargo rules remain. See [usage, privacy and verified scope](docs/1.2.0_RC8_ALPHA_REPORT.md).
 - **Player rulership.** Claim an unruled kingdom at its capital with a combined Millénaire reputation of 32768 or more.
   Political decisions need 8192. A kingdom has at most one ruler, and a player rules at most one kingdom.
-- **Conquest.** Active regions use original native raids; genuinely unloaded NPC war regions can resolve a persistent opposed-dice engagement using actual native military records. Existing political conquest requirements remain, without invented physical deaths or loot. An independent village falls
+- **Conquest.** Active regions use original native raids; genuinely unloaded NPC regions, including hostile independent targets, can resolve a persistent opposed-dice engagement using actual native military records. Existing political conquest requirements remain, without invented physical deaths or loot. An independent village falls
   after one victory and a rival kingdom's village after two victories during an active war. A capital can be attacked
   once the attacker holds 60% of the villages the defender had when the war began; two victories there end that kingdom.
 - **Raid orders.** Rulers pick the target and the village that sends the soldiers. Military readiness, a one-day
@@ -59,7 +59,7 @@ See the [bilingual release notes](releases/1.2.0-final/RELEASE_NOTES.md) and [ch
 
 ## Installation
 
-Download **[millenairekingdoms-1.2.0.jar](https://github.com/Sarikli/millenairekingdoms/releases/download/1.2.0/millenairekingdoms-1.2.0.jar)** and install it alongside the original **Millénaire 9.0.3** with the versions above. Use the same addon/dependency versions on the server and all clients, removing older addon copies. See the [current player guide](docs/1.2.0_USER_GUIDE.md). Keep a whole-world pre-upgrade backup.
+Download **[millenairekingdoms-1.2.1.jar](https://github.com/Sarikli/millenairekingdoms/releases/download/1.2.1/millenairekingdoms-1.2.1.jar)** and install it alongside the original **Millénaire 9.0.3** with the versions above. Use the same addon/dependency versions on the server and all clients, removing older addon copies. See the [current player guide](docs/1.2.0_USER_GUIDE.md). Keep a whole-world pre-upgrade backup. Network protocol 11 requires matching 1.2.1 clients and servers. Existing native/political/financial formats remain supported; new independent strategic records use format 2 and cannot be downgraded to 1.2.0.
 
 ### Historical 1.1.1 installation
 
