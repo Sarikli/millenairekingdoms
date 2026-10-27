@@ -1,0 +1,22 @@
+[
+  {
+    "suite": "verifyNativeWar",
+    "exit_code": 1,
+    "timed_out": false,
+    "required_pass_counts": [
+      1
+    ],
+    "expected_per_pass": 1,
+    "launches": [
+      [
+        "runNativeWarGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261027-150556-3da418e5/verifyNativeWar"
+      ],
+      [
+        "runNativeWarGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261027-150556-3da418e5/verifyNativeWar"
+      ]
+    ],
+    "passed": false
+  }
+]

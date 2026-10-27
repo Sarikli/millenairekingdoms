@@ -5,6 +5,9 @@ on:
     branches: [maintenance/1.2.1-strategic-villages]
     paths: ["src/**", "scripts/**", "gradle/**", "*.gradle", "gradle.properties", ".github/workflows/verify.yml", "LICENSE"]
   workflow_dispatch:
+concurrency:
+  group: maintenance-checks-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
@@ -39,6 +42,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: focused-verification-logs
-          path: build/verification
+          name: focused-verification-logs-and-addon
+          path: |
+            build/verification
+            build/libs/millenairekingdoms-1.2.1.jar
           if-no-files-found: ignore
