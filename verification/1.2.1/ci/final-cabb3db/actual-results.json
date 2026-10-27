@@ -1,0 +1,83 @@
+[
+  {
+    "suite": "verifyStrategicMilitary",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      19,
+      19
+    ],
+    "expected_per_pass": 19,
+    "launches": [
+      [
+        "runStrategicMilitaryGameTestServer",
+        "/home/runner/work/millenairekingdoms/millenairekingdoms/run/regression/20261027-152500-bb613439/verifyStrategicMilitary"
+      ],
+      [
+        "runStrategicMilitaryGameTestServerReload",
+        "/home/runner/work/millenairekingdoms/millenairekingdoms/run/regression/20261027-152500-bb613439/verifyStrategicMilitary"
+      ]
+    ],
+    "jar_sha256": "28043afee58e95a3d653ac20dc0110b6a47dae67624755ee0c7f6c8f0253c0f5",
+    "staged_sha256": [
+      "28043afee58e95a3d653ac20dc0110b6a47dae67624755ee0c7f6c8f0253c0f5",
+      "28043afee58e95a3d653ac20dc0110b6a47dae67624755ee0c7f6c8f0253c0f5"
+    ],
+    "image_matches": true,
+    "passed": true
+  },
+  {
+    "suite": "verifyStrategicRestart",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      2,
+      2
+    ],
+    "expected_per_pass": 2,
+    "launches": [
+      [
+        "runStrategicRestartGameTestServer",
+        "/home/runner/work/millenairekingdoms/millenairekingdoms/run/regression/20261027-152500-bb613439/verifyStrategicRestart"
+      ],
+      [
+        "runStrategicRestartGameTestServerReload",
+        "/home/runner/work/millenairekingdoms/millenairekingdoms/run/regression/20261027-152500-bb613439/verifyStrategicRestart"
+      ]
+    ],
+    "jar_sha256": "28043afee58e95a3d653ac20dc0110b6a47dae67624755ee0c7f6c8f0253c0f5",
+    "staged_sha256": [
+      "28043afee58e95a3d653ac20dc0110b6a47dae67624755ee0c7f6c8f0253c0f5",
+      "28043afee58e95a3d653ac20dc0110b6a47dae67624755ee0c7f6c8f0253c0f5"
+    ],
+    "image_matches": true,
+    "passed": true
+  },
+  {
+    "suite": "verifyMaintenance",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      1,
+      1
+    ],
+    "expected_per_pass": 1,
+    "launches": [
+      [
+        "runMaintenanceGameTestServer",
+        "/home/runner/work/millenairekingdoms/millenairekingdoms/run/regression/20261027-152500-bb613439/verifyMaintenance"
+      ],
+      [
+        "runMaintenanceGameTestServerReload",
+        "/home/runner/work/millenairekingdoms/millenairekingdoms/run/regression/20261027-152500-bb613439/verifyMaintenance"
+      ]
+    ],
+    "jar_sha256": "28043afee58e95a3d653ac20dc0110b6a47dae67624755ee0c7f6c8f0253c0f5",
+    "staged_sha256": [
+      "28043afee58e95a3d653ac20dc0110b6a47dae67624755ee0c7f6c8f0253c0f5",
+      "28043afee58e95a3d653ac20dc0110b6a47dae67624755ee0c7f6c8f0253c0f5"
+    ],
+    "image_matches": true,
+    "passed": true
+  }
+]

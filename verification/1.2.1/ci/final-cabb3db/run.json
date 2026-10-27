@@ -1,0 +1,31 @@
+{
+  "run": "https://github.com/Sarikli/millenairekingdoms/actions/runs/40530486804",
+  "source_commit": "cabb3db2f86701476219168102a0bed2b671522c",
+  "conclusion": "success",
+  "artifact_id": 12746621699,
+  "artifact_sha256": "8e98e2f87de56d3572a09141a2482543393bb2b898aecf4e16716a42ed38f125",
+  "production_jar_sha256": "28043afee58e95a3d653ac20dc0110b6a47dae67624755ee0c7f6c8f0253c0f5",
+  "packages": [
+    {
+      "file": "verifyStrategicMilitary.log",
+      "required_pass_counts": [
+        19,
+        19
+      ]
+    },
+    {
+      "file": "verifyMaintenance.log",
+      "required_pass_counts": [
+        1,
+        1
+      ]
+    },
+    {
+      "file": "verifyStrategicRestart.log",
+      "required_pass_counts": [
+        2,
+        2
+      ]
+    }
+  ]
+}

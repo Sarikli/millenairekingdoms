@@ -1,0 +1,57 @@
+{
+  "scope": "Actual useful physical conversions in two local controlled GameTest JVMs, eight measurements; not a large-world percentile or a before/after physical durability speedup",
+  "samples": [
+    {
+      "case": "large",
+      "total_micros": 71362,
+      "flush_micros": 44996,
+      "flush_calls": 3
+    },
+    {
+      "case": "mixed",
+      "total_micros": 31192,
+      "flush_micros": 20936,
+      "flush_calls": 3
+    },
+    {
+      "case": "silver",
+      "total_micros": 49636,
+      "flush_micros": 37356,
+      "flush_calls": 3
+    },
+    {
+      "case": "bronze",
+      "total_micros": 64491,
+      "flush_micros": 50982,
+      "flush_calls": 3
+    },
+    {
+      "case": "large",
+      "total_micros": 42481,
+      "flush_micros": 21295,
+      "flush_calls": 3
+    },
+    {
+      "case": "silver",
+      "total_micros": 33497,
+      "flush_micros": 15534,
+      "flush_calls": 3
+    },
+    {
+      "case": "bronze",
+      "total_micros": 53029,
+      "flush_micros": 34222,
+      "flush_calls": 3
+    },
+    {
+      "case": "mixed",
+      "total_micros": 50456,
+      "flush_micros": 35815,
+      "flush_calls": 3
+    }
+  ],
+  "min_total_micros": 31192,
+  "max_total_micros": 71362,
+  "median_total_micros": 50046.0,
+  "unchanged_payment_and_conversion_class_bytes": true
+}
