@@ -1,0 +1,22 @@
+name: Bug report
+description: Reproducible gameplay, persistence or presentation problem
+body:
+  - type: textarea
+    id: versions
+    attributes:
+      label: Versions
+      description: Addon, original Millenaire, Minecraft, NeoForge and Java versions.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction and expected result
+      description: Include steps, actual behavior, loaded/unloaded villages and new/upgraded world context.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Redacted evidence
+      description: Relevant log excerpts or operation IDs. Remove private player data, credentials and server addresses. Preserve original recovery files locally.

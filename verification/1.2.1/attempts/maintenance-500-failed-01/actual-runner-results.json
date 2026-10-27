@@ -1,0 +1,29 @@
+[
+  {
+    "suite": "verifyMaintenance",
+    "exit_code": 1,
+    "required_pass_counts": [
+      1
+    ],
+    "expected_per_pass": 1,
+    "launches": [
+      [
+        "runMaintenanceGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261027-142524-36a8c2ba/verifyMaintenance"
+      ],
+      [
+        "runMaintenanceGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261027-142524-36a8c2ba/verifyMaintenance"
+      ]
+    ],
+    "passed": false
+  },
+  {
+    "suite": "verifyIndependentNative",
+    "exit_code": 1,
+    "required_pass_counts": [],
+    "expected_per_pass": 1,
+    "launches": [],
+    "passed": false
+  }
+]
