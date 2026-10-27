@@ -2,12 +2,15 @@
 from pathlib import Path
 import argparse,subprocess,json,time,os,hashlib
 
-parser=argparse.ArgumentParser();parser.add_argument('--world',type=Path,required=True);parser.add_argument('--output',type=Path,required=True);a=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--world',type=Path,required=True);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--results',type=Path,required=True);a=parser.parse_args()
 obs=a.world/'world/natural-observation';out=a.output;out.mkdir(parents=True,exist_ok=True);tools=Path(__file__).resolve().parent
 deadline=time.monotonic()+172800
 while time.monotonic()<deadline:
  if(obs/'failure.json').exists():raise SystemExit('Observer failure is preserved; no completed report generated')
- if(obs/'final.json').exists()and(obs/'reopen.json').exists():
+ if(obs/'final.json').exists()and(obs/'reopen.json').exists()and a.results.exists():
+  results=json.loads(a.results.read_text());stages=results.get('stages',[])
+  if len(stages)!=2:time.sleep(10);continue
+  assert[stage['phase']for stage in stages]==['resume','reopen']and all(stage['exit_code']==0 and stage['build_successful']for stage in stages)
   final=json.loads((obs/'final.json').read_text());reopen=json.loads((obs/'reopen.json').read_text());assert final['observationComplete']and final['consecutiveTicks']==7200000 and reopen['sameWorldSeparateJvm']and reopen['kingdomMembershipAndCapitalsPreserved']
   subprocess.run(['python',str(tools/'analyze-observation.py'),'--world',str(a.world),'--output',str(out)],stdout=(out/'analysis.log').open('w'),stderr=subprocess.STDOUT,check=True)
   environment=os.environ.copy();environment['MPLCONFIGDIR']='/tmp/kingdoms-natural300-mpl';environment['XDG_CACHE_HOME']='/tmp/kingdoms-natural300-cache'
