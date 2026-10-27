@@ -1,0 +1,4 @@
+# Exact segment04 observer image
++
++The temporary first-resume observer JAR was overwritten during the later logging correction. Its recorded source changes were reconstructed and compiled with the same pinned Java21/classpath. Reproducing the recorded ZIP timestamp yields exactly the original launch-manifest SHA-256 `94596eab173e82afaf53cb7e021f2621d312e85fb14d7fbcfac5c9e6b3d21683`. The complete byte-identical image is now retained in `../../images/kingdoms-natural-observer-segment-04.jar`; the source and reconstruction receipt are here. This recovery does not change any world, clock, gameplay JAR or recorded outcome.
++
