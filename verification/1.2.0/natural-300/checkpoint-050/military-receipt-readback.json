@@ -1,0 +1,16 @@
+{
+  "source": "day-050/data/millenairekingdoms_kingdoms.dat",
+  "source_sha256": "f6ae943aa52b8cb5ee59b82ab03314b1c40fb34ced9a44e1af99eba90d5dae6e",
+  "receipts": [
+    {
+      "operation": "53af4edb-f50d-4c44-8762-943ed95ca34c",
+      "attacker": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+      "target": "36192a82-c722-47f6-a6b6-ea099e584b73",
+      "outcome": "WON",
+      "transferred": false
+    }
+  ],
+  "campaign_wins": 1,
+  "production_required_wins_for_kingdom_war": 2,
+  "scope": "Readback of retained native saved political file; one victory is not a completed conquest"
+}

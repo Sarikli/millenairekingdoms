@@ -4,5 +4,6 @@
   "images/kingdoms-natural-observer-segment-04.jar": "94596eab173e82afaf53cb7e021f2621d312e85fb14d7fbcfac5c9e6b3d21683",
   "observer-source-revisions/segment-04/NaturalObservation.java": "1010b001344bae96548e9ce95934fbf4ba963c111ad06918f250a2738d09c034",
   "observer-source-revisions/segment-04/README.md": "91b44670cedea45d325ef81572f19686173ebcf2ab33769fb25f39fb53bf3c72",
-  "observer-source-revisions/segment-04/reconstruction-proof.json": "3c8d346a2d221f56c496136a0ef8d5b154dd41cc21fd9b9f1cabdf2d5909b8bf"
+  "observer-source-revisions/segment-04/reconstruction-proof.json": "3c8d346a2d221f56c496136a0ef8d5b154dd41cc21fd9b9f1cabdf2d5909b8bf",
+  "tools/analyze-decisions.py": "c0a7f85de4df4ac2df4c3aaab57f125c457cc4452c59f6fd4b42d80210150e21"
 }

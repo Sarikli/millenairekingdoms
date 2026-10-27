@@ -1,0 +1,62 @@
+{
+  "README.md": {
+    "bytes": 1827,
+    "sha256": "db1a941efdfff8b90599dfab52fb557f3027e8662830aaea5f1bc97934480287"
+  },
+  "analysis/daily.csv": {
+    "bytes": 2028,
+    "sha256": "9598fcc8a285d899f7fbabe0a28371c908d19b65d214e24e92d9e0c133e23679"
+  },
+  "analysis/decisions-summary.json": {
+    "bytes": 7480,
+    "sha256": "557ec18fbbbd6a609517cf6d4614b1f99f82e4e17c8823f838ace3b61c98e890"
+  },
+  "analysis/relationship-samples.csv": {
+    "bytes": 148348,
+    "sha256": "87830dac1ccb81a10b277003a87ab98242cbea27f805e1d4bf19315d492f0eb4"
+  },
+  "analysis/strategy-samples.csv": {
+    "bytes": 33533,
+    "sha256": "5886f794a7642f13e7ea1575da49c13ae6f4c1b69f382ec8914f45843fdcc425"
+  },
+  "analysis/summary.json": {
+    "bytes": 13211,
+    "sha256": "b22540b6953fab6022e62ea108d79d0c6403311a7f7762dad136ae9829cd0418"
+  },
+  "baseline.json": {
+    "bytes": 86354,
+    "sha256": "0f4231bd2d2f13bc0aaae1ba59c4acaeccd31dd1432e234ae189b081e58b2465"
+  },
+  "daily-through-day-050.jsonl.gz": {
+    "bytes": 910440,
+    "sha256": "a39bbad2d6f57ac81f50fb4416f902db66355cc9841d8bbb6e72c99cb26334f1"
+  },
+  "generation.jsonl.gz": {
+    "bytes": 17084,
+    "sha256": "3ee7a7baa41acd99b42a7094b177e6c28fb091387935f94f7e068fe8e83b4189"
+  },
+  "history.jsonl.gz": {
+    "bytes": 1134,
+    "sha256": "1eb13bb1051cdd05f60cfb8b6facd05a18ef90f62af52fe6cfe6f1a62cad4a80"
+  },
+  "latest.json": {
+    "bytes": 132747,
+    "sha256": "9162d9ee5a9d2ba1c2ef57b46d5570e2fef619c95ee018d7d278f0f8cb969fb9"
+  },
+  "military-receipt-readback.json": {
+    "bytes": 582,
+    "sha256": "0e2b6ec951cd9fa7f4f6bf8351124b38d903ff812f898020a363b30a812b8355"
+  },
+  "native-state-day-050.tar.gz": {
+    "bytes": 273945,
+    "sha256": "223e5cd2feb8da555493b0107e11f237089fd63207daaae9081c71519d6bce77"
+  },
+  "political-before-day.jsonl.gz": {
+    "bytes": 4078,
+    "sha256": "f45c23583d00b4d23404eb84f684b4256057cf414e22da598efe8d42eb5de38c"
+  },
+  "resume-log-through-day-050.txt.gz": {
+    "bytes": 48936,
+    "sha256": "c4e1f4200fb9be3b37d8cadb86ef443d10db026ee06fdaf69050c2a79a33ac3d"
+  }
+}
