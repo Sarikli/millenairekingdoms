@@ -970,6 +970,24 @@ neoForge {
             systemProperty 'kingdoms.tests.persistence', 'read'
             systemProperty 'kingdoms.tests.historyWorld', 'true'
         }
+        economicQueueGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_economic_queue_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+        }
+        economicQueueGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_economic_queue_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+        }
         configureEach {
             logLevel = org.slf4j.event.Level.INFO
             jvmArguments.addAll '-Xms512m', '-Xmx3G'
@@ -1305,3 +1323,6 @@ tasks.register('verifyMaintenance') { group = 'verification'; dependsOn tasks.na
 
 tasks.named('runIndependentNativeGameTestServerReload') { dependsOn tasks.named('runIndependentNativeGameTestServer') }
 tasks.register('verifyIndependentNative') { group = 'verification'; dependsOn tasks.named('runIndependentNativeGameTestServerReload') }
+
+tasks.named('runEconomicQueueGameTestServerReload') { dependsOn tasks.named('runEconomicQueueGameTestServer') }
+tasks.register('verifyEconomicQueue') { group = 'verification'; dependsOn tasks.named('runEconomicQueueGameTestServerReload') }

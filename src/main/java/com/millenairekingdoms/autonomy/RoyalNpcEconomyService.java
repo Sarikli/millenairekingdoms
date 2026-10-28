@@ -46,6 +46,10 @@ import org.slf4j.Logger;
 public final class RoyalNpcEconomyService {
     private static final Logger LOGGER=LogUtils.getLogger();
     private static final ResourceLocation BUILD=ResourceLocation.parse("millenaire:build");
+    /** An unpaid development mandate; materials are re-read from the current original catalog. */
+    public record ProjectNeed(UUID id, UUID village, ResourceLocation planSet) {
+        public ProjectNeed { java.util.Objects.requireNonNull(id); java.util.Objects.requireNonNull(village); java.util.Objects.requireNonNull(planSet); }
+    }
     public record Proposal(Choice choice,int weight,String reason) {}
     public record Preview(List<Proposal> candidates,long funds,String reason){public Preview{candidates=List.copyOf(candidates);}}
     public record Result(UUID attempt,Kind kind,Outcome outcome,String reason) {}
@@ -59,27 +63,31 @@ public final class RoyalNpcEconomyService {
     private boolean constructionEnabled(){return !automatic || RoyalConstructionConfig.TRACKING.get();}
     private boolean shippingEnabled(){return !automatic || RoyalShipmentConfig.TRACKING.get();}
 
-    public Preview inspect(UUID kingdom,long day){
+    public Preview inspect(UUID kingdom,long day){ return inspect(kingdom,day,null); }
+    public Preview inspect(UUID kingdom,long day,ProjectNeed project){
         thread();var data=KingdomSavedData.get(level);var k=data.kingdom(kingdom);var limits=RoyalNpcConfig.budgets();
         if(!constructionEnabled() && !shippingEnabled())return none("Both automatic economic domain trackers are paused");
         if(!limits.enabled())return none("New NPC economic decisions are disabled");
         if(k==null || !k.active() || k.fallen() || !data.npcGoverned(kingdom))return none("Current active NPC government is required; player kingdoms are excluded");
         var history=history(kingdom);long due=history.stream().mapToLong(Decision::nextDay).max().orElse(0);
         if(day<due)return none("Persistent economic cooldown until day "+due);
-        return discover(data,k,day,history,limits,RoyalNpcConfig.cadence());
+        return discover(data,k,day,history,limits,RoyalNpcConfig.cadence(),project);
     }
     public Result evaluate(UUID kingdom,long day,RandomSource random){
         return evaluateConditional(kingdom,day,random,UUID.randomUUID(),proposal->true);
     }
     /** A strategic intention selects a conditional need, never bypasses current domain/budget/native discovery. */
     Result evaluateConditional(UUID kingdom,long day,RandomSource random,UUID attempt,java.util.function.Predicate<Proposal> eligible){
+        return evaluateConditional(kingdom,day,random,attempt,eligible,null);
+    }
+    Result evaluateConditional(UUID kingdom,long day,RandomSource random,UUID attempt,java.util.function.Predicate<Proposal> eligible,ProjectNeed project){
         thread();if(day<0)throw new IllegalArgumentException("Invalid NPC decision day");
         var existing=decisions.load(attempt);if(existing!=null){if(!existing.kingdom().equals(kingdom) || !existing.dimension().equals(level.dimension().location().toString()) || !eligible.test(new Proposal(existing.choice(),1,existing.reason())))throw new IllegalArgumentException("Conditional identity belongs to another economic authorization");return result(existing);}
         var data=KingdomSavedData.get(level);var k=data.kingdom(kingdom);var limits=RoyalNpcConfig.budgets();
         if(!constructionEnabled() && !shippingEnabled())return new Result(null,Kind.NONE,Outcome.SKIPPED,"Both automatic economic domain trackers are paused");
         if(!limits.enabled() || k==null || !k.active() || k.fallen() || !data.npcGoverned(kingdom))return new Result(null,Kind.NONE,Outcome.SKIPPED,"New decisions disabled or not an active NPC kingdom");
         var history=history(kingdom);if(history.stream().anyMatch(d->d.nextDay()>day))return new Result(null,Kind.NONE,Outcome.SKIPPED,"Persistent economic cooldown");
-        var cadence=RoyalNpcConfig.cadence();var preview=discover(data,k,day,history,limits,cadence);var chosen=choose(preview.candidates().stream().filter(eligible).toList(),random);
+        var cadence=RoyalNpcConfig.cadence();var preview=discover(data,k,day,history,limits,cadence,project);var chosen=choose(preview.candidates().stream().filter(eligible).toList(),random);
         var capital=PoliticsService.village(level,k.capital());var choice=chosen==null ? Choice.none() : chosen.choice();
         var decision=new Decision(attempt,level.dimension().location().toString(),kingdom,day,Math.addExact(day,cadence.attemptDays()),
                 new Budget(k.capital(),capital==null ? null : capital.getVillageTypeId(),limits.reserve(),limits.sharePermille()),choice,
@@ -103,17 +111,21 @@ public final class RoyalNpcEconomyService {
         decision=decisions.finish(attempt,outcome,bounded(explanation));log(decision);return result(decision);
     }
 
-    private Preview discover(KingdomSavedData data,KingdomSavedData.Kingdom k,long day,List<Decision> history,RoyalNpcConfig.BudgetLimits limits,RoyalNpcConfig.Cadence cadence){
+    private Preview discover(KingdomSavedData data,KingdomSavedData.Kingdom k,long day,List<Decision> history,RoyalNpcConfig.BudgetLimits limits,RoyalNpcConfig.Cadence cadence,ProjectNeed project){
         var profile=KingdomPersonality.forCapital(level,k);var capital=PoliticsService.village(level,k.capital());
         if(!profile.specialized() || capital==null || capital.getOwnerUUID()!=null)return none("Recognized original autonomous capital type/owner is required");
         if(!capital.isActive() || !level.isLoaded(capital.getCenter()))return none("Capital is inactive/unloaded; no chunks are forced");
         if(MillenaireServerConfig.SERVER.ignoreResourceCost.get())return none("Original resource costs are disabled; no NPC economic project is justified");
         RoyalTreasurySnapshot treasury;try{treasury=RoyalTreasurySnapshot.forNpc(level,k.id());}catch(IllegalArgumentException|IllegalStateException missing){return none("Actual capital treasury is unavailable: "+missing.getMessage());}
-        long funds=treasury.spendableValue();var members=members(data,k.id(),profile.category(),day,cadence);var stocks=new HashMap<UUID,RoyalVillageStock>();
+        long funds=treasury.spendableValue();var members=new ArrayList<>(members(data,k.id(),profile.category(),day,cadence));
+        if(project!=null){
+            if(!k.id().equals(data.owner(project.village())))return none("Development supply target left the kingdom");
+            if(!members.contains(project.village())){if(members.isEmpty())members.add(project.village());else members.set(members.size()-1,project.village());}
+        }var stocks=new HashMap<UUID,RoyalVillageStock>();
         var shipments=shipmentHistory().stream().filter(e->e.intent().dimension().equals(level.dimension().location().toString()) && e.intent().kingdom().equals(k.id()) && !e.terminal()).toList();
         var construction=constructionHistory().stream().filter(e->e.intent().dimension().equals(level.dimension().location().toString()) && e.intent().kingdom().equals(k.id()) && !e.terminal()).toList();
         var proposals=new ArrayList<Proposal>();var diagnostics=new java.util.LinkedHashMap<String,Integer>();String reason="No justified legal, resourced investment or safely supplied native shortage";
-        if(shippingEnabled() && shipments.isEmpty())proposals.addAll(shortages(data,k,members,stocks,history,construction,day,funds,profile.category(),limits,cadence,diagnostics));
+        if(shippingEnabled() && shipments.isEmpty())proposals.addAll(shortages(data,k,members,stocks,history,construction,day,funds,profile.category(),limits,cadence,diagnostics,project));
         else if(shippingEnabled())reason="Existing shipment/liability must settle before another NPC shipment";
         // Genuine existing native shortages take priority over optional new commissions. No player/natural queue mutation.
         if(!proposals.isEmpty()){treasury.requireUnchanged();return new Preview(proposals,funds,"Native pending resource shortage");}
@@ -151,18 +163,27 @@ public final class RoyalNpcEconomyService {
     }
 
     private List<Proposal> shortages(KingdomSavedData data,KingdomSavedData.Kingdom k,List<UUID> members,Map<UUID,RoyalVillageStock> stocks,List<Decision> history,
-                                     List<RoyalConstructionStore.Entry> construction,long day,long funds,KingdomPersonality.Category base,RoyalNpcConfig.BudgetLimits limits,RoyalNpcConfig.Cadence cadence,Map<String,Integer> diagnostics){
+                                     List<RoyalConstructionStore.Entry> construction,long day,long funds,KingdomPersonality.Category base,RoyalNpcConfig.BudgetLimits limits,RoyalNpcConfig.Cadence cadence,Map<String,Integer> diagnostics,ProjectNeed project){
         var out=new ArrayList<Proposal>();var shipping=new RoyalShipmentService(level);int routeDays=base==KingdomPersonality.Category.ARTISAN ? Math.max(1,cadence.routeDays()/2) : cadence.routeDays();
         for(var targetId:members){
-            var target=PoliticsService.village(level,targetId);if(!usable(target))continue;var pending=target.getPendingProject();if(pending==null)continue;
-            var set=ModCultures.getBuildingPlanSet(pending.planSetId());var definition=set==null ? null : set.getLevel(pending.variant(),pending.level());
-            if(definition==null || !set.culture().equals(target.getCultureId()))continue;
+            var target=PoliticsService.village(level,targetId);if(!usable(target))continue;var pending=target.getPendingProject();
+            ResourceLocation planSet;Map<ResourceLocation,Integer> requiredMaterials;UUID need;String description;
+            if(pending!=null){
+                var set=ModCultures.getBuildingPlanSet(pending.planSetId());var definition=set==null ? null : set.getLevel(pending.variant(),pending.level());
+                if(definition==null || !set.culture().equals(target.getCultureId()))continue;
+                planSet=pending.planSetId();requiredMaterials=definition.requiredResources();
+                need=construction.stream().filter(e->e.intent().actor()==null && e.intent().village().equals(targetId) && e.intent().planSet().equals(pending.planSetId()) && e.intent().variant().equals(pending.variant()))
+                        .map(e->e.intent().id()).findFirst().orElseGet(()->UUID.nameUUIDFromBytes((targetId+"/"+pending.planSetId()+"/"+pending.variant()+"/"+pending.level()+"/"+pending.isUpgrade()+"/"+pending.buildingId()).getBytes(StandardCharsets.UTF_8)));
+                description="Native pending "+planSet+"/"+pending.variant()+" level"+pending.level();
+            }else{
+                if(project==null || !project.village().equals(targetId))continue;
+                var option=RoyalConstructionCatalog.forNpc(level,k.id(),targetId).options().stream().filter(o->o.planSet().equals(project.planSet())).findFirst().orElse(null);
+                if(option==null)continue;
+                planSet=option.planSet();requiredMaterials=option.requiredMaterials();need=project.id();description="Unpaid development "+project.id()+" for "+planSet;
+            }
             RoyalVillageStock targetStock;try{targetStock=stock(stocks,k.id(),targetId);}catch(IllegalArgumentException|IllegalStateException unavailable){continue;}
-            Map<ResourceLocation,Integer> missing;try{missing=targetStock.missing(definition.requiredResources());}catch(IllegalArgumentException|IllegalStateException unavailable){note(diagnostics,"native pending material evidence unavailable");continue;}
+            Map<ResourceLocation,Integer> missing;try{missing=targetStock.missing(requiredMaterials);}catch(IllegalArgumentException|IllegalStateException unavailable){note(diagnostics,"native pending material evidence unavailable");continue;}
             if(missing.isEmpty())continue;note(diagnostics,"native pending material deficit");
-            // A native pending fingerprint is diagnostic provenance, not a claim to own/mutate its queue identity.
-            UUID need=construction.stream().filter(e->e.intent().actor()==null && e.intent().village().equals(targetId) && e.intent().planSet().equals(pending.planSetId()) && e.intent().variant().equals(pending.variant()))
-                    .map(e->e.intent().id()).findFirst().orElseGet(()->UUID.nameUUIDFromBytes((targetId+"/"+pending.planSetId()+"/"+pending.variant()+"/"+pending.level()+"/"+pending.isUpgrade()+"/"+pending.buildingId()).getBytes(StandardCharsets.UTF_8)));
             var sources=members.stream().filter(id->!id.equals(targetId)).map(id->PoliticsService.village(level,id)).filter(this::usable)
                     .sorted(Comparator.comparingDouble(v->v.getCenter().distSqr(target.getCenter()))).toList();
             boolean chosen=false;
@@ -178,9 +199,9 @@ public final class RoyalNpcEconomyService {
                         int quantity=Math.min(Math.min(required.getValue(),available),Math.min(cadence.maximumCargo(),com.millenairekingdoms.shipping.RoyalShipmentConfig.current().maximumQuantity()));if(quantity<1){note(diagnostics,"source goods protected/no safe surplus");continue;}
                         var productId=BuiltInRegistries.ITEM.getKey(product);var quote=shipping.quoteNpc(k.id(),sourceId,targetId,productId,quantity);
                         if(!RoyalNpcBudget.allows(funds,quote.fee(),limits.reserve(),limits.sharePermille())){note(diagnostics,"transport fee exceeds reserve/share");continue;}
-                        var context=RoyalInvestmentPolicy.context(level,data,k,targetId);int weight=Math.max(1,RoyalInvestmentPolicy.weight(context,RoyalInvestmentPolicy.role(pending.planSetId()),RoyalNpcConfig.weights()))*Math.min(64,required.getValue());
+                        var context=RoyalInvestmentPolicy.context(level,data,k,targetId);int weight=Math.max(1,RoyalInvestmentPolicy.weight(context,RoyalInvestmentPolicy.role(planSet),RoyalNpcConfig.weights()))*Math.min(64,required.getValue());
                         out.add(new Proposal(new Choice(Kind.SHIPMENT,sourceId,targetId,productId,quantity,quote.fee(),quote.travelTicks(),need),weight,
-                                "Native pending "+pending.planSetId()+"/"+pending.variant()+" level"+pending.level()+" lacks "+required.getValue()+" "+required.getKey()+"; safe source "+sourceId+" offers "+available+"; send "+quantity+" to "+targetId+"; need="+need));
+                                description+" lacks "+required.getValue()+" "+required.getKey()+"; safe source "+sourceId+" offers "+available+"; send "+quantity+" to "+targetId+"; need="+need));
                         chosen=true;break;
                     }if(chosen)break;
                 }if(chosen)break;

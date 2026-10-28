@@ -1,0 +1,21 @@
+[
+  {
+    "suite": "verifyEconomicQueue",
+    "exit_code": 1,
+    "timed_out": false,
+    "required_pass_counts": [],
+    "expected_per_pass": 6,
+    "launches": [
+      [
+        "runEconomicQueueGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261028-154721-d14df1ba/verifyEconomicQueue"
+      ]
+    ],
+    "jar_sha256": "3a6ba2008cb1d401882cc25bc4c6f2634ad16e7be89819e8f4891a7db4016edc",
+    "staged_sha256": [
+      "3a6ba2008cb1d401882cc25bc4c6f2634ad16e7be89819e8f4891a7db4016edc"
+    ],
+    "image_matches": false,
+    "passed": false
+  }
+]

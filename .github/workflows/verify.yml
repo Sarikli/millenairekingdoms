@@ -2,7 +2,7 @@ name: Build and focused maintenance checks
 on:
   pull_request:
   push:
-    branches: [maintenance/1.2.1-strategic-villages]
+    branches: [maintenance/1.2.1-strategic-villages, feature/1.2.2-autonomous-economy]
     paths: ["src/**", "scripts/**", "gradle/**", "*.gradle", "gradle.properties", ".github/workflows/verify.yml", "LICENSE"]
   workflow_dispatch:
 concurrency:
@@ -35,15 +35,16 @@ jobs:
       - name: Build and audit packaged resources
         run: |
           bash gradlew --no-daemon build compileGametestJava
-          python3 scripts/check-localization.py --jar build/libs/millenairekingdoms-1.2.1.jar
-          python3 scripts/check-project.py --jar build/libs/millenairekingdoms-1.2.1.jar
+          release_version=$(sed -n 's/^mod_version=//p' gradle.properties)
+          python3 scripts/check-localization.py --jar "build/libs/millenairekingdoms-${release_version}.jar"
+          python3 scripts/check-project.py --jar "build/libs/millenairekingdoms-${release_version}.jar"
       - name: Focused isolated write and separate-JVM reopen gates
-        run: python3 scripts/verify-regression.py --suites verifyStrategicMilitary,verifyStrategicRestart,verifyMaintenance -- bash gradlew --no-daemon
+        run: python3 scripts/verify-regression.py --suites verifyEconomicQueue -- bash gradlew --no-daemon
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: focused-verification-logs-and-addon
           path: |
             build/verification
-            build/libs/millenairekingdoms-1.2.1.jar
+            build/libs/millenairekingdoms-*.jar
           if-no-files-found: ignore

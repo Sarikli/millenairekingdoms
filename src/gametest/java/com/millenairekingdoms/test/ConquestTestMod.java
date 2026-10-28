@@ -90,6 +90,7 @@ public final class ConquestTestMod {
             event.register(RoyalStrategyCrashGameTests.class);
             event.register(RoyalStrategyRecoveryGameTests.class);
             event.register(RoyalStrategyGameTests.class);
+            event.register(EconomicQueueGameTests.class);
             event.register(StrategicMilitaryGameTests.class);
             event.register(IndependentStrategicGameTests.class);
             event.register(MaintenanceScaleGameTests.class);

@@ -19,7 +19,7 @@ public final class RoyalNpcConfig {
     public static ModConfigSpec.IntValue ORDINARY,PREFERRED,WAR_MILITARY,BORDER_MILITARY;
     public static ModConfigSpec.DoubleValue MILITARY_AGGRESSION,AGRICULTURAL_AGGRESSION,RELIGIOUS_AGGRESSION,ARTISAN_AGGRESSION;
     public record BudgetLimits(boolean enabled,long reserve,int sharePermille){
-        public static final BudgetLimits DEFAULTS=new BudgetLimits(true,128,250);
+        public static final BudgetLimits DEFAULTS=new BudgetLimits(true,64,500);
         public BudgetLimits{if(reserve<0 || sharePermille<1 || sharePermille>1000)throw new IllegalArgumentException("Invalid NPC spending limits");}
     }
     public static ModConfigSpec.BooleanValue ECONOMIC_ENABLED;
@@ -42,8 +42,8 @@ public final class RoyalNpcConfig {
         RELIGIOUS_AGGRESSION=b.defineInRange("religiousAggressionFactor",1.0,0.01,3.0);
         ARTISAN_AGGRESSION=b.defineInRange("artisanAggressionFactor",0.9,0.01,3.0);
         ECONOMIC_ENABLED=b.comment("Allow new NPC economic decisions and their first fee; existing paid domain recovery remains active.").define("economicDecisionsEnabled",true);
-        TREASURY_RESERVE=b.comment("Minimum actual deniers retained after a policy-owned first fee. Default128 protects two silver coins; owed taxes do not count.").defineInRange("treasuryReserveDeniers",128,0,1_000_000_000);
-        FEE_SHARE=b.comment("Maximum first fee as permille of current actual treasury. Default250 caps one major fee at a quarter; native material costs remain independent.").defineInRange("maximumFeeSharePermille",250,1,1000);
+        TREASURY_RESERVE=b.comment("Minimum actual deniers retained after a policy-owned first fee. Default64 protects one silver coin; owed taxes do not count.").defineInRange("treasuryReserveDeniers",64,0,1_000_000_000);
+        FEE_SHARE=b.comment("Maximum first fee as permille of current actual treasury. Default500 caps one major fee at half; native material costs remain independent.").defineInRange("maximumFeeSharePermille",500,1,1000);
         ATTEMPT_DAYS=b.comment("Minimum days between persisted economic attempts, including unavailable/failed decisions.").defineInRange("attemptIntervalDays",1,1,120);
         PROJECT_DAYS=b.comment("Minimum days between new royal project attempts per kingdom; must be at least attemptIntervalDays.").defineInRange("projectCooldownDays",3,1,240);
         VILLAGE_DAYS=b.comment("Minimum days between royal project attempts in the same village; must be at least projectCooldownDays.").defineInRange("villageProjectCooldownDays",6,1,480);
