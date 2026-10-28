@@ -75,6 +75,9 @@ public final class RoyalStrategyStore {
     public void write(Plan expected, Plan next) {
         var portfolio = portfolio(next.kingdom());
         if (!Objects.equals(portfolio.primary(), expected)) throw new IllegalStateException("Strategic intention changed; re-evaluate");
+        var nextLane=next.logistics() ? Lane.LOGISTICS : Lane.DEVELOPMENT;
+        if(expected!=null && expected.logistics()!=next.logistics() && portfolio.get(nextLane)!=null)
+            throw new IllegalStateException("Legacy move would overwrite an independent economic lane");
         if (expected != null) portfolio = portfolio.with(expected.logistics() ? Lane.LOGISTICS : Lane.DEVELOPMENT, null);
         writePortfolio(next.kingdom(), portfolio.with(next.logistics() ? Lane.LOGISTICS : Lane.DEVELOPMENT, next));
     }

@@ -18,7 +18,7 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.slf4j.Logger;
 
-/** Bounded NPC round robin, including unloaded capitals; no forced chunks or startup purchases. */
+/** Bounded NPC round robin, including unloaded capitals; no startup purchases; separate bounded activation owns only expiring tickets. */
 public final class RoyalNpcRuntime {
     private static final Logger LOGGER=LogUtils.getLogger();
     private static final Map<ServerLevel,Session> SESSIONS=new WeakHashMap<>();
@@ -62,7 +62,7 @@ public final class RoyalNpcRuntime {
         int inspected=Math.min(limit,kingdoms.size()),attempts=0;var service=new RoyalStrategyService(level);
         for(int offset=0;offset<inspected;offset++){
             var kingdom=kingdoms.get((start+offset)%kingdoms.size());var id=kingdom.id();session.cursor=id;
-            try{var result=service.step(id,day,level.getRandom());if(result!=null && result.attempt()!=null)attempts++;session.errors.remove(id);}
+            try{var result=service.step(id,day,level.getRandom());if(result!=null && result.attempt()!=null)attempts++;RoyalEconomicActivation.offer(level,id);session.errors.remove(id);}
             catch(RuntimeException failure){long now=level.getGameTime();var last=session.errors.get(id);if(last==null || now-last>=1200){session.errors.put(id,now);LOGGER.warn("[Kingdoms] NPC economy {} remains deferred: {}",id,failure.getMessage());}}
         }
         return session.last=new Report(inspected,attempts,System.nanoTime()-started);

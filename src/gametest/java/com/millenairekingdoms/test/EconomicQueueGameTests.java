@@ -98,6 +98,7 @@ public final class EconomicQueueGameTests {
             h.assertTrue(store.read(r.kingdom(),Lane.LOGISTICS).equals(logistics) && store.read(r.kingdom(),Lane.DEVELOPMENT).equals(linked),
                     "Construction advancement preserves an independently persisted logistics lane");
             HistoryGameTests.refused(h,()->store.write(Lane.LOGISTICS,null,logistics));
+            HistoryGameTests.refused(h,()->store.write(linked,plan(r,UUID.randomUUID(),r.to(),option.planSet(),true)));
             HistoryGameTests.refused(h,()->new Portfolio(development,plan(r,development.id(),r.to(),option.planSet(),true)));
             h.assertTrue(store.portfolio(r.kingdom()).equals(new Portfolio(linked,logistics)),"Stale writes and colliding domain identities leave both original lanes intact");h.succeed();
         }
@@ -118,6 +119,62 @@ public final class EconomicQueueGameTests {
             var future=HistoryFiles.read(store.file(r.kingdom()));future.putInt("format",99);HistoryFiles.write(store.file(r.kingdom()),future);var bytes=Files.readAllBytes(store.file(r.kingdom()));
             HistoryGameTests.refused(h,()->store.portfolio(r.kingdom()));h.assertTrue(Arrays.equals(bytes,Files.readAllBytes(store.file(r.kingdom()))),"Unknown future data is preserved, never reset to an empty economy");h.succeed();
         }
+    }
+
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void linkedPaidConstructionStillAllowsIndependentRealSupplyOrder(GameTestHelper h) {
+        try(var policy=new Policy();var r=RoyalShipmentSupport.realm(h,"linked-project-resupply")) {
+            RoyalNpcEconomyGameTests.money(r,8);var option=RoyalNpcEconomyGameTests.option(r,r.source());
+            RoyalNpcEconomyGameTests.materials(h,r,r.source(),option.requiredMaterials(),null);
+            var builder=RoyalNpcEconomyGameTests.builder(h,r);
+            try {
+                var service=new RoyalStrategyService(r.level());var build=service.step(r.kingdom(),10,RandomSource.create(8));
+                h.assertTrue(build!=null && build.kind()==RoyalNpcDecisionStore.Kind.CONSTRUCTION && r.source().getPendingProject()!=null,
+                        "Actual native builder and resources create a paid nonterminal construction domain");
+                var original=new RoyalStrategyStore(r.level()).read(r.kingdom(),Lane.DEVELOPMENT);
+                var pending=r.source().getPendingProject();var shortage=RoyalNpcEconomyGameTests.shortage(h,r); // Explicit fixture stock for a second original project.
+                // Freeze the metadata guess on a supplied third village. Actual observations must supersede it.
+                var strategyStore=new RoyalStrategyStore(r.level());
+                var provisional=plan(r,UUID.randomUUID(),r.capital().getId().uuid(),option.planSet(),true);
+                strategyStore.write(Lane.LOGISTICS,null,provisional);
+                var shipment=service.step(r.kingdom(),11,RandomSource.create(9));
+                var lanes=service.portfolio(r.kingdom());
+                h.assertTrue(shipment!=null && shipment.kind()==RoyalNpcDecisionStore.Kind.SHIPMENT && !shipment.attempt().equals(build.attempt())
+                        && lanes.development().equals(original) && lanes.logistics().id().equals(shipment.attempt())
+                        && r.source().getPendingProject()==pending && r.target().getPendingProject()==shortage.pending(),
+                        "A still-linked paid building keeps its ID/native slot while a separate justified shipment pays its own real fee: result="+shipment+" preview="+RoyalNpcEconomyService.automatic(r.level()).inspect(r.kingdom(),11)+" lanes="+lanes);
+                r.service().observe(shipment.attempt());h.assertTrue(r.store().load(shipment.attempt()).collected()>0,"The independent supply domain physically collects goods");h.succeed();
+            } finally {builder.discard();}
+        }
+    }
+
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void smallPartialShipmentLeavesTheSameUnpaidParentAndRealRemainingDeficit(GameTestHelper h) {
+        int limit=RoyalNpcConfig.MAX_CARGO.get();
+        try(var policy=new Policy();var r=RoyalShipmentSupport.realm(h,"partial-planned-supply")) {
+            var shortage=RoyalNpcEconomyGameTests.shortage(h,r);r.target().setPendingProject(null);RoyalNpcConfig.MAX_CARGO.set(1);
+            var project=plan(r,UUID.randomUUID(),r.to(),shortage.option().planSet(),false);var store=new RoyalStrategyStore(r.level());store.write(Lane.DEVELOPMENT,null,project);
+            var service=new RoyalStrategyService(r.level());var result=service.step(r.kingdom(),10,RandomSource.create(10));
+            h.assertTrue(result!=null && result.kind()==RoyalNpcDecisionStore.Kind.SHIPMENT,"A single real available unit is a valid partial supply rather than requiring a whole building batch");
+            r.service().observe(result.attempt());var shipment=r.store().load(result.attempt());
+            h.assertTrue(shipment.intent().quantity()==1 && shipment.collected()==1 && store.read(r.kingdom(),Lane.DEVELOPMENT).id().equals(project.id())
+                    && RoyalNpcEconomyGameTests.count(r,r.target(),shortage.product())==0,
+                    "Only one physical item is escrowed; cargo in transit is never credited as already present building material");
+            service.step(r.kingdom(),20,RandomSource.create(11));
+            h.assertTrue(store.read(r.kingdom(),Lane.LOGISTICS).id().equals(result.attempt()) && r.store().entries().stream().filter(e->e.intent().kingdom().equals(r.kingdom())).count()==1,
+                    "An overdue but nonterminal partial shipment keeps its original domain owner; no second cargo is invented");
+            RoyalNpcEconomyGameTests.deliver(h,r,result.attempt()); // Explicit controlled domain timer, not a natural-tick observation.
+            h.assertTrue(r.store().load(result.attempt()).delivered()==1 && RoyalNpcEconomyGameTests.count(r,r.target(),shortage.product())==1,
+                    "The first partial batch is credited once to real target storage before a new shortage is computed");
+            var next=service.step(r.kingdom(),23,RandomSource.create(12));
+            h.assertTrue(next!=null && next.kind()==RoyalNpcDecisionStore.Kind.SHIPMENT && !next.attempt().equals(result.attempt())
+                    && store.read(r.kingdom(),Lane.DEVELOPMENT).id().equals(project.id()) && r.store().load(next.attempt()).intent().quantity()==1,
+                    "Remaining physical deficit creates a distinct bounded child shipment after route cooldown, retaining the same unpaid building parent");
+            long paid=r.coins();r.service().observe(next.attempt());service.step(r.kingdom(),24,RandomSource.create(13));
+            h.assertTrue(r.store().load(next.attempt()).collected()==1 && r.coins()==paid && RoyalNpcEconomyGameTests.count(r,r.target(),shortage.product())==1
+                    && r.store().entries().stream().filter(e->e.intent().kingdom().equals(r.kingdom())).count()==2,
+                    "Second in-transit cargo is neither counted as delivered material nor duplicated by later policy checks");h.succeed();
+        } finally {RoyalNpcConfig.MAX_CARGO.set(limit);}
     }
 
     @GameTest(templateNamespace=NS,template="empty",batch="economic_queue_restart",timeoutTicks=1200)

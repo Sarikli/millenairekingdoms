@@ -30,6 +30,8 @@ public final class RoyalNpcConfig {
                 || maximumCargo<1 || maximumCargo>4096 || maximumDistance<1 || intervalTicks<20 || maximumKingdoms<1 || maximumKingdoms>16)throw new IllegalArgumentException("Invalid bounded NPC decision cadence");}
     }
     public static ModConfigSpec.IntValue ATTEMPT_DAYS,PROJECT_DAYS,VILLAGE_DAYS,ROUTE_DAYS,MAX_VILLAGES,MAX_CARGO,MAX_DISTANCE,INTERVAL_TICKS,MAX_KINGDOMS;
+    public static ModConfigSpec.BooleanValue BACKGROUND_ENABLED;
+    public static ModConfigSpec.IntValue BACKGROUND_MAX_CHUNKS,BACKGROUND_REQUESTS,BACKGROUND_LEASE_TICKS;
     private RoyalNpcConfig(){}
     public static void define(ModConfigSpec.Builder b){
         b.comment("Relative NPC preferences. Legal native choices, current NPC authority, real funds, needs, reserves and cooldowns remain separate gates.").push("royalNpcPolicy");
@@ -52,7 +54,12 @@ public final class RoyalNpcConfig {
         MAX_CARGO=b.comment("Maximum real goods in an NPC shortage shipment; shared stock/reserve/transport rules still apply.").defineInRange("maximumCargoPerDecision",64,1,4096);
         MAX_DISTANCE=b.comment("Maximum horizontal route considered for an NPC shortage shipment; distant chunks are never forced.").defineInRange("maximumShipmentDistance",2048,1,100_000);
         INTERVAL_TICKS=b.comment("Ticks between bounded NPC economic checks. Persistent day cooldowns limit actual decisions.").defineInRange("checkIntervalTicks",600,20,24000);
-        MAX_KINGDOMS=b.comment("Maximum kingdoms inspected per pass, round robin.").defineInRange("maximumKingdomsPerCheck",2,1,16);b.pop();
+        MAX_KINGDOMS=b.comment("Maximum kingdoms inspected per pass, round robin.").defineInRange("maximumKingdomsPerCheck",2,1,16);
+        BACKGROUND_ENABLED=b.comment("Bounded economic work in verified previously generated regions; no persisted force-load flags or synthetic NPC work.").define("backgroundEconomyEnabled",true);
+        BACKGROUND_MAX_CHUNKS=b.comment("Maximum owned ticking chunk tickets in the single server-wide economic lease.").defineInRange("backgroundMaximumChunks",384,16,1024);
+        BACKGROUND_REQUESTS=b.comment("Maximum chunk-status scans or new ticket requests submitted per tick.").defineInRange("backgroundRequestsPerTick",4,1,16);
+        BACKGROUND_LEASE_TICKS=b.comment("Maximum actual native work ticks before releasing the lease and rotating; original pending work persists.").defineInRange("backgroundWorkTicks",2400,200,12000);
+        b.pop();
     }
     public static Weights weights(){
         if(ORDINARY==null)return Weights.DEFAULTS;

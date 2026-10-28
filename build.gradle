@@ -988,6 +988,32 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_economic_queue_tests'
             systemProperty 'kingdoms.tests.persistence', 'read'
         }
+        economicBackgroundGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_economic_background_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+            systemProperty 'kingdoms.tests.historyWorld', 'true'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+            systemProperty 'kingdoms.tests.liveConstruction', 'true'
+            systemProperty 'kingdoms.tests.economicBackground', 'true'
+        }
+        economicBackgroundGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_economic_background_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+            systemProperty 'kingdoms.tests.historyWorld', 'true'
+            systemProperty 'kingdoms.tests.liveShipments', 'true'
+            systemProperty 'kingdoms.tests.liveConstruction', 'true'
+            systemProperty 'kingdoms.tests.economicBackground', 'true'
+        }
         configureEach {
             logLevel = org.slf4j.event.Level.INFO
             jvmArguments.addAll '-Xms512m', '-Xmx3G'
@@ -1326,3 +1352,6 @@ tasks.register('verifyIndependentNative') { group = 'verification'; dependsOn ta
 
 tasks.named('runEconomicQueueGameTestServerReload') { dependsOn tasks.named('runEconomicQueueGameTestServer') }
 tasks.register('verifyEconomicQueue') { group = 'verification'; dependsOn tasks.named('runEconomicQueueGameTestServerReload') }
+
+tasks.named('runEconomicBackgroundGameTestServerReload') { dependsOn tasks.named('runEconomicBackgroundGameTestServer') }
+tasks.register('verifyEconomicBackground') { group = 'verification'; dependsOn tasks.named('runEconomicBackgroundGameTestServerReload') }

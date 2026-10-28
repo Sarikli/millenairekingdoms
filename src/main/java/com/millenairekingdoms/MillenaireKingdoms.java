@@ -54,6 +54,8 @@ public final class MillenaireKingdoms {
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.shipping.RoyalShipmentRuntime::onStarted);
         NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST, false, net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class, com.millenairekingdoms.shipping.RoyalShipmentRuntime::onLevelTick);
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.shipping.RoyalShipmentRuntime::onStopped);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.HIGHEST,false,net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class,com.millenairekingdoms.autonomy.RoyalEconomicActivation::onTick);
+        NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.autonomy.RoyalEconomicActivation::onStopped);
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.autonomy.RoyalNpcRuntime::onStarted);
         NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.HIGH, false, net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class, com.millenairekingdoms.autonomy.RoyalNpcRuntime::onLevelTick);
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.autonomy.RoyalNpcRuntime::onStopped);

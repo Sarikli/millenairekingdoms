@@ -58,10 +58,14 @@ public final class RoyalStrategyService {
                 store.write(Lane.LOGISTICS, logistics, next);logistics = next;
             }
         }
+        if (logistics != null && logistics.status() == Status.CONDITIONAL && !authorized(data, k, logistics)) {
+            invalidate(Lane.LOGISTICS, logistics, "Supply target or capital authority changed before payment");
+            logistics = store.read(kingdom, Lane.LOGISTICS);
+        }
         // No physical balance or cargo is inferred while the capital is cold.
         if (!capital.isActive() || !level.isLoaded(capital.getCenter())) {
-            waiting(Lane.DEVELOPMENT, project, day, "WAITING_ACTIVATION: unpaid project retained; treasury/materials/builders unknown");
-            waiting(Lane.LOGISTICS, logistics, day, "WAITING_ACTIVATION: registered supply need; physical shortage remains unknown");
+            waiting(Lane.DEVELOPMENT, project, day, "WAITING_ACTIVATION: UNKNOWN treasury/materials/builders; unpaid project retained");
+            waiting(Lane.LOGISTICS, logistics, day, "WAITING_ACTIVATION: registered supply need; no shortage, cargo or fee is assumed");
             return null;
         }
         var supply = project != null && project.status() == Status.CONDITIONAL
@@ -70,11 +74,11 @@ public final class RoyalStrategyService {
         var preview = service.inspect(kingdom, day, supply);
 
         // A linked construction never holds the logistics lane hostage.
-        if (logistics != null && logistics.status() == Status.CONDITIONAL && !authorized(data, k, logistics)) {
-            invalidate(Lane.LOGISTICS, logistics, "Supply target or capital authority changed before payment");
-            logistics = store.read(kingdom, Lane.LOGISTICS);
-        }
-        if (replaceable(logistics, day) || logistics.status() == Status.CONDITIONAL && day >= logistics.nextDay() && unperformed(logistics)) {
+        var rememberedLogistics = logistics;
+        boolean observedSupplyMatches = rememberedLogistics != null && preview.candidates().stream().anyMatch(p -> shipmentMatches(rememberedLogistics, p));
+        // Metadata picks a pending project without knowing its stock. An actually measured different shortage must
+        // replace an unperformed guess immediately; otherwise a fully supplied first project can starve every route.
+        if (replaceable(logistics, day) || logistics.status() == Status.CONDITIONAL && !observedSupplyMatches && unperformed(logistics)) {
             var candidates = preview.candidates().stream().filter(p -> p.choice().kind() == RoyalNpcDecisionStore.Kind.SHIPMENT).toList();
             var selected = chooseProposal(candidates, random);
             if (selected != null) {
@@ -164,7 +168,7 @@ public final class RoyalStrategyService {
         var next = new Plan(k.id(), k.capital(), capital.getVillageTypeId(), dimension(), selected == null ? null : UUID.randomUUID(),
                 selected == null ? null : selected.target(), selected == null ? null : selected.selection(), false,
                 day, day + RoyalNpcConfig.cadence().attemptDays(), tick(), fingerprint(data, k, selected == null ? null : selected.target()),
-                selected == null ? Status.IDLE : Status.CONDITIONAL, selected == null ? "No currently legal development gap; no payment authorized" : selected.reason());
+                selected == null ? Status.IDLE : Status.CONDITIONAL, selected == null ? (!capital.isActive() || !level.isLoaded(capital.getCenter()) ? "UNKNOWN: capital unavailable; no currently legal metadata development gap or payment authorization" : "No currently legal development gap; no payment authorized") : selected.reason());
         store.write(Lane.DEVELOPMENT, old, next);return next;
     }
 
