@@ -26,6 +26,8 @@ gradle.projectsEvaluated {
             gameDirectory = p.file(world)
             systemProperty 'kingdoms.observation.mode', System.getProperty('kingdoms.observation.mode', 'write')
             systemProperty 'kingdoms.observation.cold', 'true'
+            systemProperty 'kingdoms.observation.label', System.getProperty('kingdoms.observation.label', 'probe')
+            systemProperty 'kingdoms.observation.ticks', System.getProperty('kingdoms.observation.ticks', '24000')
             jvmArgument '-Xmx6G'
         }
         p.tasks.named('stageServerJar') { enabled = false }

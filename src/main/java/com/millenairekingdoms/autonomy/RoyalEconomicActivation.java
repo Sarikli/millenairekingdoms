@@ -196,6 +196,12 @@ public final class RoyalEconomicActivation {
                 }
             }
             if(lease.phase==Phase.WORKING && now>=lease.workingUntil){release(lease,"Economic work window completed; persistent work resumes on a later fair visit");return;}
+            // A transient region ticket makes chunks entity-ticking, but does not appear in NeoForge's
+            // persistent forced-chunk registry. With zero players ServerLevel otherwise stops its entire
+            // entity/block-entity loop after 300 ticks: loaded native workers would never run a goal.
+            // Keep the normal loop awake only during an authorized, fully loaded, bounded work window.
+            // Do not register persistent forced chunks or directly tick entities ourselves.
+            if(lease.phase==Phase.WORKING)level.resetEmptyTime();
             if(now%20==0)for(var pos:lease.owned)level.getChunkSource().addRegionTicket(TICKET,pos,2,lease.owner,true);
             publish(lease,System.nanoTime()-start,"Native activation/builders and existing physical domain services retain execution authority");
         } catch(RuntimeException failure) {

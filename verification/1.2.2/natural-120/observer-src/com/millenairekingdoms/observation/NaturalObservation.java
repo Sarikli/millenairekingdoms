@@ -49,7 +49,9 @@ public final class NaturalObservation {
     private String phase="BOOT"; private int ticks,stops,lastSnapshot=-1; private long baseTick,baseDay,previousTick,previousDay,observedTicks,observerCost;
     private long wallStarted=System.nanoTime(),baselineWall; private UUID anchor; private EmbeddedChannel channel;
     private final String mode=System.getProperty("kingdoms.observation.mode","write");
-    private final boolean reopen="reopen".equals(mode);
+    private final boolean reopen="reopen".equals(mode)||"diagnose-reopen".equals(mode);
+    private final boolean diagnostic=mode.startsWith("diagnose");
+    private final long diagnosticTicks=Long.getLong("kingdoms.observation.ticks",24000L);
     private static final boolean COLD = Boolean.parseBoolean(System.getProperty("kingdoms.observation.cold","true"));
     private long resumedAtElapsedTicks;
     public NaturalObservation(){
@@ -59,14 +61,15 @@ public final class NaturalObservation {
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,false,ServerTickEvent.Post.class,this::tick);
     }
     private void started(ServerStartedEvent event){
-        level=event.getServer().overworld();output=event.getServer().getWorldPath(LevelResource.ROOT).resolve("natural-observation");
-        try{Files.createDirectories(output);log("START",Map.of("seed",level.getSeed(),"mode",mode,"normalDimension",level.dimension().location().toString(),"capitalChance",CapitalConfig.CHANCE_PERCENT.get(),"capitalSpacing",CapitalConfig.MIN_DISTANCE.get(),"autonomy",AutonomyConfig.current().autonomy(),"originalResourceCosts",!MillenaireServerConfig.SERVER.ignoreResourceCost.get(),"worldGeneration","normal; original ChunkEvent.Load -> native VillageSpawnQueue only"));if(mode.equals("resume"))resumeObservation();else if(reopen)verifyReopen();}
+        level=event.getServer().overworld();output=event.getServer().getWorldPath(LevelResource.ROOT).resolve(diagnostic?"economy-diagnostics-"+System.getProperty("kingdoms.observation.label","probe"):"natural-observation");
+        try{Files.createDirectories(output);log("START",Map.of("seed",level.getSeed(),"mode",mode,"normalDimension",level.dimension().location().toString(),"capitalChance",CapitalConfig.CHANCE_PERCENT.get(),"capitalSpacing",CapitalConfig.MIN_DISTANCE.get(),"autonomy",AutonomyConfig.current().autonomy(),"originalResourceCosts",!MillenaireServerConfig.SERVER.ignoreResourceCost.get(),"worldGeneration","normal; original ChunkEvent.Load -> native VillageSpawnQueue only"));if(diagnostic&&reopen)verifyDiagnosticReopen();else if(mode.equals("resume"))resumeObservation();else if(reopen)verifyReopen();}
         catch(Exception e){throw new IllegalStateException(e);}
     }
     private void tick(ServerTickEvent.Post event){
         if(level==null||phase.equals("DONE")||phase.equals("FAILED"))return;
         long started=System.nanoTime();ticks++;
         try{
+            if(diagnostic){diagnose();return;}
             if(phase.equals("BOOT")){
                 if(reopen){verifyReopen();return;}
                 if(ticks<100)return;
@@ -116,6 +119,55 @@ public final class NaturalObservation {
             phase="FAILED";failure.printStackTrace();try{write("failure.json",Map.of("tick",level.getGameTime(),"dayTime",level.getDayTime(),"phase",phase,"message",failure.toString(),"observedTicks",observedTicks));}catch(Exception ignored){}
             log("FAILED",Map.of("message",failure.toString()));level.getServer().halt(false);
         }finally{observerCost+=System.nanoTime()-started;}
+    }
+    /** Read-only probe of a disposable copy, including the empty-dimension entity-tick gate. */
+    private void diagnose()throws Exception{
+        if(ticks<100)return;
+        if(phase.equals("BOOT")){
+            if(Files.exists(output.resolve("baseline.json")))throw new IllegalStateException("Do not overwrite diagnostic evidence");
+            baseTick=level.getGameTime();baseDay=level.getDayTime();previousTick=baseTick;previousDay=baseDay;phase="DIAGNOSE";
+            write("baseline.json",snapshot(0));command("tick sprint 100000000");
+        }else{
+            if(level.getGameTime()!=previousTick+1 || level.getDayTime()!=previousDay+1)throw new IllegalStateException("Diagnostic clock discontinuity");
+            previousTick=level.getGameTime();previousDay=level.getDayTime();observedTicks++;
+        }
+        if(!level.players().isEmpty() || !explorationTickets.isEmpty())throw new IllegalStateException("Diagnostic must have zero players and exploration tickets");
+        if(observedTicks%200==0){
+            var row=new LinkedHashMap<String,Object>();row.put("elapsedTicks",observedTicks);row.put("gameTime",level.getGameTime());
+            row.put("emptyTime",field(level,"emptyTime"));row.put("forcedChunks",level.getForcedChunks().size());
+            row.put("nativeOrNeoForced",net.neoforged.neoforge.common.world.chunk.ForcedChunkManager.hasForcedChunks(level));row.put("lease",RoyalEconomicActivation.report(level));
+            var villages=new ArrayList<Map<String,Object>>();var data=KingdomSavedData.get(level);
+            for(var v:politicalVillages()){
+                if(!v.isActive() || !level.isLoaded(v.getCenter()) || data.owner(v.getId().uuid())==null)continue;
+                var vr=new LinkedHashMap<String,Object>();vr.put("id",v.getId().uuid());vr.put("name",v.getVillageName());vr.put("center",v.getCenter().toShortString());vr.put("pending",v.getPendingProject());
+                vr.put("npcs",v.getVillagerUuids().stream().map(level::getEntity).filter(e->e instanceof org.millenaire.entity.MillVillager).map(e->{var npc=(org.millenaire.entity.MillVillager)e;return Map.of("id",npc.getUUID(),"ticks",npc.tickCount,"position",npc.blockPosition().toShortString(),"noAi",npc.isNoAi(),"goal",String.valueOf(npc.getGoalScheduler().getCurrentGoalId()));}).toList());
+                try{
+                    var stock=RoyalVillageStock.forNpc(level,data.owner(v.getId().uuid()),v.getId().uuid());
+                    vr.put("stock",stock.products().stream().limit(64).map(stock::availability).toList());
+                    var p=v.getPendingProject();if(p!=null){var set=ModCultures.getBuildingPlanSet(p.planSetId());var def=set==null?null:set.getLevel(p.variant(),p.level());if(def!=null){vr.put("required",def.requiredResources());vr.put("missing",stock.missing(def.requiredResources()));}}
+                }catch(RuntimeException unavailable){vr.put("stockReason",String.valueOf(unavailable.getMessage()));}
+                villages.add(vr);
+            }
+            row.put("villages",villages);append("samples.jsonl",row);
+            if(observedTicks%24000==0)log("DIAGNOSTIC_DAY",Map.of("ticks",observedTicks,"lease",RoyalEconomicActivation.report(level),"loadedVillages",villages.size()));
+        }
+        if(observedTicks>=diagnosticTicks){
+            command("save-all flush");write("final.json",snapshot((int)(observedTicks/24000)));phase="DONE";
+            log("DIAGNOSTIC_COMPLETE",Map.of("ticks",observedTicks,"output",output.toString()));command("tick sprint stop");level.getServer().halt(false);
+        }
+    }
+    private void verifyDiagnosticReopen()throws Exception{
+        var expected=JsonParser.parseString(Files.readString(output.resolve("final.json"))).getAsJsonObject();
+        var actual=JSON.toJsonTree(snapshot(expected.get("relativeDay").getAsInt())).getAsJsonObject();
+        for(var key:List.of("gameTime","dayTime","bookedDay","payments","construction","shipments","economicDecisions","historySize","historyCounts"))
+            if(!Objects.equals(expected.get(key),actual.get(key)))throw new IllegalStateException("Diagnostic restart changed recorded "+key);
+        var byId=new HashMap<String,JsonObject>();for(var row:actual.getAsJsonArray("kingdoms")){var k=row.getAsJsonObject();byId.put(k.get("id").getAsString(),k);}
+        if(byId.size()!=expected.getAsJsonArray("kingdoms").size())throw new IllegalStateException("Diagnostic kingdom count changed");
+        for(var row:expected.getAsJsonArray("kingdoms")){var k=row.getAsJsonObject();var other=byId.get(k.get("id").getAsString());if(other==null)throw new IllegalStateException("Diagnostic kingdom absent");
+            for(var key:List.of("id","capital","fallen","active","members","owed","portfolio"))if(!Objects.equals(k.get(key),other.get(key)))throw new IllegalStateException("Diagnostic restart changed kingdom "+key);
+        }
+        write("reopen.json",Map.of("sameWorldSeparateJvm",true,"economicRecordsPreserved",true,"kingdomPortfoliosPreserved",true,"gameTime",level.getGameTime(),"dayTime",level.getDayTime()));
+        phase="DONE";log("DIAGNOSTIC_REOPEN",Map.of("sameWorldSeparateJvm",true));level.getServer().halt(false);
     }
     private void resumeObservation()throws Exception{
         var baseline=JsonParser.parseString(Files.readString(output.resolve("baseline.json"))).getAsJsonObject();
