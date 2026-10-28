@@ -53,10 +53,12 @@ for phase in ['diagnose','diagnose-reopen']:
  if phase=='diagnose':
   actual=json.loads((observations/'final.json').read_text());assert actual['observedTicks']==a.ticks and actual['gameTime']-actual['baseTick']==a.ticks and actual['dayTime']-actual['baseDayTime']==a.ticks
   baseline=json.loads((observations/'baseline.json').read_text());keys=['construction','shipments','payments','economicDecisions']
+  startup=json.loads((observations/'startup.json').read_text())if(observations/'startup.json').exists()else baseline
   prior={k:{row['id']for row in baseline.get(k,[])}for k in keys}
   added={k:[row for row in actual.get(k,[])if row['id']not in prior[k]]for k in keys}
   result['final_counts']={k:len(actual.get(k,[]))for k in keys}
   result['new_counts']={k:len(added[k])for k in keys}
+  result['since_startup_counts']={k:sum(row['id']not in {old['id']for old in startup.get(k,[])}for row in actual.get(k,[]))for k in keys}
   result['new_shipment_items_delivered']=sum(row['delivered']for row in added['shipments'])
   result['new_committed_fees']=sum(row['amount']for row in added['payments']if row['state']=='COMMITTED')
   result['new_chunks_during_observation']=actual.get('newChunksDuringObservation');save()

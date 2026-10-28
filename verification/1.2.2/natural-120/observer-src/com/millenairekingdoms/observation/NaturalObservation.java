@@ -69,7 +69,7 @@ public final class NaturalObservation {
     }
     private void started(ServerStartedEvent event){
         level=event.getServer().overworld();output=event.getServer().getWorldPath(LevelResource.ROOT).resolve(diagnostic?"economy-diagnostics-"+System.getProperty("kingdoms.observation.label","probe"):"natural-observation");
-        try{Files.createDirectories(output);log("START",Map.of("seed",level.getSeed(),"mode",mode,"normalDimension",level.dimension().location().toString(),"capitalChance",CapitalConfig.CHANCE_PERCENT.get(),"capitalSpacing",CapitalConfig.MIN_DISTANCE.get(),"autonomy",AutonomyConfig.current().autonomy(),"originalResourceCosts",!MillenaireServerConfig.SERVER.ignoreResourceCost.get(),"worldGeneration","normal; original ChunkEvent.Load -> native VillageSpawnQueue only"));if(diagnostic&&reopen)verifyDiagnosticReopen();else if(mode.equals("resume"))resumeObservation();else if(reopen)verifyReopen();}
+        try{Files.createDirectories(output);log("START",Map.of("seed",level.getSeed(),"mode",mode,"normalDimension",level.dimension().location().toString(),"capitalChance",CapitalConfig.CHANCE_PERCENT.get(),"capitalSpacing",CapitalConfig.MIN_DISTANCE.get(),"autonomy",AutonomyConfig.current().autonomy(),"originalResourceCosts",!MillenaireServerConfig.SERVER.ignoreResourceCost.get(),"worldGeneration","normal; original ChunkEvent.Load -> native VillageSpawnQueue only"));if(diagnostic&&!reopen)write("startup.json",snapshot(0));if(diagnostic&&reopen)verifyDiagnosticReopen();else if(mode.equals("resume"))resumeObservation();else if(reopen)verifyReopen();}
         catch(Exception e){throw new IllegalStateException(e);}
     }
     private void tick(ServerTickEvent.Post event){
