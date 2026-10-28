@@ -8,6 +8,6 @@ displayName="Natural-world 120-day observer (test only)"
 [[dependencies.kingdoms_natural_observer]]
 modId="millenairekingdoms"
 type="required"
-versionRange="[1.2.2-dev.1]"
+versionRange="[1.2.2-dev.2]"
 ordering="AFTER"
 side="SERVER"

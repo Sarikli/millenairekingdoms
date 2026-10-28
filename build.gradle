@@ -1014,6 +1014,28 @@ neoForge {
             systemProperty 'kingdoms.tests.liveConstruction', 'true'
             systemProperty 'kingdoms.tests.economicBackground', 'true'
         }
+        economicNativeGameTestServer {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_economic_native_tests'
+            systemProperty 'kingdoms.tests.persistence', 'write'
+            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
+            systemProperty 'kingdoms.tests.liveConstruction', 'true'
+        }
+        economicNativeGameTestServerReload {
+            type = 'gameTestServer'
+            sourceSet = sourceSets.gametest
+            loadedMods = [mods.millenairekingdoms_tests]
+            taskBefore stageGameTestJar
+            gameDirectory = file('run/gametest')
+            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_economic_native_tests'
+            systemProperty 'kingdoms.tests.persistence', 'read'
+            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
+            systemProperty 'kingdoms.tests.liveConstruction', 'true'
+        }
         configureEach {
             logLevel = org.slf4j.event.Level.INFO
             jvmArguments.addAll '-Xms512m', '-Xmx3G'
@@ -1355,3 +1377,6 @@ tasks.register('verifyEconomicQueue') { group = 'verification'; dependsOn tasks.
 
 tasks.named('runEconomicBackgroundGameTestServerReload') { dependsOn tasks.named('runEconomicBackgroundGameTestServer') }
 tasks.register('verifyEconomicBackground') { group = 'verification'; dependsOn tasks.named('runEconomicBackgroundGameTestServerReload') }
+
+tasks.named('runEconomicNativeGameTestServerReload') { dependsOn tasks.named('runEconomicNativeGameTestServer') }
+tasks.register('verifyEconomicNative') { group = 'verification'; dependsOn tasks.named('runEconomicNativeGameTestServerReload') }

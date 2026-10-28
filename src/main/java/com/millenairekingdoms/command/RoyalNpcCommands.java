@@ -31,7 +31,7 @@ public final class RoyalNpcCommands {
                     reply(c,com.millenairekingdoms.localization.PublicText.of("%s",com.millenairekingdoms.autonomy.RoyalNpcDiagnostics.inspect(level,id,day,preview)));
                     reply(c,Component.literal("Development (unpaid until domain acknowledgment): "+portfolio.development()));
                     reply(c,Component.literal("Logistics (independent domain ID): "+portfolio.logistics()));
-                    reply(c,Component.literal("Economic background enabled="+RoyalNpcConfig.BACKGROUND_ENABLED.get()+" | "+com.millenairekingdoms.autonomy.RoyalEconomicActivation.report(level)));
+                    reply(c,Component.literal("Economic background enabled="+RoyalNpcConfig.BACKGROUND_ENABLED.get()+" | maxChunks="+RoyalNpcConfig.BACKGROUND_MAX_CHUNKS.get()+" | "+com.millenairekingdoms.autonomy.RoyalEconomicActivation.report(level)));
                     reply(c,Component.literal("Budget values above are the effective world configuration; existing TOML overrides and previously frozen approvals are preserved."));
                     preview.candidates().stream().sorted(Comparator.comparingInt(RoyalNpcEconomyService.Proposal::weight).reversed()).limit(8).forEach(p->reply(c,com.millenairekingdoms.localization.PublicText.of("%s | weight=%s | fee=%s | %s", p.choice().kind(), p.weight(), p.choice().fee(), p.reason())));
                 }))))

@@ -56,7 +56,7 @@ public final class RoyalNpcConfig {
         INTERVAL_TICKS=b.comment("Ticks between bounded NPC economic checks. Persistent day cooldowns limit actual decisions.").defineInRange("checkIntervalTicks",600,20,24000);
         MAX_KINGDOMS=b.comment("Maximum kingdoms inspected per pass, round robin.").defineInRange("maximumKingdomsPerCheck",2,1,16);
         BACKGROUND_ENABLED=b.comment("Bounded economic work in verified previously generated regions; no persisted force-load flags or synthetic NPC work.").define("backgroundEconomyEnabled",true);
-        BACKGROUND_MAX_CHUNKS=b.comment("Maximum owned ticking chunk tickets in the single server-wide economic lease.").defineInRange("backgroundMaximumChunks",384,16,1024);
+        BACKGROUND_MAX_CHUNKS=b.comment("Maximum owned ticking chunk tickets in the single server-wide economic lease.").defineInRange("backgroundMaximumChunks",1024,16,1024);
         BACKGROUND_REQUESTS=b.comment("Maximum chunk-status scans or new ticket requests submitted per tick.").defineInRange("backgroundRequestsPerTick",4,1,16);
         BACKGROUND_LEASE_TICKS=b.comment("Maximum actual native work ticks before releasing the lease and rotating; original pending work persists.").defineInRange("backgroundWorkTicks",2400,200,12000);
         b.pop();

@@ -31,6 +31,21 @@ public final class EconomicQueueGameTests {
     }
 
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void newDefaultsAllowOneRealHalfTreasuryFeeWhileRetainingOneSilverCoin(GameTestHelper h) {
+        try(var policy=new Policy();var r=RoyalShipmentSupport.realm(h,"new-default-budget")) {
+            h.assertTrue(RoyalNpcConfig.budgets().reserve()==64 && RoyalNpcConfig.budgets().sharePermille()==500,"Fresh world uses the actual1.2.2 default reserve/share");
+            RoyalNpcEconomyGameTests.money(r,2);var option=RoyalNpcEconomyGameTests.option(r,r.source());
+            RoyalNpcEconomyGameTests.materials(h,r,r.source(),option.requiredMaterials(),null);var builder=RoyalNpcEconomyGameTests.builder(h,r);
+            try {
+                var result=new RoyalStrategyService(r.level()).step(r.kingdom(),10,RandomSource.create(14));
+                h.assertTrue(result!=null && result.kind()==RoyalNpcDecisionStore.Kind.CONSTRUCTION && r.coins()==64 && r.source().getPendingProject()!=null
+                        && r.payments().load(result.attempt()).state()==RoyalPaymentJournal.State.COMMITTED,
+                        "An actual64 fee is half the128 treasury, leaves64 real coins and acknowledges genuine original pending work");h.succeed();
+            } finally {builder.discard();}
+        }
+    }
+
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
     public static void resourcePoorKingdomRetainsOneUnpaidProjectAcrossDailyChecks(GameTestHelper h) {
         try (var policy = new Policy(); var r = RoyalShipmentSupport.realm(h,"unpaid-development")) {
             RoyalNpcEconomyGameTests.money(r,0);

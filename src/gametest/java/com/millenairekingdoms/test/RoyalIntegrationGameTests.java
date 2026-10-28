@@ -57,6 +57,10 @@ public final class RoyalIntegrationGameTests {
     }
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
     public static void actualDailyTaxReachesTheConservativeCommissionBudgetAndCannotPayAgainAfterRestart(GameTestHelper h)throws Exception{
+        int reserve=com.millenairekingdoms.autonomy.RoyalNpcConfig.TREASURY_RESERVE.get(),share=com.millenairekingdoms.autonomy.RoyalNpcConfig.FEE_SHARE.get();
+        // Preserve the original conservative existing-world configuration; new defaults have a separate focused gate.
+        com.millenairekingdoms.autonomy.RoyalNpcConfig.TREASURY_RESERVE.set(128);com.millenairekingdoms.autonomy.RoyalNpcConfig.FEE_SHARE.set(250);
+        try {
         var level=h.getLevel();var data=KingdomSavedData.get(level);var marker=level.getServer().getWorldPath(LevelResource.ROOT).resolve("royal-integration-tax.dat");
         if(RoyalShipmentSupport.read()){
             var tag=NbtIo.readCompressed(marker,NbtAccounter.unlimitedHeap());
@@ -78,6 +82,7 @@ public final class RoyalIntegrationGameTests {
             h.assertTrue(paid!=null && r.coins()==248,"Ten real taxed days support one64 commission with248 retained");var tag=r.marker();tag.putUUID("attempt",paid);tag.putLong("day",start+10);NbtIo.writeCompressed(tag,marker);r.save();saved=true;r.capital().setActive(false);r.source().setActive(false);r.target().setActive(false);
             System.out.println("ROYAL_INTEGRATION_TAX_WRITE_PASS coins=248 owed=0 fee=64 dailyIncome=12 days=10");h.succeed();
         }finally{builder.discard();if(!saved)r.close();}
+        } finally {com.millenairekingdoms.autonomy.RoyalNpcConfig.TREASURY_RESERVE.set(reserve);com.millenairekingdoms.autonomy.RoyalNpcConfig.FEE_SHARE.set(share);}
     }
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
     public static void playerClaimRetiresAnActualNpcSelectedCargoAndCannotReviveIt(GameTestHelper h){

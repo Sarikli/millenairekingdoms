@@ -21,6 +21,9 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 public final class EconomicBackgroundGameTests {
     private static final String NS="millenairekingdoms_economic_background_tests";
     private static final Map<ServerLevel,Integer> NEW_CHUNKS=new WeakHashMap<>();
+    static void startTerrainObservation(ServerLevel level){NEW_CHUNKS.put(level,0);}
+    static int newChunks(ServerLevel level){return NEW_CHUNKS.getOrDefault(level,0);}
+    static void stopTerrainObservation(ServerLevel level){NEW_CHUNKS.remove(level);}
     public static void onChunkLoad(ChunkEvent.Load event) {
         if(event.isNewChunk() && event.getLevel() instanceof ServerLevel level && NEW_CHUNKS.containsKey(level))NEW_CHUNKS.merge(level,1,Integer::sum);
     }
@@ -39,6 +42,29 @@ public final class EconomicBackgroundGameTests {
                     && order.equals(data.order(order.id())),"Real military order preempts economic activation without being consumed, replaced or progressed by it");
             data.removeOrder(order.id());org.millenaire.village.VillageSavedData.get(r.level()).getVillageManager().removeVillage(independent.getId());r.close();h.succeed();
         });
+    }
+
+    @GameTest(templateNamespace=NS,template="empty",batch="background_backlog",timeoutTicks=1000)
+    public static void unfinishedDiskScansRemainGloballyBoundedAfterLeaseRelease(GameTestHelper h) throws Exception {
+        var level=h.getLevel();var field=RoyalEconomicActivation.class.getDeclaredField("PENDING");field.setAccessible(true);
+        @SuppressWarnings("unchecked") var pending=(Map<net.minecraft.server.MinecraftServer,List<java.util.concurrent.CompletableFuture<net.minecraft.world.level.chunk.status.ChunkStatus>>>)field.get(null);
+        var original=pending.get(level.getServer());h.assertTrue(original==null || original.stream().allMatch(java.util.concurrent.CompletableFuture::isDone),"No earlier real IO is replaced by the controlled backlog fixture");
+        var blocked=new ArrayList<java.util.concurrent.CompletableFuture<net.minecraft.world.level.chunk.status.ChunkStatus>>();for(int n=0;n<16;n++)blocked.add(new java.util.concurrent.CompletableFuture<>());
+        pending.put(level.getServer(),blocked);
+        try(var first=RoyalShipmentSupport.realm(h,"blocked-scan-first");var second=RoyalShipmentSupport.realm(h,"blocked-scan-replacement")) {
+            for(var r:List.of(first,second)){RoyalNpcEconomyGameTests.shortage(h,r);r.capital().setActive(false);new RoyalStrategyService(level).step(r.kingdom(),10,RandomSource.create(3));}
+            RoyalEconomicActivation.offer(level,first.kingdom());RoyalEconomicActivation.onTick(new net.neoforged.neoforge.event.tick.LevelTickEvent.Post(()->true,level));
+            h.assertTrue(blocked.size()==16 && RoyalEconomicActivation.report(level).ownedTickets()==0,"A full controlled IO backlog submits no seventeenth scan or speculative chunk ticket");
+            RoyalEconomicActivation.offer(level,second.kingdom());
+            RoyalNpcConfig.BACKGROUND_ENABLED.set(false);RoyalEconomicActivation.onTick(new net.neoforged.neoforge.event.tick.LevelTickEvent.Post(()->true,level));RoyalNpcConfig.BACKGROUND_ENABLED.set(true);
+            RoyalEconomicActivation.offer(level,first.kingdom());RoyalEconomicActivation.onTick(new net.neoforged.neoforge.event.tick.LevelTickEvent.Post(()->true,level));
+            h.assertTrue(RoyalEconomicActivation.ownsLease(level) && second.kingdom().equals(RoyalEconomicActivation.report(level).kingdom()) && blocked.size()==16 && RoyalEconomicActivation.report(level).pendingDiskJobs()==16
+                    && RoyalEconomicActivation.report(level).ownedTickets()==0,"Releasing the first lease retains global disk limits and serves the waiting second kingdom even when the first offers again first");
+        } finally {
+            for(var future:blocked)future.complete(null);RoyalNpcConfig.BACKGROUND_ENABLED.set(false);RoyalEconomicActivation.onTick(new net.neoforged.neoforge.event.tick.LevelTickEvent.Post(()->true,level));
+            pending.remove(level.getServer());RoyalNpcConfig.BACKGROUND_ENABLED.set(true);
+        }
+        h.succeed();
     }
 
     @GameTest(templateNamespace=NS,template="empty",batch="background_guard",timeoutTicks=1000)

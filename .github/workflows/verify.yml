@@ -39,7 +39,7 @@ jobs:
           python3 scripts/check-localization.py --jar "build/libs/millenairekingdoms-${release_version}.jar"
           python3 scripts/check-project.py --jar "build/libs/millenairekingdoms-${release_version}.jar"
       - name: Focused isolated write and separate-JVM reopen gates
-        run: python3 scripts/verify-regression.py --suites verifyEconomicQueue -- bash gradlew --no-daemon
+        run: python3 scripts/verify-regression.py --suites verifyEconomicQueue,verifyEconomicBackground,verifyRoyalNpcBudget -- bash gradlew --no-daemon
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -17,6 +17,7 @@ import net.minecraft.server.level.TicketType;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.millenaire.culture.ModCultures;
 import org.millenaire.village.Village;
@@ -28,12 +29,16 @@ public final class RoyalEconomicActivation {
     private static final TicketType<UUID> TICKET = TicketType.create("kingdoms_economic_work", UUID::compareTo, 100);
     private static final Map<MinecraftServer, Lease> ACTIVE = new WeakHashMap<>();
     private static final Map<ServerLevel, State> STATES = new WeakHashMap<>();
-    public record Report(UUID kingdom, String phase, int ownedTickets, int submittedStatusChecks, long elapsedNanos, String reason) {}
+    // Released leases must not free IO capacity until their actual immutable scans finish.
+    private static final Map<MinecraftServer,List<CompletableFuture<ChunkStatus>>> PENDING = new WeakHashMap<>();
+    private record Request(ServerLevel level, UUID kingdom) {}
+    private static final Map<MinecraftServer,LinkedHashSet<Request>> QUEUED = new WeakHashMap<>();
+    public record Report(UUID kingdom, String phase, int ownedTickets, int submittedStatusChecks, int pendingDiskJobs, long elapsedNanos, String reason) {}
     private static final class State {
         final Map<UUID, Long> retry = new HashMap<>();
         final Map<UUID, Integer> supplyCursor = new HashMap<>();
         final Map<ChunkPos,ChunkStatus> verified = new LinkedHashMap<>();
-        Report report = new Report(null,"IDLE",0,0,0,"No economic lease requested");
+        Report report = new Report(null,"IDLE",0,0,0,0,"No economic lease requested");
     }
     private enum Phase { VERIFYING, LOADING, WORKING }
     private static final class Lease {
@@ -60,7 +65,19 @@ public final class RoyalEconomicActivation {
 
     /** Only the ordinary NPC scheduler submits work; this does not authorize money, materials or a commission. */
     public static void offer(ServerLevel level, UUID kingdom) {
-        thread(level);
+        thread(level);if(!enabled())return;
+        var server=level.getServer();var active=ACTIVE.get(server);
+        if(active!=null && active.level==level && active.kingdom.equals(kingdom))return;
+        var queue=QUEUED.computeIfAbsent(server,key->new LinkedHashSet<>());
+        if(queue.size()<256)queue.add(new Request(level,kingdom));
+        // The economic scheduler often inspects every kingdom in one pass. Its cursor alone cannot make leases fair:
+        // the first sorted kingdom would reacquire the slot. Retain other requests in FIFO order across work windows.
+        for(int n=0;n<2 && !queue.isEmpty() && !ACTIVE.containsKey(server);n++) {
+            var iterator=queue.iterator();var request=iterator.next();iterator.remove();start(request.level(),request.kingdom());
+        }
+    }
+
+    private static void start(ServerLevel level, UUID kingdom) {
         if (!enabled() || ACTIVE.containsKey(level.getServer())) return;
         var state=STATES.computeIfAbsent(level,l->new State());long now=level.getGameTime();
         if(now<state.retry.getOrDefault(kingdom,0L))return;
@@ -74,20 +91,29 @@ public final class RoyalEconomicActivation {
             if(p.id()!=null && p.status()!=RoyalStrategyStore.Status.IDLE && p.status()!=RoyalStrategyStore.Status.INVALIDATED){villageIds.add(p.target());work=true;}
         }
         if(!work)return;
-        // One additional member is inspected per lease for genuine source stock, rotating fairly between visits.
-        var sources=data.members(kingdom).stream().filter(id->!villageIds.contains(id)).sorted().toList();
-        if(!sources.isEmpty()) {
-            int cursor=state.supplyCursor.getOrDefault(kingdom,0);villageIds.add(sources.get(Math.floorMod(cursor,sources.size())));
-            state.supplyCursor.put(kingdom,cursor+1);
-        }
+        boolean knownSource=false;
         var history=RoyalNpcDecisionStore.directory(level);
         if(Files.exists(history.resolve("decisions.dat"))) {
             var logistics=portfolio.logistics();
             if(logistics!=null && logistics.id()!=null) {
                 var decision=new RoyalNpcDecisionStore(history).load(logistics.id());
                 if(decision!=null && decision.choice().kind()==RoyalNpcDecisionStore.Kind.SHIPMENT) {
-                    villageIds.add(decision.choice().source());villageIds.add(decision.choice().target());
+                    villageIds.add(decision.choice().source());villageIds.add(decision.choice().target());knownSource=true;
                 }
+            }
+        }
+        // A linked shipment already names its real source. Do not spend another whole village's chunk budget
+        // on a speculative source. Otherwise rotate one additional source only when it fits the same hard bound.
+        if(!knownSource) {
+            var sources=data.members(kingdom).stream().filter(id->!villageIds.contains(id)).sorted().toList();
+            if(!sources.isEmpty()) {
+                int cursor=state.supplyCursor.getOrDefault(kingdom,0);var candidate=sources.get(Math.floorMod(cursor,sources.size()));
+                state.supplyCursor.put(kingdom,cursor+1);var proposed=new LinkedHashSet<ChunkPos>();
+                for(var id:villageIds){var v=PoliticsService.village(level,id);if(v!=null)proposed.addAll(v.computeVillageChunks());}
+                var v=PoliticsService.village(level,candidate);if(v!=null)proposed.addAll(v.computeVillageChunks());
+                var type=v==null?null:ModCultures.getVillageType(v.getVillageTypeId());
+                if(v!=null && v.getTownhall()!=null && v.getOwnerUUID()==null && type!=null && !type.playerControlled() && !type.loneBuilding()
+                        && proposed.size()<=RoyalNpcConfig.BACKGROUND_MAX_CHUNKS.get())villageIds.add(candidate);
             }
         }
         var chunks=new LinkedHashSet<ChunkPos>();var check=new LinkedHashSet<ChunkPos>();
@@ -130,8 +156,9 @@ public final class RoyalEconomicActivation {
             int budget=RoyalNpcConfig.BACKGROUND_REQUESTS.get();
             if(lease.phase==Phase.VERIFYING) {
                 var state=STATES.get(level);
-                long pending=lease.scans.values().stream().filter(f->!f.isDone()).count();
-                for(int n=0;n<budget && pending<MAX_PENDING_SCANS && lease.scanCursor<lease.preflight.size();n++) {
+                var pendingJobs=PENDING.computeIfAbsent(level.getServer(),server->new ArrayList<>());
+                pendingJobs.removeIf(CompletableFuture::isDone);
+                for(int n=0;n<budget && lease.scanCursor<lease.preflight.size();n++) {
                     var pos=lease.preflight.get(lease.scanCursor++);
                     net.minecraft.world.level.chunk.ChunkAccess loaded=level.getChunkSource().getChunkNow(pos.x,pos.z);
                     // Native generation may retain a valid unsaved protochunk after nearby FULL chunks unload.
@@ -140,7 +167,10 @@ public final class RoyalEconomicActivation {
                     var cached=state.verified.get(pos);
                     if(loaded!=null && loaded.getPersistedStatus().isOrAfter(lease.required.get(pos)))lease.scans.put(pos,CompletableFuture.completedFuture(loaded.getPersistedStatus()));
                     else if(cached!=null && cached.isOrAfter(lease.required.get(pos)))lease.scans.put(pos,CompletableFuture.completedFuture(cached));
-                    else {lease.scans.put(pos,scanStatus(level,pos));pending++;}
+                    else {
+                        if(pendingJobs.size()>=MAX_PENDING_SCANS){lease.scanCursor--;break;}
+                        var scan=scanStatus(level,pos);pendingJobs.add(scan);lease.scans.put(pos,scan);
+                    }
                 }
                 for(var item:lease.scans.entrySet())if(item.getValue().isDone()) {
                     var status=item.getValue().getNow(null);
@@ -160,7 +190,7 @@ public final class RoyalEconomicActivation {
                     var pos=lease.chunks.get(lease.ticketCursor++);
                     level.getChunkSource().addRegionTicket(TICKET,pos,2,lease.owner,true);lease.owned.add(pos);
                 }
-                if(lease.ticketCursor==lease.chunks.size() && lease.chunks.stream().allMatch(p->level.getChunkSource().getChunkNow(p.x,p.z)!=null)
+                if(lease.ticketCursor==lease.chunks.size() && lease.chunks.stream().allMatch(p->level.getChunkSource().getChunkNow(p.x,p.z)!=null && level.areEntitiesLoaded(p.toLong()))
                         && lease.villages.stream().allMatch(id->level.isPositionEntityTicking(PoliticsService.village(level,id).getCenter()))) {
                     lease.phase=Phase.WORKING;lease.workingUntil=now+RoyalNpcConfig.BACKGROUND_LEASE_TICKS.get();
                 }
@@ -199,20 +229,34 @@ public final class RoyalEconomicActivation {
         return lease.villages.stream().map(id->PoliticsService.village(lease.level,id)).anyMatch(v->v==null || Military.busy(v));
     }
     private static boolean enabled() {return RoyalNpcConfig.BACKGROUND_ENABLED.get() && RoyalNpcConfig.budgets().enabled() && AutonomyConfig.current().autonomy();}
+    private static int pending(ServerLevel level) {
+        return (int)PENDING.getOrDefault(level.getServer(),List.of()).stream().filter(f->!f.isDone()).count();
+    }
     private static void publish(Lease lease,long nanos,String reason) {
-        STATES.computeIfAbsent(lease.level,l->new State()).report=new Report(lease.kingdom,lease.phase.name(),lease.owned.size(),lease.scans.size(),nanos,reason);
+        STATES.computeIfAbsent(lease.level,l->new State()).report=new Report(lease.kingdom,lease.phase.name(),lease.owned.size(),lease.scans.size(),pending(lease.level),nanos,reason);
     }
     private static void defer(ServerLevel level,UUID kingdom,String reason) {
         var state=STATES.computeIfAbsent(level,l->new State());state.retry.put(kingdom,level.getGameTime()+200);
-        state.report=new Report(kingdom,"DEFERRED",0,0,0,reason);
+        state.report=new Report(kingdom,"DEFERRED",0,0,pending(level),0,reason);
     }
     private static void release(Lease lease,String reason) {
+        // Native resident records lag live inventories between regular syncs. Preserve the original live records
+        // before a controlled unload so subsequent native activation cannot recover an older cargo snapshot.
+        if(!lease.owned.isEmpty())for(var id:lease.villages){var village=PoliticsService.village(lease.level,id);if(village!=null)village.syncRecords(lease.level);}
         for(var pos:lease.owned)lease.level.getChunkSource().removeRegionTicket(TICKET,pos,2,lease.owner,true);
         ACTIVE.remove(lease.level.getServer(),lease);defer(lease.level,lease.kingdom,reason);
     }
+    /** Must run before vanilla drains chunk unload futures, not only after all worlds have already closed. */
+    public static void onStopping(ServerStoppingEvent event) {
+        var lease=ACTIVE.get(event.getServer());if(lease!=null) {
+            int count=lease.owned.size();release(lease,"Server stopping; release economic tickets before chunk save/unload");
+            com.mojang.logging.LogUtils.getLogger().info("[Kingdoms] Released {} economic chunk tickets before shutdown chunk drain",count);
+        }
+        QUEUED.remove(event.getServer());
+    }
     public static void onStopped(ServerStoppedEvent event) {
         var lease=ACTIVE.get(event.getServer());if(lease!=null)release(lease,"Server stopped; only addon-owned expiring tickets released");
-        STATES.keySet().removeIf(level->level.getServer()==event.getServer());
+        STATES.keySet().removeIf(level->level.getServer()==event.getServer());PENDING.remove(event.getServer());QUEUED.remove(event.getServer());
     }
     private static void thread(ServerLevel level) {if(!level.getServer().isSameThread())throw new IllegalStateException("Economic activation requires the server thread");}
 }
