@@ -1,0 +1,32 @@
+{
+  "status": "INTERRUPTED_BY_ENVIRONMENT",
+  "candidate_sha256": "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f",
+  "counted_durable_days": 24,
+  "counted_durable_ticks": 576000,
+  "last_sampled_ticks": 599000,
+  "observed_but_unscored_ticks_after_last_clock_checkpoint": 23000,
+  "saved_game_time": 3926322,
+  "saved_day_time": 3926322,
+  "original_base_tick": 3350322,
+  "new_counts": {
+    "construction": 0,
+    "shipments": 32,
+    "payments": 32,
+    "economicDecisions": 32
+  },
+  "new_shipments_delivered": 31,
+  "new_items_delivered": 488,
+  "new_committed_fees": 403,
+  "new_chunks_through_durable_checkpoint": 0,
+  "no_full120_claim": true,
+  "continuation": "96 measured days in a separate labelled JVM segment. Preserve independently durable journals; do not roll them back to the clock checkpoint. Segment warmup and unscored lost-clock ticks stay separate.",
+  "backup_manifest_sha256": "875c7e6b1bdb8a06f24d40eeeb0b72f2c610af8610aedd1bb7b624eefc27c0ed",
+  "raw_sha256": {
+    "baseline.json": "817048a4db4b573d43d037c373b28b9b70a19c520469e4c5b3d9a4fea918d0b8",
+    "daily.jsonl": "1a728433155d7fb3c59d5606e987fe5c27417310faaeffaae187227a4ff4be79",
+    "latest.json": "1e91498f56aa577a5f94f1857263b3ff587e0f1903c0493350cc61149b6a9362",
+    "startup.json": "3bba6cb6a4a4fe2709215b9ba10df6cb7404211dd43e8aecf86d0f3c0abd899b",
+    "samples.jsonl": "cdf925965fd5a15e10f42fe5f9e5cedfd3780f432e2efa73fe7a007a67b34cd7",
+    "history.jsonl": "68f797c83d4e5959949234be21efb50b7e1a56f8cf413fd7daafa28740ac829b"
+  }
+}
