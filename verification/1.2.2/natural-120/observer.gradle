@@ -14,7 +14,10 @@ gradle.projectsEvaluated {
     p.tasks.register('economicObserverJar', Jar) {
         dependsOn compile
         from compile.flatMap { it.destinationDirectory }
-        from new File(evidence, 'observer-resources')
+        inputs.property 'observedVersion', p.property('mod_version')
+        from(new File(evidence, 'observer-resources')) {
+            filesMatching('META-INF/neoforge.mods.toml') { expand observed_version: p.property('mod_version') }
+        }
         destinationDirectory = p.layout.buildDirectory.dir('economic-observer')
         archiveFileName = 'kingdoms-economy-observer.jar'
         preserveFileTimestamps = false

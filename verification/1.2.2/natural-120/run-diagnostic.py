@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Observe a disposable copy of a completed natural world, then reopen it in a separate JVM."""
-import argparse, datetime, hashlib, json, re, shutil, subprocess, time
+import argparse, atexit, hashlib, json, re, shutil, subprocess, time, tomllib, zipfile
 from pathlib import Path
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('--world',type=Path,required=True)
@@ -18,10 +18,16 @@ init=Path(__file__).with_name('observer.gradle');out=root/'build/verification'/(
 assert not out.exists();out.mkdir(parents=True)
 result={'label':a.label,'world':str(world),'ticks':a.ticks,'original_observation':'completed dev2 natural world; disposable copy continued, not fresh generation','source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),'production_sources':{str(x.relative_to(root)):sha(x)for x in (root/'src/main').rglob('*')if x.is_file()},'stages':[],'status':'BUILDING_OBSERVER'}
 def save(): (out/'results.json').write_text(json.dumps(result,indent=2)+'\n')
+def mark_incomplete():
+ if result['status']!='COMPLETE_AND_REOPEN':result['status']='INCOMPLETE';save()
+atexit.register(mark_incomplete)
 save()
 with (out/'build.log').open('w')as log:code=subprocess.call([*runner,'--init-script',str(init),'economicObserverJar'],cwd=root,stdout=log,stderr=subprocess.STDOUT)
 assert code==0,'Observer compilation failed'
 observer=root/'build/economic-observer/kingdoms-economy-observer.jar';jar=a.jar.resolve()
+with zipfile.ZipFile(jar)as source:version=tomllib.loads(source.read('META-INF/neoforge.mods.toml').decode())['mods'][0]['version']
+with zipfile.ZipFile(observer)as source:pin=tomllib.loads(source.read('META-INF/neoforge.mods.toml').decode())['dependencies']['kingdoms_natural_observer'][0]['versionRange']
+assert pin=='['+version+']','Observer must match the exact candidate version before launch'
 shutil.copyfile(jar,world/'mods/millenairekingdoms.jar');shutil.copyfile(observer,world/'mods/kingdoms-economy-observer.jar')
 shutil.copyfile(jar,out/jar.name);shutil.copyfile(observer,out/observer.name)
 result.update(jar_sha256=sha(jar),observer_sha256=sha(observer));save()
@@ -36,7 +42,7 @@ for phase in ['diagnose','diagnose-reopen']:
    for line in lines[seen:]:
     if 'ECONOMY_120_DIAGNOSTIC'in line:print(line,flush=True)
    seen=len(lines)
-   if not stopping and (time.monotonic()>deadline or shutil.disk_usage(root).free<268435456):
+   if not stopping and (time.monotonic()>deadline or shutil.disk_usage(root).free<268435456 or (observations/'stop.request').exists()):
     result['status']='STOPPING_INCOMPLETE';save();proc.stdin.write('stop\n');proc.stdin.flush();stopping=True
    time.sleep(2)
   code=proc.returncode

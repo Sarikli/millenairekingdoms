@@ -46,7 +46,7 @@ public final class NaturalObservation {
     private final Set<UUID> knownVillages=new HashSet<>(),knownHistory=new HashSet<>();
     private final List<int[]> route=new ArrayList<>();
     private Path output; private ServerLevel level; private ServerPlayer observer;
-    private String phase="BOOT"; private int ticks,stops,lastSnapshot=-1; private long baseTick,baseDay,previousTick,previousDay,observedTicks,observerCost;
+    private volatile String phase="BOOT"; private int ticks,stops,lastSnapshot=-1; private long baseTick,baseDay,previousTick,previousDay,observedTicks,observerCost;
     private long wallStarted=System.nanoTime(),baselineWall; private UUID anchor; private EmbeddedChannel channel;
     private final String mode=System.getProperty("kingdoms.observation.mode","write");
     private final boolean reopen="reopen".equals(mode)||"diagnose-reopen".equals(mode);
@@ -54,11 +54,18 @@ public final class NaturalObservation {
     private final long diagnosticTicks=Long.getLong("kingdoms.observation.ticks",24000L);
     private static final boolean COLD = Boolean.parseBoolean(System.getProperty("kingdoms.observation.cold","true"));
     private long resumedAtElapsedTicks;
+    private final java.util.concurrent.atomic.AtomicInteger observedNewChunks=new java.util.concurrent.atomic.AtomicInteger();
     public NaturalObservation(){
         for(int radius=0;radius<=20;radius++)for(int z=-radius;z<=radius;z++)for(int x=-radius;x<=radius;x++)
             if(Math.max(Math.abs(x),Math.abs(z))==radius)route.add(new int[]{x*384,z*384});
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,false,ServerStartedEvent.class,this::started);
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST,false,ServerTickEvent.Post.class,this::tick);
+        NeoForge.EVENT_BUS.addListener(this::chunkLoaded);
+    }
+    private void chunkLoaded(net.neoforged.neoforge.event.level.ChunkEvent.Load event){
+        if(event.getLevel()==level && event.isNewChunk() && (phase.equals("OBSERVE") || phase.equals("DIAGNOSE"))){
+            observedNewChunks.incrementAndGet();
+        }
     }
     private void started(ServerStartedEvent event){
         level=event.getServer().overworld();output=event.getServer().getWorldPath(LevelResource.ROOT).resolve(diagnostic?"economy-diagnostics-"+System.getProperty("kingdoms.observation.label","probe"):"natural-observation");
@@ -125,7 +132,7 @@ public final class NaturalObservation {
         if(ticks<100)return;
         if(phase.equals("BOOT")){
             if(Files.exists(output.resolve("baseline.json")))throw new IllegalStateException("Do not overwrite diagnostic evidence");
-            baseTick=level.getGameTime();baseDay=level.getDayTime();previousTick=baseTick;previousDay=baseDay;phase="DIAGNOSE";
+            baseTick=level.getGameTime();baseDay=level.getDayTime();previousTick=baseTick;previousDay=baseDay;baselineWall=System.nanoTime();phase="DIAGNOSE";
             write("baseline.json",snapshot(0));command("tick sprint 100000000");
         }else{
             if(level.getGameTime()!=previousTick+1 || level.getDayTime()!=previousDay+1)throw new IllegalStateException("Diagnostic clock discontinuity");
@@ -149,7 +156,11 @@ public final class NaturalObservation {
                 villages.add(vr);
             }
             row.put("villages",villages);append("samples.jsonl",row);
-            if(observedTicks%24000==0)log("DIAGNOSTIC_DAY",Map.of("ticks",observedTicks,"lease",RoyalEconomicActivation.report(level),"loadedVillages",villages.size()));
+            if(observedTicks%24000==0){
+                if(observedTicks>0)command("save-all flush");
+                var daily=snapshot((int)(observedTicks/24000));append("daily.jsonl",daily);write("latest.json",daily);
+                log("DIAGNOSTIC_DAY",Map.of("ticks",observedTicks,"lease",RoyalEconomicActivation.report(level),"loadedVillages",villages.size(),"newChunks",observedNewChunks.get()));
+            }
         }
         if(observedTicks>=diagnosticTicks){
             command("save-all flush");write("final.json",snapshot((int)(observedTicks/24000)));phase="DONE";
@@ -223,11 +234,15 @@ public final class NaturalObservation {
         for(var k:data.kingdoms()){
             var r=new LinkedHashMap<String,Object>();r.put("id",k.id());r.put("name",k.name());r.put("capital",k.capital());r.put("fallen",k.fallen());r.put("active",k.active());r.put("ethos",KingdomPersonality.forKingdom(level,k.id()).category().name());r.put("members",data.members(k.id()).stream().sorted().toList());r.put("owed",data.owed(k.id()));
             try{r.put("spendableCoins",RoyalTreasurySnapshot.forNpc(level,k.id()).spendableValue());}catch(RuntimeException unavailable){r.put("spendableCoins",null);r.put("coinReason",unavailable.getMessage());}
-            r.put("portfolio",new RoyalStrategyStore(level).portfolio(k.id()));
-            r.put("economicPreview",RoyalNpcEconomyService.automatic(level).inspect(k.id(),Math.max(0,level.getDayTime())/24000));kingdoms.add(r);
+            var portfolio=new RoyalStrategyStore(level).portfolio(k.id());r.put("portfolio",portfolio);
+            var project=portfolio.development();var need=project!=null && project.status()==RoyalStrategyStore.Status.CONDITIONAL
+                    ?new RoyalNpcEconomyService.ProjectNeed(project.id(),project.target(),project.selection()):null;
+            r.put("economicPreview",RoyalNpcEconomyService.automatic(level).inspect(k.id(),Math.max(0,level.getDayTime())/24000,need));kingdoms.add(r);
         }
         row.put("background",RoyalEconomicActivation.report(level));row.put("lastEconomicRuntime",RoyalNpcRuntime.last(level));
         row.put("effectiveBudget",RoyalNpcConfig.budgets());row.put("economicBackgroundEnabled",RoyalNpcConfig.BACKGROUND_ENABLED.get());
+        row.put("newChunksDuringObservation",observedNewChunks.get());
+        if(diagnostic && !reopen)row.put("measurementWallSeconds",(System.nanoTime()-baselineWall)/1e9);
         var paymentRoot=level.getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-payments");
         if(Files.isDirectory(paymentRoot))row.put("payments",new RoyalPaymentJournal(paymentRoot).entries().stream().sorted(Comparator.comparing(RoyalPaymentJournal.Entry::id)).map(p->Map.of("id",p.id(),"state",p.state().name(),"purpose",p.intent().getString("purpose"),"amount",p.intent().getLong("amount"))).toList());
         row.put("kingdoms",kingdoms);row.put("wars",data.wars());row.put("activeRaids",data.activeRaids());

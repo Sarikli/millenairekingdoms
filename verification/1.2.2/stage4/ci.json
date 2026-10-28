@@ -1,0 +1,93 @@
+{
+  "run": "https://github.com/Sarikli/millenairekingdoms/actions/runs/40764130559",
+  "source_commit": "4d24662b9ab4dfeea9e869be39014e735d132f82",
+  "status": "success",
+  "downloaded_artifact_sha256": "63163ef942e676f242a86739a4226b5b950df4bd2f241303adc9fc8479bc134f",
+  "jar_sha256": "edab7a0f68c188ee21b3a851f2d8096a8a0f3494850cd9d1a190c3b253f93500",
+  "matches_local_tested_artifact": true,
+  "results": [
+    [
+      {
+        "suite": "verifyEconomicQueue",
+        "exit_code": 0,
+        "timed_out": false,
+        "required_pass_counts": [
+          9,
+          9
+        ],
+        "expected_per_pass": 9,
+        "launches": [
+          [
+            "runEconomicQueueGameTestServer",
+            "/home/runner/work/millenairekingdoms/millenairekingdoms/run/regression/20261028-203256-7930f5f0/verifyEconomicQueue"
+          ],
+          [
+            "runEconomicQueueGameTestServerReload",
+            "/home/runner/work/millenairekingdoms/millenairekingdoms/run/regression/20261028-203256-7930f5f0/verifyEconomicQueue"
+          ]
+        ],
+        "jar_sha256": "edab7a0f68c188ee21b3a851f2d8096a8a0f3494850cd9d1a190c3b253f93500",
+        "staged_sha256": [
+          "edab7a0f68c188ee21b3a851f2d8096a8a0f3494850cd9d1a190c3b253f93500",
+          "edab7a0f68c188ee21b3a851f2d8096a8a0f3494850cd9d1a190c3b253f93500"
+        ],
+        "image_matches": true,
+        "passed": true
+      },
+      {
+        "suite": "verifyEconomicBackground",
+        "exit_code": 0,
+        "timed_out": false,
+        "required_pass_counts": [
+          4,
+          4
+        ],
+        "expected_per_pass": 4,
+        "launches": [
+          [
+            "runEconomicBackgroundGameTestServer",
+            "/home/runner/work/millenairekingdoms/millenairekingdoms/run/regression/20261028-203256-7930f5f0/verifyEconomicBackground"
+          ],
+          [
+            "runEconomicBackgroundGameTestServerReload",
+            "/home/runner/work/millenairekingdoms/millenairekingdoms/run/regression/20261028-203256-7930f5f0/verifyEconomicBackground"
+          ]
+        ],
+        "jar_sha256": "edab7a0f68c188ee21b3a851f2d8096a8a0f3494850cd9d1a190c3b253f93500",
+        "staged_sha256": [
+          "edab7a0f68c188ee21b3a851f2d8096a8a0f3494850cd9d1a190c3b253f93500",
+          "edab7a0f68c188ee21b3a851f2d8096a8a0f3494850cd9d1a190c3b253f93500"
+        ],
+        "image_matches": true,
+        "passed": true
+      },
+      {
+        "suite": "verifyRoyalNpcBudget",
+        "exit_code": 0,
+        "timed_out": false,
+        "required_pass_counts": [
+          13,
+          13
+        ],
+        "expected_per_pass": 13,
+        "launches": [
+          [
+            "runRoyalNpcBudgetGameTestServer",
+            "/home/runner/work/millenairekingdoms/millenairekingdoms/run/regression/20261028-203256-7930f5f0/verifyRoyalNpcBudget"
+          ],
+          [
+            "runRoyalNpcBudgetGameTestServerReload",
+            "/home/runner/work/millenairekingdoms/millenairekingdoms/run/regression/20261028-203256-7930f5f0/verifyRoyalNpcBudget"
+          ]
+        ],
+        "jar_sha256": "edab7a0f68c188ee21b3a851f2d8096a8a0f3494850cd9d1a190c3b253f93500",
+        "staged_sha256": [
+          "edab7a0f68c188ee21b3a851f2d8096a8a0f3494850cd9d1a190c3b253f93500",
+          "edab7a0f68c188ee21b3a851f2d8096a8a0f3494850cd9d1a190c3b253f93500"
+        ],
+        "image_matches": true,
+        "passed": true
+      }
+    ]
+  ]
+}

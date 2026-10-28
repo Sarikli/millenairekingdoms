@@ -1,0 +1,155 @@
+{
+  "candidate": "1.2.2-dev.3",
+  "jar_sha256": "edab7a0f68c188ee21b3a851f2d8096a8a0f3494850cd9d1a190c3b253f93500",
+  "actual_ticks": 240000,
+  "days": 10,
+  "test_scope": "Continuation of an independent copy of the completed natural dev2 world; not fresh generation or a 120-day dev3 result. No players, persistent forced chunks, exploration tickets or injected resources/outcomes.",
+  "shipments": [
+    {
+      "id": "9159e5fe-fbe9-4783-8bdb-1cc9bd45923d",
+      "kingdom": "0ee86569-0e20-4e7f-939a-e14fdbdabc57",
+      "stage": "DELIVERED",
+      "source": "97a22301-fdef-49a4-979e-1ee6ec55cf52",
+      "target": "3b3de1fd-4680-4c3b-89ed-03066e9d45fd",
+      "product": "millenaire:snow_brick",
+      "quantity": 30,
+      "fee": 18,
+      "collected": 30,
+      "delivered": 30,
+      "held": 0,
+      "returned": 0,
+      "due": 3130100
+    },
+    {
+      "id": "94ed03ad-eb28-4b30-b461-b933b6761331",
+      "kingdom": "3e068b72-e37f-43f7-9727-a32400e04469",
+      "stage": "DELIVERED",
+      "source": "79f78143-b974-4db3-81d9-ca54d94e9706",
+      "target": "8670a3f5-f5b9-4b2f-adac-2033603beddf",
+      "product": "minecraft:oak_log",
+      "quantity": 2,
+      "fee": 12,
+      "collected": 2,
+      "delivered": 2,
+      "held": 0,
+      "returned": 0,
+      "due": 3184700
+    },
+    {
+      "id": "ac1fd629-cec7-41ca-8476-592bd450c985",
+      "kingdom": "3e068b72-e37f-43f7-9727-a32400e04469",
+      "stage": "DELIVERED",
+      "source": "e7c40d33-9283-4adc-b1ac-d2525de04265",
+      "target": "8201c45e-d215-43bd-b9b1-9d2c42525ae0",
+      "product": "millenaire:snow_brick",
+      "quantity": 32,
+      "fee": 10,
+      "collected": 32,
+      "delivered": 32,
+      "held": 0,
+      "returned": 0,
+      "due": 3082700
+    },
+    {
+      "id": "b3ffc2c7-30d4-4710-8016-20e6394ff3fc",
+      "kingdom": "3e068b72-e37f-43f7-9727-a32400e04469",
+      "stage": "DELIVERED",
+      "source": "8670a3f5-f5b9-4b2f-adac-2033603beddf",
+      "target": "79f78143-b974-4db3-81d9-ca54d94e9706",
+      "product": "millenaire:thatch",
+      "quantity": 64,
+      "fee": 12,
+      "collected": 64,
+      "delivered": 64,
+      "held": 0,
+      "returned": 0,
+      "due": 3031700
+    },
+    {
+      "id": "0bcb203f-660f-4143-949e-1291a0c7951b",
+      "kingdom": "3e068b72-e37f-43f7-9727-a32400e04469",
+      "stage": "DELIVERED",
+      "source": "8670a3f5-f5b9-4b2f-adac-2033603beddf",
+      "target": "79f78143-b974-4db3-81d9-ca54d94e9706",
+      "product": "millenaire:thatch",
+      "quantity": 45,
+      "fee": 12,
+      "collected": 45,
+      "delivered": 45,
+      "held": 0,
+      "returned": 0,
+      "due": 3015500
+    },
+    {
+      "id": "2d2404c6-0597-41af-884a-1cf2672ef71e",
+      "kingdom": "3e068b72-e37f-43f7-9727-a32400e04469",
+      "stage": "DELIVERED",
+      "source": "79f78143-b974-4db3-81d9-ca54d94e9706",
+      "target": "608538d6-cb04-40b9-993d-158f4aaec9e3",
+      "product": "millenaire:thatch",
+      "quantity": 64,
+      "fee": 14,
+      "collected": 64,
+      "delivered": 64,
+      "held": 0,
+      "returned": 0,
+      "due": 3153500
+    }
+  ],
+  "total_delivered_items": 237,
+  "total_fees": 78,
+  "payments": [
+    {
+      "id": "9159e5fe-fbe9-4783-8bdb-1cc9bd45923d",
+      "purpose": "SHIPMENT_FEE",
+      "amount": 18,
+      "state": "COMMITTED"
+    },
+    {
+      "id": "94ed03ad-eb28-4b30-b461-b933b6761331",
+      "purpose": "SHIPMENT_FEE",
+      "amount": 12,
+      "state": "COMMITTED"
+    },
+    {
+      "id": "ac1fd629-cec7-41ca-8476-592bd450c985",
+      "purpose": "SHIPMENT_FEE",
+      "amount": 10,
+      "state": "COMMITTED"
+    },
+    {
+      "id": "b3ffc2c7-30d4-4710-8016-20e6394ff3fc",
+      "purpose": "SHIPMENT_FEE",
+      "amount": 12,
+      "state": "COMMITTED"
+    },
+    {
+      "id": "0bcb203f-660f-4143-949e-1291a0c7951b",
+      "purpose": "SHIPMENT_FEE",
+      "amount": 12,
+      "state": "COMMITTED"
+    },
+    {
+      "id": "2d2404c6-0597-41af-884a-1cf2672ef71e",
+      "purpose": "SHIPMENT_FEE",
+      "amount": 14,
+      "state": "COMMITTED"
+    }
+  ],
+  "actual_construction_orders": 0,
+  "reopen": {
+    "economicRecordsPreserved": true,
+    "sameWorldSeparateJvm": true,
+    "kingdomPortfoliosPreserved": true,
+    "gameTime": 3198500,
+    "dayTime": 3198500
+  },
+  "new_chunk_counter": "not instrumented in this diagnostic image; separate controlled native/background suites verify zero new chunks. The longer observer adds the counter.",
+  "raw_sha256": {
+    "baseline.json": "f7bf3a58e2af48f4baf1286463bf8e961ee6f388b287c724491b32076c12ed80",
+    "reopen.json": "b75635a8c67ed30f067ef1b6129bba593d38d0ceb8b70b0166c45623f678a86c",
+    "final.json": "bb1ae9bc8dd8adafd4f2bf7ac56416e060c866738d251918e83439aaec8ec0f2",
+    "samples.jsonl": "61670d99a89ecf4f2b604c8f18e7ebc6ebe2d90015f6882747446150f184af62",
+    "history.jsonl": "131f9c96b2e1b3f31e75f2059526b2cf047d6797413c06755c6f282f14379547"
+  }
+}
