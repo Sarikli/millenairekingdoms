@@ -18,6 +18,7 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 @PrefixGameTestTemplate(false)
 public final class EconomicQueueGameTests {
     private static final String NS = "millenairekingdoms_economic_queue_tests";
+    private static final net.minecraft.server.level.TicketType<UUID> REOPEN = net.minecraft.server.level.TicketType.create("economic_queue_reopen",UUID::compareTo,200);
 
     private static final class Policy implements AutoCloseable {
         final boolean construction = RoyalConstructionConfig.TRACKING.get();
@@ -25,9 +26,42 @@ public final class EconomicQueueGameTests {
         Policy() { RoyalConstructionConfig.TRACKING.set(true); com.millenairekingdoms.shipping.RoyalShipmentConfig.TRACKING.set(true); }
         public void close() { RoyalConstructionConfig.TRACKING.set(construction); com.millenairekingdoms.shipping.RoyalShipmentConfig.TRACKING.set(shipping); }
     }
+    private static final class HandoffPolicy implements AutoCloseable {
+        final boolean autonomy=AutonomyConfig.ENABLED.get();
+        HandoffPolicy(){AutonomyConfig.ENABLED.set(true);}
+        public void close(){AutonomyConfig.ENABLED.set(autonomy);}
+    }
     private static Plan plan(RoyalShipmentSupport.Realm r, UUID id, UUID target, net.minecraft.resources.ResourceLocation selection, boolean logistics) {
         return new Plan(r.kingdom(),r.capital().getId().uuid(),r.capital().getVillageTypeId(),r.level().dimension().location().toString(),
                 id,target,selection,logistics,10,11,Math.max(0,r.level().getGameTime()),UUID.randomUUID().toString(),Status.CONDITIONAL,"Controlled unpaid queue fixture");
+    }
+
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void unpaidNpcPlanClaimsTheNextNativeSlotBeforeAnotherNaturalChoice(GameTestHelper h) {
+        try(var policy=new Policy();var autonomy=new HandoffPolicy();var r=RoyalShipmentSupport.realm(h,"npc-native-handoff")) {
+            h.assertTrue(AutonomyConfig.current().autonomy(),"Native handoff uses the actual enabled autonomous policy");
+            RoyalNpcEconomyGameTests.money(r,2);var option=RoyalNpcEconomyGameTests.option(r,r.source());
+            RoyalNpcEconomyGameTests.materials(h,r,r.source(),option.requiredMaterials(),null);var builder=RoyalNpcEconomyGameTests.builder(h,r);
+            try {
+                var original=new org.millenaire.village.Village.PendingProject(option.planSet(),option.variant(),0,false,null);
+                r.source().setPendingProject(original);
+                var parent=plan(r,UUID.randomUUID(),r.from(),option.planSet(),false);var store=new RoyalStrategyStore(r.level());store.write(Lane.DEVELOPMENT,null,parent);
+                var service=new RoyalStrategyService(r.level());service.step(r.kingdom(),10,RandomSource.create(21));
+                h.assertTrue(r.source().getPendingProject()==original && r.coins()==128,"Unpaid NPC mandate leaves original work and money intact");
+                RoyalConstructionRuntime.beforeNativeGrowth(r.level(),r.source());
+                // Controlled metadata boundary: the original job has vacated its slot. Physical original building
+                // execution/consumption is covered separately by the live native package.
+                r.source().setPendingProject(null);
+                RoyalConstructionRuntime.beforeNativeGrowth(r.level(),r.source());
+                var decision=new RoyalNpcDecisionStore(RoyalNpcDecisionStore.directory(r.level())).load(parent.id());
+                h.assertTrue(decision!=null && decision.choice().kind()==RoyalNpcDecisionStore.Kind.CONSTRUCTION && r.coins()==64
+                        && r.source().getPendingProject()!=null && store.read(r.kingdom(),Lane.DEVELOPMENT).id().equals(parent.id()),
+                        "The native handoff honors the exact ready unpaid NPC mandate before selecting unrelated natural work; decision="+decision+" coins="+r.coins());
+                RoyalConstructionRuntime.beforeNativeGrowth(r.level(),r.source());
+                h.assertTrue(r.coins()==64 && r.payments().load(parent.id()).state()==RoyalPaymentJournal.State.COMMITTED,
+                        "Repeated native growth callbacks cannot replay the original mandate's fee");h.succeed();
+            }finally{builder.discard();}
+        }
     }
 
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
@@ -192,20 +226,45 @@ public final class EconomicQueueGameTests {
         } finally {RoyalNpcConfig.MAX_CARGO.set(limit);}
     }
 
-    @GameTest(templateNamespace=NS,template="empty",batch="economic_queue_restart",timeoutTicks=1200)
+    @GameTest(templateNamespace=NS,template="empty",batch="economic_queue_restart",timeoutTicks=24000)
     public static void bothUnpaidLanesSurviveAnIndependentJvmWithoutBecomingPayments(GameTestHelper h) {
         var marker=h.getLevel().getServer().getWorldPath(LevelResource.ROOT).resolve("economic-queue-restart.dat");
         if (RoyalShipmentSupport.read()) {
-            var saved=HistoryFiles.read(marker);try(var r=RoyalShipmentSupport.restore(h,saved.getCompound("realm"),false)) {
+            var saved=HistoryFiles.read(marker);var r=RoyalShipmentSupport.restore(h,saved.getCompound("realm"),false);
                 var portfolio=new RoyalStrategyStore(r.level()).portfolio(r.kingdom());
                 h.assertTrue(portfolio.development().id().equals(saved.getUUID("development")) && portfolio.logistics().id().equals(saved.getUUID("logistics"))
                         && portfolio.development().status()==Status.CONDITIONAL && portfolio.logistics().status()==Status.CONDITIONAL && r.coins()==0,
-                        "Both exact unpaid operation identities reopen in an independent JVM without a debit or synthetic coins");h.succeed();return;
-            }
+                        "Both exact unpaid operation identities reopen in an independent JVM without a debit or synthetic coins");
+                var chunk=new net.minecraft.world.level.ChunkPos(r.source().getCenter());
+                r.level().getChunkSource().addRegionTicket(REOPEN,chunk,2,saved.getUUID("development"),true);
+                restoredHandoff(h,r,saved,0);return;
         }
         var r=RoyalShipmentSupport.realm(h,"persist-two-unpaid-lanes");RoyalNpcEconomyGameTests.money(r,0);var option=RoyalNpcEconomyGameTests.option(r,r.source());
         var development=plan(r,UUID.randomUUID(),r.from(),option.planSet(),false);var logistics=plan(r,UUID.randomUUID(),r.to(),option.planSet(),true);
         var store=new RoyalStrategyStore(r.level());store.write(Lane.DEVELOPMENT,null,development);store.write(Lane.LOGISTICS,null,logistics);
         var saved=new CompoundTag();saved.put("realm",r.marker());saved.putUUID("development",development.id());saved.putUUID("logistics",logistics.id());HistoryFiles.write(marker,saved);r.save();h.succeed();
+    }
+    private static void restoredHandoff(GameTestHelper h,RoyalShipmentSupport.Realm r,CompoundTag saved,int waited){
+        var chunk=new net.minecraft.world.level.ChunkPos(r.source().getCenter());
+        if(waited%20==0)r.level().getChunkSource().addRegionTicket(REOPEN,chunk,2,saved.getUUID("development"),true);
+        // GameTestServer runs ticks without real-time pacing. Give bounded asynchronous neighboring-chunk/entity IO
+        // room to finish; never spawn a second NPC in an attempt to repair an unavailable first entity.
+        if(!r.level().areEntitiesLoaded(chunk.toLong()) && waited<10000){h.runAfterDelay(1,()->restoredHandoff(h,r,saved,waited+1));return;}
+        try{
+            h.assertTrue(r.level().areEntitiesLoaded(chunk.toLong()),"Reopened source entity sections must be loaded before the original builder factory; waited="+waited+" centre="+r.source().getCenter()+" ticking="+r.level().isPositionEntityTicking(r.source().getCenter()));
+            r.activate(false); // Reapply this fixture's declared capital/storage availability after asynchronous ticks.
+            // No strategy step registers this restored mandate: the read-only startup cache must already know it.
+            RoyalNpcEconomyGameTests.money(r,2);var option=RoyalNpcEconomyGameTests.option(r,r.source());
+            RoyalNpcEconomyGameTests.materials(h,r,r.source(),option.requiredMaterials(),null);var builder=RoyalNpcEconomyGameTests.builder(h,r);
+            try(var policy=new Policy();var autonomy=new HandoffPolicy()){
+                RoyalConstructionRuntime.beforeNativeGrowth(r.level(),r.source());
+                h.assertTrue(r.coins()==64 && r.payments().load(saved.getUUID("development"))!=null
+                        && r.payments().load(saved.getUUID("development")).state()==RoyalPaymentJournal.State.COMMITTED
+                        && new RoyalStrategyStore(r.level()).portfolio(r.kingdom()).logistics().id().equals(saved.getUUID("logistics")),
+                        "The separate JVM rebuilds the exact unpaid handoff before native growth without replacing its logistics sibling; portfolio="+new RoyalStrategyStore(r.level()).portfolio(r.kingdom())+" coins="+r.coins());
+                System.out.println("ECONOMIC_HANDOFF_REOPEN waited="+waited+" committedFee=64 retained=64 plan="+saved.getUUID("development"));
+            }finally{builder.discard();}
+            h.succeed();
+        }finally{r.level().getChunkSource().removeRegionTicket(REOPEN,chunk,2,saved.getUUID("development"),true);r.close();}
     }
 }

@@ -1,0 +1,7 @@
+{
+  "reference_dev3_sha256": "edab7a0f68c188ee21b3a851f2d8096a8a0f3494850cd9d1a190c3b253f93500",
+  "enabled_negative_image_sha256": "f165cafc79c75986b2ee4cc5f1449162d06e58a4ab680f0dbe65104d5d5cea88",
+  "compared_production_classes": 282,
+  "different_classes": [],
+  "note": "Negative image uses dev4 metadata solely for the newly compiled test dependency; production classes are identical to frozen dev3. Autonomy scope is explicitly enabled in the regression."
+}

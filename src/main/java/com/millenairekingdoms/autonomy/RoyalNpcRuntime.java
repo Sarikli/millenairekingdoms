@@ -2,6 +2,8 @@ package com.millenairekingdoms.autonomy;
 
 import com.millenairekingdoms.economy.EconomyService;
 import com.millenairekingdoms.economy.RoyalNpcDecisionStore;
+import com.millenairekingdoms.construction.RoyalConstructionCatalog;
+import com.millenairekingdoms.construction.RoyalConstructionConfig;
 import com.millenairekingdoms.kingdom.KingdomSavedData;
 import com.millenairekingdoms.personality.KingdomPersonality;
 import com.millenairekingdoms.politics.PoliticsService;
@@ -9,6 +11,7 @@ import com.mojang.logging.LogUtils;
 import java.nio.file.Files;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.WeakHashMap;
@@ -17,13 +20,25 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.slf4j.Logger;
+import org.millenaire.village.Village;
 
 /** Bounded NPC round robin, including unloaded capitals; no startup purchases; separate bounded activation owns only expiring tickets. */
 public final class RoyalNpcRuntime {
     private static final Logger LOGGER=LogUtils.getLogger();
     private static final Map<ServerLevel,Session> SESSIONS=new WeakHashMap<>();
     public record Report(int inspected,int attempts,long elapsedNanos){}
-    private static final class Session {UUID cursor;long nextTick,lastError=Long.MIN_VALUE;Report last=new Report(0,0,0);final Map<UUID,Long> errors=new HashMap<>();}
+    private static final int MAX_HANDOFFS=256;
+    private static final class Handoff {
+        final UUID kingdom,plan,target;
+        boolean armed=true,running;
+        long lastDiagnostic=-1200;
+        Handoff(RoyalStrategyStore.Plan p){kingdom=p.kingdom();plan=p.id();target=p.target();}
+    }
+    private static final class Session {
+        UUID cursor;long nextTick,lastError=Long.MIN_VALUE,handoffTick=Long.MIN_VALUE;int handoffsThisTick;Report last=new Report(0,0,0);
+        final Map<UUID,Long> errors=new HashMap<>();
+        final LinkedHashMap<UUID,Handoff> handoffs=new LinkedHashMap<>();
+    }
     private RoyalNpcRuntime(){}
     public static void onStarted(ServerStartedEvent event){
         for(var level:event.getServer().getAllLevels()){
@@ -31,8 +46,45 @@ public final class RoyalNpcRuntime {
             try{
                 session.nextTick=level.getGameTime()+RoyalNpcConfig.cadence().intervalTicks();var path=RoyalNpcDecisionStore.directory(level);
                 if(Files.exists(path.resolve("decisions.dat")))new RoyalNpcDecisionStore(path).entries();
+                // Rebuild metadata hints before the first native growth tick, without startup spending/chunk access.
+                var store=new RoyalStrategyStore(level);var data=KingdomSavedData.get(level);
+                for(var k:data.kingdoms().stream().filter(k->k.active() && !k.fallen() && data.npcGoverned(k.id())).sorted(Comparator.comparing(KingdomSavedData.Kingdom::id)).limit(MAX_HANDOFFS).toList())
+                    try{watchDevelopment(level,k.id(),store.read(k.id(),RoyalStrategyStore.Lane.DEVELOPMENT));}
+                    catch(RuntimeException invalid){LOGGER.warn("[Kingdoms] NPC handoff metadata unavailable for {}; original plan retained: {}",k.id(),invalid.getMessage());}
             }catch(RuntimeException unsupported){session.nextTick=Long.MAX_VALUE;LOGGER.error("[Kingdoms] NPC economy startup unavailable in {}; no automatic spending, original history preserved.",level.dimension().location(),unsupported);}
         }
+    }
+    /** A bounded disposable hint, never a new authorization or a replacement for the persisted plan. */
+    static void watchDevelopment(ServerLevel level,UUID kingdom,RoyalStrategyStore.Plan plan){
+        var session=SESSIONS.computeIfAbsent(level,key->new Session());Handoff previous=null;
+        for(var iterator=session.handoffs.values().iterator();iterator.hasNext();){var old=iterator.next();if(old.kingdom.equals(kingdom)){previous=old;iterator.remove();}}
+        if(plan==null || plan.logistics() || plan.status()!=RoyalStrategyStore.Status.CONDITIONAL)return;
+        var next=previous!=null && previous.plan.equals(plan.id()) && previous.target.equals(plan.target())?previous:new Handoff(plan);
+        session.handoffs.put(next.target,next);
+        while(session.handoffs.size()>MAX_HANDOFFS)session.handoffs.remove(session.handoffs.keySet().iterator().next());
+    }
+    /** Retry the exact existing unpaid NPC mandate once when native work vacates its slot. The idle path has no
+     * disk/village scan. The normal policy/domain paths still validate current resources, builder, fee and authority. */
+    public static void beforeNativeGrowth(ServerLevel level,Village village){
+        if(!level.getServer().isSameThread())throw new IllegalStateException("Native economic handoff requires the server thread");
+        if(!RoyalConstructionConfig.TRACKING.get() || !AutonomyConfig.current().autonomy() || !RoyalNpcConfig.budgets().enabled())return;
+        var session=SESSIONS.get(level);if(session==null || session.nextTick==Long.MAX_VALUE)return;
+        var handoff=session.handoffs.get(village.getId().uuid());if(handoff==null || handoff.running)return;
+        if(RoyalConstructionCatalog.naturalWorkPending(village)){handoff.armed=true;return;}
+        if(!handoff.armed)return;
+        long tick=level.getGameTime();if(session.handoffTick!=tick){session.handoffTick=tick;session.handoffsThisTick=0;}
+        if(session.handoffsThisTick>=RoyalNpcConfig.cadence().maximumKingdoms())return;
+        session.handoffsThisTick++;
+        handoff.armed=false;handoff.running=true;
+        try{
+            var plan=new RoyalStrategyStore(level).read(handoff.kingdom,RoyalStrategyStore.Lane.DEVELOPMENT);
+            if(plan==null || plan.status()!=RoyalStrategyStore.Status.CONDITIONAL || !handoff.plan.equals(plan.id()) || !handoff.target.equals(plan.target())){
+                session.handoffs.remove(handoff.target,handoff);return;
+            }
+            new RoyalStrategyService(level).step(handoff.kingdom,Math.max(0,level.getDayTime())/EconomyService.DAY_TICKS,level.getRandom());
+        }catch(RuntimeException failure){
+            long now=level.getGameTime();if(now-handoff.lastDiagnostic>=1200){handoff.lastDiagnostic=now;LOGGER.warn("[Kingdoms] Unpaid NPC handoff {} deferred; original work remains authoritative: {}",handoff.plan,failure.getMessage());}
+        }finally{handoff.running=false;}
     }
     /** HIGH runs before native growth's normal-priority slot selection. It never replaces an existing native project;
      * an occasional justified royal request may fill an idle slot, then the original engine owns placement/builders. */

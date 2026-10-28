@@ -52,6 +52,13 @@ for phase in ['diagnose','diagnose-reopen']:
  assert sha(world/'mods/millenairekingdoms.jar')==result['jar_sha256']
  if phase=='diagnose':
   actual=json.loads((observations/'final.json').read_text());assert actual['observedTicks']==a.ticks and actual['gameTime']-actual['baseTick']==a.ticks and actual['dayTime']-actual['baseDayTime']==a.ticks
-  result['final_counts']={k:len(actual.get(k,[]))for k in ['construction','shipments','payments','economicDecisions']};save()
+  baseline=json.loads((observations/'baseline.json').read_text());keys=['construction','shipments','payments','economicDecisions']
+  prior={k:{row['id']for row in baseline.get(k,[])}for k in keys}
+  added={k:[row for row in actual.get(k,[])if row['id']not in prior[k]]for k in keys}
+  result['final_counts']={k:len(actual.get(k,[]))for k in keys}
+  result['new_counts']={k:len(added[k])for k in keys}
+  result['new_shipment_items_delivered']=sum(row['delivered']for row in added['shipments'])
+  result['new_committed_fees']=sum(row['amount']for row in added['payments']if row['state']=='COMMITTED')
+  result['new_chunks_during_observation']=actual.get('newChunksDuringObservation');save()
  else:assert json.loads((observations/'reopen.json').read_text())['economicRecordsPreserved']
-result['status']='COMPLETE_AND_REOPEN';result['outputs_sha256']={x.name:sha(x)for x in observations.iterdir()if x.is_file()};save();print('DIAGNOSTIC_COMPLETE_AND_REOPEN',result['final_counts'],flush=True)
+result['status']='COMPLETE_AND_REOPEN';result['outputs_sha256']={x.name:sha(x)for x in observations.iterdir()if x.is_file()};save();print('DIAGNOSTIC_COMPLETE_AND_REOPEN new_counts=',result['new_counts'],flush=True)

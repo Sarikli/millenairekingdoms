@@ -1,0 +1,14 @@
+{
+  "from": "1.2.2-dev.3",
+  "to": "1.2.2-dev.4",
+  "changed": [
+    "com/millenairekingdoms/autonomy/RoyalNpcRuntime$Handoff.class",
+    "com/millenairekingdoms/autonomy/RoyalNpcRuntime$Report.class",
+    "com/millenairekingdoms/autonomy/RoyalNpcRuntime$Session.class",
+    "com/millenairekingdoms/autonomy/RoyalNpcRuntime.class",
+    "com/millenairekingdoms/autonomy/RoyalStrategyService.class",
+    "com/millenairekingdoms/construction/RoyalConstructionRuntime.class",
+    "com/millenairekingdoms/mixin/VillageGrowthQueueMixin.class"
+  ],
+  "unchanged": 276
+}

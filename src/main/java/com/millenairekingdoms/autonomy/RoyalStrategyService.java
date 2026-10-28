@@ -29,6 +29,12 @@ public final class RoyalStrategyService {
     public Portfolio portfolio(UUID kingdom) { return store.portfolio(kingdom); }
 
     public RoyalNpcEconomyService.Result step(UUID kingdom, long day, RandomSource random) {
+        var result=decide(kingdom,day,random);
+        RoyalNpcRuntime.watchDevelopment(level,kingdom,store.read(kingdom,Lane.DEVELOPMENT));
+        return result;
+    }
+
+    private RoyalNpcEconomyService.Result decide(UUID kingdom,long day,RandomSource random) {
         var data = KingdomSavedData.get(level);
         var k = data.kingdom(kingdom);
         if (!RoyalNpcConfig.budgets().enabled() || k == null || k.fallen() || !k.active() || !data.npcGoverned(kingdom)) {
