@@ -127,11 +127,12 @@ public final class RoyalNpcEconomyService {
         var proposals=new ArrayList<Proposal>();var diagnostics=new java.util.LinkedHashMap<String,Integer>();String reason="No justified legal, resourced investment or safely supplied native shortage";
         if(shippingEnabled() && shipments.isEmpty())proposals.addAll(shortages(data,k,members,stocks,history,construction,day,funds,profile.category(),limits,cadence,diagnostics,project));
         else if(shippingEnabled())reason="Existing shipment/liability must settle before another NPC shipment";
-        // Genuine existing native shortages take priority over optional new commissions. No player/natural queue mutation.
-        if(!proposals.isEmpty()){treasury.requireUnchanged();return new Preview(proposals,funds,"Native pending resource shortage");}
-        if(!constructionEnabled())return new Preview(List.of(),funds,"Automatic construction tracker is paused; "+reason);
-        if(!construction.isEmpty())return new Preview(List.of(),funds,bounded("Existing royal construction/liability remains tracked; no second major project; "+diagnostics));
-        if(recent(history,Kind.CONSTRUCTION,day,cadence.projectDays(),null))return new Preview(List.of(),funds,"Persistent kingdom project cooldown");
+        // Ordinary discovery prefers supplies. An existing unpaid mandate must also be checked for readiness:
+        // a shortage in another village must not hide its one free native construction slot.
+        if(!proposals.isEmpty() && project==null){treasury.requireUnchanged();return new Preview(proposals,funds,"Native pending resource shortage");}
+        if(!constructionEnabled())return new Preview(proposals,funds,"Automatic construction tracker is paused; "+reason);
+        if(!construction.isEmpty())return new Preview(proposals,funds,bounded("Existing royal construction/liability remains tracked; no second major project; "+diagnostics));
+        if(recent(history,Kind.CONSTRUCTION,day,cadence.projectDays(),null))return new Preview(proposals,funds,"Persistent kingdom project cooldown");
         for(var member:members){
             var village=PoliticsService.village(level,member);if(!usable(village)){note(diagnostics,"unavailable/local-player village");continue;}
             // Original9.0.3 canStartNewConstruction explicitly excludes wall segments from normal-building slots.

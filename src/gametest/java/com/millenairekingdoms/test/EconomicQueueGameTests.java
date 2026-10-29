@@ -65,6 +65,43 @@ public final class EconomicQueueGameTests {
     }
 
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
+    public static void unrelatedSupplyCannotStealTheReadyUnpaidNativeHandoff(GameTestHelper h) {
+        try(var policy=new Policy();var autonomy=new HandoffPolicy();var r=RoyalShipmentSupport.realm(h,"supply-versus-handoff")) {
+            var shortage=RoyalNpcEconomyGameTests.shortage(h,r);var option=RoyalNpcEconomyGameTests.option(r,r.source());
+            RoyalNpcEconomyGameTests.materials(h,r,r.source(),option.requiredMaterials(),null);
+            int added=r.source().getTownhall().getInventory().add(r.level(),shortage.product(),shortage.sourceBefore());
+            h.assertTrue(added==shortage.sourceBefore(),"Actual source storage holds both the planned building materials and genuine export goods");
+            r.source().getTownhall().getInventory().invalidateCache();
+            var builder=RoyalNpcEconomyGameTests.builder(h,r);
+            try {
+                var original=new org.millenaire.village.Village.PendingProject(option.planSet(),option.variant(),0,false,null);
+                r.source().setPendingProject(original);RoyalNpcEconomyGameTests.money(r,0);
+                var parent=plan(r,UUID.randomUUID(),r.from(),option.planSet(),false);var store=new RoyalStrategyStore(r.level());store.write(Lane.DEVELOPMENT,null,parent);
+                var service=new RoyalStrategyService(r.level());service.step(r.kingdom(),10,RandomSource.create(22));
+                RoyalConstructionRuntime.beforeNativeGrowth(r.level(),r.source());
+                h.assertTrue(r.coins()==0 && r.source().getPendingProject()==original,"Unpaid planning preserves existing work without money");
+                RoyalNpcEconomyGameTests.money(r,8);r.source().setPendingProject(null);
+                h.assertTrue(RoyalNpcEconomyService.automatic(r.level()).inspect(r.kingdom(),10).candidates().stream()
+                        .anyMatch(p->p.choice().kind()==RoyalNpcDecisionStore.Kind.SHIPMENT && r.to().equals(p.choice().target())),
+                        "A different village really has a payable shipment proposal at this exact construction boundary");
+                RoyalConstructionRuntime.beforeNativeGrowth(r.level(),r.source());
+                var decision=new RoyalNpcDecisionStore(RoyalNpcDecisionStore.directory(r.level())).load(parent.id());
+                h.assertTrue(decision!=null && decision.choice().kind()==RoyalNpcDecisionStore.Kind.CONSTRUCTION
+                        && r.coins()==448 && r.source().getPendingProject()!=null && r.target().getPendingProject()==shortage.pending(),
+                        "A ready exact unpaid building must claim its native slot despite an unrelated supply proposal; decision="+decision+" coins="+r.coins()+" plan="+store.read(r.kingdom(),Lane.DEVELOPMENT));
+                RoyalConstructionRuntime.beforeNativeGrowth(r.level(),r.source());
+                h.assertTrue(r.coins()==448 && r.payments().load(parent.id()).state()==RoyalPaymentJournal.State.COMMITTED,
+                        "Repeated handoffs retain the actual single64 fee");
+                var supply=service.step(r.kingdom(),11,RandomSource.create(23));
+                h.assertTrue(supply!=null && supply.kind()==RoyalNpcDecisionStore.Kind.SHIPMENT && !supply.attempt().equals(parent.id())
+                        && store.read(r.kingdom(),Lane.DEVELOPMENT).id().equals(parent.id()) && r.target().getPendingProject()==shortage.pending(),
+                        "The unrelated original shortage still receives its own paid logistics operation after the normal cooldown");
+                h.succeed();
+            }finally{builder.discard();}
+        }
+    }
+
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
     public static void newDefaultsAllowOneRealHalfTreasuryFeeWhileRetainingOneSilverCoin(GameTestHelper h) {
         try(var policy=new Policy();var r=RoyalShipmentSupport.realm(h,"new-default-budget")) {
             h.assertTrue(RoyalNpcConfig.budgets().reserve()==64 && RoyalNpcConfig.budgets().sharePermille()==500,"Fresh world uses the actual1.2.2 default reserve/share");

@@ -1,0 +1,18 @@
+{
+  "builder": "fc1bf169-861d-40ae-aac6-c543841bd11e",
+  "write_cold_ticks": 41716,
+  "read_cold_ticks": 14255,
+  "write_work_visits": 11,
+  "read_work_visits": 4,
+  "expected_template_blocks": 425,
+  "final_template_match": 1.0,
+  "awake_npc_ticks_each": 400,
+  "awake_world_ticks_each": 400,
+  "players": 0,
+  "persistent_forced_chunks": 0,
+  "new_chunks": 0,
+  "actual_order_on_write": "IN_PROGRESS",
+  "actual_order_after_reopen": "COMPLETED",
+  "evidence": "verifyEconomicNative.log.gz",
+  "jar_sha256": "7a97f6ee372ab97ff0b48946b4f67c3b5cb22380c44c526683a00c156bfce137"
+}

@@ -79,6 +79,14 @@ public final class RoyalStrategyService {
         var service = RoyalNpcEconomyService.automatic(level);
         var preview = service.inspect(kingdom, day, supply);
 
+        // Take the exact ready mandate's empty native slot before unrelated logistics consumes this decision.
+        // Discovery still requires the original builder, all actual materials, budget and normal cooldowns.
+        if (project != null && project.status() == Status.CONDITIONAL) {
+            var readyProject = project;
+            if (preview.candidates().stream().anyMatch(p -> constructionMatches(readyProject, p)))
+                return issue(Lane.DEVELOPMENT, project, day, random, p -> constructionMatches(readyProject, p), supply);
+        }
+
         // A linked construction never holds the logistics lane hostage.
         var rememberedLogistics = logistics;
         boolean observedSupplyMatches = rememberedLogistics != null && preview.candidates().stream().anyMatch(p -> shipmentMatches(rememberedLogistics, p));
