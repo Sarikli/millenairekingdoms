@@ -1,0 +1,6 @@
+{
+  "baseline_jar_sha256": "7a97f6ee372ab97ff0b48946b4f67c3b5cb22380c44c526683a00c156bfce137",
+  "negative_jar_sha256": "f457acfabe490216f56f3d38248939e8cb9739eb744f26c22126999c7ba0dc0d",
+  "production_classes": 283,
+  "production_classes_identical": true
+}

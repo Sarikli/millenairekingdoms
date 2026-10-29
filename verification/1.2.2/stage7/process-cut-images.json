@@ -1,0 +1,14 @@
+{
+  "frozen_candidate_sha256": "0d17715ea023bdbdc6e9ba2ff9f9d8d73faaabba5c66051b20ac2c0bf53c868f",
+  "source_changes_during_run": false,
+  "staged_after_recovery": [
+    {
+      "world_run": "order-crash-20261029T212816-c3e9d593-before-village",
+      "staged_after_recovery_sha256": "0d17715ea023bdbdc6e9ba2ff9f9d8d73faaabba5c66051b20ac2c0bf53c868f"
+    },
+    {
+      "world_run": "order-crash-20261029T212816-c3e9d593-after-village",
+      "staged_after_recovery_sha256": "0d17715ea023bdbdc6e9ba2ff9f9d8d73faaabba5c66051b20ac2c0bf53c868f"
+    }
+  ]
+}
