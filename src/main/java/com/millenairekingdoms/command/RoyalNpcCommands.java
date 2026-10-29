@@ -21,10 +21,18 @@ public final class RoyalNpcCommands {
         return Commands.literal("economy").requires(s->s.hasPermission(2))
                 .then(Commands.literal("explain").then(PoliticalArguments.kingdomArgument("kingdom").executes(c->guarded(c,()->{
                     var level=c.getSource().getLevel();var id=PoliticalArguments.kingdom(c,"kingdom");long day=Math.max(0,level.getDayTime())/EconomyService.DAY_TICKS;
-                    var preview=RoyalNpcEconomyService.automatic(level).inspect(id,day);var budget=RoyalNpcConfig.budgets();
+                    var portfolio=new com.millenairekingdoms.autonomy.RoyalStrategyStore(level).portfolio(id);
+                    var project=portfolio.development();
+                    var need=project!=null && project.status()==com.millenairekingdoms.autonomy.RoyalStrategyStore.Status.CONDITIONAL
+                            ? new RoyalNpcEconomyService.ProjectNeed(project.id(),project.target(),project.selection()) : null;
+                    var preview=RoyalNpcEconomyService.automatic(level).inspect(id,day,need);var budget=RoyalNpcConfig.budgets();
                     reply(c,com.millenairekingdoms.localization.PublicText.of("NPC economics | masterAutonomy=%s | enabled=%s | reserve=%s | maxFeePermille=%s | actualFunds=%s | %s", AutonomyConfig.current().autonomy(), budget.enabled(), budget.reserve(), budget.sharePermille(), preview.funds()<0?"UNKNOWN":Long.toString(preview.funds()), preview.reason()));
                     reply(c,com.millenairekingdoms.localization.PublicText.of("Justified candidates=%s | runtimeLast=%s", preview.candidates().size(), RoyalNpcRuntime.last(level)));
                     reply(c,com.millenairekingdoms.localization.PublicText.of("%s",com.millenairekingdoms.autonomy.RoyalNpcDiagnostics.inspect(level,id,day,preview)));
+                    reply(c,Component.literal("Development (unpaid until domain acknowledgment): "+portfolio.development()));
+                    reply(c,Component.literal("Logistics (independent domain ID): "+portfolio.logistics()));
+                    reply(c,Component.literal("Economic background enabled="+RoyalNpcConfig.BACKGROUND_ENABLED.get()+" | maxChunks="+RoyalNpcConfig.BACKGROUND_MAX_CHUNKS.get()+" | "+com.millenairekingdoms.autonomy.RoyalEconomicActivation.report(level)));
+                    reply(c,Component.literal("Budget values above are the effective world configuration; existing TOML overrides and previously frozen approvals are preserved."));
                     preview.candidates().stream().sorted(Comparator.comparingInt(RoyalNpcEconomyService.Proposal::weight).reversed()).limit(8).forEach(p->reply(c,com.millenairekingdoms.localization.PublicText.of("%s | weight=%s | fee=%s | %s", p.choice().kind(), p.weight(), p.choice().fee(), p.reason())));
                 }))))
                 .then(Commands.literal("status").then(PoliticalArguments.kingdomArgument("kingdom").executes(c->guarded(c,()->{

@@ -1,0 +1,21 @@
+[
+  {
+    "suite": "verifyRoyalConstruction",
+    "exit_code": 1,
+    "timed_out": false,
+    "required_pass_counts": [],
+    "expected_per_pass": 56,
+    "launches": [
+      [
+        "runRoyalConstructionGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261029-211737-34703e24/verifyRoyalConstruction"
+      ]
+    ],
+    "jar_sha256": "f457acfabe490216f56f3d38248939e8cb9739eb744f26c22126999c7ba0dc0d",
+    "staged_sha256": [
+      "f457acfabe490216f56f3d38248939e8cb9739eb744f26c22126999c7ba0dc0d"
+    ],
+    "image_matches": false,
+    "passed": false
+  }
+]

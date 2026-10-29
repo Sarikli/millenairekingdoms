@@ -90,6 +90,9 @@ public final class ConquestTestMod {
             event.register(RoyalStrategyCrashGameTests.class);
             event.register(RoyalStrategyRecoveryGameTests.class);
             event.register(RoyalStrategyGameTests.class);
+            event.register(EconomicQueueGameTests.class);
+            event.register(EconomicBackgroundGameTests.class);
+            event.register(EconomicNativeGameTests.class);
             event.register(StrategicMilitaryGameTests.class);
             event.register(IndependentStrategicGameTests.class);
             event.register(MaintenanceScaleGameTests.class);
@@ -111,10 +114,12 @@ public final class ConquestTestMod {
             if(event.getLevel() instanceof net.minecraft.server.level.ServerLevel level && Boolean.getBoolean("kingdoms.tests.liveNpcEconomy"))RoyalNpcLiveGameTests.fixtureTick(level);
         });
         NeoForge.EVENT_BUS.addListener(NativeWarLiveGameTests::onDeath);
+        NeoForge.EVENT_BUS.addListener(EconomicBackgroundGameTests::onChunkLoad);
         // Tests share one world: the scheduled NPC politics and founding must not decide for other tests' villages. The
         // stage-6.2 and 1.1.0 tests call the same code directly, with explicit settings.
         NeoForge.EVENT_BUS.addListener((ServerStartedEvent event) -> {
             AutonomyConfig.ENABLED.set(Boolean.getBoolean("kingdoms.tests.liveNpcEconomy") || Boolean.getBoolean("kingdoms.tests.historyWorld"));
+            com.millenairekingdoms.autonomy.RoyalNpcConfig.BACKGROUND_ENABLED.set(Boolean.getBoolean("kingdoms.tests.economicBackground"));
             FoundingConfig.ENABLED.set(false);
             boolean liveConstruction=Boolean.getBoolean("kingdoms.tests.liveConstruction");
             com.millenairekingdoms.construction.RoyalConstructionConfig.TRACKING.set(liveConstruction);

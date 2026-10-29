@@ -74,7 +74,7 @@ public final class RoyalNpcEconomyGameTests {
         h.assertTrue(RoyalVillageStock.forNpc(r.level(),r.kingdom(),r.to()).missing(chosen.requiredMaterials()).getOrDefault(required.getKey(),0)>0,"Actual native pending project genuinely lacks the chosen material");
         return new Shortage(chosen,required.getKey(),product,required.getValue(),supplied,retained,pending);
     }
-    private static void deliver(GameTestHelper h,RoyalShipmentSupport.Realm r,UUID id){
+    static void deliver(GameTestHelper h,RoyalShipmentSupport.Realm r,UUID id){
         var clock=(ServerLevelData)r.level().getLevelData();long before=clock.getGameTime();
         try{
             for(int n=0;n<12;n++){var entry=r.store().load(id);if(entry.terminal())return;if(entry.dispatched() && clock.getGameTime()<entry.due())clock.setGameTime(entry.due());r.service().observe(id);}
@@ -149,7 +149,7 @@ public final class RoyalNpcEconomyGameTests {
             h.assertTrue(result.kind()==Kind.NONE && r.coins()==before && r.target().getPendingProject()==setup.pending(),"Actual protected source goods cannot be drained to solve another village's shortage");
         }
         try(var r=RoyalShipmentSupport.realm(h,"npc-poor-shortage")){
-            shortage(h,r);money(r,2);var result=service(r).evaluate(r.kingdom(),10,RandomSource.create(8));h.assertTrue(result.kind()==Kind.NONE && r.coins()==128 && result.reason().contains("reserve"),"Real128 cannot pay transport while retaining default128 reserve; no free cargo/fee intent");
+            shortage(h,r);money(r,1);var result=service(r).evaluate(r.kingdom(),10,RandomSource.create(8));h.assertTrue(result.kind()==Kind.NONE && r.coins()==64 && result.reason().contains("reserve"),"Real64 cannot pay transport while retaining default64 reserve; no free cargo/fee intent");
         }h.succeed();
     }
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)

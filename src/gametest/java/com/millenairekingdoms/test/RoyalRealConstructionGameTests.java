@@ -91,6 +91,7 @@ public final class RoyalRealConstructionGameTests {
         long remaining;
         double initialMatch;
         boolean fetched,builderLoaded,closed;
+        Integer completedCarryWitness;
         Probe(GameTestHelper h) {
             this(h,"read".equals(System.getProperty("kingdoms.tests.persistence")),new RoyalConstructionService(h.getLevel()));
         }
@@ -183,6 +184,7 @@ public final class RoyalRealConstructionGameTests {
                 phase=4; return;
             }
             if(phase==4) {
+                captureCompletionCargo();
                 if(ticks%20!=0) return;
                 Entry order=observed();
                 if(order.stage()==Stage.IN_PROGRESS || order.stage()==Stage.COMPLETED) {
@@ -208,7 +210,7 @@ public final class RoyalRealConstructionGameTests {
                     }
                     // Terrain clearing can occupy >90% of original task steps. Use a genuinely partial structure,
                     // rather than an arbitrary cursor percentage, to choose the independent-JVM boundary.
-                    if(!read && builderLoaded && fetched && task.progress()>=0.1F && !task.isComplete() && match()>initialMatch && match()<0.5) {
+                    if(!read && builderLoaded && fetched && level.getEntity(builder) instanceof MillVillager loadedBuilder && loadedBuilder.getInventory().getCount(watched)>=needed && task.progress()>=0.1F && !task.isComplete() && match()>initialMatch && match()<0.5) {
                         h.assertTrue(task.totalSteps()>100 && task.getNextStepIndex()>0,"Actual original builder advanced a substantial nonempty task");
                         village.syncRecords(level); new RoyalVillagePersistence().building(level,village.getId().uuid(),building);
                         var tag=new CompoundTag(); tag.putUUID("kingdom",kingdom); tag.putUUID("village",village.getId().uuid()); tag.putUUID("order",id); tag.putUUID("building",building.getId().uuid());
@@ -225,8 +227,8 @@ public final class RoyalRealConstructionGameTests {
                         h.assertTrue(builderLoaded && task.isComplete() && task.totalSteps()>100 && building.getStatus()==BuildingInstance.Status.COMPLETE
                                 && placed>=0.90 && village.getOwnerUUID()==null && RoyalTreasurySnapshot.forNpc(level,kingdom).spendableValue()==remaining,
                                 "Actual saved resident must resume and complete original construction; final match="+placed+" builderLoaded="+builderLoaded);
-                        h.assertTrue(level.getEntity(builder) instanceof MillVillager actual && actual.getInventory().getCount(watched)<=carriedAtRestart-needed,
-                                "Original builder consumes the real carried construction materials after completion");
+                        h.assertTrue(level.getEntity(builder) instanceof MillVillager && completedCarryWitness!=null && completedCarryWitness<=carriedAtRestart-needed,
+                                "Original completion consumes the real carried supplies before later native jobs can fetch more: witness="+completedCarryWitness+" carriedAtRestart="+carriedAtRestart+" needed="+needed);
                         assertHistory(true);
                         System.out.println("ROYAL_REAL_BUILD_RESTART_READ_PASS "+diagnostic()+" finalMatch="+placed);
                         close(); h.succeed(); return;
@@ -267,6 +269,12 @@ public final class RoyalRealConstructionGameTests {
             var watch=materials.entrySet().stream().filter(e->e.getValue()>0).sorted(Comparator.comparing(e->e.getKey().toString())).findFirst().orElseThrow();
             anywoodWatched=AnywoodHelper.isAnywood(watch.getKey());watched=anywoodWatched ? Items.OAK_LOG : ItemHelper.resolve(watch.getKey());needed=watch.getValue();stock=economicStocks.getOrDefault(watched,inventory.getCount(level,watched));
             System.out.println("ROYAL_NPC_BUILDER_SELECTED id="+id+" plan="+order.intent().planSet()+" fee="+order.intent().fee()+" remaining="+remaining+" materials="+materials+" reason="+selected.reason());phase=4;
+        }
+
+        void captureCompletionCargo() {
+            if(read && completedCarryWitness==null && building!=null && building.getStatus()==BuildingInstance.Status.COMPLETE
+                    && building.getConstructionTask()!=null && building.getConstructionTask().isComplete() && level.getEntity(builder) instanceof MillVillager actual)
+                completedCarryWitness=actual.getInventory().getCount(watched);
         }
 
         void assertHistory(boolean finished){

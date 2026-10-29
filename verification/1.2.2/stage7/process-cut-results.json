@@ -1,0 +1,71 @@
+{
+  "run": "order-crash-20261029T212816-c3e9d593",
+  "kind": "abrupt-jvm-construction-domain-recovery",
+  "cases": [
+    {
+      "boundary": "before-village",
+      "world_run": "order-crash-20261029T212816-c3e9d593-before-village",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "before-village-prepare.log"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "before-village-interrupt.log",
+          "expected_jvm_exit_code": 70
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "before-village-recover.log"
+        }
+      ]
+    },
+    {
+      "boundary": "after-village",
+      "world_run": "order-crash-20261029T212816-c3e9d593-after-village",
+      "stages": [
+        {
+          "stage": "prepare",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "after-village-prepare.log"
+        },
+        {
+          "stage": "interrupt",
+          "exit_code": 1,
+          "required_test_pass_lines": [],
+          "verified": true,
+          "log": "after-village-interrupt.log",
+          "expected_jvm_exit_code": 70
+        },
+        {
+          "stage": "recover",
+          "exit_code": 0,
+          "required_test_pass_lines": [
+            "1"
+          ],
+          "verified": true,
+          "log": "after-village-recover.log"
+        }
+      ]
+    }
+  ],
+  "complete": true
+}

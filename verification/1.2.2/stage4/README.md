@@ -1,0 +1,11 @@
+# Empty-dimension entity work
+
+Candidate1.2.2-dev.3 SHA-256edab7a0f68c188ee21b3a851f2d8096a8a0f3494850cd9d1a190c3b253f93500. Original9.0.3 dependency unchanged. [Source/artifact attribution](source-artifact.json).
+
+Fresh isolated native write and same-world separate-JVM reopen each log **All 1 required tests passed** and exit0. The stronger fixture replaces only the GameTest harness's permanent area tickets with transient tickets during physical measurement. It observes zero players, no vanilla/NeoForge permanent force records, and400 actual native NPC ticks over400 world ticks in both JVMs. The same original builder c6b0d46f-d9b8-4dcc-9556-9159e2b3b680 performs physical construction, keeps genuine assigned material cargo and reopens partial work. Cold work takes41621/14248 actual ticks and11/4 lease visits;0 newly generated chunks.
+
+Affected activation guards each log **All 4 required tests passed** in fresh write/reopen JVMs, exit0: actual cold physical goods/fees, missing-terrain guard, military preemption, FIFO fairness and global blocked-disk job bounds. [Machine-readable pair results](focused-results.json). Both suites stage the exact candidate hash above.
+
+The [dev2 natural baseline](../natural-120/dev2-baseline/README.md) failed economy liveness despite completing120 days/reopen. Dev3's [ten-day copied-world continuation](natural-ten-days/result.json) completes with6 fully delivered shipments/237 real goods,6 committed fees totaling78 deniers and a successful exact-record separate-JVM reopen. New paid royal construction remains0; original work/material deficits are retained. This is not a fresh-world run or120-day dev3 completion. The longer separately labelled120-day continuation is running with daily durable snapshots and new-chunk instrumentation.
+
+[CI40764130559](https://github.com/Sarikli/millenairekingdoms/actions/runs/40764130559) succeeds. The downloaded CI JAR exactly matches the locally tested candidate; queue9/9, background4/4 and budget13/13 results are in [ci.json](ci.json). Local ordinary Java21 build/compile also passes. A rejected old observer-version pin is retained with the ten-day evidence; no failed startup is counted as a gameplay result. GUI rendering and authenticated online login remain unverified.

@@ -1,0 +1,38 @@
+// Explicit test-only init script. Does not edit project/cloud setup or affect ordinary builds.
+gradle.projectsEvaluated {
+    def p = gradle.rootProject
+    def evidence = p.file('verification/1.2.2/natural-120')
+    def compile = p.tasks.register('compileEconomicObserver', JavaCompile) {
+        dependsOn p.tasks.named('classes')
+        source p.fileTree(new File(evidence, 'observer-src')) { include '**/*.java' }
+        classpath = p.sourceSets.gametest.compileClasspath
+        destinationDirectory = p.layout.buildDirectory.dir('economic-observer/classes')
+        javaCompiler = p.javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(21) }
+        options.compilerArgs.addAll(['-proc:none', '-implicit:none'])
+        options.release = 21
+    }
+    p.tasks.register('economicObserverJar', Jar) {
+        dependsOn compile
+        from compile.flatMap { it.destinationDirectory }
+        inputs.property 'observedVersion', p.property('mod_version')
+        from(new File(evidence, 'observer-resources')) {
+            filesMatching('META-INF/neoforge.mods.toml') { expand observed_version: p.property('mod_version') }
+        }
+        destinationDirectory = p.layout.buildDirectory.dir('economic-observer')
+        archiveFileName = 'kingdoms-economy-observer.jar'
+        preserveFileTimestamps = false
+        reproducibleFileOrder = true
+    }
+    def world = System.getProperty('kingdoms.observation.world')
+    if (world != null) {
+        p.neoForge.runs.named('serverJar') {
+            gameDirectory = p.file(world)
+            systemProperty 'kingdoms.observation.mode', System.getProperty('kingdoms.observation.mode', 'write')
+            systemProperty 'kingdoms.observation.cold', 'true'
+            systemProperty 'kingdoms.observation.label', System.getProperty('kingdoms.observation.label', 'probe')
+            systemProperty 'kingdoms.observation.ticks', System.getProperty('kingdoms.observation.ticks', '24000')
+            jvmArgument '-Xmx6G'
+        }
+        p.tasks.named('stageServerJar') { enabled = false }
+    }
+}

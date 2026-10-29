@@ -1,0 +1,116 @@
+{
+  "version": "1.2.2-dev.2",
+  "source_commit": "21e658ea7fa28a2c6964f279562d2022cb8542a4",
+  "jar_sha256": "59fe6c077df34c19ed3d17f71b43dab07f118d300ffb9025e8ca8e9ff950f35e",
+  "seed": 20261027300,
+  "actual_ticks": 2880000,
+  "days": 120,
+  "wall_seconds": 3021.427947049,
+  "players": 0,
+  "observer_tickets": 0,
+  "vanilla_forced_chunks": 0,
+  "capital_chance_percent": 10,
+  "capital_spacing": 1000,
+  "budget": {
+    "enabled": true,
+    "reserve": 64,
+    "sharePermille": 500
+  },
+  "natural_capitals": 3,
+  "settlement_records": 42,
+  "history_counts": {
+    "FOUNDING": 3,
+    "INCORPORATION": 7,
+    "VILLAGE_CONQUEST": 10,
+    "STRATEGIC_BATTLE": 18
+  },
+  "actual_construction_orders": 0,
+  "actual_shipments": 0,
+  "payments": 0,
+  "economic_decisions": 0,
+  "reopen": {
+    "bookedDay": 122,
+    "kingdomMembershipAndCapitalsPreserved": true,
+    "dayTime": 2934300,
+    "sameWorldSeparateJvm": true,
+    "historySize": 38,
+    "gameTime": 2934300,
+    "economicRecordsPreserved": true
+  },
+  "economy_liveness_acceptance": "FAILED: no actual economic orders; do not treat lifecycle completion as economy success",
+  "diagnostic_copy": {
+    "actual_ticks": 24000,
+    "npc_tracks_frozen_for_at_least_1000_world_ticks": 42,
+    "examples": [
+      {
+        "npc": "a0a7dbde-7bf2-4ab0-86be-087da23050b1",
+        "firstElapsedTick": 4600,
+        "lastElapsedTick": 6800,
+        "firstNpcTicks": 0,
+        "lastNpcTicks": 0
+      },
+      {
+        "npc": "c25c7ccb-bc39-4f8b-8b2d-c006aef905dc",
+        "firstElapsedTick": 4600,
+        "lastElapsedTick": 6800,
+        "firstNpcTicks": 0,
+        "lastNpcTicks": 0
+      },
+      {
+        "npc": "5b32fdf1-2083-4419-8fc0-015d4cfb08bc",
+        "firstElapsedTick": 4600,
+        "lastElapsedTick": 6800,
+        "firstNpcTicks": 0,
+        "lastNpcTicks": 0
+      },
+      {
+        "npc": "ff61acb5-52a4-498b-b013-5d19e2c9e00a",
+        "firstElapsedTick": 4600,
+        "lastElapsedTick": 6800,
+        "firstNpcTicks": 0,
+        "lastNpcTicks": 0
+      },
+      {
+        "npc": "2fc17978-528c-4c94-b6de-17dae0af1894",
+        "firstElapsedTick": 4600,
+        "lastElapsedTick": 6800,
+        "firstNpcTicks": 0,
+        "lastNpcTicks": 0
+      },
+      {
+        "npc": "0a07b441-81fe-40dc-885c-4d06f2ebbe7c",
+        "firstElapsedTick": 4600,
+        "lastElapsedTick": 6800,
+        "firstNpcTicks": 0,
+        "lastNpcTicks": 0
+      },
+      {
+        "npc": "8531779f-4861-4f43-8315-6fa9690e963a",
+        "firstElapsedTick": 4600,
+        "lastElapsedTick": 6800,
+        "firstNpcTicks": 0,
+        "lastNpcTicks": 0
+      },
+      {
+        "npc": "6e527e71-de7e-4a18-b74e-37e86e43e578",
+        "firstElapsedTick": 4600,
+        "lastElapsedTick": 6800,
+        "firstNpcTicks": 0,
+        "lastNpcTicks": 0
+      }
+    ],
+    "observed_empty_time_range": [
+      100,
+      24100
+    ],
+    "persistent_force_registry_seen": false
+  },
+  "raw_sha256": {
+    "baseline.json": "e254d8813ec962d838d5cfe8f36abba48094d3295cb1a8897f259dea6c8eecbf",
+    "daily.jsonl": "30b255fd171599fee4df704450c733f154bfa7747f4c49e1d37f98c90d27d36d",
+    "final.json": "e4872404c2395462765017b8196ba51bbd7b994255875234f860644185e977cf",
+    "reopen.json": "08f4a23d0a02dd2cd965394611bb10d81a56477946da63a13af5423c37e6edc6",
+    "generation.jsonl": "48453deb1cc4b5c678763dbe8eb2d23e8f405f63129c1491acba83f547f17e53",
+    "history.jsonl": "82dc4b0fdeecf699da79ada4b9c48aeada9317694f6fcbc9fc2432d16ce16a5c"
+  }
+}
