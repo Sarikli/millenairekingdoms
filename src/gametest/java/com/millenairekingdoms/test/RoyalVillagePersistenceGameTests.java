@@ -22,6 +22,35 @@ import org.millenaire.village.Village;
 public final class RoyalVillagePersistenceGameTests {
     private static final String NS="millenairekingdoms_royal_construction_tests";
 
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=2400)
+    public static void unrelatedLargeVillageCannotBlockExactPendingReadback(GameTestHelper h) throws Exception {
+        try(var f=RoyalCatalogGameTests.eligible(h);var other=RoyalCatalogGameTests.eligible(h)) {
+            var option=f.catalog().options().getFirst();var pending=new Village.PendingProject(option.planSet(),option.variant(),0,false,null);
+            var id=f.village().getId().uuid();f.village().setPendingProject(pending);new RoyalVillagePersistence().pending(f.level(),id,pending);
+            var path=file(f.level());var original=Files.readAllBytes(path);
+            try {
+                var root=NbtIo.readCompressed(path,net.minecraft.nbt.NbtAccounter.create(64L*1024*1024));
+                CompoundTag unrelated=null;
+                for(var raw:root.getCompound("data").getList("villages",10)) {
+                    var t=(CompoundTag)raw;if(t.hasUUID("id") && t.getUUID("id").equals(other.village().getId().uuid()))unrelated=t;
+                }
+                h.assertTrue(unrelated!=null,"The size-pressure payload belongs to a different genuine serialized native village");
+                unrelated.putByteArray("kingdoms_test_extension",new byte[64*1024*1024]);NbtIo.writeCompressed(root,path);
+                boolean oldLimit=false;
+                try{NbtIo.readCompressed(path,net.minecraft.nbt.NbtAccounter.create(64L*1024*1024));}
+                catch(RuntimeException limit){oldLimit=limit.getMessage().contains("too big");}
+                h.assertTrue(oldLimit,"The controlled existing native file reproduces the actual64MiB whole-world NBT read failure");
+                var bytes=Files.readAllBytes(path);long start=System.nanoTime();
+                var readOnly=new RoyalVillagePersistence(){@Override protected void flush(ServerLevel level){}};
+                readOnly.pending(f.level(),id,pending);
+                h.assertTrue(Arrays.equals(bytes,Files.readAllBytes(path)) && f.village().getPendingProject()==pending,
+                        "Exact saved pending proof ignores unrelated payload without rewriting world bytes or changing the original project");
+                System.out.println("ROYAL_LARGE_NATIVE_READBACK elapsedNanos="+(System.nanoTime()-start)+" compressedBytes="+bytes.length);
+            }finally{Files.write(path,original);}
+            h.succeed();
+        }
+    }
+
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
     public static void actualPendingAndRemovalAreAcknowledgedByOriginalSaveWorker(GameTestHelper h) throws Exception {
         try(var f=RoyalCatalogGameTests.eligible(h)) {

@@ -1,0 +1,8 @@
+{
+  "source": "/workspace/millenairekingdoms/run/natural-300-world-03",
+  "archive": "/workspace/royal-decree/natural-300/checkpoints/world-03-before-resume.tar.gz",
+  "archive_sha256": "d10386c9e7d2bff658fddc9eeabfae105feb4e6810f63fd278d96d69f041a014",
+  "source_preserved_in_place": true,
+  "all_files_byte_verified": true,
+  "file_count": 4191
+}

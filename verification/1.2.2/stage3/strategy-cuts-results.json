@@ -1,0 +1,80 @@
+[
+  {
+    "cut": "before-decision",
+    "stages": [
+      {
+        "phase": "prepare",
+        "exit_code": 0,
+        "required_pass_counts": [
+          1
+        ],
+        "expected_halt": false,
+        "jar_sha256": "59fe6c077df34c19ed3d17f71b43dab07f118d300ffb9025e8ca8e9ff950f35e",
+        "image_matches": true,
+        "log_sha256": "469fae070c032d05e222da0a0de928e0fb137a9b34248abbc7ea4e248dc17f82",
+        "passed": true
+      },
+      {
+        "phase": "cut",
+        "exit_code": 1,
+        "required_pass_counts": [],
+        "expected_halt": true,
+        "jar_sha256": "59fe6c077df34c19ed3d17f71b43dab07f118d300ffb9025e8ca8e9ff950f35e",
+        "image_matches": true,
+        "log_sha256": "24da26b3f9291022660d0ccff7318e95eb1e38052e991c7d8e166ac85fd85760",
+        "passed": true
+      },
+      {
+        "phase": "read",
+        "exit_code": 0,
+        "required_pass_counts": [
+          1
+        ],
+        "expected_halt": false,
+        "jar_sha256": "59fe6c077df34c19ed3d17f71b43dab07f118d300ffb9025e8ca8e9ff950f35e",
+        "image_matches": true,
+        "log_sha256": "02cfc828d5a0643cc546c76333333ccb3a31e9698f9f6dbd06ca8c4c4ddb50a9",
+        "passed": true
+      }
+    ]
+  },
+  {
+    "cut": "after-decision",
+    "stages": [
+      {
+        "phase": "prepare",
+        "exit_code": 0,
+        "required_pass_counts": [
+          1
+        ],
+        "expected_halt": false,
+        "jar_sha256": "59fe6c077df34c19ed3d17f71b43dab07f118d300ffb9025e8ca8e9ff950f35e",
+        "image_matches": true,
+        "log_sha256": "d233bb5e26f23bf147080c5cb2a6fe97f6f0d68a01a24d44495b7144651bb707",
+        "passed": true
+      },
+      {
+        "phase": "cut",
+        "exit_code": 1,
+        "required_pass_counts": [],
+        "expected_halt": true,
+        "jar_sha256": "59fe6c077df34c19ed3d17f71b43dab07f118d300ffb9025e8ca8e9ff950f35e",
+        "image_matches": true,
+        "log_sha256": "b315c9720cbd7f07401f417f4065833ba52dcc7a46b60d241e9b8d9ff2cb4ad0",
+        "passed": true
+      },
+      {
+        "phase": "read",
+        "exit_code": 0,
+        "required_pass_counts": [
+          1
+        ],
+        "expected_halt": false,
+        "jar_sha256": "59fe6c077df34c19ed3d17f71b43dab07f118d300ffb9025e8ca8e9ff950f35e",
+        "image_matches": true,
+        "log_sha256": "d2eaca10e87265f2747fc99462d97d0e8de813d4a11a8f44e8b88934ba3d2503",
+        "passed": true
+      }
+    ]
+  }
+]

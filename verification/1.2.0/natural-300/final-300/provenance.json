@@ -1,0 +1,58 @@
+{
+  "product": "Millenaire Kingdoms 1.2.0 \u2014 By Royal Decree",
+  "observed_product_tag_commit": "f31801644b724c58581c69f73b1cd0a23a3d785f",
+  "latest_observation_source_commit": "9318d22ddc0101db0f28d00851939dd532e89e52",
+  "production_jar_sha256": "b7ae9fc2f208588962bac8739021b4e4169322443d475b65c672791a53a3e8dd",
+  "native_jar_sha256": "5882528027ac67e8759db3926ebef36abe2300029526582f80c7a988b583ec62",
+  "final_observer_jar_sha256": "10dea462ab32668a45b114813c8cd7349d1afaa394f1669ed6e0661174c72bed",
+  "normal_seed": 20261027300,
+  "baseline_tick": 22200,
+  "final_tick": 7222200,
+  "reopen_tick": 7222201,
+  "actual_elapsed_ticks": 7200000,
+  "daily_rows": 301,
+  "separate_jvm_stages": [
+    {
+      "phase": "resume",
+      "exit_code": 0,
+      "build_successful": true
+    },
+    {
+      "phase": "reopen",
+      "exit_code": 0,
+      "build_successful": true
+    }
+  ],
+  "gameplay_config_values_equal_original_capture": true,
+  "final_config_file_sha256": {
+    "millenairekingdoms-server.toml": "47737ab3740575020c93f8de2704889c8740a78fb64b14094444d0fed6901de8",
+    "millenaire-server.toml": "c011cd41fc9dcddcad33889d956d23379a0b55a748f0d758ac036287a54bf4d6"
+  },
+  "physical_world_preserved": "/workspace/millenairekingdoms/run/natural-300-world-03",
+  "single_uninterrupted_jvm": false,
+  "final_jvm_tick_validation": 7099829,
+  "earlier_saved_elapsed_ticks": 100171,
+  "no_GameTest_pass_line_claimed": true,
+  "graphical_client_verified": false,
+  "online_authentication_verified": false,
+  "tools": {
+    "tools/analyze-decisions.py": "c0a7f85de4df4ac2df4c3aaab57f125c457cc4452c59f6fd4b42d80210150e21",
+    "tools/analyze-observation.py": "1230ef6d65b06cc741d4a372fff14ee531b168e0851a61ca391adc1518cb48b7",
+    "tools/audit-logs.py": "a32cacb8bde40ce9ec89d2198096b4c64ba8ad01b4977b30e4770f8be2627e9f",
+    "tools/backup-interruption.py": "f17edaa376566f82b684da9a37512e9d2dcece7855440a9b3d5b0d9c991b9785",
+    "tools/capture-native-state.py": "6a6755ce2a84793874d61feb8bfac1a1d94661c9fa0ab775a939750f12cd6648",
+    "tools/compile-observer.py": "97bb69915662ba7e8385eacbaa74e5994fe47a9ad21680ca8a42ca31721f2690",
+    "tools/plot-observation.py": "d309df0dc6ecd39fcbf946e2299aa4a134ec2b6a4c1678e071a890442998f203",
+    "tools/prepare-completed-report.py": "7aa2467bf6503c2b14cbe45f74ddfd00f332ab03a6ae907dd3a971298257d8a2",
+    "tools/preserve-checkpoint.py": "ea9fd6031b00a4af835ebb398d2a0eeaf55fd1d55a504cc779bb659b8422761c",
+    "tools/resume-observation.py": "c243f6ba70b92506c25990ec687b53164e856c09f6ce1fadde0e4fed6b062a34",
+    "tools/run-observation.py": "8479935a376ea307c719f8bb433c4ebab97fdd54298816b02e328cb1e62236bd"
+  },
+  "plot_export": {
+    "script": "tools/plot-observation.py",
+    "matplotlib_rcParams": {
+      "savefig.bbox": "tight"
+    },
+    "scope": "Standalone final figures generated from the stopped original world, with complete labels inside exported bounds"
+  }
+}

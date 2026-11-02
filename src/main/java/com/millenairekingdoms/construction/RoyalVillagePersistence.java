@@ -1,13 +1,9 @@
 package com.millenairekingdoms.construction;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
-import net.minecraft.SharedConstants;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtAccounter;
-import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.dimension.DimensionType;
@@ -22,7 +18,6 @@ import org.millenaire.village.VillageSavedData;
  * No chunk load, queue insertion, building creation, completion claim or direct rewrite of the dependency's format. */
 @org.jetbrains.annotations.ApiStatus.Internal
 public class RoyalVillagePersistence {
-    private static final long MAX_BYTES=64L*1024*1024;
 
     public void pending(ServerLevel level,UUID villageId,Village.PendingProject expected) {
         thread(level); var village=village(level,villageId);
@@ -93,29 +88,9 @@ public class RoyalVillagePersistence {
         if(village==null) throw new IllegalStateException("Construction village is missing; retain intent for recovery"); return village;
     }
     private static CompoundTag readVillage(ServerLevel level,UUID id) {
-        var root=read(level); CompoundTag found=null;
-        for(Tag raw:root.getCompound("data").getList("villages",Tag.TAG_COMPOUND)) {
-            var tag=(CompoundTag)raw;
-            if(tag.hasUUID("id") && id.equals(tag.getUUID("id"))) {
-                if(found!=null) throw new IllegalStateException("Duplicate saved construction village identity"); found=tag;
-            }
-        }
-        if(found==null) throw new IllegalStateException("Village missing from saved Millenaire data; do not commit patronage"); return found;
+        return NativeVillageReadback.village(file(level),id);
     }
-    private static void preflight(ServerLevel level) { if(Files.exists(file(level))) read(level); }
-    private static CompoundTag read(ServerLevel level) {
-        try {
-            var root=NbtIo.readCompressed(file(level),NbtAccounter.create(MAX_BYTES)); var data=root.getCompound("data");
-            if(!root.contains("data",Tag.TAG_COMPOUND) || !data.contains("villages",Tag.TAG_LIST)
-                    || data.getList("villages",Tag.TAG_COMPOUND).size()!=((net.minecraft.nbt.ListTag)data.get("villages")).size()
-                    || (data.contains("version") && !data.contains("version",Tag.TAG_INT)) || data.getInt("version")<0 || data.getInt("version")>6
-                    || (root.contains("DataVersion") && (!root.contains("DataVersion",Tag.TAG_INT)
-                    || root.getInt("DataVersion")>SharedConstants.getCurrentVersion().getDataVersion().getVersion()))) {
-                throw new IllegalStateException("Unsupported/future Millenaire saved data; preserve original and postpone royal acceptance");
-            }
-            return root;
-        } catch(IOException e) { throw new IllegalStateException("Cannot read original Millenaire save; preserve it and do not accept construction",e); }
-    }
+    private static void preflight(ServerLevel level) { if(Files.exists(file(level))) NativeVillageReadback.validate(file(level)); }
     private static Path file(ServerLevel level) {
         return DimensionType.getStorageFolder(level.dimension(),level.getServer().getWorldPath(LevelResource.ROOT)).resolve("data/millenaire_villages.dat");
     }

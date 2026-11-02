@@ -1,0 +1,10 @@
+{
+  "suite": "verifyStrategicMilitary",
+  "exit_code": 0,
+  "required_pass_counts": [
+    19,
+    19
+  ],
+  "expected": 19,
+  "jar_sha256": "65ed773104c8eae869e254fe2a0ad252bb9613e9e3a531f88f2daed99ec5f59d"
+}

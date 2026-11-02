@@ -1,0 +1,19 @@
+{
+  "scope": "Controlled module A/B only: exact released1.2.0 runtime class and inner classes in the1.2.1 benchmark container; not the original release JAR",
+  "baseline_commit": "f31801644b724c58581c69f73b1cd0a23a3d785f",
+  "expected_runtime_class_sha256": "67b524a63f5c5b02f02494de1e662d87971f94b9cb84d109b7dfb745b3595036",
+  "benchmark_image_sha256": "98c27425eadd237708c8cdd45a36389e2d6c7110cd492a8b6f14bed61e102666",
+  "production_candidate_sha256": "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+  "exit_code": 0,
+  "required_pass_counts": [
+    1
+  ],
+  "runtime_class_observed": "67b524a63f5c5b02f02494de1e662d87971f94b9cb84d109b7dfb745b3595036",
+  "measurement_valid": true,
+  "metrics": [
+    "MAINTENANCE_METADATA_SCALE capitals=5 passes=1 totalMicros=5736 maxPassMicros=5736 players=0",
+    "MAINTENANCE_METADATA_SCALE capitals=50 passes=4 totalMicros=16395 maxPassMicros=6577 players=0",
+    "MAINTENANCE_METADATA_SCALE capitals=500 passes=32 totalMicros=81381 maxPassMicros=10562 players=0"
+  ],
+  "unloaded_warning_count": 500
+}

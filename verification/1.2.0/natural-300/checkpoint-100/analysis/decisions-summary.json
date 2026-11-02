@@ -1,0 +1,472 @@
+{
+  "observation_complete": false,
+  "completed_actual_days": 100,
+  "pre_round_coverage_first_world_day": 6,
+  "pre_round_coverage_last_world_day": 100,
+  "recorded_pre_rounds": 95,
+  "due_pre_rounds": 95,
+  "pre_round_scope": "Read-only native blockers and service eligibility BEFORE daily relation drift/border and actual decisions. These are opportunities, not proof of RNG draws. At most one successful join per kingdom per round; later candidates may not be drawn.",
+  "independent_village_samples": {
+    "f48bc567-fad1-4a52-9ed2-09dbea0b5e0d": {
+      "eligible_pre_round_samples": 0,
+      "native_military_busy_samples": 27,
+      "eligible_world_days": [],
+      "name": "Hagios Antonios",
+      "sampled_chance_min": null,
+      "sampled_chance_max": null
+    },
+    "b14ff19b-4a4c-4f48-95ce-03dc8465720e": {
+      "eligible_pre_round_samples": 0,
+      "native_military_busy_samples": 20,
+      "eligible_world_days": [],
+      "name": "Hagios Stefanos",
+      "sampled_chance_min": null,
+      "sampled_chance_max": null
+    },
+    "5016b8cd-afa0-46c7-a087-8dbf399ca33d": {
+      "eligible_pre_round_samples": 6,
+      "native_military_busy_samples": 0,
+      "eligible_world_days": [
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "name": "Vaucelles la-fôret",
+      "sampled_chance_min": 0.034191409753605156,
+      "sampled_chance_max": 0.03907589686126304
+    },
+    "cac941f2-8094-435c-8d47-af95cbc571a4": {
+      "eligible_pre_round_samples": 0,
+      "native_military_busy_samples": 0,
+      "eligible_world_days": [],
+      "name": "Hagia Barbara",
+      "sampled_chance_min": null,
+      "sampled_chance_max": null
+    },
+    "4b4fd10a-ad0a-4300-b746-64181ddccb85": {
+      "eligible_pre_round_samples": 7,
+      "native_military_busy_samples": 0,
+      "eligible_world_days": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "name": "Marolles la-fôret",
+      "sampled_chance_min": 0.04164561533197081,
+      "sampled_chance_max": 0.04858655122063261
+    },
+    "b8457b41-b274-4fc2-9ad7-f7cd1f99fcc8": {
+      "eligible_pre_round_samples": 6,
+      "native_military_busy_samples": 0,
+      "eligible_world_days": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "name": "Saint-Charles l'abbaye",
+      "sampled_chance_min": 0.03370510610829537,
+      "sampled_chance_max": 0.03370510610829537
+    },
+    "9ebb7b61-8e20-4600-9d63-53ba907e62c6": {
+      "eligible_pre_round_samples": 0,
+      "native_military_busy_samples": 35,
+      "eligible_world_days": [],
+      "name": "Ho-Chunk",
+      "sampled_chance_min": null,
+      "sampled_chance_max": null
+    },
+    "6ed0a901-afb6-4b56-9da7-205eee36faf9": {
+      "eligible_pre_round_samples": 1,
+      "native_military_busy_samples": 29,
+      "eligible_world_days": [
+        60
+      ],
+      "name": "Yavapai",
+      "sampled_chance_min": 0.04079098290797891,
+      "sampled_chance_max": 0.04079098290797891
+    },
+    "1fd4ed41-2536-410d-ab59-6e17b4129916": {
+      "eligible_pre_round_samples": 49,
+      "native_military_busy_samples": 0,
+      "eligible_world_days": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54
+      ],
+      "name": "Périgny la-montagne",
+      "sampled_chance_min": 0.04183927746263901,
+      "sampled_chance_max": 0.06275891619395851
+    },
+    "36192a82-c722-47f6-a6b6-ea099e584b73": {
+      "eligible_pre_round_samples": 1,
+      "native_military_busy_samples": 0,
+      "eligible_world_days": [
+        6
+      ],
+      "name": "Numazu",
+      "sampled_chance_min": 0.031028665087444424,
+      "sampled_chance_max": 0.031028665087444424
+    },
+    "fd391b9c-c3ee-4cb4-8f45-f2677c4d8a1c": {
+      "eligible_pre_round_samples": 0,
+      "native_military_busy_samples": 2,
+      "eligible_world_days": [],
+      "name": "Hagios Panteleimonas",
+      "sampled_chance_min": null,
+      "sampled_chance_max": null
+    },
+    "1ee8ebbc-2e64-4ff6-aab0-d5e4a3b1081f": {
+      "eligible_pre_round_samples": 0,
+      "native_military_busy_samples": 0,
+      "eligible_world_days": [],
+      "name": "Teton",
+      "sampled_chance_min": null,
+      "sampled_chance_max": null
+    }
+  },
+  "strategy_scope": "Daily persistent conditional intentions. Metadata reasons do not prove actual shortages, cargo, fees, paid orders or finished buildings. Physical execution requires current loaded native facts.",
+  "kingdom_strategy_samples": {
+    "4cbea1ed-efbb-4b93-81a9-79edf9a46085": {
+      "strategy_status_samples": {
+        "CONDITIONAL": 101
+      },
+      "capital_loaded_samples": 0,
+      "target_loaded_samples": 0,
+      "distinct_selections": [
+        "millenaire:japanese/chickenfarm",
+        "millenaire:japanese/japaneseforge"
+      ],
+      "name": "Kingdom of Saga"
+    },
+    "61b7125e-ec16-4b58-b3e7-c626ce77d0f5": {
+      "strategy_status_samples": {
+        "CONDITIONAL": 99,
+        "IDLE": 2
+      },
+      "capital_loaded_samples": 101,
+      "target_loaded_samples": 14,
+      "distinct_selections": [
+        "millenaire:japanese/japaneseforge",
+        "millenaire:norman/cattlefarm",
+        "millenaire:norman/guardhouse",
+        "millenaire:norman/pigfarm",
+        "millenaire:norman/presbytery",
+        "millenaire:norman/quarry"
+      ],
+      "name": "Kingdom of Sainte-Marguerite les-mines"
+    }
+  },
+  "recorded_economic_authorizations": 0,
+  "economic_outcomes": {},
+  "strategic_battles": [
+    {
+      "id": "c2ffb7ff-4594-3512-bf34-596bf821b2bc",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 49,
+      "gameTime": 1179000,
+      "dimension": "minecraft:overworld",
+      "source": "53af4edb-f50d-4c44-8762-943ed95ca34c",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "36192a82-c722-47f6-a6b6-ea099e584b73",
+          "name": "Numazu",
+          "located": true,
+          "x": 1513,
+          "z": -43
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "ATTACKER_VICTORY",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "9",
+        "attackerDie": "17",
+        "modifier": "-4",
+        "mode": "STRATEGIC",
+        "defendingStrength": "96"
+      }
+    },
+    {
+      "id": "55a00b39-f4a2-3569-bad5-25b42247caa1",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 65,
+      "gameTime": 1563000,
+      "dimension": "minecraft:overworld",
+      "source": "7e56064d-951e-463f-bf9a-c7311b1fa718",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "36192a82-c722-47f6-a6b6-ea099e584b73",
+          "name": "Numazu",
+          "located": true,
+          "x": 1513,
+          "z": -43
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "ATTACKER_VICTORY",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "6",
+        "attackerDie": "17",
+        "modifier": "-4",
+        "mode": "STRATEGIC",
+        "defendingStrength": "96"
+      }
+    },
+    {
+      "id": "ee81c561-bff5-34e2-b648-dff6f63e32de",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 68,
+      "gameTime": 1635000,
+      "dimension": "minecraft:overworld",
+      "source": "67bf52d2-a5c3-4777-a9bc-ee98c2d479ea",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "36192a82-c722-47f6-a6b6-ea099e584b73",
+          "name": "Numazu",
+          "located": true,
+          "x": 1513,
+          "z": -43
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "ATTACKER_VICTORY",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "5",
+        "attackerDie": "20",
+        "modifier": "-4",
+        "mode": "STRATEGIC",
+        "defendingStrength": "96"
+      }
+    },
+    {
+      "id": "d1b66372-bd77-3dbb-ba75-8566b75b76a7",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 70,
+      "gameTime": 1683000,
+      "dimension": "minecraft:overworld",
+      "source": "4108352a-3aa7-4a8c-a754-f4ba28d8c0af",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        },
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+          "name": "Marolles la-fôret",
+          "located": true,
+          "x": -777,
+          "z": -39
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "DEFENDED",
+      "facts": {
+        "attackingStrength": "40",
+        "defenderDie": "18",
+        "attackerDie": "10",
+        "modifier": "-5",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    },
+    {
+      "id": "e432e13a-f1c3-3d63-9d72-23bcb9fc43c8",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 81,
+      "gameTime": 1947000,
+      "dimension": "minecraft:overworld",
+      "source": "458dc805-1b61-4858-b747-21a044c43d70",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "1371aae7-4fe4-4a89-b88e-873c00779010",
+          "name": "Saga",
+          "located": true,
+          "x": 365,
+          "z": 1175
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "ATTACKER_VICTORY",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "1",
+        "attackerDie": "11",
+        "modifier": "-2",
+        "mode": "STRATEGIC",
+        "defendingStrength": "74"
+      }
+    }
+  ],
+  "ownership_transfers_scope": "Count only actual VILLAGE_CONQUEST/CAPITAL_CONQUEST events and membership changes; a strategic attacker victory alone need not complete the required campaign.",
+  "village_conquest_events": 1,
+  "capital_conquest_events": 0
+}

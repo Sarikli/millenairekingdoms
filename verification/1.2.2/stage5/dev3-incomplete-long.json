@@ -1,0 +1,10 @@
+{
+  "status": "INCOMPLETE",
+  "reason": "Intentionally stopped normally to reproduce and fix the missed NPC/native handoff; no120-day completion or reopen claimed.",
+  "last_flushed_daily_ticks": 144000,
+  "last_flushed_day": 6,
+  "new_chunks_through_that_checkpoint": 0,
+  "source_result_sha256": "0638eda7035af2477af371ec3b6a7aaa7561faf631b89b6856a3ea967375686b",
+  "last_daily_sha256": "798f49baec78be5929c8d9b7ed1b3f1c343b135122409cf6e4400df0dae69960",
+  "stop_request": "Pause for focused reproduction of NPC/native queue handoff; preserve completed daily checkpoints.\n"
+}

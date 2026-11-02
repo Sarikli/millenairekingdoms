@@ -1,0 +1,12 @@
+{
+  "seed": 20261027300,
+  "overworld_generator_type": "minecraft:noise",
+  "overworld_settings": "minecraft:overworld",
+  "generate_features": 1,
+  "day_time_at_saved_snapshot": 6000,
+  "game_time_at_saved_snapshot": 6000,
+  "doDaylightCycle": "true",
+  "doMobSpawning": "true",
+  "randomTickSpeed": "3",
+  "level_dat_sha256_at_probe": "43dc4f1b29c952878b23c90b4ccfbd77f477d0629a07e5d4bff16f69ee19fd73"
+}

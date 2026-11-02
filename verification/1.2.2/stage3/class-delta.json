@@ -1,0 +1,24 @@
+{
+  "previous_jar_sha256": "20603c7abf95afe28a4d329d1cda53956f74b311da932214df6ff6b6cd955d03",
+  "final_jar_sha256": "59fe6c077df34c19ed3d17f71b43dab07f118d300ffb9025e8ca8e9ff950f35e",
+  "unchanged_financial_cargo_construction_classes": 104,
+  "all_these_class_bytes_identical": true,
+  "changed_entries": [
+    "META-INF/MANIFEST.MF",
+    "META-INF/neoforge.mods.toml",
+    "com/millenairekingdoms/MillenaireKingdoms.class",
+    "com/millenairekingdoms/autonomy/RoyalEconomicActivation$Lease.class",
+    "com/millenairekingdoms/autonomy/RoyalEconomicActivation$Phase.class",
+    "com/millenairekingdoms/autonomy/RoyalEconomicActivation$Report.class",
+    "com/millenairekingdoms/autonomy/RoyalEconomicActivation$State.class",
+    "com/millenairekingdoms/autonomy/RoyalEconomicActivation.class",
+    "com/millenairekingdoms/autonomy/RoyalNpcConfig.class",
+    "com/millenairekingdoms/command/RoyalNpcCommands.class"
+  ],
+  "added_entries": [
+    "com/millenairekingdoms/autonomy/RoyalBuilderCargo$ProtectedDelivery.class",
+    "com/millenairekingdoms/autonomy/RoyalBuilderCargo.class",
+    "com/millenairekingdoms/autonomy/RoyalEconomicActivation$Request.class"
+  ],
+  "removed_entries": []
+}

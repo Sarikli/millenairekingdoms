@@ -1,0 +1,9 @@
+{
+  "baseline": "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f",
+  "candidate": "7a97f6ee372ab97ff0b48946b4f67c3b5cb22380c44c526683a00c156bfce137",
+  "changed_classes": [
+    "com/millenairekingdoms/autonomy/RoyalNpcEconomyService.class",
+    "com/millenairekingdoms/autonomy/RoyalStrategyService.class"
+  ],
+  "unchanged_classes": 281
+}

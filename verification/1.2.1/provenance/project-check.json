@@ -1,0 +1,10 @@
+{
+  "production_java_files": 114,
+  "java_release": 21,
+  "native_checksum_verified": true,
+  "version": "1.2.1",
+  "jar_classes": 271,
+  "license_verified": true,
+  "canonical_zip_permissions": true,
+  "jar_sha256": "28043afee58e95a3d653ac20dc0110b6a47dae67624755ee0c7f6c8f0253c0f5"
+}

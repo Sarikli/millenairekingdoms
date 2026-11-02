@@ -83,6 +83,33 @@ public final class RoyalRecoveryGameTests {
         }
     }
 
+    @GameTest(templateNamespace=NS,template="empty",timeoutTicks=2400)
+    public static void exactQuarantinedOrderRecoversPastUnrelatedNativeSizeWithoutAnotherFee(GameTestHelper h) throws Exception {
+        try(var f=fixture(h,"recovery-native-size");var other=fixture(h,"recovery-native-size-other")) {
+            var intent=quarantine(f,true);var pending=f.village().getPendingProject();
+            new RoyalVillagePersistence().pending(f.level(),f.village().getId().uuid(),pending);
+            var file=net.minecraft.world.level.dimension.DimensionType.getStorageFolder(f.level().dimension(),f.level().getServer().getWorldPath(LevelResource.ROOT)).resolve("data/millenaire_villages.dat");
+            var original=Files.readAllBytes(file);
+            try {
+                var root=NbtIo.readCompressed(file,NbtAccounter.create(64L*1024*1024));boolean added=false;
+                for(var raw:root.getCompound("data").getList("villages",Tag.TAG_COMPOUND)) {
+                    var tag=(CompoundTag)raw;if(tag.hasUUID("id") && tag.getUUID("id").equals(other.village().getId().uuid())) {
+                        tag.putByteArray("kingdoms_test_extension",new byte[64*1024*1024]);added=true;
+                    }
+                }
+                h.assertTrue(added,"Size pressure is isolated to a different genuine native village");NbtIo.writeCompressed(root,file);
+                var service=new RoyalRecoveryService(f.level());var decision=UUID.randomUUID();
+                service.authorize(op(f.level()),decision,intent.id(),Mode.ADOPT_PENDING,null,"Reviewed existing pending after native readback size failure");
+                var done=service.resume(op(f.level()),decision);var order=orders(f.level()).load(intent.id());
+                h.assertTrue(done.state()==State.DONE && order.stage()==Stage.QUEUED && order.intent().id().equals(intent.id())
+                        && f.value()==64 && paid(f,intent).state()==RoyalPaymentJournal.State.COMMITTED && f.village().getPendingProject()==pending,
+                        "Operator recovery acknowledges the same exact original pending/paid64 identity without a replacement request, project or debit");
+                h.assertTrue(service.resume(op(f.level()),decision).equals(done) && f.value()==64,"Recovery replay cannot charge another fee");
+            }finally{Files.write(file,original);}
+            h.succeed();
+        }
+    }
+
     @GameTest(templateNamespace=NS,template="empty",timeoutTicks=1200)
     public static void explicitForfeitRetainsPaidFeeAndOriginalAutonomousWork(GameTestHelper h) throws Exception {
         try(var f=fixture(h,"recovery-forfeit")) {

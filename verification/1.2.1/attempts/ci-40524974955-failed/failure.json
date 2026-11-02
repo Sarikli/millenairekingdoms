@@ -1,0 +1,7 @@
+{
+  "run": "https://github.com/Sarikli/millenairekingdoms/actions/runs/40524974955",
+  "conclusion": "failure",
+  "cause": "depth-one checkout makes git show treat HEAD as a root; whitespace check traversed retained historical raw verification logs, which contain actual trailing whitespace",
+  "fix": "fetch-depth2 plus an explicit source/tooling/documentation path scope; preserve original raw logs byte-for-byte",
+  "gameplay_gates_executed": false
+}

@@ -1,0 +1,254 @@
+[
+  {
+    "suite": "verifyStrategicMilitary",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      19,
+      19
+    ],
+    "expected_per_pass": 19,
+    "launches": [
+      [
+        "runStrategicMilitaryGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyStrategicMilitary"
+      ],
+      [
+        "runStrategicMilitaryGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyStrategicMilitary"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyStrategicRestart",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      2,
+      2
+    ],
+    "expected_per_pass": 2,
+    "launches": [
+      [
+        "runStrategicRestartGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyStrategicRestart"
+      ],
+      [
+        "runStrategicRestartGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyStrategicRestart"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyWars",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      30,
+      30
+    ],
+    "expected_per_pass": 30,
+    "launches": [
+      [
+        "runWarGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyWars"
+      ],
+      [
+        "runWarGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyWars"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyAutonomy",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      22,
+      22
+    ],
+    "expected_per_pass": 22,
+    "launches": [
+      [
+        "runAutonomyGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyAutonomy"
+      ],
+      [
+        "runAutonomyGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyAutonomy"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyHistory",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      38,
+      38
+    ],
+    "expected_per_pass": 38,
+    "launches": [
+      [
+        "runHistoryGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyHistory"
+      ],
+      [
+        "runHistoryGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyHistory"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyLocalization",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      8,
+      8
+    ],
+    "expected_per_pass": 8,
+    "launches": [
+      [
+        "runLocalizationGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyLocalization"
+      ],
+      [
+        "runLocalizationGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyLocalization"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyConsolidation",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      22,
+      22
+    ],
+    "expected_per_pass": 22,
+    "launches": [
+      [
+        "runConsolidationGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyConsolidation"
+      ],
+      [
+        "runConsolidationGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyConsolidation"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyConsolidationLive",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      1,
+      1
+    ],
+    "expected_per_pass": 1,
+    "launches": [
+      [
+        "runConsolidationLiveGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyConsolidationLive"
+      ],
+      [
+        "runConsolidationLiveGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyConsolidationLive"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyRoyalEconomy",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      46,
+      46
+    ],
+    "expected_per_pass": 46,
+    "launches": [
+      [
+        "runRoyalEconomyGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyRoyalEconomy"
+      ],
+      [
+        "runRoyalEconomyGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyRoyalEconomy"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyRoyalGui",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      28,
+      28
+    ],
+    "expected_per_pass": 28,
+    "launches": [
+      [
+        "runRoyalGuiGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyRoyalGui"
+      ],
+      [
+        "runRoyalGuiGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyRoyalGui"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyRoyalShipmentGui",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      18,
+      18
+    ],
+    "expected_per_pass": 18,
+    "launches": [
+      [
+        "runRoyalShipmentGuiGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyRoyalShipmentGui"
+      ],
+      [
+        "runRoyalShipmentGuiGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyRoyalShipmentGui"
+      ]
+    ],
+    "passed": true
+  },
+  {
+    "suite": "verifyAtlas",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      22,
+      22
+    ],
+    "expected_per_pass": 21,
+    "launches": [
+      [
+        "runAtlasGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyAtlas"
+      ],
+      [
+        "runAtlasGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261027-144903-5edfb46d/verifyAtlas"
+      ]
+    ],
+    "passed": false
+  }
+]

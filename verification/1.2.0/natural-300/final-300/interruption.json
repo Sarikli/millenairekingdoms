@@ -1,0 +1,19 @@
+{
+  "measurement_complete": false,
+  "last_daily_snapshot": 1,
+  "saved_game_time": 61571,
+  "saved_day_time": 61571,
+  "original_baseline_game_time": 22200,
+  "original_baseline_day_time": 22200,
+  "original_baseline_kingdoms": 2,
+  "native_records_on_disk": 15,
+  "political_kingdoms_on_disk": 2,
+  "cause": "Process no longer running. No final marker/pass/reopen. Cause not established from stdout; current level.dat is a saved world checkpoint.",
+  "captured_files": {
+    "level.dat": "356e41602250f9600e145e15dc2bd4e8db5fbf0be11937afdf505d4e7a077393",
+    "data/millenaire_villages.dat": "5e0121e2a88b4fdff4fe5a3de5647ea8c937173d39f640550d3d625e010ffc17",
+    "data/millenairekingdoms_kingdoms.dat": "4c90ee4a93c0a0c7a1dc773793c6bfb4fd6bf4b372f30eb0332be75a02d30002",
+    "natural-observation/baseline.json": "0f4231bd2d2f13bc0aaae1ba59c4acaeccd31dd1432e234ae189b081e58b2465",
+    "natural-observation/daily.jsonl": "d917710fe56172c825f8f4807a9246ba16875ca041a0869f1f9fb7d31129b4a4"
+  }
+}

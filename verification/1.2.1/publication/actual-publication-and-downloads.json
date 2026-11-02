@@ -1,0 +1,45 @@
+{
+  "release_id": 425658914,
+  "release_url": "https://github.com/Sarikli/millenairekingdoms/releases/tag/1.2.1",
+  "tag_name": "1.2.1",
+  "published_at": "2026-10-27T15:47:13Z",
+  "draft": false,
+  "prerelease": false,
+  "source_commit": "4faf06d621c53f9bba5533aa343f80510e9f58cd",
+  "tag_object_sha": "84e6fe333193919c5e60ee7b9ab5db5ce2f47317",
+  "upload_action": "https://github.com/Sarikli/millenairekingdoms/actions/runs/40534071542",
+  "latest_release_verified": true,
+  "main_commit_unchanged": "388dba0af9745d4ba4b0186ab56f5f1b25f62038",
+  "old_120_jar_digest_unchanged": "sha256:b7ae9fc2f208588962bac8739021b4e4169322443d475b65c672791a53a3e8dd",
+  "assets": [
+    {
+      "name": "millenairekingdoms-1.2.1.jar",
+      "size": 1941956,
+      "public_download_url": "https://github.com/Sarikli/millenairekingdoms/releases/download/1.2.1/millenairekingdoms-1.2.1.jar",
+      "actual_download_sha256": "28043afee58e95a3d653ac20dc0110b6a47dae67624755ee0c7f6c8f0253c0f5",
+      "api_digest": "sha256:28043afee58e95a3d653ac20dc0110b6a47dae67624755ee0c7f6c8f0253c0f5",
+      "matches_local_immutable_asset": true
+    },
+    {
+      "name": "RELEASE_NOTES.md",
+      "size": 5710,
+      "public_download_url": "https://github.com/Sarikli/millenairekingdoms/releases/download/1.2.1/RELEASE_NOTES.md",
+      "actual_download_sha256": "fed372f82635bf21dbacc06b4387d1d376adf81630e5af541ffc4c24f1823a87",
+      "api_digest": "sha256:fed372f82635bf21dbacc06b4387d1d376adf81630e5af541ffc4c24f1823a87",
+      "matches_local_immutable_asset": true
+    },
+    {
+      "name": "SHA256SUMS",
+      "size": 95,
+      "public_download_url": "https://github.com/Sarikli/millenairekingdoms/releases/download/1.2.1/SHA256SUMS",
+      "actual_download_sha256": "645b64f40dddd6ffff0bc123eabb8bd8a3245daab0ecc866a1d42733668b8a42",
+      "api_digest": "sha256:645b64f40dddd6ffff0bc123eabb8bd8a3245daab0ecc866a1d42733668b8a42",
+      "matches_local_immutable_asset": true
+    }
+  ],
+  "all_old_120_asset_digests_unchanged": {
+    "millenairekingdoms-1.2.0.jar": "sha256:b7ae9fc2f208588962bac8739021b4e4169322443d475b65c672791a53a3e8dd",
+    "RELEASE_NOTES.md": "sha256:a94e9993bf7be51d603ec3d7278c47942bebed1a2ce5d17b5374bca3cd9dc657",
+    "SHA256SUMS": "sha256:33a93f88c6ae619f48462ed5ef8e3b9f259e7c3130f0a70d99c1bfd1527d4c02"
+  }
+}

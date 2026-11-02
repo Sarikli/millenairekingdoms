@@ -1,0 +1,8 @@
+{
+  "observer-src/com/millenairekingdoms/observation/NaturalObservation.java": "89653a63b765f95d08c7a0ae2f151bcde02a05db21b33100d589573705a10840",
+  "observer-resources/META-INF/neoforge.mods.toml": "5fc0a6f2062b60317fd6fcd7d8aef5b3f9bbad923c8051aea0450405e8e11cb2",
+  "tools/compile-observer.py": "97bb69915662ba7e8385eacbaa74e5994fe47a9ad21680ca8a42ca31721f2690",
+  "tools/server.gradle": "fa21e67b44834d9e667f131d7787e3536c06818d9b75c2174b2c2a66fb93c6a9",
+  "tools/run-observation.py": "8479935a376ea307c719f8bb433c4ebab97fdd54298816b02e328cb1e62236bd",
+  "images/kingdoms-natural-observer.jar": "b81df3145142f8eb206d21bcdd3f28b4c76eda9b1dbf56b4841a0149473536ec"
+}

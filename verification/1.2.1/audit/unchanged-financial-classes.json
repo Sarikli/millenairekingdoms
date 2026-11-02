@@ -1,0 +1,37 @@
+{
+  "RoyalPaymentService": {
+    "baseline_sha256": "ec61d41b48827d2637f9ed85c5b9b875d40f2ff721f4b8dd1dd574ca69cad72a",
+    "candidate_sha256": "ec61d41b48827d2637f9ed85c5b9b875d40f2ff721f4b8dd1dd574ca69cad72a",
+    "byte_identical": true
+  },
+  "RoyalPaymentJournal": {
+    "baseline_sha256": "b8cd2dd1a74be89f2b2da435f0866ba1af97023e9000cae3c9e604c6778da122",
+    "candidate_sha256": "b8cd2dd1a74be89f2b2da435f0866ba1af97023e9000cae3c9e604c6778da122",
+    "byte_identical": true
+  },
+  "RoyalTreasuryImage": {
+    "baseline_sha256": "cf89d88ab5e4da0c11089938ed62aff28cd59df9d4982c594eebbc4d1af0f701",
+    "candidate_sha256": "cf89d88ab5e4da0c11089938ed62aff28cd59df9d4982c594eebbc4d1af0f701",
+    "byte_identical": true
+  },
+  "RoyalTreasuryPersistence": {
+    "baseline_sha256": "3e26d1959a936e49efd1b15955131c39599b74b9c67937d890998ebbebc0c289",
+    "candidate_sha256": "3e26d1959a936e49efd1b15955131c39599b74b9c67937d890998ebbebc0c289",
+    "byte_identical": true
+  },
+  "RoyalConsolidationService": {
+    "baseline_sha256": "71b3c064c19187409d5542917a3a6abe498a5aa8ddd5b8a07129c16fafcb17fd",
+    "candidate_sha256": "71b3c064c19187409d5542917a3a6abe498a5aa8ddd5b8a07129c16fafcb17fd",
+    "byte_identical": true
+  },
+  "RoyalCoinPlan": {
+    "baseline_sha256": "1229185da5af133f609c193c29c7b41fa839574cffa3bf6483dffe550dbeb56b",
+    "candidate_sha256": "1229185da5af133f609c193c29c7b41fa839574cffa3bf6483dffe550dbeb56b",
+    "byte_identical": true
+  },
+  "EconomyService": {
+    "baseline_sha256": "9204053c267cf19cf0637bd90629b0fa2a4e1496d73b90240e7c8911dc58ae2f",
+    "candidate_sha256": "9204053c267cf19cf0637bd90629b0fa2a4e1496d73b90240e7c8911dc58ae2f",
+    "byte_identical": true
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "partial": true,
+  "completed_days": 100,
+  "elapsed_actual_ticks": 2400000,
+  "game_time_cutoff": 2422200,
+  "day_time_cutoff": 2422200,
+  "daily_rows": 101,
+  "source_world": "/workspace/millenairekingdoms/run/natural-300-world-03",
+  "world_read_only": true,
+  "native_sample_atomic_across_stores": false,
+  "tools": {
+    "preserve-checkpoint.py": "ea9fd6031b00a4af835ebb398d2a0eeaf55fd1d55a504cc779bb659b8422761c",
+    "analyze-observation.py": "1230ef6d65b06cc741d4a372fff14ee531b168e0851a61ca391adc1518cb48b7",
+    "analyze-decisions.py": "c0a7f85de4df4ac2df4c3aaab57f125c457cc4452c59f6fd4b42d80210150e21"
+  }
+}

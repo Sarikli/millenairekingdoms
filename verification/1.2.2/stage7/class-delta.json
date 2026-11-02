@@ -1,0 +1,12 @@
+{
+  "baseline_jar_sha256": "7a97f6ee372ab97ff0b48946b4f67c3b5cb22380c44c526683a00c156bfce137",
+  "candidate_jar_sha256": "0d17715ea023bdbdc6e9ba2ff9f9d8d73faaabba5c66051b20ac2c0bf53c868f",
+  "changed_or_added_classes": [
+    "com/millenairekingdoms/construction/NativeVillageReadback$1.class",
+    "com/millenairekingdoms/construction/NativeVillageReadback$ExpandedLimit.class",
+    "com/millenairekingdoms/construction/NativeVillageReadback$Projection.class",
+    "com/millenairekingdoms/construction/NativeVillageReadback.class",
+    "com/millenairekingdoms/construction/RoyalVillagePersistence.class"
+  ],
+  "unchanged_classes": 282
+}

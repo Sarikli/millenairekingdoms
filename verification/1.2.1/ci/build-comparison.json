@@ -1,0 +1,21 @@
+{
+  "ci_run": "https://github.com/Sarikli/millenairekingdoms/actions/runs/40528982266",
+  "ci_jdk": "21.0.12+1",
+  "local_jdk": "21.0.13+9",
+  "ci_jar_sha256": "28043afee58e95a3d653ac20dc0110b6a47dae67624755ee0c7f6c8f0253c0f5",
+  "local_jar_sha256": "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+  "entry_name_difference": [],
+  "different_entry_bytes": [],
+  "zip_entry_order_equal": true,
+  "zip_metadata_differences": {
+    "external_attr": 326
+  },
+  "zip_difference_examples": {
+    "external_attr": {
+      "entry": "com/",
+      "local": "1103101968",
+      "ci": "1106051088"
+    }
+  },
+  "uncompressed_production_classes_and_resources_byte_identical": true
+}

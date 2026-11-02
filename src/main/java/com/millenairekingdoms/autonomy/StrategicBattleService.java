@@ -37,7 +37,9 @@ public final class StrategicBattleService {
         thread(level);var store=new StrategicBattleStore(level);var session=SESSIONS.computeIfAbsent(level,l->new Session());
         try{var existing=store.read(order.id());if(existing!=null){resume(level,store,existing);return new RaidOrderService.Attempt(RaidOrderService.Status.RESOLVED,"Existing committed strategic operation",null);}}
         catch(RuntimeException failure){warn(level,session,failure);return RaidOrderService.Attempt.waiting("Existing strategic operation awaits durable recovery: "+failure.getMessage());}
-        if(!order.byNpc() || order.warId()==null || order.source()==null || !AutonomyConfig.current().autonomy() || !StrategicCombatConfig.ENABLED.get())return null;
+        if(!order.byNpc() || order.source()==null || !AutonomyConfig.current().autonomy() || !StrategicCombatConfig.ENABLED.get())return null;
+        if(!order.equals(data.order(order.id())))return RaidOrderService.Attempt.dropped("the order was withdrawn or replaced");
+        if(level.getGameTime()>=order.expiresGameTime())return RaidOrderService.Attempt.dropped("the order expired");
         var source=PoliticsService.village(level,order.source());var target=PoliticsService.village(level,order.target());if(source==null || target==null)return null;
         if(level.isLoaded(source.getCenter()) || level.isLoaded(target.getCenter()))return null;
         if(level.getGameTime()<session.retryAfter)return RaidOrderService.Attempt.waiting("Strategic operation data unavailable; bounded retry, original evidence preserved");
@@ -51,8 +53,9 @@ public final class StrategicBattleService {
             acknowledgePolitical(level,data);
             var settings=StrategicCombatConfig.settings();var roll=OpposedDice.roll(a.attack(),d.defense(),level.getRandom(),settings);
             long tick=Math.max(1,level.getGameTime()),day=Math.max(0,level.getDayTime())/24000;var victor=roll.attackerWon()?a.owner():d.owner();var loser=roll.attackerWon()?d.owner():a.owner();
-            var facts=Map.of("mode","STRATEGIC","attackingStrength",Long.toString(a.attack()),"defendingStrength",Long.toString(d.defense()),"attackerDie",Integer.toString(roll.attackDie()),"defenderDie",Integer.toString(roll.defenseDie()),"modifier",Integer.toString(roll.relativeModifier()));
-            var narrative=HistoryEvent.create(HistoryEvent.Kind.STRATEGIC_BATTLE,day,tick,level.dimension().location().toString(),order.id().toString(),List.of(HistoryHooks.realm(level,victor),HistoryHooks.realm(level,loser)),List.of(HistoryHooks.place(level,order.source()),HistoryHooks.place(level,order.target())),null,"","UNATTENDED_OPPOSED_DICE",roll.attackerWon()?"ATTACKER_VICTORY":"DEFENDED",facts);
+            var facts=new HashMap<>(Map.of("mode","STRATEGIC","attackingStrength",Long.toString(a.attack()),"defendingStrength",Long.toString(d.defense()),"attackerDie",Integer.toString(roll.attackDie()),"defenderDie",Integer.toString(roll.defenseDie()),"modifier",Integer.toString(roll.relativeModifier())));
+            List<HistoryEvent.Realm> realms;if(d.owner()==null){facts.put("independentTarget","true");realms=List.of(HistoryHooks.realm(level,a.owner()));}else realms=List.of(HistoryHooks.realm(level,victor),HistoryHooks.realm(level,loser));
+            var narrative=HistoryEvent.create(HistoryEvent.Kind.STRATEGIC_BATTLE,day,tick,level.dimension().location().toString(),order.id().toString(),realms,List.of(HistoryHooks.place(level,order.source()),HistoryHooks.place(level,order.target())),null,"","UNATTENDED_OPPOSED_DICE",roll.attackerWon()?"ATTACKER_VICTORY":"DEFENDED",facts);
             var operation=new Operation(order,data.revision(order.target()),a,d,settings,roll,day,tick,narrative,Status.ROLL_COMMITTED,"");store.commit(operation);session.known.add(order.id());resume(level,store,operation);
             return new RaidOrderService.Attempt(RaidOrderService.Status.RESOLVED,"Unattended opposed-dice military operation",null);
         }catch(RuntimeException failure){warn(level,session,failure);return RaidOrderService.Attempt.waiting("Strategic resolution deferred: "+failure.getMessage());}
@@ -67,7 +70,7 @@ public final class StrategicBattleService {
             }
             if(!raid.id().equals(op.id()) || !raid.campaign().equals(op.campaign())){abort(level,store,op,"Another military operation owns the current raid");return;}
             var source=com.millenairekingdoms.politics.PoliticsService.village(level,op.order().source());var target=com.millenairekingdoms.politics.PoliticsService.village(level,op.order().target());
-            if(source==null || target==null || !data.npcGoverned(op.attack().owner()) || !data.npcGoverned(op.defense().owner()) || source.getOwnerUUID()!=null || target.getOwnerUUID()!=null || Military.busy(source) || Military.busy(target)){
+            if(source==null || target==null || !data.npcGoverned(op.attack().owner()) || op.defense().owner()!=null && !data.npcGoverned(op.defense().owner()) || source.getOwnerUUID()!=null || target.getOwnerUUID()!=null || Military.busy(source) || Military.busy(target)){
                 abort(level,store,op,"Current native authority/physical raid invalidated the uncommitted political result");return;
             }
             if(op.roll().attackerWon())data.recordVictory(raid);
@@ -84,10 +87,15 @@ public final class StrategicBattleService {
         // A durable roll already started inside its original window. A separately saved world clock may lag it.
         if(order==null || !order.byNpc() || !order.equals(data.order(order.id())) || !committed && (level.getGameTime()<order.dueGameTime() || level.getGameTime()>=order.expiresGameTime()))return "Military order is absent, premature, expired or replaced";
         var source=PoliticsService.village(level,order.source());var target=PoliticsService.village(level,order.target());var defender=data.owner(order.target());
-        if(source==null || target==null || defender==null || !order.kingdom().equals(data.owner(order.source())) || !data.npcGoverned(order.kingdom()) || !data.npcGoverned(defender))return "Current NPC military authority or native settlement is unavailable";
+        if(source==null || target==null || !order.kingdom().equals(data.owner(order.source())) || !data.npcGoverned(order.kingdom()) || defender!=null && !data.npcGoverned(defender))return "Current NPC military authority or native settlement is unavailable";
         try{var campaign=data.startable(order.source(),order.target());if(!Objects.equals(campaign.warId(),order.warId()))return "Legitimate active war changed";}catch(IllegalArgumentException invalid){return invalid.getMessage();}
+        if(order.warId()==null){
+            if(defender!=null)return "Independent target joined a kingdom before execution";
+            var capital=PoliticsService.village(level,data.kingdom(order.kingdom()).capital());Integer relation=capital==null?null:capital.getRelations().get(target.getId());long radius=AutonomyService.joinRadius();
+            if(relation==null || relation>AutonomyConfig.current().warThreshold() || capital.getCenter().distSqr(target.getCenter())>radius*radius)return "Independent target is no longer a nearby hostile village";
+        }
         if(RaidOrderService.cooldownLeft(data,order.target(),AutonomyConfig.current())>0)return "Existing military cooldown has not expired";
-        if(data.activeConquests(order.kingdom())>0 || data.activeConquests(defender)>0 || data.orderOf(defender)!=null)return "A kingdom has an incompatible military commitment";
+        if(data.activeConquests(order.kingdom())>0 || defender!=null && (data.activeConquests(defender)>0 || data.orderOf(defender)!=null))return "A kingdom has an incompatible military commitment";
         if(source.getTownhall()==null || target.getTownhall()==null || source.getOwnerUUID()!=null || target.getOwnerUUID()!=null)return "Native capital/local government eligibility changed";
         var a=ModCultures.getVillageType(source.getVillageTypeId());var b=ModCultures.getVillageType(target.getVillageTypeId());if(a==null || b==null || a.playerControlled() || b.playerControlled() || a.loneBuilding() || b.loneBuilding())return "Unsupported native village type";
         if(!level.getWorldBorder().isWithinBounds(source.getCenter()) || !level.getWorldBorder().isWithinBounds(target.getCenter()) || target.getId().equals(source.getParentVillageId()) || source.getId().equals(target.getParentVillageId()))return "Native location/parent-child military restriction";
@@ -105,7 +113,7 @@ public final class StrategicBattleService {
         long now=level.getGameTime();
         if(session.budgetTick!=now){
             checkedPending(level,session,store);session.budgetTick=now;session.selected.clear();
-            var candidates=data.orders().stream().filter(o->o.byNpc() && o.warId()!=null && o.source()!=null && now>=o.dueGameTime() && now<o.expiresGameTime() && !session.known.contains(o.id()))
+            var candidates=data.orders().stream().filter(o->o.byNpc() && o.source()!=null && now>=o.dueGameTime() && now<o.expiresGameTime() && !session.known.contains(o.id()))
                     .filter(o->{var a=PoliticsService.village(level,o.source());var d=PoliticsService.village(level,o.target());return a!=null && d!=null && !level.isLoaded(a.getCenter()) && !level.isLoaded(d.getCenter());})
                     .sorted(Comparator.comparing(KingdomSavedData.RaidOrder::id)).toList();
             if(!candidates.isEmpty()){int start=0;if(session.schedulingCursor!=null){while(start<candidates.size() && candidates.get(start).id().compareTo(session.schedulingCursor)<=0)start++;start%=candidates.size();}

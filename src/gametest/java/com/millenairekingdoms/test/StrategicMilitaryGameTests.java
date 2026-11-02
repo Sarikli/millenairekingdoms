@@ -23,14 +23,16 @@ public final class StrategicMilitaryGameTests {
     }
     static final class Fixture implements AutoCloseable{
         final GameTestHelper h;final PersonalityGameTests.Villages villages;final Village a,b;final KingdomSavedData data;final KingdomSavedData.Kingdom ka,kb;
-        Fixture(GameTestHelper h){this.h=h;villages=new PersonalityGameTests.Villages(h);a=villages.add("norman/militaire");b=villages.add("norman/ecclesiastique");for(int n=0;n<4;n++)soldier(a,true);soldier(b,false);data=KingdomSavedData.get(h.getLevel());ka=villages.kingdom(a);kb=villages.kingdom(b);data.declareWar(ka.id(),kb.id(),Math.max(1,h.getLevel().getGameTime()));}
+        Fixture(GameTestHelper h){this(h,false);}
+        Fixture(GameTestHelper h,boolean independent){this.h=h;villages=new PersonalityGameTests.Villages(h);a=villages.add("norman/militaire");b=villages.add("norman/ecclesiastique");for(int n=0;n<4;n++)soldier(a,true);soldier(b,false);data=KingdomSavedData.get(h.getLevel());ka=villages.kingdom(a);kb=independent?null:villages.kingdom(b);if(independent)a.setRelation(b.getId(),-100);else data.declareWar(ka.id(),kb.id(),Math.max(1,h.getLevel().getGameTime()));}
         KingdomSavedData.RaidOrder order(UUID target){long now=Math.max(1,h.getLevel().getGameTime());return data.addOrder(ka.id(),target,a.getId().uuid(),null,now,now,now+24000);}
         @Override public void close(){villages.close();}
     }
     static StrategicBattleStore.Operation operation(GameTestHelper h,KingdomSavedData.RaidOrder order,boolean win){
         var level=h.getLevel();var a=MilitarySnapshot.capture(level,com.millenairekingdoms.politics.PoliticsService.village(level,order.source()));var b=MilitarySnapshot.capture(level,com.millenairekingdoms.politics.PoliticsService.village(level,order.target()));var settings=OpposedDice.Settings.DEFAULT;
         var roll=OpposedDice.compare(a.attack(),b.defense(),win?20:1,win?1:20,settings);var first=win?a.owner():b.owner();var second=win?b.owner():a.owner();long tick=Math.max(1,level.getGameTime()),day=Math.max(0,level.getDayTime())/24000;
-        var event=HistoryEvent.create(HistoryEvent.Kind.STRATEGIC_BATTLE,day,tick,level.dimension().location().toString(),order.id().toString(),List.of(HistoryHooks.realm(level,first),HistoryHooks.realm(level,second)),List.of(HistoryHooks.place(level,order.source()),HistoryHooks.place(level,order.target())),null,"","UNATTENDED_OPPOSED_DICE",win?"ATTACKER_VICTORY":"DEFENDED",Map.of("mode","STRATEGIC"));
+        var realms=b.owner()==null?List.of(HistoryHooks.realm(level,a.owner())):List.of(HistoryHooks.realm(level,first),HistoryHooks.realm(level,second));
+        var event=HistoryEvent.create(HistoryEvent.Kind.STRATEGIC_BATTLE,day,tick,level.dimension().location().toString(),order.id().toString(),realms,List.of(HistoryHooks.place(level,order.source()),HistoryHooks.place(level,order.target())),null,"","UNATTENDED_OPPOSED_DICE",win?"ATTACKER_VICTORY":"DEFENDED",b.owner()==null?Map.of("mode","STRATEGIC","independentTarget","true"):Map.of("mode","STRATEGIC"));
         return new StrategicBattleStore.Operation(order,KingdomSavedData.get(level).revision(order.target()),a,b,settings,roll,day,tick,event,StrategicBattleStore.Status.ROLL_COMMITTED,"");
     }
     @GameTest(templateNamespace=NS,template="empty")

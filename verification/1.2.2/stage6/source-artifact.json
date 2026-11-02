@@ -1,0 +1,13 @@
+{
+  "base_commit": "3c0880d332c3b79b2113225becf27c2de86a79e3",
+  "version": "1.2.2-dev.5",
+  "jar_sha256": "7a97f6ee372ab97ff0b48946b4f67c3b5cb22380c44c526683a00c156bfce137",
+  "source_sha256": {
+    "gradle.properties": "9edceb8cc27bda35977e26c2475abc924e9a1e1aec4810a9e08c572072174577",
+    "scripts/verify-regression.py": "33625f0db2451b0ff9cd7f19dce5cf60cc8c3b7ca81496d3bb35bd62b2bab508",
+    "src/main/java/com/millenairekingdoms/autonomy/RoyalNpcEconomyService.java": "73622e136d938f804242783ca5f7935e45decec46890215fef36ac16c9cec48d",
+    "src/main/java/com/millenairekingdoms/autonomy/RoyalStrategyService.java": "aa9423c5c4f16cdf40927b272de073ced97df58e4f44d5ee687aedade345f0f1",
+    "src/gametest/java/com/millenairekingdoms/test/EconomicQueueGameTests.java": "2fca5f90ed819262c38432c29b0832ee603eb89083a1c9d908e742920747b76c"
+  },
+  "scope": "Ready persisted development mandates are checked before unrelated logistics. No financial, cargo, save-format, native-building or activation class changed. Long day-based acceptance remains manual."
+}

@@ -1,0 +1,82 @@
+{
+  "README.md": {
+    "bytes": 2186,
+    "sha256": "48c5d830b017cacb538fb7e7fc69bf521e43aa879ccc01e8553c3335625fd027"
+  },
+  "analysis/daily.csv": {
+    "bytes": 3822,
+    "sha256": "d00a70e230b68a7a249917695d0f63092f291f4e32eb3260bd43a9bc0bf5dfbe"
+  },
+  "analysis/decisions-summary.json": {
+    "bytes": 13137,
+    "sha256": "27ca2c18a983650f3559c46c01823b84eddbd1ad5bece71aa89a41164b93f7ac"
+  },
+  "analysis/relationship-samples.csv": {
+    "bytes": 261464,
+    "sha256": "d51d0108ae36e7623a6bf90867eebae3d8560f697f01c3f6463e02449dc64846"
+  },
+  "analysis/settlement-ownership.png": {
+    "bytes": 77216,
+    "sha256": "9676a609013380fefc90591025b4f11be34383e3815fd7263e84c8b08067bd07"
+  },
+  "analysis/strategy-samples.csv": {
+    "bytes": 66347,
+    "sha256": "1a21d385a512c7652cccdab043a6739538509196ffe2f910825679153f4406aa"
+  },
+  "analysis/summary.json": {
+    "bytes": 27908,
+    "sha256": "cb09c5908690c9ffab6e63abdd19985db9a729b1d23218b2dbc341313b2b5269"
+  },
+  "analysis/timeline.png": {
+    "bytes": 176884,
+    "sha256": "16d0c6e572e3264097b6ccfe72f11648c3948161d291099944b2d10a2d9d3010"
+  },
+  "analyze-decisions.log": {
+    "bytes": 111,
+    "sha256": "f5f97825a116b3920f2a12a757d34c9ff69123905b8732d845d72cb6916c71df"
+  },
+  "analyze-observation.log": {
+    "bytes": 2769,
+    "sha256": "31c5599978094a4a67737941037572afd9e8618e10c03bfc06992e54cbcfd974"
+  },
+  "baseline.json": {
+    "bytes": 86354,
+    "sha256": "0f4231bd2d2f13bc0aaae1ba59c4acaeccd31dd1432e234ae189b081e58b2465"
+  },
+  "daily-through-day-100.jsonl.gz": {
+    "bytes": 1804413,
+    "sha256": "6cadbd49b6142bcc903ca0846b4093dfd71db291d48516f5260602dd8f0e0487"
+  },
+  "generation.jsonl.gz": {
+    "bytes": 17084,
+    "sha256": "3ee7a7baa41acd99b42a7094b177e6c28fb091387935f94f7e068fe8e83b4189"
+  },
+  "history.jsonl.gz": {
+    "bytes": 1876,
+    "sha256": "cc02320c79946634e8b7da3390a3aed84513fffbf22ee189ab2e4cb9a1aa2a3e"
+  },
+  "latest.json": {
+    "bytes": 133582,
+    "sha256": "6d7a4fdacf308a001104c67b164af5b50ae8f3d136720d5ba83cee10deb6d7ba"
+  },
+  "military-receipt-readback.json": {
+    "bytes": 2182,
+    "sha256": "ed33ed65ee20309d50404e52e8fb04be46c53203d9fb6f7fe5ec058027378db6"
+  },
+  "native-state-day-100.tar.gz": {
+    "bytes": 268164,
+    "sha256": "3d8f5d2a7fc289ac2d88fa429713193813da21b4166ce545ab809be9d302cd09"
+  },
+  "political-before-day.jsonl.gz": {
+    "bytes": 6764,
+    "sha256": "d7d646c6aa900a8bd493ca90ee201532832fe62b39430e00be65be4723a00c62"
+  },
+  "provenance.json": {
+    "bytes": 623,
+    "sha256": "37a75c037b37e05ee8045faa3d2ef2fa3087d87df38e25cf5af251c727cee2c3"
+  },
+  "resume-log-through-day-100.txt.gz": {
+    "bytes": 77683,
+    "sha256": "f9118394e7811c847cebd15ce5b8909ec2c096ac5780dedfa571abd250581c64"
+  }
+}

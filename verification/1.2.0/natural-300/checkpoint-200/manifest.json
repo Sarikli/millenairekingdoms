@@ -1,0 +1,70 @@
+{
+  "README.md": {
+    "bytes": 1388,
+    "sha256": "05e4d2d81da497c9882c61bbfef1c4502fba0025616745fe66a283ff5a6685be"
+  },
+  "analysis/daily.csv": {
+    "bytes": 7622,
+    "sha256": "dc1939f5c9178132b845f8a636c16fdce3e0b21af48fcd66314c344ef17414b1"
+  },
+  "analysis/decisions-summary.json": {
+    "bytes": 32685,
+    "sha256": "195d1d4dc7d8ad541f033a441154d9fbfc3a105989f91574f69e4b277a7bb222"
+  },
+  "analysis/relationship-samples.csv": {
+    "bytes": 489261,
+    "sha256": "b2092da4bc9c910a002f51cbe14cba7e71356f1f47839accf87b6d549e9dd647"
+  },
+  "analysis/strategy-samples.csv": {
+    "bytes": 132551,
+    "sha256": "cfcd23c966ebe9ffc4753c5e989a67fdcd82885e45bea6a0f4bbb575adbc7f9f"
+  },
+  "analysis/summary.json": {
+    "bytes": 59744,
+    "sha256": "09bbebc4884b996e03d94f00338e266190e8b0ce5bfc3bf1a9d5d9c05c95f64f"
+  },
+  "analyze-decisions.log": {
+    "bytes": 113,
+    "sha256": "ef3436a47fb941841575b9e6c5379c13a709d5c3e68ba03bf975e2484074cc39"
+  },
+  "analyze-observation.log": {
+    "bytes": 2780,
+    "sha256": "a5483772b8f980b792858095e5aef8d65abce8680322b5ecfab5e581ff6cfbca"
+  },
+  "baseline.json": {
+    "bytes": 86354,
+    "sha256": "0f4231bd2d2f13bc0aaae1ba59c4acaeccd31dd1432e234ae189b081e58b2465"
+  },
+  "daily-through-day-200.jsonl.gz": {
+    "bytes": 3598589,
+    "sha256": "e6cf1b5d8b5ab090195a767265a12d0ff1244a079b0030a5f56263217d286d5a"
+  },
+  "generation.jsonl.gz": {
+    "bytes": 17084,
+    "sha256": "3ee7a7baa41acd99b42a7094b177e6c28fb091387935f94f7e068fe8e83b4189"
+  },
+  "history.jsonl.gz": {
+    "bytes": 3685,
+    "sha256": "28df0b97ae929d6d8b6dc4b33725f74baf958b639a8f3b9a4d3803fe4a56e9b6"
+  },
+  "latest.json": {
+    "bytes": 136238,
+    "sha256": "a659a4aa27fb4e215a27243e19a318f552bfbc5e2bbf0d16b3b9408c06161abd"
+  },
+  "native-state-day-200.tar.gz": {
+    "bytes": 268905,
+    "sha256": "eb8b2a8ce624478263b34a3b9a2a96be71292ec63cfa114025d04aea55c91e83"
+  },
+  "political-before-day.jsonl.gz": {
+    "bytes": 12898,
+    "sha256": "7d61970c8746d35d9464c6eec56e0a69c790545bed1204776cb72d3c932b219a"
+  },
+  "provenance.json": {
+    "bytes": 623,
+    "sha256": "dfa887c01082627608bd419b3775c5c481d79800234931c7ee1d55abee75fd41"
+  },
+  "resume-log-through-day-200.txt.gz": {
+    "bytes": 126232,
+    "sha256": "2585efcd004c2d3d997a6f71b8f6c2b2241faa0bbc353907ca3d9990b2769a6b"
+  }
+}

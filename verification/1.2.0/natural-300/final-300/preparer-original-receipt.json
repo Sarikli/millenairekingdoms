@@ -1,0 +1,17 @@
+{
+  "actual_days": 300,
+  "actual_world_ticks": 7200000,
+  "daily_rows": 301,
+  "separate_jvm_reopen": true,
+  "files": {
+    "analysis.log": "324c5df3b2679e42222bed8a389a4d4ea6851167c98990f7b1d345cac05f16e0",
+    "plots.log": "c84dd090e8a4e7e3c8c1eb62f35866f70e800de1915695d1a88c01a36ec149f5",
+    "daily.csv": "1ad1fd07ee78254c7c0eea9fca573fae3bacee6c685e8475dc06be203b239615",
+    "settlement-ownership.png": "2e5f5cc4ecd343371f94c5625941f3ef841421b8b495dc07d1b37262f3689995",
+    "process.json": "db6241686ad7a8ccbd8375c2c01dc7638e01ef5a40a3de2d425f27de5b1a82c1",
+    "preparer.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "summary.json": "633727a45be3c0726f68bbf1900068aaecde46c841dc54e52121dbec8bad7f73",
+    "timeline.png": "ee5471bea7fbb109cf72b920fc8eacb58c53b1f82242c71ca57e7525819360a4",
+    "relationship-samples.csv": "c75f8a5dd4c0fed0e310cbaadc8b88c58edfee17b1d2ccb8998466ac1523cf5b"
+  }
+}

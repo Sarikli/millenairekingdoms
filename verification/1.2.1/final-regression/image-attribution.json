@@ -1,0 +1,110 @@
+[
+  {
+    "suite": "verifyStrategicMilitary",
+    "staged_jar_sha256": "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+    "log_sha256": "9a56c2a7b485defcbd3a3a067939410649bc52419c535fb77d43bf300b95fdd1",
+    "pass_counts": [
+      19,
+      19
+    ]
+  },
+  {
+    "suite": "verifyStrategicRestart",
+    "staged_jar_sha256": "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+    "log_sha256": "2cdf9ca715bae44be864b214f9a934b4ecd7f37bc022bacbfd9b43f218ff87d6",
+    "pass_counts": [
+      2,
+      2
+    ]
+  },
+  {
+    "suite": "verifyWars",
+    "staged_jar_sha256": "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+    "log_sha256": "7cb9f26eb77e1b6c14b11f7012d8f8b6eb3951c185bf2dca843eefaa74e8b57b",
+    "pass_counts": [
+      30,
+      30
+    ]
+  },
+  {
+    "suite": "verifyAutonomy",
+    "staged_jar_sha256": "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+    "log_sha256": "77db8fc58d027b37884c4b216e8d7e9f0a5f4183456acf98dfe06455b7c5e2e8",
+    "pass_counts": [
+      22,
+      22
+    ]
+  },
+  {
+    "suite": "verifyHistory",
+    "staged_jar_sha256": "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+    "log_sha256": "c2fe3f008d4ec3295613882d1263327da594f05073dda082876f29dd43e7fdb8",
+    "pass_counts": [
+      38,
+      38
+    ]
+  },
+  {
+    "suite": "verifyLocalization",
+    "staged_jar_sha256": "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+    "log_sha256": "87cbd92d6a223b60b9455cc87ea6d49bc65f4fc11b06f60a00156f136036d592",
+    "pass_counts": [
+      8,
+      8
+    ]
+  },
+  {
+    "suite": "verifyConsolidation",
+    "staged_jar_sha256": "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+    "log_sha256": "fd8f1d6d576c8140d378803020510d766fa7027755b59b3a8cd95a5b3ee07000",
+    "pass_counts": [
+      22,
+      22
+    ]
+  },
+  {
+    "suite": "verifyConsolidationLive",
+    "staged_jar_sha256": "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+    "log_sha256": "3f683261ba49a541684945101aa640bb689b43e4750a1007465e31ff33a1127a",
+    "pass_counts": [
+      1,
+      1
+    ]
+  },
+  {
+    "suite": "verifyRoyalEconomy",
+    "staged_jar_sha256": "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+    "log_sha256": "4e778095e0d32f7cb51c9ff44387f8bd1bc59e2dd0dbc2f1ad1e0b209d20fe24",
+    "pass_counts": [
+      46,
+      46
+    ]
+  },
+  {
+    "suite": "verifyRoyalGui",
+    "staged_jar_sha256": "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+    "log_sha256": "f694ec1d049559daef23f03a07f406c04af06bc2060067751dab332f108c218c",
+    "pass_counts": [
+      28,
+      28
+    ]
+  },
+  {
+    "suite": "verifyRoyalShipmentGui",
+    "staged_jar_sha256": "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+    "log_sha256": "0ee38bb1f948417684347064b43dad295f5301500a28532e8d9d03e1bab555fa",
+    "pass_counts": [
+      18,
+      18
+    ]
+  },
+  {
+    "suite": "verifyAtlas",
+    "staged_jar_sha256": "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+    "log_sha256": "56683444c7774c4d4718c73f92e7f3671916f66e0bfac61a80c7e64bcf29dc02",
+    "pass_counts": [
+      22,
+      22
+    ]
+  }
+]

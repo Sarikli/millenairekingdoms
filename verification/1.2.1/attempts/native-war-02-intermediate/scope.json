@@ -1,0 +1,9 @@
+{
+  "source_commit": "17d84e4",
+  "write_reopen_pass_lines": [
+    1,
+    1
+  ],
+  "observed": "day28, two wars, lawful past-war peace, immutable saved dice/receipts preserved",
+  "oracle_refinement": "Final fixture additionally binds a single active observed war across both JVMs and accepts its first actual battle without waiting for a lucky roll. This intermediate pass is not labelled proof of a subsequent second-war outcome."
+}

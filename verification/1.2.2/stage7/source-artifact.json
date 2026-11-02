@@ -1,0 +1,15 @@
+{
+  "base_commit": "8b1873482985a06e502f21652539979cac2eb8ca",
+  "version": "1.2.2-dev.6",
+  "jar_sha256": "0d17715ea023bdbdc6e9ba2ff9f9d8d73faaabba5c66051b20ac2c0bf53c868f",
+  "source_sha256": {
+    "gradle.properties": "00e867a2c6df62f7314d79dcf297f5266bc792a086421ef0afeb23ba86069d9a",
+    "scripts/verify-regression.py": "c59292eff52d40ae3c214c8a4a7ea4ea210b6f7fe6315c343507a010ca2d29e3",
+    "src/main/java/com/millenairekingdoms/construction/NativeVillageReadback.java": "e88022d30e82ad4ad62ced3d8cf57b1e619df4f82c0d9b5a0c0a85563cbb9048",
+    "src/main/java/com/millenairekingdoms/construction/RoyalVillagePersistence.java": "01b420e5c2070f59c3e571cec79c166212e3d9eacd765b8d64d821ad82de60cc",
+    "src/gametest/java/com/millenairekingdoms/test/RoyalVillagePersistenceGameTests.java": "523461d004cdf2db61318d9d6b824daf15151dabbe48ca2fd7967d14639e5599",
+    "src/gametest/java/com/millenairekingdoms/test/RoyalRecoveryGameTests.java": "30bec0465be81afa240b7a39f2d321a1d0b9650db12f8329934efa2a4f6a168e",
+    ".github/workflows/verify.yml": "dffa9bd1a2d80b22718b314a37bca2a36bcdf899d044f035b2c3324310b9f696"
+  },
+  "unmodified_user_gradlew_bat_sha256": "0c09e2ab543937d760afcb2f611e66a1f36b0f24ed4362e07b068ef02f7314d3"
+}

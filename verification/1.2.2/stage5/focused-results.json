@@ -1,0 +1,164 @@
+[
+  {
+    "suite": "verifyEconomicQueue",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      10,
+      10
+    ],
+    "expected_per_pass": 10,
+    "launches": [
+      [
+        "runEconomicQueueGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261028-211259-e57d640e/verifyEconomicQueue"
+      ],
+      [
+        "runEconomicQueueGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261028-211259-e57d640e/verifyEconomicQueue"
+      ]
+    ],
+    "jar_sha256": "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f",
+    "staged_sha256": [
+      "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f",
+      "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f"
+    ],
+    "image_matches": true,
+    "passed": true
+  },
+  {
+    "suite": "verifyRoyalNpcRuntime",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      4,
+      4
+    ],
+    "expected_per_pass": 4,
+    "launches": [
+      [
+        "runRoyalNpcRuntimeGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261028-211259-e57d640e/verifyRoyalNpcRuntime"
+      ],
+      [
+        "runRoyalNpcRuntimeGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261028-211259-e57d640e/verifyRoyalNpcRuntime"
+      ]
+    ],
+    "jar_sha256": "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f",
+    "staged_sha256": [
+      "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f",
+      "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f"
+    ],
+    "image_matches": true,
+    "passed": true
+  },
+  {
+    "suite": "verifyRoyalStrategy",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      7,
+      7
+    ],
+    "expected_per_pass": 7,
+    "launches": [
+      [
+        "runRoyalStrategyGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261028-211259-e57d640e/verifyRoyalStrategy"
+      ],
+      [
+        "runRoyalStrategyGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261028-211259-e57d640e/verifyRoyalStrategy"
+      ]
+    ],
+    "jar_sha256": "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f",
+    "staged_sha256": [
+      "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f",
+      "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f"
+    ],
+    "image_matches": true,
+    "passed": true
+  },
+  {
+    "suite": "verifyRoyalConstruction",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      55,
+      55
+    ],
+    "expected_per_pass": 55,
+    "launches": [
+      [
+        "runRoyalConstructionGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261028-211259-e57d640e/verifyRoyalConstruction"
+      ],
+      [
+        "runRoyalConstructionGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261028-211259-e57d640e/verifyRoyalConstruction"
+      ]
+    ],
+    "jar_sha256": "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f",
+    "staged_sha256": [
+      "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f",
+      "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f"
+    ],
+    "image_matches": true,
+    "passed": true
+  },
+  {
+    "suite": "verifyEconomicNative",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      1,
+      1
+    ],
+    "expected_per_pass": 1,
+    "launches": [
+      [
+        "runEconomicNativeGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261028-211259-e57d640e/verifyEconomicNative"
+      ],
+      [
+        "runEconomicNativeGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261028-211259-e57d640e/verifyEconomicNative"
+      ]
+    ],
+    "jar_sha256": "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f",
+    "staged_sha256": [
+      "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f",
+      "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f"
+    ],
+    "image_matches": true,
+    "passed": true
+  },
+  {
+    "suite": "verifyStrategyRecovery",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      3,
+      3
+    ],
+    "expected_per_pass": 3,
+    "launches": [
+      [
+        "runStrategyRecoveryGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261028-211259-e57d640e/verifyStrategyRecovery"
+      ],
+      [
+        "runStrategyRecoveryGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261028-211259-e57d640e/verifyStrategyRecovery"
+      ]
+    ],
+    "jar_sha256": "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f",
+    "staged_sha256": [
+      "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f",
+      "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f"
+    ],
+    "image_matches": true,
+    "passed": true
+  }
+]

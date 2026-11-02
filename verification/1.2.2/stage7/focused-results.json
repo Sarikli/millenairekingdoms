@@ -1,0 +1,83 @@
+[
+  {
+    "suite": "verifyRoyalConstruction",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      56,
+      56
+    ],
+    "expected_per_pass": 56,
+    "launches": [
+      [
+        "runRoyalConstructionGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261029-212058-7a25b9be/verifyRoyalConstruction"
+      ],
+      [
+        "runRoyalConstructionGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261029-212058-7a25b9be/verifyRoyalConstruction"
+      ]
+    ],
+    "jar_sha256": "0d17715ea023bdbdc6e9ba2ff9f9d8d73faaabba5c66051b20ac2c0bf53c868f",
+    "staged_sha256": [
+      "0d17715ea023bdbdc6e9ba2ff9f9d8d73faaabba5c66051b20ac2c0bf53c868f",
+      "0d17715ea023bdbdc6e9ba2ff9f9d8d73faaabba5c66051b20ac2c0bf53c868f"
+    ],
+    "image_matches": true,
+    "passed": true
+  },
+  {
+    "suite": "verifyRoyalRecovery",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      17,
+      17
+    ],
+    "expected_per_pass": 17,
+    "launches": [
+      [
+        "runRoyalRecoveryGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261029-212058-7a25b9be/verifyRoyalRecovery"
+      ],
+      [
+        "runRoyalRecoveryGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261029-212058-7a25b9be/verifyRoyalRecovery"
+      ]
+    ],
+    "jar_sha256": "0d17715ea023bdbdc6e9ba2ff9f9d8d73faaabba5c66051b20ac2c0bf53c868f",
+    "staged_sha256": [
+      "0d17715ea023bdbdc6e9ba2ff9f9d8d73faaabba5c66051b20ac2c0bf53c868f",
+      "0d17715ea023bdbdc6e9ba2ff9f9d8d73faaabba5c66051b20ac2c0bf53c868f"
+    ],
+    "image_matches": true,
+    "passed": true
+  },
+  {
+    "suite": "verifyEconomicQueue",
+    "exit_code": 0,
+    "timed_out": false,
+    "required_pass_counts": [
+      11,
+      11
+    ],
+    "expected_per_pass": 11,
+    "launches": [
+      [
+        "runEconomicQueueGameTestServer",
+        "/workspace/millenairekingdoms/run/regression/20261029-212058-7a25b9be/verifyEconomicQueue"
+      ],
+      [
+        "runEconomicQueueGameTestServerReload",
+        "/workspace/millenairekingdoms/run/regression/20261029-212058-7a25b9be/verifyEconomicQueue"
+      ]
+    ],
+    "jar_sha256": "0d17715ea023bdbdc6e9ba2ff9f9d8d73faaabba5c66051b20ac2c0bf53c868f",
+    "staged_sha256": [
+      "0d17715ea023bdbdc6e9ba2ff9f9d8d73faaabba5c66051b20ac2c0bf53c868f",
+      "0d17715ea023bdbdc6e9ba2ff9f9d8d73faaabba5c66051b20ac2c0bf53c868f"
+    ],
+    "image_matches": true,
+    "passed": true
+  }
+]

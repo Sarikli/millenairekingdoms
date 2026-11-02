@@ -1,0 +1,13 @@
+{
+  "world": "run/regression/20261027-142524-36a8c2ba/verifyMaintenance",
+  "write_required_pass_count": 1,
+  "reopen_complete": false,
+  "error": "Java heap space in Minecraft sky-light updates while original Millenaire9.0.3 VillageRehydrator.rehydrateAll -> BuildingInstance.linkChestsToBuilding -> Level.getBlockEntity -> chunk loading",
+  "heap_limit_gib": 3,
+  "test_jvm_pid": 448118,
+  "forced_termination_after_unrecoverable_OOM": true,
+  "source_scope": "Exact failing metadata test source/class and production JAR retained; no passing reopen or production500-village guarantee",
+  "termination_signal": "SIGTERM",
+  "sigkill_used": false,
+  "exit_code": 143
+}

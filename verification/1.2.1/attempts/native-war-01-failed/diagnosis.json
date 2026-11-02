@@ -1,0 +1,10 @@
+{
+  "candidate_sha256": "ab8c5d1c76f7a696ad5c4b57f52bc91081b80531a0918968e2846c288001479f",
+  "write_pass_lines": [
+    1
+  ],
+  "reopen_pass_lines": [],
+  "failure": "bounded test expected eventual capital conquest despite legitimate automatic peace after five days without military progress",
+  "actual_results": "six persistent war operations: LOST,WON,LOST,LOST,LOST,LOST; one victory; NPC_PEACE on day8; no capital ownership transfer; timed out on day28",
+  "fix_scope": "test oracle and persisted-roll/receipt checks only; production balance and outcomes unchanged"
+}

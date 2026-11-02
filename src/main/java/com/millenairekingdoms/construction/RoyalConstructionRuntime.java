@@ -18,7 +18,7 @@ import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.slf4j.Logger;
 import org.millenaire.village.Village;
 
-/** Bounded round-robin existing-order recovery. Never invents a new NPC commission or forces remote chunks. */
+/** Bounded accepted-order recovery; the native handoff delegates persisted unpaid mandates to their owning policy. */
 public final class RoyalConstructionRuntime {
     private static final Logger LOGGER=LogUtils.getLogger();
     private static final Map<ServerLevel,Session> SESSIONS=new WeakHashMap<>();
@@ -74,6 +74,11 @@ public final class RoyalConstructionRuntime {
      * miss the empty slot. Retry once at that village's busy->ready boundary, before its next natural selection.
      * No native call is cancelled, no project replaced, and failure leaves native growth free to continue. */
     public static void beforeNativeGrowth(ServerLevel level,Village village) {
+        beforePlayerGrowth(level,village);
+        com.millenairekingdoms.autonomy.RoyalNpcRuntime.beforeNativeGrowth(level,village);
+    }
+
+    private static void beforePlayerGrowth(ServerLevel level,Village village) {
         if(!RoyalConstructionConfig.TRACKING.get()) return;
         var session=SESSIONS.get(level);if(session==null)return;
         var waiting=session.waiting.get(village.getId().uuid());if(waiting==null)return;

@@ -1,0 +1,477 @@
+{
+  "observation_complete": false,
+  "separate_jvm_reopen_verified": false,
+  "completed_actual_days": 50,
+  "actual_observed_ticks": 1200000,
+  "baseline_world_day_time": 22200,
+  "final_world_day_time": 1222200,
+  "initial_kingdoms": 2,
+  "final_living_kingdoms": 2,
+  "final_fallen_kingdoms": 0,
+  "initial_villages": 14,
+  "final_villages": 14,
+  "initial_independent_non_hamlets": 12,
+  "final_independent_non_hamlets": 8,
+  "event_counts_with_causal_times_inside_observation": {
+    "INCORPORATION": 4,
+    "WAR": 1,
+    "STRATEGIC_BATTLE": 1
+  },
+  "final_construction_stages": {},
+  "final_shipment_stages": {},
+  "native_building_records_upgraded": 33,
+  "new_native_complete_building_records": 8,
+  "resident_records_initial": 171,
+  "resident_records_final": 196,
+  "initial_active_villages": 1,
+  "final_active_villages": 1,
+  "observer_exploration_tickets_during_measurement": [
+    0
+  ],
+  "daily_snapshots": 51,
+  "kingdoms": [
+    {
+      "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+      "name": "Kingdom of Saga",
+      "ethos": "AGRICULTURAL",
+      "capital": "Saga",
+      "initial_members_including_capital": 1,
+      "final_members_including_capital": 2,
+      "fallen": false,
+      "initial_physical_coins": null,
+      "final_physical_coins": null,
+      "final_coin_unavailability": "Treasury chunk is unloaded; postpone the operation",
+      "initial_owed": 0,
+      "final_owed": 1576,
+      "events_involving_realm": {
+        "INCORPORATION": 1,
+        "WAR": 1,
+        "STRATEGIC_BATTLE": 1
+      }
+    },
+    {
+      "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+      "name": "Kingdom of Sainte-Marguerite les-mines",
+      "ethos": "ARTISAN",
+      "capital": "Sainte-Marguerite les-mines",
+      "initial_members_including_capital": 1,
+      "final_members_including_capital": 4,
+      "fallen": false,
+      "initial_physical_coins": 0,
+      "final_physical_coins": 2440,
+      "final_coin_unavailability": null,
+      "initial_owed": 0,
+      "final_owed": 0,
+      "events_involving_realm": {
+        "INCORPORATION": 3,
+        "WAR": 1,
+        "STRATEGIC_BATTLE": 1
+      }
+    }
+  ],
+  "relationship_sample_count": 908,
+  "relationship_and_distance_qualified_samples": 87,
+  "relationship_samples_scope": "Daily samples, not exact per-evaluation eligibility; native control/raid/order guards also apply.",
+  "resident_scope": "Persistent native resident records; not a count of simultaneously loaded living NPC entities.",
+  "native_building_scope": "Native building records include original wall/sub-building records; no template-block completion proof inferred here.",
+  "new_native_upgrades": [
+    {
+      "id": "635f0c04-c334-406e-b78d-f2e433d46ae6",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "dd81bc8d-842b-4a65-a917-840f157df9fd",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "2d0d2dfb-6cb9-427f-a055-447ef9e0da35",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "1aa477b9-6c24-46de-8cdd-e71c9dc232fb",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "2550bd44-ea29-4da9-ac0e-c9137f32b934",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "0b8d59a1-6837-42ef-9115-0a634ab4fa59",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_right2_a_1"
+    },
+    {
+      "id": "d861a490-3f86-48a1-8642-3a8381a20b3f",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_right2_a_1"
+    },
+    {
+      "id": "c1c204da-71e0-4454-baff-bc5a0fc58181",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_right2_a_1"
+    },
+    {
+      "id": "0b49c98e-f75d-4d76-9180-e08e93756c08",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_right3_a_1"
+    },
+    {
+      "id": "ba6ed507-7855-41b0-85b7-a5804541d453",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "ef79f4cb-181b-48e5-95e0-323a9c66d1ca",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "28ceeb41-cbeb-470e-b567-2c76acc0aedd",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left1_a_1"
+    },
+    {
+      "id": "0593543e-ee3d-4058-9863-119dfb0aab81",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "61e2a600-38e9-425b-89ef-d552fb517a37",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "0a7ae4d8-f286-44f2-aa3a-658f83bc3c92",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "df25adeb-f57e-4809-8fff-7752879c98bb",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left1_a_1"
+    },
+    {
+      "id": "e3e510e6-c43f-4f85-b325-dd2cc57edb2b",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "3185245c-71bd-468e-ac04-48972349a1fa",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "2d14b280-75d3-4ac6-9339-a9f57caababd",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left1_a_1"
+    },
+    {
+      "id": "6edf2b81-b4c3-49a8-9f54-7aaa76a8cffd",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "5686f4f5-ce65-4b1a-bc07-e430abdc34e4",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "cfb65dd5-7667-49f3-a5bc-f3ce7bd06a68",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "4a84d827-0aeb-46da-9e50-fd03c7024813",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "739c56e8-2c24-4e4b-9987-948bc03122fc",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_right1_a_1"
+    },
+    {
+      "id": "c42437d5-b70b-401a-b2dc-ab99a5f713c5",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "3d895c65-4200-43ae-bde7-f023d11737c9",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left1_a_1"
+    },
+    {
+      "id": "cf0c1d39-a1a5-451f-b8f6-99a7076f71d2",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left2_a_1"
+    },
+    {
+      "id": "75cdfc48-8835-4b6a-a041-659d6ef99cca",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left3_a_1"
+    },
+    {
+      "id": "89edc4b6-1894-48d7-89f0-9f8303762124",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left1_a_1"
+    },
+    {
+      "id": "ddfe54ff-69fc-49b7-ba9f-bf83f0248250",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_left1_a_1"
+    },
+    {
+      "id": "72e30f28-97df-4b71-91aa-9d84ca9ece13",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_a_1"
+    },
+    {
+      "id": "819d354f-542f-4b69-829d-8f1f5bc96092",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_right1_a_1"
+    },
+    {
+      "id": "e1fc5c2d-8471-4961-887d-c5f0dec4ff47",
+      "before": 0,
+      "after": 1,
+      "plan": "millenaire:norman/full_wall_slope_right1_a_1"
+    }
+  ],
+  "events": [
+    {
+      "id": "1f837e8e-a350-3b0e-82a1-02473f4f9fc9",
+      "kind": "INCORPORATION",
+      "day": 6,
+      "gameTime": 144000,
+      "dimension": "minecraft:overworld",
+      "source": "36192a82-c722-47f6-a6b6-ea099e584b73/1",
+      "realms": [
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "36192a82-c722-47f6-a6b6-ea099e584b73",
+          "name": "Numazu",
+          "located": true,
+          "x": 1513,
+          "z": -43
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "RECORDED_ATTACHMENT",
+      "outcome": "INCORPORATED",
+      "facts": {}
+    },
+    {
+      "id": "aca8f692-3453-36e4-8a33-bf78a55e6d5e",
+      "kind": "INCORPORATION",
+      "day": 11,
+      "gameTime": 264000,
+      "dimension": "minecraft:overworld",
+      "source": "b8457b41-b274-4fc2-9ad7-f7cd1f99fcc8/1",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "b8457b41-b274-4fc2-9ad7-f7cd1f99fcc8",
+          "name": "Saint-Charles l'abbaye",
+          "located": true,
+          "x": 8,
+          "z": 744
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "RECORDED_ATTACHMENT",
+      "outcome": "INCORPORATED",
+      "facts": {}
+    },
+    {
+      "id": "82b6dbc8-16f3-3c0b-ad31-91855c9c8d43",
+      "kind": "INCORPORATION",
+      "day": 12,
+      "gameTime": 288000,
+      "dimension": "minecraft:overworld",
+      "source": "4b4fd10a-ad0a-4300-b746-64181ddccb85/1",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "4b4fd10a-ad0a-4300-b746-64181ddccb85",
+          "name": "Marolles la-fôret",
+          "located": true,
+          "x": -777,
+          "z": -39
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "RECORDED_ATTACHMENT",
+      "outcome": "INCORPORATED",
+      "facts": {}
+    },
+    {
+      "id": "8502bf4b-23a3-35d0-adb7-53b5c83c27a8",
+      "kind": "INCORPORATION",
+      "day": 17,
+      "gameTime": 408000,
+      "dimension": "minecraft:overworld",
+      "source": "5016b8cd-afa0-46c7-a087-8dbf399ca33d/1",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "RECORDED_ATTACHMENT",
+      "outcome": "INCORPORATED",
+      "facts": {}
+    },
+    {
+      "id": "27e347d5-e63a-3f48-abca-f40c904871b8",
+      "kind": "WAR",
+      "day": 49,
+      "gameTime": 1176000,
+      "dimension": "minecraft:overworld",
+      "source": "91aaeee5-ef05-43cb-9927-38b7f5f82a42",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [],
+      "actor": null,
+      "actorName": "",
+      "reason": "",
+      "outcome": "ACTIVE",
+      "facts": {}
+    },
+    {
+      "id": "c2ffb7ff-4594-3512-bf34-596bf821b2bc",
+      "kind": "STRATEGIC_BATTLE",
+      "day": 49,
+      "gameTime": 1179000,
+      "dimension": "minecraft:overworld",
+      "source": "53af4edb-f50d-4c44-8762-943ed95ca34c",
+      "realms": [
+        {
+          "id": "61b7125e-ec16-4b58-b3e7-c626ce77d0f5",
+          "name": "Kingdom of Sainte-Marguerite les-mines",
+          "culture": "millenaire:norman",
+          "ethos": "ARTISAN"
+        },
+        {
+          "id": "4cbea1ed-efbb-4b93-81a9-79edf9a46085",
+          "name": "Kingdom of Saga",
+          "culture": "millenaire:japanese",
+          "ethos": "AGRICULTURAL"
+        }
+      ],
+      "places": [
+        {
+          "id": "5016b8cd-afa0-46c7-a087-8dbf399ca33d",
+          "name": "Vaucelles la-fôret",
+          "located": true,
+          "x": -360,
+          "z": 312
+        },
+        {
+          "id": "36192a82-c722-47f6-a6b6-ea099e584b73",
+          "name": "Numazu",
+          "located": true,
+          "x": 1513,
+          "z": -43
+        }
+      ],
+      "actor": null,
+      "actorName": "",
+      "reason": "UNATTENDED_OPPOSED_DICE",
+      "outcome": "ATTACKER_VICTORY",
+      "facts": {
+        "attackingStrength": "60",
+        "defenderDie": "9",
+        "attackerDie": "17",
+        "modifier": "-4",
+        "mode": "STRATEGIC",
+        "defendingStrength": "96"
+      }
+    }
+  ]
+}

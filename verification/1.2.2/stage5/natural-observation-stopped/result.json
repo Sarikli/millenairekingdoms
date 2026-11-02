@@ -1,0 +1,11 @@
+{
+  "status": "STOPPED_FOR_MANUAL_DAY_ACCEPTANCE",
+  "full120_completed": false,
+  "final_long_run_reopen_executed": false,
+  "product_sha256": "aafd9ad643185be8f42a30f3e46606fd3193bed4129cf2af309b375879360a5f",
+  "normal_shutdown_proof": "Released915 economic chunk tickets; Stopping server; All dimensions are saved; no Java process remains.",
+  "completed_prefix_days": 24,
+  "second_segment_last_flushed_days": 11,
+  "second_segment_last_flushed_ticks": 264000,
+  "scope": "Partial observations retained only. Long day-based acceptance is manual. Previously passed short isolated write/reopen and process-cut gates remain valid."
+}
