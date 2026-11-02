@@ -5,7 +5,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-/** Two payloads, both handled on the main thread (NeoForge's default): the server's screen snapshot and the client's requests. */
+/**
+ * Two payloads, both handled on the main thread (NeoForge's default): the server's screen snapshot and the client's
+ * requests.
+ */
 public final class KingdomNetwork {
     public static final String VERSION = "11";
     private KingdomNetwork() {}
@@ -14,10 +17,12 @@ public final class KingdomNetwork {
         var registrar = event.registrar(VERSION);
         registrar.playToClient(KingdomViewPayload.TYPE, KingdomViewPayload.CODEC, KingdomNetwork::onView);
         registrar.playToServer(KingdomActionPayload.TYPE, KingdomActionPayload.CODEC, KingdomNetwork::onAction);
-        registrar.playToServer(ChronicleRequestPayload.TYPE,ChronicleRequestPayload.CODEC,(payload,context)->{
-            if(context.player() instanceof ServerPlayer player)com.millenairekingdoms.history.ChronicleViews.handle(player,payload);
+        registrar.playToServer(ChronicleRequestPayload.TYPE, ChronicleRequestPayload.CODEC, (payload, context) -> {
+            if (context.player() instanceof ServerPlayer player)
+                com.millenairekingdoms.history.ChronicleViews.handle(player, payload);
         });
-        registrar.playToClient(ChronicleViewPayload.TYPE,ChronicleViewPayload.CODEC,(payload,context)->com.millenairekingdoms.client.HistoryClient.receive(payload.view()));
+        registrar.playToClient(ChronicleViewPayload.TYPE, ChronicleViewPayload.CODEC,
+                (payload, context) -> com.millenairekingdoms.client.HistoryClient.receive(payload.view()));
     }
 
     /** Runs only on a client; the client class is loaded only then, never on a dedicated server. */
@@ -25,6 +30,7 @@ public final class KingdomNetwork {
         com.millenairekingdoms.client.KingdomClient.show(payload.view());
     }
     private static void onAction(KingdomActionPayload payload, IPayloadContext context) {
-        if (context.player() instanceof ServerPlayer player) KingdomActions.handle(player, payload);
+        if (context.player() instanceof ServerPlayer player)
+            KingdomActions.handle(player, payload);
     }
 }

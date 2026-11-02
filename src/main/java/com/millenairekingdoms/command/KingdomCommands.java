@@ -5,9 +5,9 @@ import com.millenairekingdoms.conquest.ConquestService;
 import com.millenairekingdoms.economy.EconomyService;
 import com.millenairekingdoms.economy.TreasuryService;
 import com.millenairekingdoms.gui.KingdomScreens;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.millenairekingdoms.kingdom.KingdomSavedData;
 import com.millenairekingdoms.politics.PoliticsService;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -19,8 +19,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
-/** Player commands (permission 0). They act only for the executing player's real UUID; every reputation, distance,
- * ruler and war rule is re-checked in PoliticsService, so typing a command gives nothing a chat button would not. */
+/**
+ * Player commands (permission 0). They act only for the executing player's real UUID; every reputation, distance,
+ * ruler and war rule is re-checked in PoliticsService, so typing a command gives nothing a chat button would not.
+ */
 public final class KingdomCommands {
     private KingdomCommands() {}
 
@@ -74,34 +76,76 @@ public final class KingdomCommands {
 
     private static void raid(ServerPlayer p, java.util.UUID target, java.util.UUID source) {
         var attempt = RaidOrderService.order(p, target, source);
-        reply(p, attempt.status() == RaidOrderService.Status.STARTED ? com.millenairekingdoms.localization.PublicText.of("Conquest raid started.") : com.millenairekingdoms.localization.PublicText.of("Conquest raid ordered; it starts when possible (%s). It is called off after one day.", com.millenairekingdoms.localization.PublicText.error(attempt.reason())));
+        reply(p,
+                attempt.status() == RaidOrderService.Status.STARTED
+                        ? com.millenairekingdoms.localization.PublicText.of("Conquest raid started.")
+                        : com.millenairekingdoms.localization.PublicText.of(
+                                  "Conquest raid ordered; it starts when possible (%s). It is called off after one day.",
+                                  com.millenairekingdoms.localization.PublicText.error(attempt.reason())));
     }
     private static void raidStatus(ServerPlayer p) {
         var data = KingdomSavedData.get(p.serverLevel());
         var kingdom = PoliticsService.ruledKingdom(p);
         var order = data.orderOf(kingdom.id());
-        if (order != null) reply(p, com.millenairekingdoms.localization.PublicText.of("Waiting order against %s%s", villageName(p, order.target()), (RaidOrderService.waitingReason(order.id()) == null ? "" : Component.literal(": ").append(com.millenairekingdoms.localization.PublicText.error(RaidOrderService.waitingReason(order.id()))))));
-        data.activeRaids().stream().filter(r -> r.campaign() != null && kingdom.id().equals(r.campaign().attackerKingdom())).forEach(r ->
-                reply(p, com.millenairekingdoms.localization.PublicText.of("Raid under way: %s -> %s | %s/%s", villageName(p, r.attacker()), villageName(p, r.target()), data.wins(r.campaign()), KingdomSavedData.requiredWins(r.campaign()))));
-        if (order == null && data.activeConquests(kingdom.id()) == 0) reply(p, com.millenairekingdoms.localization.PublicText.of("No conquest raid under way."));
+        if (order != null)
+            reply(p,
+                    com.millenairekingdoms.localization.PublicText.of("Waiting order against %s%s",
+                            villageName(p, order.target()),
+                            (RaidOrderService.waitingReason(order.id()) == null
+                                            ? ""
+                                            : Component.literal(": ").append(
+                                                      com.millenairekingdoms.localization.PublicText.error(
+                                                              RaidOrderService.waitingReason(order.id()))))));
+        data.activeRaids()
+                .stream()
+                .filter(r -> r.campaign() != null && kingdom.id().equals(r.campaign().attackerKingdom()))
+                .forEach(r
+                        -> reply(p,
+                                com.millenairekingdoms.localization.PublicText.of("Raid under way: %s -> %s | %s/%s",
+                                        villageName(p, r.attacker()), villageName(p, r.target()),
+                                        data.wins(r.campaign()), KingdomSavedData.requiredWins(r.campaign()))));
+        if (order == null && data.activeConquests(kingdom.id()) == 0)
+            reply(p, com.millenairekingdoms.localization.PublicText.of("No conquest raid under way."));
     }
     private static String villageName(ServerPlayer p, java.util.UUID id) {
-        var v = PoliticsService.village(p.serverLevel(), id); return v == null ? id.toString() : PoliticsService.name(v);
+        var v = PoliticsService.village(p.serverLevel(), id);
+        return v == null ? id.toString() : PoliticsService.name(v);
     }
     private static RequiredArgumentBuilder<CommandSourceStack, String> target() {
-        return Commands.argument("target", StringArgumentType.greedyString()).suggests((context, builder) -> SharedSuggestionProvider.suggest(
-                KingdomSavedData.get(context.getSource().getLevel()).kingdoms().stream().filter(k -> !k.fallen()).map(KingdomSavedData.Kingdom::name), builder));
+        return Commands.argument("target", StringArgumentType.greedyString())
+                .suggests(
+                        (context, builder)
+                                -> SharedSuggestionProvider.suggest(KingdomSavedData.get(context.getSource().getLevel())
+                                                                            .kingdoms()
+                                                                            .stream()
+                                                                            .filter(k -> !k.fallen())
+                                                                            .map(KingdomSavedData.Kingdom::name),
+                                        builder));
     }
-    interface Action { void run(ServerPlayer player); }
+    interface Action {
+        void run(ServerPlayer player);
+    }
     private static int run(CommandContext<CommandSourceStack> c, Action action) throws CommandSyntaxException {
         ServerPlayer player = c.getSource().getPlayerOrException();
-        try { action.run(player); return 1; }
-        catch (IllegalArgumentException refused) { c.getSource().sendFailure(com.millenairekingdoms.util.KingdomException.of(refused)); return 0; }
+        try {
+            action.run(player);
+            return 1;
+        } catch (IllegalArgumentException refused) {
+            c.getSource().sendFailure(com.millenairekingdoms.util.KingdomException.of(refused));
+            return 0;
+        }
     }
     private static KingdomSavedData.Kingdom kingdomOf(ServerPlayer p) {
-        var data = KingdomSavedData.get(p.serverLevel()); return data.kingdom(data.ruledBy(p.getUUID()));
+        var data = KingdomSavedData.get(p.serverLevel());
+        return data.kingdom(data.ruledBy(p.getUUID()));
     }
-    private static String name(ServerPlayer p, java.util.UUID kingdom) { return KingdomSavedData.get(p.serverLevel()).kingdom(kingdom).name(); }
-    private static void reply(ServerPlayer p, String text) { com.millenairekingdoms.localization.PublicText.send(p,Component.literal("[Kingdoms] " + text)); }
-    private static void reply(ServerPlayer p, Component text) { com.millenairekingdoms.localization.PublicText.send(p,Component.literal("[Kingdoms] ").append(text)); }
+    private static String name(ServerPlayer p, java.util.UUID kingdom) {
+        return KingdomSavedData.get(p.serverLevel()).kingdom(kingdom).name();
+    }
+    private static void reply(ServerPlayer p, String text) {
+        com.millenairekingdoms.localization.PublicText.send(p, Component.literal("[Kingdoms] " + text));
+    }
+    private static void reply(ServerPlayer p, Component text) {
+        com.millenairekingdoms.localization.PublicText.send(p, Component.literal("[Kingdoms] ").append(text));
+    }
 }

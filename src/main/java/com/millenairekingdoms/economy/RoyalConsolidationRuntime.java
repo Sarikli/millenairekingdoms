@@ -39,7 +39,8 @@ public final class RoyalConsolidationRuntime {
     }
 
     public static void onTick(LevelTickEvent.Post event) {
-        if (!(event.getLevel() instanceof ServerLevel level)) return;
+        if (!(event.getLevel() instanceof ServerLevel level))
+            return;
         var session = SESSIONS.computeIfAbsent(level, ignored -> new Session());
         long now = level.getGameTime();
         if (now >= session.nextRecovery) {
@@ -48,18 +49,23 @@ public final class RoyalConsolidationRuntime {
         }
         if (now >= session.nextMaintenance) {
             session.nextMaintenance = now + RoyalConsolidationConfig.INTERVAL.get();
-            if (RoyalConsolidationConfig.ENABLED.get()) step(level, RoyalConsolidationConfig.MAX_CAPITALS.get());
+            if (RoyalConsolidationConfig.ENABLED.get())
+                step(level, RoyalConsolidationConfig.MAX_CAPITALS.get());
         }
     }
 
     public static Report step(ServerLevel level, int limit) {
         thread(level);
-        if (limit < 1 || limit > 16) throw new IllegalArgumentException("Invalid consolidation budget");
+        if (limit < 1 || limit > 16)
+            throw new IllegalArgumentException("Invalid consolidation budget");
         long start = System.nanoTime();
         var session = SESSIONS.computeIfAbsent(level, ignored -> new Session());
-        var capitals = KingdomSavedData.get(level).kingdoms().stream()
-                .filter(k -> k.active() && !k.fallen())
-                .sorted(Comparator.comparing(KingdomSavedData.Kingdom::id)).toList();
+        var capitals = KingdomSavedData.get(level)
+                               .kingdoms()
+                               .stream()
+                               .filter(k -> k.active() && !k.fallen())
+                               .sorted(Comparator.comparing(KingdomSavedData.Kingdom::id))
+                               .toList();
         int inspected = Math.min(limit, capitals.size()), committed = 0;
         if (!capitals.isEmpty()) {
             int offset = nextIndex(capitals, session.capitalCursor, KingdomSavedData.Kingdom::id);
@@ -67,14 +73,15 @@ public final class RoyalConsolidationRuntime {
             for (int n = 0; n < inspected; n++) {
                 var kingdom = capitals.get((offset + n) % capitals.size());
                 session.capitalCursor = kingdom.id();
-                if (maintain(level, session, service, kingdom)) committed++;
+                if (maintain(level, session, service, kingdom))
+                    committed++;
             }
         }
         return session.last = new Report(inspected, committed, System.nanoTime() - start);
     }
 
-    private static boolean maintain(ServerLevel level, Session session, RoyalConsolidationService service,
-                                    KingdomSavedData.Kingdom kingdom) {
+    private static boolean maintain(
+            ServerLevel level, Session session, RoyalConsolidationService service, KingdomSavedData.Kingdom kingdom) {
         String key = "capital/" + kingdom.id();
         var capital = PoliticsService.village(level, kingdom.capital());
         if (capital != null && !level.isLoaded(capital.getCenter())) {
@@ -87,7 +94,8 @@ public final class RoyalConsolidationRuntime {
             var result = service.consolidate(kingdom.id());
             if (result.status() == RoyalConsolidationService.Status.RECOVERY_REQUIRED) {
                 warn(level, session, key, new IllegalStateException(result.reason()));
-            } else session.warnings.remove(key);
+            } else
+                session.warnings.remove(key);
             return result.status() == RoyalConsolidationService.Status.COMMITTED;
         } catch (RuntimeException failure) {
             warn(level, session, key, failure);
@@ -99,10 +107,16 @@ public final class RoyalConsolidationRuntime {
         var session = SESSIONS.computeIfAbsent(level, ignored -> new Session());
         try {
             var service = new RoyalConsolidationService(level);
-            var entries = service.current().stream()
-                    .filter(e -> e.intent().getString("dimension").equals(level.dimension().location().toString()))
-                    .sorted(Comparator.comparing(RoyalPaymentJournal.Entry::id)).toList();
-            if (entries.isEmpty()) return;
+            var entries = service.current()
+                                  .stream()
+                                  .filter(e
+                                          -> e.intent()
+                                                  .getString("dimension")
+                                                  .equals(level.dimension().location().toString()))
+                                  .sorted(Comparator.comparing(RoyalPaymentJournal.Entry::id))
+                                  .toList();
+            if (entries.isEmpty())
+                return;
             int next = nextIndex(entries, session.recoveryCursor, RoyalPaymentJournal.Entry::id);
             var entry = entries.get(next);
             session.recoveryCursor = entry.id();
@@ -115,7 +129,9 @@ public final class RoyalConsolidationRuntime {
 
     private static <T> int nextIndex(List<T> sorted, UUID cursor, Function<T, UUID> id) {
         int index = 0;
-        if (cursor != null) while (index < sorted.size() && id.apply(sorted.get(index)).compareTo(cursor) <= 0) index++;
+        if (cursor != null)
+            while (index < sorted.size() && id.apply(sorted.get(index)).compareTo(cursor) <= 0)
+                index++;
         return index % sorted.size();
     }
 
@@ -129,11 +145,14 @@ public final class RoyalConsolidationRuntime {
         var last = session.warnings.get(key);
         if (last == null || now - last >= WARNING_INTERVAL) {
             session.warnings.put(key, now);
-            LogUtils.getLogger().warn("[Kingdoms] Conserving treasury maintenance {} deferred; original evidence retained: {}", key, failure.getMessage());
+            LogUtils.getLogger().warn(
+                    "[Kingdoms] Conserving treasury maintenance {} deferred; original evidence retained: {}", key,
+                    failure.getMessage());
         }
     }
 
     private static void thread(ServerLevel level) {
-        if (!level.getServer().isSameThread()) throw new IllegalStateException("Treasury maintenance requires server thread");
+        if (!level.getServer().isSameThread())
+            throw new IllegalStateException("Treasury maintenance requires server thread");
     }
 }

@@ -1,7 +1,7 @@
 package com.millenairekingdoms.command;
 
-import com.millenairekingdoms.kingdom.KingdomSavedData;
 import com.millenairekingdoms.conquest.ConquestService;
+import com.millenairekingdoms.kingdom.KingdomSavedData;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -152,67 +152,114 @@ public final class KingdomsCommands {
                                         .executes(c -> villages(c, IntegerArgumentType.getInteger(c, "page")))))));
     }
     public static String describeWar(KingdomSavedData data, KingdomSavedData.War w) {
-        return "War " + w.id() + " | " + w.attackerKingdom() + " -> " + w.defenderKingdom()
-                + " | status=" + w.status() + " | startGameTime=" + w.startGameTime()
-                + " | initial defender members=" + w.initialDefenderMembers().size()
-                + " | capital requires=" + KingdomSavedData.capitalRequirement(w) + " | held=" + data.capitalHeld(w)
-                + " | capital open=" + data.capitalOpen(w)
-                + " | capital " + data.kingdom(w.defenderKingdom()).capital() + " progress=" + data.capitalWins(w) + "/" + KingdomSavedData.REQUIRED_WINS
-                + " | endReason=" + w.endReason();
+        return "War " + w.id() + " | " + w.attackerKingdom() + " -> " + w.defenderKingdom() + " | status=" + w.status()
+                + " | startGameTime=" + w.startGameTime() + " | initial defender members="
+                + w.initialDefenderMembers().size() + " | capital requires=" + KingdomSavedData.capitalRequirement(w)
+                + " | held=" + data.capitalHeld(w) + " | capital open=" + data.capitalOpen(w) + " | capital "
+                + data.kingdom(w.defenderKingdom()).capital() + " progress=" + data.capitalWins(w) + "/"
+                + KingdomSavedData.REQUIRED_WINS + " | endReason=" + w.endReason();
     }
     private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, UUID> warArgument() {
-        return Commands.argument("war", UuidArgument.uuid()).suggests((context, builder) -> SharedSuggestionProvider.suggest(
-                KingdomSavedData.get(context.getSource().getLevel()).wars().stream().map(w -> w.id().toString()), builder));
+        return Commands.argument("war", UuidArgument.uuid())
+                .suggests(
+                        (context, builder)
+                                -> SharedSuggestionProvider.suggest(KingdomSavedData.get(context.getSource().getLevel())
+                                                                            .wars()
+                                                                            .stream()
+                                                                            .map(w -> w.id().toString()),
+                                        builder));
     }
     private static String describe(KingdomSavedData data, KingdomSavedData.Kingdom k) {
         var ruler = data.ruler(k.id());
-        return k.id() + " | " + k.name() + " | active=" + k.active() + " | capital=" + k.capital() + " | villages=" + data.members(k.id()).size()
+        return k.id() + " | " + k.name() + " | active=" + k.active() + " | capital=" + k.capital()
+                + " | villages=" + data.members(k.id()).size()
                 + " | ruler=" + (ruler == null ? "none" : ruler.player() + " (" + ruler.lastKnownName() + ")")
                 + (k.fallen() ? " | FALLEN in war " + k.fallenInWar() + " (former capital and villages now belong to "
-                + data.war(k.fallenInWar()).attackerKingdom() + ")" : "");
+                                        + data.war(k.fallenInWar()).attackerKingdom() + ")"
+                              : "");
     }
     private static KingdomSavedData data(CommandContext<CommandSourceStack> c) {
         ConquestService.reconcile(c.getSource().getLevel());
         return KingdomSavedData.get(c.getSource().getLevel());
     }
-    private static UUID villageId(CommandContext<CommandSourceStack> c, String key) { return PoliticalArguments.village(c, key); }
-    private static void reply(CommandContext<CommandSourceStack> c, String text) { c.getSource().sendSuccess(() -> Component.literal(text), false); }
-    private static void reply(CommandContext<CommandSourceStack> c, Component text) { c.getSource().sendSuccess(() -> text, false); }
+    private static UUID villageId(CommandContext<CommandSourceStack> c, String key) {
+        return PoliticalArguments.village(c, key);
+    }
+    private static void reply(CommandContext<CommandSourceStack> c, String text) {
+        c.getSource().sendSuccess(() -> Component.literal(text), false);
+    }
+    private static void reply(CommandContext<CommandSourceStack> c, Component text) {
+        c.getSource().sendSuccess(() -> text, false);
+    }
     private static int guarded(CommandContext<CommandSourceStack> c, Runnable action) {
-        try { action.run(); return 1; }
-        catch (IllegalArgumentException e) { c.getSource().sendFailure(com.millenairekingdoms.util.KingdomException.of(e)); return 0; }
+        try {
+            action.run();
+            return 1;
+        } catch (IllegalArgumentException e) {
+            c.getSource().sendFailure(com.millenairekingdoms.util.KingdomException.of(e));
+            return 0;
+        }
     }
     private static Village knownVillage(CommandSourceStack source, UUID id) {
         Village village = VillageSavedData.get(source.getLevel()).getVillageManager().getVillage(new VillageId(id));
-        if (village == null) throw new IllegalArgumentException("Unknown village UUID in this dimension.");
+        if (village == null)
+            throw new IllegalArgumentException("Unknown village UUID in this dimension.");
         var type = ModCultures.getVillageType(village.getVillageTypeId());
         if (type == null || type.loneBuilding() || village.getTownhall() == null)
             throw new IllegalArgumentException("A known village with an existing town hall is required.");
         return village;
     }
-    private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, String> villageArgument(String name) {
+    private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, String> villageArgument(
+            String name) {
         return PoliticalArguments.villageArgument(name);
     }
     private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, String> kingdomArgument() {
         return kingdomArgument("kingdom");
     }
-    private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, String> kingdomArgument(String name) {
+    private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack, String> kingdomArgument(
+            String name) {
         return PoliticalArguments.kingdomArgument(name);
     }
     private static int conquest(CommandContext<CommandSourceStack> c) {
         return guarded(c, () -> {
-            var source = c.getSource(); var player = source.getPlayer();
-            var raid = ConquestService.start(source.getLevel(), villageId(c, "attacker"), villageId(c, "target"), player == null ? null : player.getUUID());
+            var source = c.getSource();
+            var player = source.getPlayer();
+            var raid = ConquestService.start(source.getLevel(), villageId(c, "attacker"), villageId(c, "target"),
+                    player == null ? null : player.getUUID());
             var campaign = raid.campaign();
-            reply(c, com.millenairekingdoms.localization.PublicText.of("Conquest raid started: %s | attacking kingdom=%s%s. Operator test: preparation and relation checks skipped; loot disabled for this raid.", raid.id(), campaign.attackerKingdom(), (campaign.warId() == null ? com.millenairekingdoms.localization.PublicText.of(" | independent village, 1 victory required") : com.millenairekingdoms.localization.PublicText.of(" | war=%s%s | %s/%s before this raid", campaign.warId(), (data(c).isCapital(campaign.target()) ? com.millenairekingdoms.localization.PublicText.of(" | CAPITAL") : ""), data(c).wins(campaign), KingdomSavedData.REQUIRED_WINS))));
+            reply(c,
+                    com.millenairekingdoms.localization.PublicText.of(
+                            "Conquest raid started: %s | attacking kingdom=%s%s. Operator test: preparation and relation checks skipped; loot disabled for this raid.",
+                            raid.id(), campaign.attackerKingdom(),
+                            (campaign.warId() == null
+                                            ? com.millenairekingdoms.localization.PublicText.of(
+                                                      " | independent village, 1 victory required")
+                                            : com.millenairekingdoms.localization.PublicText.of(
+                                                      " | war=%s%s | %s/%s before this raid", campaign.warId(),
+                                                      (data(c).isCapital(campaign.target())
+                                                                      ? com.millenairekingdoms.localization.PublicText
+                                                                                .of(" | CAPITAL")
+                                                                      : ""),
+                                                      data(c).wins(campaign), KingdomSavedData.REQUIRED_WINS))));
         });
     }
     private static int status(CommandContext<CommandSourceStack> c) {
         return guarded(c, () -> {
-            UUID target = villageId(c, "target"); var data = data(c);
-            var active = data.raid(target); var last = data.lastResult(target);
-            reply(c, com.millenairekingdoms.localization.PublicText.of("%s | political owner=%s | capital=%s | active=%s | last=%s | legacy archived wins=%s (no political credit)", target, data.owner(target), data.isCapital(target), (active == null ? com.millenairekingdoms.localization.PublicText.of("none") : active.id()), (last == null ? com.millenairekingdoms.localization.PublicText.of("none") : last.outcome()), data.legacyWins(target)));
-            data.progress(target).entrySet().stream().sorted(Comparator.comparing(e -> e.getKey().attackerKingdom().toString()))
+            UUID target = villageId(c, "target");
+            var data = data(c);
+            var active = data.raid(target);
+            var last = data.lastResult(target);
+            reply(c,
+                    com.millenairekingdoms.localization.PublicText.of(
+                            "%s | political owner=%s | capital=%s | active=%s | last=%s | legacy archived wins=%s (no political credit)",
+                            target, data.owner(target), data.isCapital(target),
+                            (active == null ? com.millenairekingdoms.localization.PublicText.of("none") : active.id()),
+                            (last == null ? com.millenairekingdoms.localization.PublicText.of("none") : last.outcome()),
+                            data.legacyWins(target)));
+            data.progress(target)
+                    .entrySet()
+                    .stream()
+                    .sorted(Comparator.comparing(e -> e.getKey().attackerKingdom().toString()))
                     .forEach(e -> reply(c, describeCampaign(data, e.getKey(), e.getValue())));
         });
     }
@@ -221,22 +268,34 @@ public final class KingdomsCommands {
         boolean stage3 = KingdomSavedData.STAGE3_WAR.equals(warId);
         int required = KingdomSavedData.requiredWins(campaign);
         String note = wins == required && !stage3 ? " (completed)"
-                : campaign.targetRevision() != data.revision(campaign.target()) ? " (historical; target changed allegiance)"
+                : campaign.targetRevision() != data.revision(campaign.target())
+                ? " (historical; target changed allegiance)"
                 : stage3 ? " (historical; pre-war progress, no credit)"
-                : warId != null && data.war(warId).status() != KingdomSavedData.WarStatus.ACTIVE ? " (historical; war ended)"
-                : data.kingdom(campaign.attackerKingdom()).fallen() ? " (historical; attacking kingdom fell)" : "";
-        return "campaign kingdom=" + campaign.attackerKingdom() + " | revision=" + campaign.targetRevision()
-                + " | " + (warId == null ? "independent" : stage3 ? "war=none (pre-4.2A)" : "war=" + warId)
+                : warId != null && data.war(warId).status() != KingdomSavedData.WarStatus.ACTIVE
+                ? " (historical; war ended)"
+                : data.kingdom(campaign.attackerKingdom()).fallen() ? " (historical; attacking kingdom fell)"
+                                                                    : "";
+        return "campaign kingdom=" + campaign.attackerKingdom() + " | revision=" + campaign.targetRevision() + " | "
+                + (warId == null         ? "independent"
+                                : stage3 ? "war=none (pre-4.2A)"
+                                         : "war=" + warId)
                 + " | " + wins + "/" + required + note;
     }
     private static int villages(CommandContext<CommandSourceStack> context, int page) {
         var source = context.getSource();
-        var villages = VillageSavedData.get(source.getLevel()).getVillageManager().getAllVillages().stream()
-                .sorted(Comparator.comparing(v -> v.getId().uuid().toString())).toList();
+        var villages = VillageSavedData.get(source.getLevel())
+                               .getVillageManager()
+                               .getAllVillages()
+                               .stream()
+                               .sorted(Comparator.comparing(v -> v.getId().uuid().toString()))
+                               .toList();
         long offset = ((long) page - 1) * 10;
-        reply(context, com.millenairekingdoms.localization.PublicText.of("Villages in %s (%s); page %s. IDs are plain UUIDs:", source.getLevel().dimension().location(), villages.size(), page));
-        villages.stream().skip(offset).limit(10).forEach(v -> reply(context,
-                v.getId().uuid() + " | " + ConquestService.name(v) + " | " + v.getCenter().toShortString()));
+        reply(context,
+                com.millenairekingdoms.localization.PublicText.of("Villages in %s (%s); page %s. IDs are plain UUIDs:",
+                        source.getLevel().dimension().location(), villages.size(), page));
+        villages.stream().skip(offset).limit(10).forEach(v
+                -> reply(context,
+                        v.getId().uuid() + " | " + ConquestService.name(v) + " | " + v.getCenter().toShortString()));
         return 1;
     }
 }

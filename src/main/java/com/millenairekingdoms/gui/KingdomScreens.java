@@ -28,8 +28,10 @@ import org.millenaire.culture.ModCultures;
 import org.millenaire.village.Village;
 import org.millenaire.village.VillageSavedData;
 
-/** Builds the kingdom screen's snapshot for one player on the server, from the same rules the actions check again.
- * Sent only when the screen opens or after the player's own action: no periodic traffic. */
+/**
+ * Builds the kingdom screen's snapshot for one player on the server, from the same rules the actions check again.
+ * Sent only when the screen opens or after the player's own action: no periodic traffic.
+ */
 public final class KingdomScreens {
     /** Targets listed for a ruler besides the enemy's villages: independent villages nearest the kingdom. */
     public static final int MAX_TARGETS = 30;
@@ -38,26 +40,41 @@ public final class KingdomScreens {
 
     private KingdomScreens() {}
 
-    /** Opening the screen starts at the player's own (or nearest) kingdom again; "view" choices last only while it is open. */
-    public static void open(ServerPlayer player) { FOCUS.remove(player.getUUID()); send(player, null); }
+    /**
+     * Opening the screen starts at the player's own (or nearest) kingdom again; "view" choices last only while it is
+     * open.
+     */
+    public static void open(ServerPlayer player) {
+        FOCUS.remove(player.getUUID());
+        send(player, null);
+    }
     public static void send(ServerPlayer player, Component message) {
         CompoundTag view = build(player);
-        if (message != null) view.putString("message", Component.Serializer.toJson(message, player.serverLevel().registryAccess()));
+        if (message != null)
+            view.putString("message", Component.Serializer.toJson(message, player.serverLevel().registryAccess()));
         PacketDistributor.sendToPlayer(player, new KingdomViewPayload(view));
     }
     static void focus(ServerPlayer player, UUID kingdom) {
-        if (kingdom == null) FOCUS.remove(player.getUUID()); else FOCUS.put(player.getUUID(), kingdom);
+        if (kingdom == null)
+            FOCUS.remove(player.getUUID());
+        else
+            FOCUS.put(player.getUUID(), kingdom);
     }
-    public static void forget(UUID player) { FOCUS.remove(player); }
+    public static void forget(UUID player) {
+        FOCUS.remove(player);
+    }
 
     static Kingdom focusOf(ServerPlayer player, KingdomSavedData data) {
         UUID chosen = FOCUS.get(player.getUUID());
         Kingdom k = chosen == null ? null : data.kingdom(chosen);
-        if (k != null && !k.fallen()) return k;
+        if (k != null && !k.fallen())
+            return k;
         UUID ruled = data.ruledBy(player.getUUID());
-        if (ruled != null) return data.kingdom(ruled);
+        if (ruled != null)
+            return data.kingdom(ruled);
         Kingdom near = PoliticsService.nearbyCapital(player);
-        if (near != null) return near;
+        if (near != null)
+            return near;
         return data.kingdoms().stream().filter(x -> !x.fallen()).min(Comparator.comparing(Kingdom::name)).orElse(null);
     }
 
@@ -68,20 +85,23 @@ public final class KingdomScreens {
         CompoundTag view = new CompoundTag();
         view.putLong("day", Math.max(0, data.day()));
         UUID ruled = data.ruledBy(player.getUUID());
-        if (ruled != null) view.putUUID("ruled", ruled);
+        if (ruled != null)
+            view.putUUID("ruled", ruled);
         Kingdom focus = focusOf(player, data);
         view.put("kingdoms", kingdoms(level, data, focus));
         view.put("nearby", nearby(player, data));
-        if (focus == null) return view;
+        if (focus == null)
+            return view;
         boolean isRuler = focus.id().equals(ruled);
         view.putUUID("focus", focus.id());
         view.putBoolean("isRuler", isRuler);
         view.put("kingdom", kingdom(level, data, focus, isRuler));
         var war = data.activeWar(focus.id());
-        if (war != null) view.put("war", war(level, data, war, focus));
+        if (war != null)
+            view.put("war", war(level, data, war, focus));
         view.put("rights", rights(player, data, focus, isRuler));
-        view.put("construction",RoyalConstructionView.build(player,focus.id()));
-        view.put("shipments",RoyalShipmentView.build(player,focus.id()));
+        view.put("construction", RoyalConstructionView.build(player, focus.id()));
+        view.put("shipments", RoyalShipmentView.build(player, focus.id()));
         if (isRuler) {
             view.put("targets", targets(player, level, data, focus));
             view.put("sources", sources(level, data, focus));
@@ -95,7 +115,9 @@ public final class KingdomScreens {
         ListTag list = new ListTag();
         data.kingdoms().stream().filter(k -> !k.fallen()).sorted(Comparator.comparing(Kingdom::name)).forEach(k -> {
             CompoundTag e = new CompoundTag();
-            e.putUUID("id", k.id()); e.putString("name", k.name()); e.putBoolean("active", k.active());
+            e.putUUID("id", k.id());
+            e.putString("name", k.name());
+            e.putBoolean("active", k.active());
             Village capital = PoliticsService.village(level, k.capital());
             e.putString("capital", capital == null ? "?" : PoliticsService.name(capital));
             var ruler = data.ruler(k.id());
@@ -103,13 +125,16 @@ public final class KingdomScreens {
             e.putInt("members", data.members(k.id()).size());
             if (focus != null && !k.id().equals(focus.id())) {
                 Integer relation = AutonomyService.relation(level, focus, k);
-                if (relation != null) e.putInt("relation", relation);
+                if (relation != null)
+                    e.putInt("relation", relation);
                 var war = data.activeWar(focus.id());
                 if (war != null && (war.attackerKingdom().equals(k.id()) || war.defenderKingdom().equals(k.id())))
                     e.putString("war", war.attackerKingdom().equals(focus.id()) ? "attacking" : "defending");
                 long truce = data.truceUntil(focus.id(), k.id());
-                if (truce >= 0) e.putLong("truce", truce);
-                if (data.activeWar(k.id()) != null) e.putBoolean("atWar", true);
+                if (truce >= 0)
+                    e.putLong("truce", truce);
+                if (data.activeWar(k.id()) != null)
+                    e.putBoolean("atWar", true);
             }
             list.add(e);
         });
@@ -118,24 +143,35 @@ public final class KingdomScreens {
 
     private static CompoundTag kingdom(ServerLevel level, KingdomSavedData data, Kingdom k, boolean isRuler) {
         CompoundTag e = new CompoundTag();
-        e.putString("name", k.name()); e.putBoolean("active", k.active());
+        e.putString("name", k.name());
+        e.putBoolean("active", k.active());
         Village capital = PoliticsService.village(level, k.capital());
         if (capital != null) {
             e.putString("capital", PoliticsService.name(capital));
             var culture = ModCultures.getCulture(capital.getCultureId());
-            e.putString("cultureId",capital.getCultureId().toString());
-            e.putString("culture", culture == null || culture.displayName() == null ? capital.getCultureId().getPath() : culture.displayName());
-            e.putInt("x", capital.getCenter().getX()); e.putInt("y", capital.getCenter().getY()); e.putInt("z", capital.getCenter().getZ());
+            e.putString("cultureId", capital.getCultureId().toString());
+            e.putString("culture",
+                    culture == null || culture.displayName() == null ? capital.getCultureId().getPath()
+                                                                     : culture.displayName());
+            e.putInt("x", capital.getCenter().getX());
+            e.putInt("y", capital.getCenter().getY());
+            e.putInt("z", capital.getCenter().getZ());
         }
         var ruler = data.ruler(k.id());
         e.putString("ruler", ruler == null ? "" : ruler.lastKnownName());
-        var personality=com.millenairekingdoms.personality.KingdomPersonality.forCapital(level,k);
-        e.putString("personality",personality.category().name());e.putBoolean("personalityFallback",!personality.specialized());
+        var personality = com.millenairekingdoms.personality.KingdomPersonality.forCapital(level, k);
+        e.putString("personality", personality.category().name());
+        e.putBoolean("personalityFallback", !personality.specialized());
         ListTag members = new ListTag();
-        data.members(k.id()).stream().map(id -> PoliticsService.village(level, id)).filter(v -> v != null)
-                .sorted(Comparator.comparing(v -> !v.getId().uuid().equals(k.capital()))).forEach(v -> {
+        data.members(k.id())
+                .stream()
+                .map(id -> PoliticsService.village(level, id))
+                .filter(v -> v != null)
+                .sorted(Comparator.comparing(v -> !v.getId().uuid().equals(k.capital())))
+                .forEach(v -> {
                     CompoundTag m = new CompoundTag();
-                    m.putUUID("id", v.getId().uuid()); m.putString("name", PoliticsService.name(v));
+                    m.putUUID("id", v.getId().uuid());
+                    m.putString("name", PoliticsService.name(v));
                     m.putBoolean("capital", v.getId().uuid().equals(k.capital()));
                     int townhall = EconomyService.centerLevel(v);
                     m.putInt("level", townhall);
@@ -148,7 +184,9 @@ public final class KingdomScreens {
         // The treasury stock is the ruler's business; others see the income only.
         if (isRuler) {
             var coins = TreasuryService.stored(level, k);
-            e.putInt("gold", coins.gold()); e.putInt("silver", coins.silver()); e.putInt("bronze", coins.bronze());
+            e.putInt("gold", coins.gold());
+            e.putInt("silver", coins.silver());
+            e.putInt("bronze", coins.bronze());
             e.putLong("coins", coins.value());
             e.putBoolean("storageLoaded", TreasuryService.loaded(level, k));
         }
@@ -162,7 +200,10 @@ public final class KingdomScreens {
         e.putString("defender", data.kingdom(war.defenderKingdom()).name());
         e.putBoolean("attacking", war.attackerKingdom().equals(focus.id()));
         var clock = data.warClock(war.id());
-        if (clock != null) { e.putLong("startDay", clock.startDay()); e.putLong("idleSince", clock.lastProgressDay()); }
+        if (clock != null) {
+            e.putLong("startDay", clock.startDay());
+            e.putLong("idleSince", clock.lastProgressDay());
+        }
         e.putBoolean("peaceOffered", data.peaceOffered(war.id()));
         e.putInt("capitalRequired", KingdomSavedData.capitalRequirement(war));
         e.putInt("capitalHeld", data.capitalHeld(war));
@@ -185,22 +226,35 @@ public final class KingdomScreens {
         boolean near = capital != null && PoliticsService.near(player, capital.getCenter());
         e.putBoolean("near", near);
         var ruler = data.ruler(focus.id());
-        Component claim = ruler != null ? (isRuler ? why("ruled_by_you", "You already rule it.") : why("ruled_by", "It is ruled by %s.", ruler.lastKnownName()))
+        Component claim = ruler != null ? (isRuler ? why("ruled_by_you", "You already rule it.")
+                                                   : why("ruled_by", "It is ruled by %s.", ruler.lastKnownName()))
                 : data.ruledBy(player.getUUID()) != null ? why("rule_one", "You already rule a kingdom.")
-                : !focus.active() ? why("inactive", "The kingdom is inactive.")
+                : !focus.active()                        ? why("inactive", "The kingdom is inactive.")
                 : !near ? why("not_near", "Stand within 64 blocks of its capital centre.")
-                : reputation < PoliticsService.CLAIM_REPUTATION ? why("reputation", "Reputation %s of %s.", reputation, PoliticsService.CLAIM_REPUTATION) : null;
+                : reputation < PoliticsService.CLAIM_REPUTATION
+                ? why("reputation", "Reputation %s of %s.", reputation, PoliticsService.CLAIM_REPUTATION)
+                : null;
         put(e, "claim", claim, level);
         Component decide = null;
         if (isRuler) {
-            try { PoliticsService.ruledKingdom(player); } catch (IllegalArgumentException blocked) { decide = KingdomException.of(blocked); }
-        } else decide = why("ruler_only", "Only the ruler decides.");
+            try {
+                PoliticsService.ruledKingdom(player);
+            } catch (IllegalArgumentException blocked) {
+                decide = KingdomException.of(blocked);
+            }
+        } else
+            decide = why("ruler_only", "Only the ruler decides.");
         put(e, "decide", decide, level);
         Component request = ruler != null ? why("ruler_decides", "The ruler decides, not the NPC leader.")
-                : !near ? why("not_near", "Stand within 64 blocks of its capital centre.")
-                : reputation < PoliticsService.WAR_REQUEST_REPUTATION ? why("reputation", "Reputation %s of %s.", reputation, PoliticsService.WAR_REQUEST_REPUTATION) : null;
+                : !near                   ? why("not_near", "Stand within 64 blocks of its capital centre.")
+                : reputation < PoliticsService.WAR_REQUEST_REPUTATION
+                ? why("reputation", "Reputation %s of %s.", reputation, PoliticsService.WAR_REQUEST_REPUTATION)
+                : null;
         put(e, "request", request, level);
-        put(e, "withdraw", isRuler ? TreasuryService.problemComponent(player) : why("ruler_treasury", "Only the ruler takes coins from the treasury."), level);
+        put(e, "withdraw",
+                isRuler ? TreasuryService.problemComponent(player)
+                        : why("ruler_treasury", "Only the ruler takes coins from the treasury."),
+                level);
         var order = data.orderOf(focus.id());
         if (order != null) {
             CompoundTag o = new CompoundTag();
@@ -211,7 +265,8 @@ public final class KingdomScreens {
                 o.putString("source", source == null ? "?" : PoliticsService.name(source));
             }
             String waiting = RaidOrderService.waitingReason(order.id());
-            if (waiting != null) o.putString("waiting", waiting);
+            if (waiting != null)
+                o.putString("waiting", waiting);
             o.putLong("expiresIn", Math.max(0, order.expiresGameTime() - level.getGameTime()));
             o.putBoolean("npc", order.byNpc());
             e.put("order", o);
@@ -219,44 +274,70 @@ public final class KingdomScreens {
         return e;
     }
     private static void put(CompoundTag e, String key, Component problem, ServerLevel level) {
-        if (problem != null) e.putString(key, Component.Serializer.toJson(problem, level.registryAccess())); else e.putBoolean(key + "Ok", true);
+        if (problem != null)
+            e.putString(key, Component.Serializer.toJson(problem, level.registryAccess()));
+        else
+            e.putBoolean(key + "Ok", true);
     }
     private static Component why(String key, String fallback, Object... args) {
         return Component.translatableWithFallback("millenairekingdoms.gui.why." + key, fallback, args);
     }
 
-    /** For a ruler: the enemy's villages in the current war and the nearest independent villages, each with its status. */
+    /**
+     * For a ruler: the enemy's villages in the current war and the nearest independent villages, each with its status.
+     */
     private static ListTag targets(ServerPlayer player, ServerLevel level, KingdomSavedData data, Kingdom k) {
         Village capital = PoliticsService.village(level, k.capital());
         List<Village> candidates = new ArrayList<>();
         var war = data.activeWar(k.id());
         if (war != null && war.attackerKingdom().equals(k.id()))
-            data.members(war.defenderKingdom()).forEach(id -> { Village v = PoliticsService.village(level, id); if (v != null) candidates.add(v); });
+            data.members(war.defenderKingdom()).forEach(id -> {
+                Village v = PoliticsService.village(level, id);
+                if (v != null)
+                    candidates.add(v);
+            });
         if (capital != null) {
             long radius = AutonomyService.joinRadius();
-            VillageSavedData.get(level).getVillageManager().getAllVillages().stream()
-                    .filter(v -> data.owner(v.getId().uuid()) == null && proper(v) && capital.getCenter().distSqr(v.getCenter()) <= radius * radius)
-                    .sorted(Comparator.comparingDouble(v -> v.getCenter().distSqr(capital.getCenter()))).limit(MAX_TARGETS).forEach(candidates::add);
+            VillageSavedData.get(level)
+                    .getVillageManager()
+                    .getAllVillages()
+                    .stream()
+                    .filter(v
+                            -> data.owner(v.getId().uuid()) == null && proper(v)
+                                    && capital.getCenter().distSqr(v.getCenter()) <= radius * radius)
+                    .sorted(Comparator.comparingDouble(v -> v.getCenter().distSqr(capital.getCenter())))
+                    .limit(MAX_TARGETS)
+                    .forEach(candidates::add);
         }
         ListTag list = new ListTag();
         var settings = AutonomyConfig.current();
         for (Village v : candidates) {
             UUID id = v.getId().uuid();
             CompoundTag e = new CompoundTag();
-            e.putUUID("id", id); e.putString("name", PoliticsService.name(v));
+            e.putUUID("id", id);
+            e.putString("name", PoliticsService.name(v));
             UUID owner = data.owner(id);
-            if (owner != null) e.putString("owner", data.kingdom(owner).name());
+            if (owner != null)
+                e.putString("owner", data.kingdom(owner).name());
             e.putBoolean("capital", data.isCapital(id));
             e.putBoolean("playerVillage", v.getOwnerUUID() != null);
-            if (capital != null) e.putInt("distance", (int) Math.sqrt(capital.getCenter().distSqr(v.getCenter())));
+            if (capital != null)
+                e.putInt("distance", (int) Math.sqrt(capital.getCenter().distSqr(v.getCenter())));
             e.putInt("defence", v.getVillageDefendingStrength());
             try {
                 var campaign = data.campaignFor(k.id(), id);
-                e.putInt("wins", data.wins(campaign)); e.putInt("required", KingdomSavedData.requiredWins(campaign));
-            } catch (IllegalArgumentException ignored) { /* Status below explains it. */ }
+                e.putInt("wins", data.wins(campaign));
+                e.putInt("required", KingdomSavedData.requiredWins(campaign));
+            } catch (IllegalArgumentException ignored) { /* Status below explains it. */
+            }
             e.putLong("cooldown", RaidOrderService.cooldownLeft(data, id, settings));
-            try { RaidOrderService.validate(player, id, null); e.putBoolean("ready", true); }
-            catch (IllegalArgumentException blocked) { e.putString("status", Component.Serializer.toJson(KingdomException.of(blocked), level.registryAccess())); }
+            try {
+                RaidOrderService.validate(player, id, null);
+                e.putBoolean("ready", true);
+            } catch (IllegalArgumentException blocked) {
+                e.putString(
+                        "status", Component.Serializer.toJson(KingdomException.of(blocked), level.registryAccess()));
+            }
             list.add(e);
         }
         return list;
@@ -264,12 +345,19 @@ public final class KingdomScreens {
 
     private static ListTag sources(ServerLevel level, KingdomSavedData data, Kingdom k) {
         ListTag list = new ListTag();
-        data.members(k.id()).stream().map(id -> PoliticsService.village(level, id)).filter(v -> v != null)
-                .sorted(Comparator.comparing(PoliticsService::name)).forEach(v -> {
+        data.members(k.id())
+                .stream()
+                .map(id -> PoliticsService.village(level, id))
+                .filter(v -> v != null)
+                .sorted(Comparator.comparing(PoliticsService::name))
+                .forEach(v -> {
                     CompoundTag e = new CompoundTag();
-                    e.putUUID("id", v.getId().uuid()); e.putString("name", PoliticsService.name(v));
-                    e.putInt("raiders", Military.availableRaiders(v)); e.putInt("strength", v.getVillageRaidingStrength());
-                    e.putBoolean("carries", Military.carriesRaids(v)); e.putBoolean("busy", Military.busy(v));
+                    e.putUUID("id", v.getId().uuid());
+                    e.putString("name", PoliticsService.name(v));
+                    e.putInt("raiders", Military.availableRaiders(v));
+                    e.putInt("strength", v.getVillageRaidingStrength());
+                    e.putBoolean("carries", Military.carriesRaids(v));
+                    e.putBoolean("busy", Military.busy(v));
                     list.add(e);
                 });
         return list;
@@ -280,8 +368,10 @@ public final class KingdomScreens {
         data.joinRequests().entrySet().stream().filter(e -> e.getValue().kingdom().equals(k.id())).forEach(e -> {
             CompoundTag r = new CompoundTag();
             Village v = PoliticsService.village(level, e.getKey());
-            r.putUUID("village", e.getKey()); r.putString("name", v == null ? e.getKey().toString() : PoliticsService.name(v));
-            r.putString("from", e.getValue().playerName()); r.putBoolean("npc", e.getValue().fromNpcVillage());
+            r.putUUID("village", e.getKey());
+            r.putString("name", v == null ? e.getKey().toString() : PoliticsService.name(v));
+            r.putString("from", e.getValue().playerName());
+            r.putBoolean("npc", e.getValue().fromNpcVillage());
             list.add(r);
         });
         return list;
@@ -289,12 +379,20 @@ public final class KingdomScreens {
 
     private static ListTag raids(ServerLevel level, KingdomSavedData data, Kingdom k) {
         ListTag list = new ListTag();
-        data.activeRaids().stream().filter(r -> r.campaign() != null && (k.id().equals(r.campaign().attackerKingdom()) || k.id().equals(data.owner(r.target()))))
+        data.activeRaids()
+                .stream()
+                .filter(r
+                        -> r.campaign() != null
+                                && (k.id().equals(r.campaign().attackerKingdom())
+                                        || k.id().equals(data.owner(r.target()))))
                 .forEach(r -> {
                     CompoundTag e = new CompoundTag();
-                    Village a = PoliticsService.village(level, r.attacker()), t = PoliticsService.village(level, r.target());
-                    e.putString("attacker", a == null ? "?" : PoliticsService.name(a)); e.putString("target", t == null ? "?" : PoliticsService.name(t));
-                    e.putInt("wins", data.wins(r.campaign())); e.putInt("required", KingdomSavedData.requiredWins(r.campaign()));
+                    Village a = PoliticsService.village(level, r.attacker()),
+                            t = PoliticsService.village(level, r.target());
+                    e.putString("attacker", a == null ? "?" : PoliticsService.name(a));
+                    e.putString("target", t == null ? "?" : PoliticsService.name(t));
+                    e.putInt("wins", data.wins(r.campaign()));
+                    e.putInt("required", KingdomSavedData.requiredWins(r.campaign()));
                     e.putLong("ticks", level.getGameTime() - r.startGameTime());
                     e.putBoolean("ours", k.id().equals(r.campaign().attackerKingdom()));
                     list.add(e);
@@ -306,21 +404,33 @@ public final class KingdomScreens {
     private static CompoundTag nearby(ServerPlayer player, KingdomSavedData data) {
         CompoundTag e = new CompoundTag();
         Village v = PoliticsService.nearbyIndependentVillage(player);
-        if (v == null) return e;
+        if (v == null)
+            return e;
         ServerLevel level = player.serverLevel();
-        e.putUUID("id", v.getId().uuid()); e.putString("name", PoliticsService.name(v));
+        e.putUUID("id", v.getId().uuid());
+        e.putString("name", PoliticsService.name(v));
         e.putInt("level", EconomyService.centerLevel(v));
         e.putString("owner", v.getOwnerUUID() == null ? "" : v.getOwnerName() == null ? "?" : v.getOwnerName());
         boolean own = v.isControlledBy(player.getUUID());
         e.putBoolean("own", own);
-        e.putBoolean("canFound", own && EconomyService.centerLevel(v) >= PoliticsService.FOUND_LEVEL && data.ruledBy(player.getUUID()) == null);
+        e.putBoolean("canFound",
+                own && EconomyService.centerLevel(v) >= PoliticsService.FOUND_LEVEL
+                        && data.ruledBy(player.getUUID()) == null);
         ListTag relations = new ListTag();
-        data.kingdoms().stream().filter(k -> !k.fallen() && k.active()).sorted(Comparator.comparing(Kingdom::name)).forEach(k -> {
-            Village capital = PoliticsService.village(level, k.capital());
-            if (capital == null) return;
-            CompoundTag r = new CompoundTag(); r.putUUID("id", k.id()); r.putString("name", k.name());
-            r.putInt("relation", capital.getRelation(v.getId())); relations.add(r);
-        });
+        data.kingdoms()
+                .stream()
+                .filter(k -> !k.fallen() && k.active())
+                .sorted(Comparator.comparing(Kingdom::name))
+                .forEach(k -> {
+                    Village capital = PoliticsService.village(level, k.capital());
+                    if (capital == null)
+                        return;
+                    CompoundTag r = new CompoundTag();
+                    r.putUUID("id", k.id());
+                    r.putString("name", k.name());
+                    r.putInt("relation", capital.getRelation(v.getId()));
+                    relations.add(r);
+                });
         e.put("kingdoms", relations);
         return e;
     }

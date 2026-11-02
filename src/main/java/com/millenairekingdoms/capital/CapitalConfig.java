@@ -13,13 +13,17 @@ public final class CapitalConfig {
 
     static {
         var b = new ModConfigSpec.Builder();
-        b.comment("Rare natural NPC capitals: a new Millénaire village from natural world generation may found its own kingdom.").push("naturalCapitals");
+        b.comment(
+                 "Rare natural NPC capitals: a new Millénaire village from natural world generation may found its own kingdom.")
+                .push("naturalCapitals");
         ENABLED = b.comment("Allow new natural villages to become NPC capitals. Existing villages are never converted.")
-                .define("enabled", true);
+                          .define("enabled", true);
         CHANCE_PERCENT = b.comment("Chance in percent for each new eligible natural village (10.0 = 10%).")
-                .defineInRange("chancePercent", 10.0, 0.0, 100.0);
-        MIN_DISTANCE = b.comment("Minimum horizontal distance in blocks between a new natural capital and every living capital.")
-                .defineInRange("minCapitalDistance", 1000, 0, 100_000);
+                                 .defineInRange("chancePercent", 10.0, 0.0, 100.0);
+        MIN_DISTANCE =
+                b.comment(
+                         "Minimum horizontal distance in blocks between a new natural capital and every living capital.")
+                        .defineInRange("minCapitalDistance", 1000, 0, 100_000);
         b.pop();
         AutonomyConfig.define(b);
         com.millenairekingdoms.autonomy.StrategicCombatConfig.define(b);

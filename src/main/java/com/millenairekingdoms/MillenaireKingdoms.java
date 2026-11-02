@@ -1,17 +1,17 @@
 package com.millenairekingdoms;
 
-import com.mojang.logging.LogUtils;
 import com.millenairekingdoms.autonomy.AutonomyConfig;
 import com.millenairekingdoms.autonomy.RaidOrderService;
 import com.millenairekingdoms.capital.CapitalConfig;
-import com.millenairekingdoms.gui.KingdomActions;
-import com.millenairekingdoms.kingdom.KingdomSavedData;
-import com.millenairekingdoms.network.KingdomNetwork;
 import com.millenairekingdoms.command.KingdomCommands;
 import com.millenairekingdoms.command.KingdomsCommands;
 import com.millenairekingdoms.conquest.ConquestService;
+import com.millenairekingdoms.gui.KingdomActions;
+import com.millenairekingdoms.kingdom.KingdomSavedData;
+import com.millenairekingdoms.network.KingdomNetwork;
 import com.millenairekingdoms.politics.ChiefInteraction;
 import com.millenairekingdoms.politics.KingdomDay;
+import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -40,40 +40,63 @@ public final class MillenaireKingdoms {
         NeoForge.EVENT_BUS.addListener(KingdomDay::onLevelTick);
         NeoForge.EVENT_BUS.addListener(RaidOrderService::onLevelTick);
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.autonomy.StrategicBattleService::onTick);
-        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppedEvent event)->com.millenairekingdoms.autonomy.StrategicBattleService.clear(event.getServer()));
+        NeoForge.EVENT_BUS.addListener(
+                (net.neoforged.neoforge.event.server.ServerStoppedEvent event)
+                        -> com.millenairekingdoms.autonomy.StrategicBattleService.clear(event.getServer()));
         NeoForge.EVENT_BUS.addListener(KingdomActions::onLogout);
         NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStartedEvent event) -> {
-            for (var level : event.getServer().getAllLevels()) try { com.millenairekingdoms.history.HistoryHooks.recover(level); }
-            catch (RuntimeException failure) { LOGGER.error("Historical archive recovery unavailable; original files preserved", failure); }
+            for (var level : event.getServer().getAllLevels())
+                try {
+                    com.millenairekingdoms.history.HistoryHooks.recover(level);
+                } catch (RuntimeException failure) {
+                    LOGGER.error("Historical archive recovery unavailable; original files preserved", failure);
+                }
         });
-        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppedEvent event) -> com.millenairekingdoms.history.HistoryHooks.clear(event.getServer()));
-        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST,false,net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class,com.millenairekingdoms.history.HistoryRecovery::onTick);
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppedEvent event)
+                                               -> com.millenairekingdoms.history.HistoryHooks.clear(event.getServer()));
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST, false,
+                net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class,
+                com.millenairekingdoms.history.HistoryRecovery::onTick);
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.construction.RoyalConstructionRuntime::onStarted);
-        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.HIGH, false, net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class, com.millenairekingdoms.construction.RoyalConstructionRuntime::onLevelTick);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.HIGH, false,
+                net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class,
+                com.millenairekingdoms.construction.RoyalConstructionRuntime::onLevelTick);
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.construction.RoyalConstructionRuntime::onStopped);
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.shipping.RoyalShipmentRuntime::onStarted);
-        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST, false, net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class, com.millenairekingdoms.shipping.RoyalShipmentRuntime::onLevelTick);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST, false,
+                net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class,
+                com.millenairekingdoms.shipping.RoyalShipmentRuntime::onLevelTick);
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.shipping.RoyalShipmentRuntime::onStopped);
-        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST,com.millenairekingdoms.autonomy.RoyalBuilderCargo::onStarted);
-        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.HIGHEST,false,net.neoforged.neoforge.event.tick.LevelTickEvent.Pre.class,com.millenairekingdoms.autonomy.RoyalBuilderCargo::onPreTick);
-        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.HIGHEST,false,net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class,com.millenairekingdoms.autonomy.RoyalEconomicActivation::onTick);
-        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.HIGHEST,com.millenairekingdoms.autonomy.RoyalEconomicActivation::onStopping);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST,
+                com.millenairekingdoms.autonomy.RoyalBuilderCargo::onStarted);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.HIGHEST, false,
+                net.neoforged.neoforge.event.tick.LevelTickEvent.Pre.class,
+                com.millenairekingdoms.autonomy.RoyalBuilderCargo::onPreTick);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.HIGHEST, false,
+                net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class,
+                com.millenairekingdoms.autonomy.RoyalEconomicActivation::onTick);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.HIGHEST,
+                com.millenairekingdoms.autonomy.RoyalEconomicActivation::onStopping);
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.autonomy.RoyalEconomicActivation::onStopped);
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.autonomy.RoyalNpcRuntime::onStarted);
-        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.HIGH, false, net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class, com.millenairekingdoms.autonomy.RoyalNpcRuntime::onLevelTick);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.HIGH, false,
+                net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class,
+                com.millenairekingdoms.autonomy.RoyalNpcRuntime::onLevelTick);
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.autonomy.RoyalNpcRuntime::onStopped);
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.economy.RoyalConsolidationRuntime::onStarted);
-        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST,false,net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class,com.millenairekingdoms.economy.RoyalConsolidationRuntime::onTick);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST, false,
+                net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class,
+                com.millenairekingdoms.economy.RoyalConsolidationRuntime::onTick);
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.economy.RoyalConsolidationRuntime::onStopped);
         KingdomSavedData.defaultTruceDays = AutonomyConfig::truceDays;
-        LOGGER.info("Millénaire Kingdoms {} initialized (modId={}).",
-                modContainer.getModInfo().getVersion(), MOD_ID);
+        LOGGER.info("Millénaire Kingdoms {} initialized (modId={}).", modContainer.getModInfo().getVersion(), MOD_ID);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
         // Run after mod construction; this verified Millénaire API only reads its version.
-        event.enqueueWork(() -> LOGGER.info("Millénaire Kingdoms dependency verified: millenaire {}.",
-                Millenaire.getModVersion()));
+        event.enqueueWork(()
+                                  -> LOGGER.info("Millénaire Kingdoms dependency verified: millenaire {}.",
+                                          Millenaire.getModVersion()));
     }
 
     private void loadComplete(FMLLoadCompleteEvent event) {
