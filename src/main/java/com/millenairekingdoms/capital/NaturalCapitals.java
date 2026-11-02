@@ -285,7 +285,7 @@ public final class NaturalCapitals {
         List<String> keys = new ArrayList<>(hall.startingSubBuildings());
         hall.variants().values().forEach(levels -> levels.forEach(l -> keys.addAll(l.subBuildings())));
         for (String key : keys)
-            chain.add(ResourceLocation.fromNamespaceAndPath("millenaire", hall.culture().getPath() + "/" + key.toLowerCase()));
+            chain.add(ResourceLocation.fromNamespaceAndPath("millenaire", hall.culture().getPath() + "/" + key.toLowerCase(java.util.Locale.ROOT)));
         return chain;
     }
 

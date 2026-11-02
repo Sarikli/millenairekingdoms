@@ -273,6 +273,7 @@ public final class EconomicQueueGameTests {
                         && portfolio.development().status()==Status.CONDITIONAL && portfolio.logistics().status()==Status.CONDITIONAL && r.coins()==0,
                         "Both exact unpaid operation identities reopen in an independent JVM without a debit or synthetic coins");
                 var chunk=new net.minecraft.world.level.ChunkPos(r.source().getCenter());
+                for(int dx=-2;dx<=2;dx++)for(int dz=-2;dz<=2;dz++)r.level().getChunk(chunk.x+dx,chunk.z+dz);
                 r.level().getChunkSource().addRegionTicket(REOPEN,chunk,2,saved.getUUID("development"),true);
                 restoredHandoff(h,r,saved,0);return;
         }

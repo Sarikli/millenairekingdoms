@@ -1,7 +1,7 @@
 # Millénaire Kingdoms
 
-> **1.2.1 — By Royal Decree.** [Release](https://github.com/Sarikli/millenairekingdoms/releases/tag/1.2.1) · [JAR, checksum and bilingual notes](releases/1.2.1/) · [engineering review](docs/1.2.1_ENGINEERING_REVIEW.md).
-> Unattended strategic conflicts now include hostile independent villages. Focused maintenance retains real order blockers, quietly defers cold-capital treasury work and improves contributor checks. [Current architecture](docs/ARCHITECTURE.md) · [contributing](CONTRIBUTING.md) · [1.2.1 validation](docs/1.2.1_PROGRESS.md). The released 1.2.0 artifact, earlier verification and original PR #3 remain preserved. The maintenance work is reviewed in [Draft PR #4](https://github.com/Sarikli/millenairekingdoms/pull/4); this task does not merge `main`.
+> **1.2.2 — By Royal Decree.** [Release](https://github.com/Sarikli/millenairekingdoms/releases/tag/1.2.2) · [changelog](CHANGELOG.md) · [current architecture](docs/ARCHITECTURE.md) · [contributing](CONTRIBUTING.md).
+> Autonomous NPC kingdoms now retain unpaid building plans across native work, supply planned projects with independent partial shipments, and run bounded background economic leases in previously generated regions without nearby players. Construction save readback is bounded to the selected village to prevent large-world 64 MiB NBT allocation failures.
 
 A medieval kingdom layer for [Millénaire](https://millenaire.org) villages: NPC kingdoms with their own capitals,
 player rulers, diplomacy, war and peace, conquest through native raids and persistent unattended strategic engagements, daily taxes paid into a capital
@@ -13,7 +13,7 @@ Addon generation hooks use original building plans to complete natural capitals;
 
 | | |
 |---|---|
-| Stable version | 1.2.1 — By Royal Decree |
+| Stable version | 1.2.2 — By Royal Decree |
 | Minecraft | 1.21.1 |
 | Loader | NeoForge 21.1.259 |
 | Required dependency | Millénaire 9.0.3 |
@@ -59,7 +59,7 @@ See the [bilingual release notes](releases/1.2.1/RELEASE_NOTES.md), [changelog](
 
 ## Installation
 
-Download **[millenairekingdoms-1.2.1.jar](https://github.com/Sarikli/millenairekingdoms/releases/download/1.2.1/millenairekingdoms-1.2.1.jar)** and install it alongside the original **Millénaire 9.0.3** with the versions above. Use the same addon/dependency versions on the server and all clients, removing older addon copies. See the [current player guide](docs/1.2.0_USER_GUIDE.md). Keep a whole-world pre-upgrade backup. Network protocol 11 requires matching 1.2.1 clients and servers. Existing native/political/financial formats remain supported; new independent strategic records use format 2 and cannot be downgraded to 1.2.0.
+Download **[millenairekingdoms-1.2.2.jar](https://github.com/Sarikli/millenairekingdoms/releases/download/1.2.2/millenairekingdoms-1.2.2.jar)** and install it alongside the original **Millénaire 9.0.3** with the versions above. Use the same addon/dependency versions on the server and all clients, removing older addon copies. See the [current player guide](docs/1.2.0_USER_GUIDE.md). Keep a whole-world pre-upgrade backup. Network protocol 11 requires matching 1.2.2 clients and servers. Existing native/political/financial formats remain supported; new independent strategic records use format 2 and cannot be downgraded to 1.2.0.
 
 ### Historical 1.1.1 installation
 
