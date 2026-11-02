@@ -31,6 +31,67 @@ def stageGameTestJar = tasks.register('stageGameTestJar', Copy) {
     rename { 'millenairekingdoms.jar' }
 }
 
+def pairedGameTestSuites = [
+    [run: 'gameTestServer',                  verify: 'verifyConquest',             ns: 'millenairekingdoms_tests'],
+    [run: 'geographyGameTestServer',         verify: 'verifyGeography',            ns: 'millenairekingdoms_geography_tests'],
+    [run: 'localizationGameTestServer',      verify: 'verifyLocalization',         ns: 'millenairekingdoms_localization_tests'],
+    [run: 'warGameTestServer',               verify: 'verifyWars',                 ns: 'millenairekingdoms_war_tests'],
+    [run: 'stage5GameTestServer',            verify: 'verifyStage5',               ns: 'millenairekingdoms_stage5_tests'],
+    [run: 'capitalGameTestServer',           verify: 'verifyCapitals',             ns: 'millenairekingdoms_capital_tests'],
+    [run: 'autonomyGameTestServer',          verify: 'verifyAutonomy',             ns: 'millenairekingdoms_autonomy_tests'],
+    [run: 'foundingGameTestServer',          verify: 'verifyFounding',             ns: 'millenairekingdoms_founding_tests'],
+    [run: 'guiGameTestServer',               verify: 'verifyGui',                  ns: 'millenairekingdoms_gui_tests'],
+    [run: 'royalEconomyGameTestServer',      verify: 'verifyRoyalEconomy',         ns: 'millenairekingdoms_royal_economy_tests'],
+    [run: 'royalConstructionGameTestServer', verify: 'verifyRoyalConstruction',    ns: 'millenairekingdoms_royal_construction_tests'],
+    [run: 'royalRecoveryGameTestServer',     verify: 'verifyRoyalRecovery',        ns: 'millenairekingdoms_royal_recovery_tests'],
+    [run: 'royalSitesGameTestServer',        verify: 'verifyRoyalSites',           ns: 'millenairekingdoms_royal_site_tests'],
+    [run: 'royalGoodsGameTestServer',        verify: 'verifyRoyalGoods',           ns: 'millenairekingdoms_royal_goods_tests'],
+    [run: 'royalShipmentGameTestServer',     verify: 'verifyRoyalShipments',       ns: 'millenairekingdoms_royal_shipment_tests'],
+    [run: 'royalNpcBuilderGameTestServer',   verify: 'verifyRoyalNpcBuilders',     ns: 'millenairekingdoms_royal_npc_builder_tests', props: ['kingdoms.tests.liveNpcEconomy': 'true', 'kingdoms.tests.liveConstruction': 'true']],
+    [run: 'royalIntegrationGameTestServer',  verify: 'verifyRoyalIntegration',     ns: 'millenairekingdoms_royal_integration_tests'],
+    [run: 'royalNpcRuntimeGameTestServer',   verify: 'verifyRoyalNpcRuntime',      ns: 'millenairekingdoms_royal_npc_runtime_tests'],
+    [run: 'royalStrategyGameTestServer',     verify: 'verifyRoyalStrategy',        ns: 'millenairekingdoms_royal_strategy_tests',    props: ['kingdoms.tests.liveNpcEconomy': 'true', 'kingdoms.tests.liveShipments': 'true']],
+    [run: 'strategicRestartGameTestServer',  verify: 'verifyStrategicRestart',     ns: 'millenairekingdoms_strategic_restart_tests', props: ['kingdoms.tests.liveNpcEconomy': 'true', 'kingdoms.tests.liveShipments': 'true']],
+    [run: 'strategicMilitaryGameTestServer', verify: 'verifyStrategicMilitary',    ns: 'millenairekingdoms_strategic_military_tests',props: ['kingdoms.tests.liveNpcEconomy': 'true', 'kingdoms.tests.liveShipments': 'true']],
+    [run: 'nativeBattleGameTestServer',      verify: 'verifyNativeBattle',         ns: 'millenairekingdoms_native_battle_tests',     props: ['kingdoms.tests.liveNpcEconomy': 'true', 'kingdoms.tests.liveShipments': 'true', 'kingdoms.tests.liveConstruction': 'true', 'kingdoms.tests.liveConsolidation': 'true']],
+    [run: 'nativeWarGameTestServer',         verify: 'verifyNativeWar',            ns: 'millenairekingdoms_native_war_tests',        props: ['kingdoms.tests.liveNpcEconomy': 'true', 'kingdoms.tests.liveShipments': 'true', 'kingdoms.tests.liveConstruction': 'true', 'kingdoms.tests.liveConsolidation': 'true']],
+    [run: 'royalNpcLiveGameTestServer',      verify: 'verifyRoyalNpcLive',         ns: 'millenairekingdoms_royal_npc_live_tests',    props: ['kingdoms.tests.liveNpcEconomy': 'true', 'kingdoms.tests.liveShipments': 'true']],
+    [run: 'consolidationGameTestServer',     verify: 'verifyConsolidation',        ns: 'millenairekingdoms_consolidation_tests'],
+    [run: 'consolidationLiveGameTestServer', verify: 'verifyConsolidationLive',    ns: 'millenairekingdoms_consolidation_live_tests',props: ['kingdoms.tests.liveConsolidation': 'true']],
+    [run: 'strategyRecoveryGameTestServer',  verify: 'verifyStrategyRecovery',     ns: 'millenairekingdoms_strategy_recovery_tests', props: ['kingdoms.tests.liveShipments': 'true']],
+    [run: 'royalNpcEconomyGameTestServer',   verify: 'verifyRoyalNpcEconomy',      ns: 'millenairekingdoms_royal_npc_economy_tests'],
+    [run: 'royalNpcBudgetGameTestServer',    verify: 'verifyRoyalNpcBudget',       ns: 'millenairekingdoms_royal_npc_budget_tests'],
+    [run: 'royalPolicyGameTestServer',       verify: 'verifyRoyalPolicy',          ns: 'millenairekingdoms_royal_policy_tests'],
+    [run: 'personalityGameTestServer',       verify: 'verifyPersonalities',        ns: 'millenairekingdoms_personality_tests'],
+    [run: 'royalShipmentGuiGameTestServer',  verify: 'verifyRoyalShipmentGui',     ns: 'millenairekingdoms_royal_shipment_gui_tests'],
+    [run: 'royalShipmentRuntimeGameTestServer', verify: 'verifyRoyalShipmentRuntime', ns: 'millenairekingdoms_royal_shipment_runtime_tests'],
+    [run: 'royalShipmentLiveGameTestServer', verify: 'verifyRoyalShipmentLive',    ns: 'millenairekingdoms_royal_shipment_live_tests', props: ['kingdoms.tests.liveShipments': 'true']],
+    [run: 'royalReceiptGameTestServer',      verify: 'verifyRoyalReceipts',        ns: 'millenairekingdoms_royal_receipt_tests'],
+    [run: 'royalGuiGameTestServer',          verify: 'verifyRoyalGui',             ns: 'millenairekingdoms_royal_gui_tests'],
+    [run: 'royalLiveGameTestServer',         verify: 'verifyRoyalLive',            ns: 'millenairekingdoms_royal_live_tests',        props: ['kingdoms.tests.liveConstruction': 'true']],
+    [run: 'historyGameTestServer',           verify: 'verifyHistory',              ns: 'millenairekingdoms_history_tests'],
+    [run: 'atlasGameTestServer',             verify: 'verifyAtlas',                ns: 'millenairekingdoms_atlas_tests'],
+    [run: 'historyWorldGameTestServer',      verify: 'verifyHistoryWorld',         ns: 'millenairekingdoms_history_world_tests',     props: ['kingdoms.tests.historyWorld': 'true', 'kingdoms.tests.liveConstruction': 'true', 'kingdoms.tests.liveShipments': 'true']],
+    [run: 'maintenanceGameTestServer',       verify: 'verifyMaintenance',          ns: 'millenairekingdoms_maintenance_tests',       props: ['kingdoms.tests.scaleCapitals': System.getProperty('kingdoms.scaleCapitals', '50')]],
+    [run: 'independentNativeGameTestServer', verify: 'verifyIndependentNative',    ns: 'millenairekingdoms_independent_native_tests',props: ['kingdoms.tests.historyWorld': 'true']],
+    [run: 'economicQueueGameTestServer',     verify: 'verifyEconomicQueue',        ns: 'millenairekingdoms_economic_queue_tests'],
+    [run: 'economicBackgroundGameTestServer',verify: 'verifyEconomicBackground',   ns: 'millenairekingdoms_economic_background_tests',props: ['kingdoms.tests.historyWorld': 'true', 'kingdoms.tests.liveShipments': 'true', 'kingdoms.tests.liveConstruction': 'true', 'kingdoms.tests.economicBackground': 'true']],
+    [run: 'economicNativeGameTestServer',    verify: 'verifyEconomicNative',       ns: 'millenairekingdoms_economic_native_tests',   props: ['kingdoms.tests.liveNpcEconomy': 'true', 'kingdoms.tests.liveConstruction': 'true']]
+]
+
+def extraGameTestRuns = [
+    [run: 'royalSimulationGameTestServer',       ns: 'millenairekingdoms_royal_simulation_tests', props: ['kingdoms.tests.persistence': 'write', 'kingdoms.tests.simulationEpoch': '0']],
+    [run: 'royalSimulationGameTestServerReload', ns: 'millenairekingdoms_royal_simulation_tests', props: ['kingdoms.tests.persistence': 'read',  'kingdoms.tests.simulationEpoch': '1']],
+    [run: 'royalSimulationGameTestServerThird',  ns: 'millenairekingdoms_royal_simulation_tests', props: ['kingdoms.tests.persistence': 'read',  'kingdoms.tests.simulationEpoch': '2']],
+    [run: 'royalSimulationGameTestServerFourth', ns: 'millenairekingdoms_royal_simulation_tests', props: ['kingdoms.tests.persistence': 'read',  'kingdoms.tests.simulationEpoch': '3']],
+    [run: 'consolidationCrashGameTestServer',    ns: 'millenairekingdoms_consolidation_crash_tests',    props: ['kingdoms.tests.consolidationPhase': System.getProperty('kingdoms.consolidationPhase', 'prepare'), 'kingdoms.tests.consolidationCut': System.getProperty('kingdoms.consolidationCut', 'before-write')]],
+    [run: 'strategyEconomyCrashGameTestServer',  ns: 'millenairekingdoms_strategy_economy_crash_tests', props: ['kingdoms.tests.strategyEconomyPhase': System.getProperty('kingdoms.strategyEconomyPhase', 'prepare'), 'kingdoms.tests.strategyEconomyCut': System.getProperty('kingdoms.strategyEconomyCut', 'before-decision')]],
+    [run: 'strategicCrashGameTestServer',        ns: 'millenairekingdoms_strategic_crash_tests',        props: ['kingdoms.tests.strategicCrashPhase': System.getProperty('kingdoms.strategicCrashPhase', 'prepare'), 'kingdoms.tests.strategicCut': System.getProperty('kingdoms.strategicCut', 'after-roll'), 'kingdoms.tests.strategicIndependent': System.getProperty('kingdoms.strategicIndependent', 'false')]],
+    [run: 'historyCrashPrepareGameTestServer',   ns: 'millenairekingdoms_history_cut_prepare',          props: ['kingdoms.tests.persistence': 'write', 'kingdoms.tests.historyBoundary': System.getProperty('kingdoms.historyBoundary', '')]],
+    [run: 'historyCrashInterruptGameTestServer', ns: 'millenairekingdoms_history_cut_interrupt',        props: ['kingdoms.tests.persistence': 'read',  'kingdoms.tests.historyBoundary': System.getProperty('kingdoms.historyBoundary', '')]],
+    [run: 'historyCrashRecoverGameTestServer',   ns: 'millenairekingdoms_history_cut_recover',          props: ['kingdoms.tests.persistence': 'read',  'kingdoms.tests.historyBoundary': System.getProperty('kingdoms.historyBoundary', '')]]
+]
+
 neoForge {
     version = project.neo_version
     addModdingDependenciesTo(sourceSets.gametest)
@@ -59,995 +120,38 @@ neoForge {
             programArgument '--nogui'
             taskBefore stageServerJar
         }
-        geographyGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_geography_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        geographyGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_geography_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        localizationGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_localization_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        localizationGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_localization_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        gameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        gameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        warGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_war_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        warGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_war_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        stage5GameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_stage5_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        stage5GameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_stage5_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        capitalGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_capital_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        capitalGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_capital_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        autonomyGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_autonomy_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        autonomyGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_autonomy_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        foundingGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_founding_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        foundingGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_founding_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        guiGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_gui_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        guiGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_gui_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        royalEconomyGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_economy_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        royalEconomyGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_economy_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        royalConstructionGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_construction_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        royalConstructionGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_construction_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        royalRecoveryGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_recovery_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        royalRecoveryGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_recovery_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        royalSitesGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_site_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        royalSitesGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_site_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        royalGoodsGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_goods_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        royalGoodsGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_goods_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        royalShipmentGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        royalShipmentGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        royalNpcBuilderGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_npc_builder_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
-            systemProperty 'kingdoms.tests.liveConstruction', 'true'
-        }
-        royalNpcBuilderGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_npc_builder_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
-            systemProperty 'kingdoms.tests.liveConstruction', 'true'
-        }
-        royalSimulationGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_simulation_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-            systemProperty 'kingdoms.tests.simulationEpoch', '0'
-        }
-        royalSimulationGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_simulation_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.simulationEpoch', '1'
-        }
-        royalSimulationGameTestServerThird {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_simulation_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.simulationEpoch', '2'
-        }
-        royalSimulationGameTestServerFourth {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_simulation_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.simulationEpoch', '3'
-        }
-        royalIntegrationGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_integration_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        royalIntegrationGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_integration_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        royalNpcRuntimeGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_npc_runtime_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        royalNpcRuntimeGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_npc_runtime_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        royalStrategyGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_strategy_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-        }
-        royalStrategyGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_strategy_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-        }
-        strategicRestartGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_strategic_restart_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-        }
-        strategicRestartGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_strategic_restart_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-        }
-        strategicMilitaryGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_strategic_military_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-        }
-        strategicMilitaryGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_strategic_military_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-        }
-        nativeBattleGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_native_battle_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-            systemProperty 'kingdoms.tests.liveConstruction', 'true'
-            systemProperty 'kingdoms.tests.liveConsolidation', 'true'
-        }
-        nativeBattleGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_native_battle_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-            systemProperty 'kingdoms.tests.liveConstruction', 'true'
-            systemProperty 'kingdoms.tests.liveConsolidation', 'true'
-        }
-        nativeWarGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_native_war_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-            systemProperty 'kingdoms.tests.liveConstruction', 'true'
-            systemProperty 'kingdoms.tests.liveConsolidation', 'true'
-        }
-        nativeWarGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_native_war_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-            systemProperty 'kingdoms.tests.liveConstruction', 'true'
-            systemProperty 'kingdoms.tests.liveConsolidation', 'true'
-        }
-        royalNpcLiveGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_npc_live_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-        }
-        royalNpcLiveGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_npc_live_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-        }
-        consolidationGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_consolidation_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        consolidationGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_consolidation_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        consolidationLiveGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_consolidation_live_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-            systemProperty 'kingdoms.tests.liveConsolidation', 'true'
-        }
-        consolidationLiveGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_consolidation_live_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.liveConsolidation', 'true'
-        }
-        consolidationCrashGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_consolidation_crash_tests'
-            systemProperty 'kingdoms.tests.consolidationPhase', System.getProperty('kingdoms.consolidationPhase', 'prepare')
-            systemProperty 'kingdoms.tests.consolidationCut', System.getProperty('kingdoms.consolidationCut', 'before-write')
-        }
-        strategyRecoveryGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_strategy_recovery_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-        }
-        strategyRecoveryGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_strategy_recovery_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-        }
-        strategyEconomyCrashGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_strategy_economy_crash_tests'
-            systemProperty 'kingdoms.tests.strategyEconomyPhase', System.getProperty('kingdoms.strategyEconomyPhase', 'prepare')
-            systemProperty 'kingdoms.tests.strategyEconomyCut', System.getProperty('kingdoms.strategyEconomyCut', 'before-decision')
-        }
-        strategicCrashGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_strategic_crash_tests'
-            systemProperty 'kingdoms.tests.strategicCrashPhase', System.getProperty('kingdoms.strategicCrashPhase', 'prepare')
-            systemProperty 'kingdoms.tests.strategicCut', System.getProperty('kingdoms.strategicCut', 'after-roll')
-            systemProperty 'kingdoms.tests.strategicIndependent', System.getProperty('kingdoms.strategicIndependent', 'false')
-        }
-        royalNpcEconomyGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_npc_economy_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        royalNpcEconomyGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_npc_economy_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        royalNpcBudgetGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_npc_budget_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        royalNpcBudgetGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_npc_budget_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        royalPolicyGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_policy_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        royalPolicyGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_policy_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        personalityGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_personality_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        personalityGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_personality_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        royalShipmentGuiGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_gui_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        royalShipmentGuiGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_gui_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        royalShipmentRuntimeGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_runtime_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        royalShipmentRuntimeGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_runtime_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        royalShipmentLiveGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_live_tests'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        royalShipmentLiveGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_shipment_live_tests'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        royalReceiptGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_receipt_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        royalReceiptGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_receipt_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        royalGuiGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_gui_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        royalGuiGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_gui_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        royalLiveGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_live_tests'
-            systemProperty 'kingdoms.tests.liveConstruction', 'true'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        royalLiveGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_royal_live_tests'
-            systemProperty 'kingdoms.tests.liveConstruction', 'true'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        historyGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_history_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        historyGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_history_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        atlasGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_atlas_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        atlasGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_atlas_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        historyWorldGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_history_world_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-            systemProperty 'kingdoms.tests.historyWorld', 'true'
-            systemProperty 'kingdoms.tests.liveConstruction', 'true'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-        }
-        historyWorldGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_history_world_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.historyWorld', 'true'
-            systemProperty 'kingdoms.tests.liveConstruction', 'true'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-        }
-        historyCrashPrepareGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_history_cut_prepare'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-            systemProperty 'kingdoms.tests.historyBoundary', System.getProperty('kingdoms.historyBoundary','')
-        }
-        historyCrashInterruptGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_history_cut_interrupt'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.historyBoundary', System.getProperty('kingdoms.historyBoundary','')
-        }
-        historyCrashRecoverGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_history_cut_recover'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.historyBoundary', System.getProperty('kingdoms.historyBoundary','')
-        }
-        maintenanceGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_maintenance_tests'
-            systemProperty 'kingdoms.tests.scaleCapitals', System.getProperty('kingdoms.scaleCapitals','50')
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        maintenanceGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_maintenance_tests'
-            systemProperty 'kingdoms.tests.scaleCapitals', System.getProperty('kingdoms.scaleCapitals','50')
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        independentNativeGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_independent_native_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-            systemProperty 'kingdoms.tests.historyWorld', 'true'
-        }
-        independentNativeGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_independent_native_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.historyWorld', 'true'
-        }
-        economicQueueGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_economic_queue_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-        }
-        economicQueueGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_economic_queue_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-        }
-        economicBackgroundGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_economic_background_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-            systemProperty 'kingdoms.tests.historyWorld', 'true'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-            systemProperty 'kingdoms.tests.liveConstruction', 'true'
-            systemProperty 'kingdoms.tests.economicBackground', 'true'
-        }
-        economicBackgroundGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_economic_background_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.historyWorld', 'true'
-            systemProperty 'kingdoms.tests.liveShipments', 'true'
-            systemProperty 'kingdoms.tests.liveConstruction', 'true'
-            systemProperty 'kingdoms.tests.economicBackground', 'true'
-        }
-        economicNativeGameTestServer {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_economic_native_tests'
-            systemProperty 'kingdoms.tests.persistence', 'write'
-            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
-            systemProperty 'kingdoms.tests.liveConstruction', 'true'
-        }
-        economicNativeGameTestServerReload {
-            type = 'gameTestServer'
-            sourceSet = sourceSets.gametest
-            loadedMods = [mods.millenairekingdoms_tests]
-            taskBefore stageGameTestJar
-            gameDirectory = file('run/gametest')
-            systemProperty 'neoforge.enabledGameTestNamespaces', 'millenairekingdoms_economic_native_tests'
-            systemProperty 'kingdoms.tests.persistence', 'read'
-            systemProperty 'kingdoms.tests.liveNpcEconomy', 'true'
-            systemProperty 'kingdoms.tests.liveConstruction', 'true'
-        }
+
+        def registerGameTestRun = { String runName, String namespace, Map<String, String> sysProps ->
+            create(runName) {
+                type = 'gameTestServer'
+                sourceSet = sourceSets.gametest
+                loadedMods = [mods.millenairekingdoms_tests]
+                taskBefore stageGameTestJar
+                gameDirectory = file('run/gametest')
+                systemProperty 'neoforge.enabledGameTestNamespaces', namespace
+                sysProps.each { k, v -> systemProperty k, v }
+            }
+        }
+
+        pairedGameTestSuites.each { suite ->
+            def extra = suite.props ?: [:]
+            registerGameTestRun(suite.run, suite.ns, ['kingdoms.tests.persistence': 'write'] + extra)
+            registerGameTestRun("${suite.run}Reload", suite.ns, ['kingdoms.tests.persistence': 'read'] + extra)
+        }
+        extraGameTestRuns.each { spec ->
+            registerGameTestRun(spec.run, spec.ns, spec.props)
+        }
+
         configureEach {
             logLevel = org.slf4j.event.Level.INFO
             jvmArguments.addAll '-Xms512m', '-Xmx3G'
         }
     }
-
 }
 
 def millenaireJar = layout.projectDirectory.file("millenaire-${millenaire_version}.jar")
 
 dependencies {
-    // Available for compilation and development runs; never embedded in our JAR.
     implementation files(millenaireJar)
 }
 
@@ -1106,16 +210,10 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 tasks.named('compileJava') { dependsOn verifyMillenaireJar }
-tasks.named('check') { dependsOn verifyMillenaireJar }
-tasks.named('check') { dependsOn tasks.named('gametestClasses') }
-tasks.named('runGameTestServerReload') { dependsOn tasks.named('runGameTestServer') }
+tasks.named('check') { dependsOn verifyMillenaireJar, tasks.named('gametestClasses') }
 tasks.named('runServer', JavaExec) { standardInput = System.in }
 tasks.named('runServerJar', JavaExec) { standardInput = System.in }
-tasks.register('verifyConquest') {
-    group = 'verification'
-    description = 'Runs real server integration tests, then restarts the server to verify persisted progress.'
-    dependsOn tasks.named('runGameTestServerReload')
-}
+
 tasks.named('jar', Jar) {
     preserveFileTimestamps = false
     reproducibleFileOrder = true
@@ -1130,253 +228,19 @@ tasks.named('wrapper', Wrapper) {
     distributionType = Wrapper.DistributionType.BIN
 }
 
-// Focused stage-4.1 suite; does not execute the broader conquest/NPC test suites.
-tasks.named('runWarGameTestServerReload') { dependsOn tasks.named('runWarGameTestServer') }
-tasks.register('verifyWars') {
-    group = 'verification'
-    description = 'Runs only war/peace tests and verifies war persistence after a server restart.'
-    dependsOn tasks.named('runWarGameTestServerReload')
-}
-
-// Stage-5 suite (rulers, economy, diplomacy): write round, then a separate JVM checks persistence.
-tasks.named('runStage5GameTestServerReload') { dependsOn tasks.named('runStage5GameTestServer') }
-tasks.register('verifyStage5') {
-    group = 'verification'
-    description = 'Runs only stage-5 politics, economy and diplomacy tests, then verifies persistence after a restart.'
-    dependsOn tasks.named('runStage5GameTestServerReload')
-}
-
-// Stage-6.1 suite (natural NPC capitals): write round, then a separate JVM checks the capital after a restart.
-tasks.named('runCapitalGameTestServerReload') { dependsOn tasks.named('runCapitalGameTestServer') }
-tasks.register('verifyCapitals') {
-    group = 'verification'
-    description = 'Runs only the natural-capital tests on real Millénaire villages, then verifies them after a restart.'
-    dependsOn tasks.named('runCapitalGameTestServerReload')
-}
-
-// Stage-6.2 suite (NPC autonomy, conquest orders, peace): write round, then a separate JVM checks persistence.
-tasks.named('runAutonomyGameTestServerReload') { dependsOn tasks.named('runAutonomyGameTestServer') }
-tasks.register('verifyAutonomy') {
-    group = 'verification'
-    description = 'Runs only the stage-6.2 NPC politics and conquest-order tests, then verifies persistence after a restart.'
-    dependsOn tasks.named('runAutonomyGameTestServerReload')
-}
-
-// Kingdom screen and treasury suite: server-side action checks and real coin withdrawals, then a restart round.
-tasks.named('runGuiGameTestServerReload') { dependsOn tasks.named('runGuiGameTestServer') }
-tasks.register('verifyGui') {
-    group = 'verification'
-    description = 'Runs only the kingdom screen (server side) and treasury tests, then verifies them after a restart.'
-    dependsOn tasks.named('runGuiGameTestServerReload')
-}
-
-// 1.1.0 suite (kingdom founding by development): write round, then a separate JVM checks the founded kingdom after a restart.
-tasks.named('runFoundingGameTestServerReload') { dependsOn tasks.named('runFoundingGameTestServer') }
-tasks.register('verifyFounding') {
-    group = 'verification'
-    description = 'Runs only the 1.1.0 kingdom-founding tests on real Millénaire records and villages, then verifies them after a restart.'
-    dependsOn tasks.named('runFoundingGameTestServerReload')
-}
-
-// Royal coin/change planning; full durable spending remains a separate service.
-tasks.named('runRoyalEconomyGameTestServerReload') { dependsOn tasks.named('runRoyalEconomyGameTestServer') }
-tasks.register('verifyRoyalEconomy') {
-    group = 'verification'
-    description = 'Verifies royal coin planning and real-chest change across separate JVMs.'
-    dependsOn tasks.named('runRoyalEconomyGameTestServerReload')
-}
-tasks.named('runRoyalConstructionGameTestServerReload') { dependsOn tasks.named('runRoyalConstructionGameTestServer') }
-tasks.register('verifyRoyalConstruction') {
-    group = 'verification'
-    description = 'Verify royal construction in a write JVM and a separate reload JVM.'
-    dependsOn tasks.named('runRoyalConstructionGameTestServerReload')
-}
-
-tasks.named('runRoyalRecoveryGameTestServerReload') { dependsOn tasks.named('runRoyalRecoveryGameTestServer') }
-tasks.register('verifyRoyalRecovery') {
-    group = 'verification'
-    description = 'Verify audited operator construction recovery in two separate JVMs.'
-    dependsOn tasks.named('runRoyalRecoveryGameTestServerReload')
-}
-
-tasks.named('runRoyalSitesGameTestServerReload') { dependsOn tasks.named('runRoyalSitesGameTestServer') }
-tasks.register('verifyRoyalSites') {
-    group = 'verification'
-    description = 'Verify real placement rejection and safe paid site retry across JVMs.'
-    dependsOn tasks.named('runRoyalSitesGameTestServerReload')
-}
-
-tasks.named('runRoyalLiveGameTestServerReload') { dependsOn tasks.named('runRoyalLiveGameTestServer') }
-tasks.register('verifyRoyalLive') {
-    group = 'verification'
-    description = 'Verify genuine NPC construction through actual periodic server events in separate JVMs.'
-    dependsOn tasks.named('runRoyalLiveGameTestServerReload')
-}
-
-tasks.named('runRoyalGuiGameTestServerReload') { dependsOn tasks.named('runRoyalGuiGameTestServer') }
-tasks.register('verifyRoyalGui') {
-    group = 'verification'
-    description = 'Verify server-owned construction offers and player actions across JVMs.'
-    dependsOn tasks.named('runRoyalGuiGameTestServerReload')
-}
-
-tasks.named('runRoyalGoodsGameTestServerReload') { dependsOn tasks.named('runRoyalGoodsGameTestServer') }
-tasks.register('verifyRoyalGoods') {
-    group = 'verification'
-    description = 'Verify conserving real-stack plans and saved physical chest images in separate JVMs.'
-    dependsOn tasks.named('runRoyalGoodsGameTestServerReload')
-}
-
-tasks.named('runRoyalReceiptGameTestServerReload') { dependsOn tasks.named('runRoyalReceiptGameTestServer') }
-tasks.register('verifyRoyalReceipts') {
-    group = 'verification'
-    description = 'Verify physical operation receipt recovery under real inventory interference.'
-    dependsOn tasks.named('runRoyalReceiptGameTestServerReload')
-}
-
-tasks.named('runRoyalShipmentGameTestServerReload') { dependsOn tasks.named('runRoyalShipmentGameTestServer') }
-tasks.register('verifyRoyalShipments') {
-    group = 'verification'
-    description = 'Verify strict shipment accounting and native physical cargo operations across separate JVMs.'
-    dependsOn tasks.named('runRoyalShipmentGameTestServerReload')
-}
-
-tasks.named('runRoyalShipmentRuntimeGameTestServerReload') { dependsOn tasks.named('runRoyalShipmentRuntimeGameTestServer') }
-tasks.register('verifyRoyalShipmentRuntime') {
-    group = 'verification'
-    description = 'Verify bounded or actual automatic paid shipment tracking across separate JVMs.'
-    dependsOn tasks.named('runRoyalShipmentRuntimeGameTestServerReload')
-}
-
-tasks.named('runRoyalShipmentLiveGameTestServerReload') { dependsOn tasks.named('runRoyalShipmentLiveGameTestServer') }
-tasks.register('verifyRoyalShipmentLive') {
-    group = 'verification'
-    description = 'Verify bounded or actual automatic paid shipment tracking across separate JVMs.'
-    dependsOn tasks.named('runRoyalShipmentLiveGameTestServerReload')
-}
-
-tasks.named('runRoyalShipmentGuiGameTestServerReload') { dependsOn tasks.named('runRoyalShipmentGuiGameTestServer') }
-tasks.register('verifyRoyalShipmentGui') {
-    group = 'verification'
-    description = 'Verify real player shipment offers/actions in a write and separate-JVM reopen.'
-    dependsOn tasks.named('runRoyalShipmentGuiGameTestServerReload')
-}
-
-tasks.named('runPersonalityGameTestServerReload') { dependsOn tasks.named('runPersonalityGameTestServer') }
-tasks.register('verifyPersonalities') {
-    group = 'verification'
-    description = 'Verify original capital type classification and separate-JVM identity persistence.'
-    dependsOn tasks.named('runPersonalityGameTestServerReload')
-}
-
-tasks.named('runRoyalPolicyGameTestServerReload') { dependsOn tasks.named('runRoyalPolicyGameTestServer') }
-tasks.register('verifyRoyalPolicy') {
-    group = 'verification'
-    description = 'Verify native investment functions, real war contexts and personality-weighted existing autonomy draws.'
-    dependsOn tasks.named('runRoyalPolicyGameTestServerReload')
-}
-
-tasks.named('runRoyalNpcBudgetGameTestServerReload') { dependsOn tasks.named('runRoyalNpcBudgetGameTestServer') }
-tasks.register('verifyRoyalNpcBudget') {
-    group = 'verification'
-    description = 'Verify strict NPC attempt cooldowns and actual delayed first-fee budgets across JVMs.'
-    dependsOn tasks.named('runRoyalNpcBudgetGameTestServerReload')
-}
-
-tasks.named('runRoyalNpcEconomyGameTestServerReload') { dependsOn tasks.named('runRoyalNpcEconomyGameTestServer') }
-tasks.register('verifyRoyalNpcEconomy') {
-    group = 'verification'
-    description = 'Verify actual need-based shared paid NPC construction and native shortage shipping across JVMs.'
-    dependsOn tasks.named('runRoyalNpcEconomyGameTestServerReload')
-}
-
-tasks.named('runRoyalNpcRuntimeGameTestServerReload') { dependsOn tasks.named('runRoyalNpcRuntimeGameTestServer') }
-tasks.register('verifyRoyalNpcRuntime') {
-    group = 'verification'
-    description = 'Verify bounded or actual automatic NPC economic events in separate write and reopen JVMs.'
-    dependsOn tasks.named('runRoyalNpcRuntimeGameTestServerReload')
-}
-
-tasks.named('runRoyalNpcLiveGameTestServerReload') { dependsOn tasks.named('runRoyalNpcLiveGameTestServer') }
-tasks.register('verifyRoyalNpcLive') {
-    group = 'verification'
-    description = 'Verify bounded or actual automatic NPC economic events in separate write and reopen JVMs.'
-    dependsOn tasks.named('runRoyalNpcLiveGameTestServerReload')
-}
-
-tasks.named('runRoyalNpcBuilderGameTestServerReload') { dependsOn tasks.named('runRoyalNpcBuilderGameTestServer') }
-tasks.register('verifyRoyalNpcBuilders') {
-    group = 'verification'
-    description = 'Verify automatic paid NPC economic selection and genuine original physical builders across JVMs.'
-    dependsOn tasks.named('runRoyalNpcBuilderGameTestServerReload')
-}
-
-tasks.named('runRoyalIntegrationGameTestServerReload') { dependsOn tasks.named('runRoyalIntegrationGameTestServer') }
-tasks.register('verifyRoyalIntegration') {
-    group = 'verification'
-    description = 'Verify independent economic features, real tax budgets, governance and legacy saves across JVMs.'
-    dependsOn tasks.named('runRoyalIntegrationGameTestServerReload')
+pairedGameTestSuites.each { suite ->
+    def cap = suite.run.capitalize()
+    tasks.named("run${cap}Reload") { dependsOn tasks.named("run${cap}") }
+    tasks.register(suite.verify) {
+        group = 'verification'
+        dependsOn tasks.named("run${cap}Reload")
+    }
 }
 
 tasks.named('runRoyalSimulationGameTestServerReload') { dependsOn tasks.named('runRoyalSimulationGameTestServer') }
-tasks.named('runRoyalSimulationGameTestServerThird') { dependsOn tasks.named('runRoyalSimulationGameTestServerReload') }
+tasks.named('runRoyalSimulationGameTestServerThird')  { dependsOn tasks.named('runRoyalSimulationGameTestServerReload') }
 tasks.named('runRoyalSimulationGameTestServerFourth') { dependsOn tasks.named('runRoyalSimulationGameTestServerThird') }
 tasks.register('verifyRoyalSimulation') {
     group = 'verification'
-    description = 'Measure400 controlled economic days across10 realms and4 separate JVM saves; no simulated physical completion.'
     dependsOn tasks.named('runRoyalSimulationGameTestServerFourth')
 }
-
- tasks.named('runHistoryGameTestServerReload') { dependsOn tasks.named('runHistoryGameTestServer') }
- tasks.register('verifyHistory') { group = 'verification'; dependsOn tasks.named('runHistoryGameTestServerReload') }
-
- tasks.named('runAtlasGameTestServerReload') { dependsOn tasks.named('runAtlasGameTestServer') }
- tasks.register('verifyAtlas') { group = 'verification'; dependsOn tasks.named('runAtlasGameTestServerReload') }
-
- tasks.named('runHistoryWorldGameTestServerReload') { dependsOn tasks.named('runHistoryWorldGameTestServer') }
- tasks.register('verifyHistoryWorld') { group = 'verification'; dependsOn tasks.named('runHistoryWorldGameTestServerReload') }
-
-tasks.named('runLocalizationGameTestServerReload') { dependsOn tasks.named('runLocalizationGameTestServer') }
-tasks.register('verifyLocalization') { group = 'verification'; dependsOn tasks.named('runLocalizationGameTestServerReload') }
-
-tasks.named('runGeographyGameTestServerReload') { dependsOn tasks.named('runGeographyGameTestServer') }
-tasks.register('verifyGeography') { group = 'verification'; dependsOn tasks.named('runGeographyGameTestServerReload') }
-
-tasks.named('runRoyalStrategyGameTestServerReload') { dependsOn tasks.named('runRoyalStrategyGameTestServer') }
-tasks.register('verifyRoyalStrategy') { group = 'verification'; dependsOn tasks.named('runRoyalStrategyGameTestServerReload') }
-
-tasks.named('runStrategicMilitaryGameTestServerReload') { dependsOn tasks.named('runStrategicMilitaryGameTestServer') }
-tasks.register('verifyStrategicMilitary') { group = 'verification'; dependsOn tasks.named('runStrategicMilitaryGameTestServerReload') }
-
-tasks.named('runStrategicRestartGameTestServerReload') { dependsOn tasks.named('runStrategicRestartGameTestServer') }
-tasks.register('verifyStrategicRestart') { group = 'verification'; dependsOn tasks.named('runStrategicRestartGameTestServerReload') }
-
-tasks.named('runNativeWarGameTestServerReload') { dependsOn tasks.named('runNativeWarGameTestServer') }
-tasks.register('verifyNativeWar') { group = 'verification'; dependsOn tasks.named('runNativeWarGameTestServerReload') }
-
-tasks.named('runNativeBattleGameTestServerReload') { dependsOn tasks.named('runNativeBattleGameTestServer') }
-tasks.register('verifyNativeBattle') { group = 'verification'; dependsOn tasks.named('runNativeBattleGameTestServerReload') }
-
-tasks.named('runConsolidationGameTestServerReload') { dependsOn tasks.named('runConsolidationGameTestServer') }
-tasks.register('verifyConsolidation') { group = 'verification'; dependsOn tasks.named('runConsolidationGameTestServerReload') }
-
-tasks.named('runConsolidationLiveGameTestServerReload') { dependsOn tasks.named('runConsolidationLiveGameTestServer') }
-tasks.register('verifyConsolidationLive') { group = 'verification'; dependsOn tasks.named('runConsolidationLiveGameTestServerReload') }
-
-tasks.named('runStrategyRecoveryGameTestServerReload') { dependsOn tasks.named('runStrategyRecoveryGameTestServer') }
-tasks.register('verifyStrategyRecovery') { group = 'verification'; dependsOn tasks.named('runStrategyRecoveryGameTestServerReload') }
-
-tasks.named('runMaintenanceGameTestServerReload') { dependsOn tasks.named('runMaintenanceGameTestServer') }
-tasks.register('verifyMaintenance') { group = 'verification'; dependsOn tasks.named('runMaintenanceGameTestServerReload') }
-
-tasks.named('runIndependentNativeGameTestServerReload') { dependsOn tasks.named('runIndependentNativeGameTestServer') }
-tasks.register('verifyIndependentNative') { group = 'verification'; dependsOn tasks.named('runIndependentNativeGameTestServerReload') }
-
-tasks.named('runEconomicQueueGameTestServerReload') { dependsOn tasks.named('runEconomicQueueGameTestServer') }
-tasks.register('verifyEconomicQueue') { group = 'verification'; dependsOn tasks.named('runEconomicQueueGameTestServerReload') }
-
-tasks.named('runEconomicBackgroundGameTestServerReload') { dependsOn tasks.named('runEconomicBackgroundGameTestServer') }
-tasks.register('verifyEconomicBackground') { group = 'verification'; dependsOn tasks.named('runEconomicBackgroundGameTestServerReload') }
-
-tasks.named('runEconomicNativeGameTestServerReload') { dependsOn tasks.named('runEconomicNativeGameTestServer') }
-tasks.register('verifyEconomicNative') { group = 'verification'; dependsOn tasks.named('runEconomicNativeGameTestServerReload') }
