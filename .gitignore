@@ -11,3 +11,5 @@ bin/
 
 # Keep the supplied dependency locally; do not redistribute it with the addon.
 /millenaire-*.jar
+/verification/
+/releases/**/*.jar

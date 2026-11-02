@@ -21,14 +21,14 @@ Addon generation hooks use original building plans to complete natural capitals;
 | Mod ID | `millenairekingdoms` |
 | Languages | All26 original Millénaire9.0.3 locales; new translations are AI/machine-assisted drafts pending native review |
 
-See the [bilingual release notes](releases/1.2.1/RELEASE_NOTES.md), [changelog](CHANGELOG.md) and [audit findings and limits](docs/1.2.1_ENGINEERING_REVIEW.md). The [immutable 1.2.0 release](releases/1.2.0-final/) remains available.
+See the [release notes](releases/1.2.2/RELEASE_NOTES.md), [changelog](CHANGELOG.md) and [architecture guide](docs/ARCHITECTURE.md).
 
 ## Features
 
 - **Kingdom screen.** Press **K** (rebindable under Controls → Key Binds → Millénaire Kingdoms) or run `/kingdom`.
   Five main tabs: My Kingdom, Military, Diplomacy, Treasury and Rulership. Open Construction and Shipping using the two buttons inside Rulership; click Rulership or press Esc to return. Greyed-out buttons explain why they are disabled,
   and every action is checked again on the server.
-- **Chronicles and political atlas.** Open History/Tarihçe at the kingdom screen's bottom-left. Read kingdom/world events, search fallen archives, filter dates/types and locate known historical places on a separate full-screen political atlas. All settlements of one kingdom share a persistent color/name; native village icons, capital crowns, zoom/pan and information connect to village/kingdom history. Ocean scanning and territorial polygon rendering are removed. Old founding dates stay unknown; original NPC work and real financial/cargo rules remain. See [usage, privacy and verified scope](docs/1.2.0_RC8_ALPHA_REPORT.md).
+- **Chronicles and political atlas.** Open History/Tarihçe at the kingdom screen's bottom-left. Read kingdom/world events, search fallen archives, filter dates/types and locate known historical places on a separate full-screen political atlas. All settlements of one kingdom share a persistent color/name; native village icons, capital crowns, zoom/pan and information connect to village/kingdom history. Ocean scanning and territorial polygon rendering are removed. Old founding dates stay unknown; original NPC work and real financial/cargo rules remain.
 - **Player rulership.** Claim an unruled kingdom at its capital with a combined Millénaire reputation of 32768 or more.
   Political decisions need 8192. A kingdom has at most one ruler, and a player rules at most one kingdom.
 - **Conquest.** Active regions use original native raids; genuinely unloaded NPC regions, including hostile independent targets, can resolve a persistent opposed-dice engagement using actual native military records. Existing political conquest requirements remain, without invented physical deaths or loot. An independent village falls
@@ -55,19 +55,11 @@ See the [bilingual release notes](releases/1.2.1/RELEASE_NOTES.md), [changelog](
 - **Royal shipments.** Pay normal logistics costs to transfer actual surplus with at most50 protected units per product between member villages over server-tick travel time. Full/unloaded destinations retain held cargo; normal Millénaire trade stays unrestricted.
 - **Capital ethos.** Exact native capital types give a Warlike, Peaceful, Traditionalist, Industrious or Pragmatic ethos (Karakter in Turkish). Bounded NPC decisions use the same paid services, actual needs/reserves and persistent cooldowns. War increases military preference for every type; player rule excludes new NPC economics.
 
-[RC.5 balance changes and existing-world settings](docs/1.2.0_RC5_TIMINGS.md) describe the new defaults. Existing per-world configuration values remain in effect until edited. Configurable chances, distances and intervals can be adjusted per world. See the bilingual [1.2.0 player/operator guide](docs/1.2.0_USER_GUIDE.md), [save/downgrade policy](docs/1.2.0_SAVE_COMPATIBILITY.md), and [separate unverified graphical/online checks](docs/1.2.0_MANUAL_TESTS.md).
+Existing per-world configuration values remain in effect until edited. Configurable chances, distances and intervals can be adjusted per world. See the bilingual [player/operator guide](docs/1.2.0_USER_GUIDE.md) and [save/downgrade policy](docs/1.2.0_SAVE_COMPATIBILITY.md).
 
 ## Installation
 
 Download **[millenairekingdoms-1.2.2.jar](https://github.com/Sarikli/millenairekingdoms/releases/download/1.2.2/millenairekingdoms-1.2.2.jar)** and install it alongside the original **Millénaire 9.0.3** with the versions above. Use the same addon/dependency versions on the server and all clients, removing older addon copies. See the [current player guide](docs/1.2.0_USER_GUIDE.md). Keep a whole-world pre-upgrade backup. Network protocol 11 requires matching 1.2.2 clients and servers. Existing native/political/financial formats remain supported; new independent strategic records use format 2 and cannot be downgraded to 1.2.0.
-
-### Historical 1.1.1 installation
-
-
-1. Install NeoForge 21.1.259 for Minecraft 1.21.1.
-2. Put the original **Millénaire 9.0.2** JAR and **[millenairekingdoms-1.1.1.jar](releases/1.1.1/millenairekingdoms-1.1.1.jar)** (local maintenance build) into your `mods` folder.
-3. Remove any older Millénaire Kingdoms JAR. Two versions cannot be loaded together.
-4. **Back up your world before opening an existing save.** See [Save format](#save-format) below.
 
 On a dedicated server, the same two JARs must be installed on the server and on every client, because the kingdom
 screen is drawn on the client.

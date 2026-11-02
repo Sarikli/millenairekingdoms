@@ -1,6 +1,6 @@
 # Current architecture and safe modification guide
 
-Applies to 1.2.1, based on original Millénaire 9.0.3/Minecraft 1.21.1/NeoForge 21.1.259/Java 21. [Baseline audit and tradeoffs](1.2.1_ENGINEERING_REVIEW.md). The longer 1.2.0 architecture/progress files retain historical checkpoints; their old planned/unimplemented labels are not current implementation status.
+Applies to 1.2.2, based on original Millénaire 9.0.3/Minecraft 1.21.1/NeoForge 21.1.259/Java 21.
 
 ## Authority and boundaries
 
