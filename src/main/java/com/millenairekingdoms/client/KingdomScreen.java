@@ -36,20 +36,21 @@ public final class KingdomScreen extends Screen {
             List.of(Tab.KINGDOM, Tab.MILITARY, Tab.DIPLOMACY, Tab.ECONOMY, Tab.RULERSHIP);
     private static Tab lastTab = Tab.KINGDOM;
 
-    private CompoundTag view;
+    CompoundTag view;
     private Tab tab = lastTab;
     private UUID selectedTarget, selectedSource, selectedKingdom, selectedRequest, joinKingdom, enemyKingdom;
     private String amount = "", kingdomName = "";
     private boolean confirmAbdicate;
-    private boolean confirmConstructionCancel;
-    private String selectedConstructionPlan;
-    private String shipmentQuantity = "";
-    private UUID selectedShipmentOrder;
-    private boolean confirmShipmentCancel;
+    boolean confirmConstructionCancel;
+    String selectedConstructionPlan;
+    String shipmentQuantity = "";
+    UUID selectedShipmentOrder;
+    boolean confirmShipmentCancel;
     private int left, top, panelWidth, panelHeight;
     private final List<Text> texts = new ArrayList<>();
     private final List<RowList> lists = new ArrayList<>();
-    private EditBox amountBox, nameBox, shipmentQuantityBox;
+    private EditBox amountBox, nameBox;
+    EditBox shipmentQuantityBox;
     /** Scroll positions survive the rebuild after each click or snapshot. */
     private final java.util.Map<String, Integer> scrolls = new java.util.HashMap<>();
     private Tab listTab = tab;
@@ -144,21 +145,21 @@ public final class KingdomScreen extends Screen {
             case DIPLOMACY -> diplomacyTab();
             case ECONOMY -> economyTab();
             case RULERSHIP -> rulershipTab();
-            case CONSTRUCTION -> constructionTab();
-            case SHIPMENTS -> shipmentTab();
+            case CONSTRUCTION -> KingdomRoyalTabs.constructionTab(this);
+            case SHIPMENTS -> KingdomRoyalTabs.shipmentTab(this);
         }
     }
 
-    private int x0() {
+    int x0() {
         return left + 14;
     }
-    private int y0() {
+    int y0() {
         return top + 44;
     }
-    private int contentWidth() {
+    int contentWidth() {
         return panelWidth - 28;
     }
-    private int bottom() {
+    int bottom() {
         return top + panelHeight - 28;
     }
     private static boolean isRoyalPage(Tab page) {
@@ -180,298 +181,8 @@ public final class KingdomScreen extends Screen {
             super.onClose();
     }
 
-    private void constructionTab() {
-        int x = x0(), y = y0(), w = contentWidth(), half = w * 11 / 20;
-        var c = view.getCompound("construction");
-        var villages = c.getList("villages", Tag.TAG_COMPOUND);
-        if (!c.hasUUID("village") || villages.isEmpty()) {
-            wrapped(x, y, constructionReason(c.getString("reason")), w, BAD, 5);
-            return;
-        }
-        int index = 0;
-        for (int n = 0; n < villages.size(); n++)
-            if (villages.getCompound(n).getUUID("id").equals(c.getUUID("village")))
-                index = n;
-        var village = villages.getCompound(index);
-        var next = villages.getCompound((index + 1) % villages.size());
-        Component villageLabel = t("construction.village", village.getString("name"));
-        if (!c.getBoolean("available"))
-            villageLabel = Component.empty().append(villageLabel).append(" · ").append(t("construction.unavailable"));
-        button(x, y, w, villageLabel,
-                b
-                -> send(KingdomActionPayload.of("CONSTRUCTION_SELECT", next.getUUID("id"))),
-                villages.size() > 1, null);
-        y += 21;
-        text(x, y, t("construction.plans"), TITLE, half - 4);
-        int rx = x + half + 2, rw = w - half - 2;
-        text(rx, y, t("construction.current"), TITLE, rw);
-        var plans = c.getList("plans", Tag.TAG_COMPOUND);
-        CompoundTag selected = null;
-        for (Tag raw : plans) {
-            var plan = (CompoundTag) raw;
-            if (plan.getString("key").equals(selectedConstructionPlan))
-                selected = plan;
-        }
-        if (selected == null && !plans.isEmpty()) {
-            selected = plans.getCompound(0);
-            selectedConstructionPlan = selected.getString("key");
-        }
-        int listHeight = Math.max(33, bottom() - y - 63);
-        var choices = list(x, y + 11, half - 4, listHeight);
-        for (Tag raw : plans) {
-            var plan = (CompoundTag) raw;
-            String id = plan.getString("key");
-            choices.add(Component.empty().append(constructionPlanName(plan)).append(" · " + coins(plan.getLong("fee"))),
-                    plan.getBoolean("canOrder") ? TEXT : MUTED, id.equals(selectedConstructionPlan), () -> {
-                        selectedConstructionPlan = id;
-                        rebuildWidgets();
-                    });
-        }
-        if (selected != null) {
-            var plan = selected;
-            var purchase =
-                    Button.builder(t(plan.getBoolean("upgrade")
-                                                   ? (c.getBoolean("naturalPending") ? "construction.queue_upgrade"
-                                                                                     : "construction.upgrade_order")
-                                                   : (c.getBoolean("naturalPending") ? "construction.queue_order"
-                                                                                     : "construction.order"),
-                                           coins(plan.getLong("fee"))),
-                                  b
-                                  -> send(new KingdomActionPayload("CONSTRUCTION_ORDER",
-                                          Optional.of(c.getUUID("village")), Optional.of(plan.getUUID("offer")), 0,
-                                          plan.getString("plan"))))
-                            .bounds(x, y + listHeight + 14, half - 4, 16)
-                            .build();
-            purchase.active = plan.getBoolean("canOrder");
-            Component tip = constructionPlanName(plan);
-            if (!purchase.active)
-                tip = Component.empty().append(tip).append("\n").append(constructionReason(plan.getString("reason")));
-            else if (c.getBoolean("naturalPending"))
-                tip = Component.empty().append(tip).append("\n").append(t("construction.waiting_note"));
-            purchase.setTooltip(Tooltip.create(tip));
-            addRenderableWidget(purchase);
-        } else
-            wrapped(x, y + listHeight + 14, constructionReason(c.getString("reason")), half - 4, MUTED, 2);
-        int ry = y + 11;
-        var order = c.getCompound("order");
-        if (order.hasUUID("id")) {
-            ry = line(rx, ry, ClientText.building(order.getString("plan"), order.getString("name")), rw);
-            ry = line(rx, ry, t("construction.stage." + order.getString("stage")), rw, TITLE);
-            if (!order.getString("blocked").equals("NONE"))
-                ry = wrapped(rx, ry, t("construction.blocked." + order.getString("blocked")), rw, BAD, 2);
-            if (order.contains("progress"))
-                ry = line(rx, ry, t("construction.progress", order.getInt("progress")), rw);
-            ry = line(rx, ry, t("construction.price", coins(order.getLong("fee"))), rw);
-            button(rx, ry, rw,
-                    t(confirmConstructionCancel ? "construction.confirm_cancel" : "construction.cancel"), b -> {
-                        if (confirmConstructionCancel) {
-                            confirmConstructionCancel = false;
-                            send(KingdomActionPayload.of("CONSTRUCTION_CANCEL", order.getUUID("id")));
-                        } else {
-                            confirmConstructionCancel = true;
-                            rebuildWidgets();
-                        }
-                    }, order.getBoolean("canCancel"), t("construction.cancel_unavailable"));
-            ry += 20;
-            if (order.getBoolean("canResume"))
-                button(rx, ry, rw, t("construction.resume"),
-                        b -> send(KingdomActionPayload.of("CONSTRUCTION_RESUME", order.getUUID("id"))), true, null);
-        } else {
-            ry = wrapped(rx, ry, t(c.getBoolean("stateKnown") ? "construction.no_order" : "construction.order_unknown"),
-                    rw, MUTED, 2);
-            if (c.contains("reason"))
-                wrapped(rx, ry, constructionReason(c.getString("reason")), rw, BAD, 4);
-        }
-        wrapped(x, bottom() - 25,
-                t(order.getString("stage").equals("WAITING") || !order.hasUUID("id") && c.getBoolean("naturalPending")
-                                ? "construction.waiting_note"
-                                : order.getBoolean("refundable") ? "construction.refund_note"
-                                                                 : "construction.patronage_note"),
-                w, MUTED, 2);
-    }
-    private static Component constructionPlanName(CompoundTag plan) {
-        return plan.getBoolean("upgrade")
-                ? t("construction.upgrade_choice", ClientText.building(plan.getString("plan"), plan.getString("name")),
-                          plan.getInt("targetLevel") + 1, plan.getInt("x"), plan.getInt("z"))
-                : ClientText.building(plan.getString("plan"), plan.getString("name"));
-    }
-    private static Component constructionReason(String reason) {
-        return t("construction.reason." + (reason.isEmpty() ? "NO_ELIGIBLE_PLAN" : reason));
-    }
-
-    private void shipmentTab() {
-        int x = x0(), y = y0(), w = contentWidth(), lw = w / 2 - 3, rx = x + w / 2 + 3, rw = w / 2 - 3;
-        var s = view.getCompound("shipments");
-        var villages = s.getList("villages", Tag.TAG_COMPOUND);
-        if (!s.hasUUID("source") || !s.hasUUID("target") || villages.size() < 2) {
-            wrapped(x, y, shipmentReason(s.getString("reason")), w, BAD, 5);
-            return;
-        }
-        shipmentVillage(x, y, w, s, villages, true);
-        shipmentVillage(x, y + 20, w, s, villages, false);
-        y += 42;
-        var products = s.getList("products", Tag.TAG_COMPOUND);
-        if (!products.isEmpty()) {
-            shipmentButton(x, y, lw, shipmentItem(s.getString("product")),
-                    b
-                    -> { minecraft.setScreen(new ShipmentProductScreen(this, products, s.getString("product"))); },
-                    true,
-                    Component.empty()
-                            .append(t("shipment.choose_product"))
-                            .append("\n")
-                            .append(shipmentStockDetails(s) == null ? Component.empty() : shipmentStockDetails(s)));
-        } else
-            text(x, y, t("shipment.no_goods"), MUTED, lw);
-        int sy = y + 20;
-        if (shipmentQuantity.isEmpty())
-            shipmentQuantity = Integer.toString(s.getInt("quantity"));
-        shipmentQuantityBox = new EditBox(font, x, sy, Math.max(30, lw - 85), 16, t("shipment.quantity"));
-        shipmentQuantityBox.setMaxLength(6);
-        shipmentQuantityBox.setFilter(value -> value.matches("[0-9]*"));
-        shipmentQuantityBox.setValue(shipmentQuantity);
-        addRenderableWidget(shipmentQuantityBox);
-        shipmentButton(x + lw - 81, sy, 81, t("shipment.set_quantity"), b -> {
-            String value = shipmentQuantityBox.getValue();
-            long quantity = value.isEmpty() ? 0 : Long.parseLong(value);
-            send(new KingdomActionPayload("SHIPMENT_QUANTITY", Optional.empty(), Optional.empty(), quantity, ""));
-        }, true, t("shipment.quantity_hint", s.getInt("maximumQuantity")));
-        sy += 20;
-        if (s.contains("physical")) {
-            sy = line(x, sy, t("shipment.stock_summary", s.getInt("physical"), s.getInt("retained")), lw);
-            sy = line(x, sy, t("shipment.available", s.getInt("available")), lw);
-        }
-        if (s.hasUUID("offer")) {
-            sy = line(x, sy, t("shipment.price", coins(s.getLong("fee"))), lw);
-            sy = line(x, sy, t("shipment.time", seconds(s.getLong("travelTicks"))), lw);
-            var purchase = Button.builder(t("shipment.order"),
-                                         b -> send(KingdomActionPayload.of("SHIPMENT_ORDER", s.getUUID("offer"))))
-                                   .bounds(x, sy + 2, lw, 16)
-                                   .build();
-            purchase.active =
-                    s.getBoolean("canOrder") && shipmentQuantity.equals(Integer.toString(s.getInt("quantity")));
-            purchase.setTooltip(
-                    Tooltip.create(s.getBoolean("canOrder") ? t("shipment.apply_quantity") : shipmentReason(s)));
-            addRenderableWidget(purchase);
-            shipmentQuantityBox.setResponder(value -> {
-                shipmentQuantity = value;
-                purchase.active = s.getBoolean("canOrder") && value.equals(Integer.toString(s.getInt("quantity")));
-            });
-            sy += 22;
-        }
-        if (s.contains("reason"))
-            wrapped(x, sy, shipmentReason(s), lw, BAD, Math.max(1, (bottom() - sy) / 11));
-        var orders = s.getList("orders", Tag.TAG_COMPOUND);
-        if (orders.isEmpty()) {
-            wrapped(rx, y, t(s.getBoolean("stateKnown") ? "shipment.no_order" : "shipment.order_unknown"), rw, MUTED,
-                    4);
-            return;
-        }
-        int index = 0;
-        for (int n = 0; n < orders.size(); n++)
-            if (orders.getCompound(n).getUUID("id").equals(selectedShipmentOrder))
-                index = n;
-        var order = orders.getCompound(index);
-        selectedShipmentOrder = order.getUUID("id");
-        var next = orders.getCompound((index + 1) % orders.size());
-        shipmentButton(rx, y, rw, t("shipment.to", order.getString("destination")), b -> {
-            selectedShipmentOrder = next.getUUID("id");
-            confirmShipmentCancel = false;
-            rebuildWidgets();
-        }, orders.size() > 1, shipmentItem(order.getString("product")));
-        int ry = y + 20;
-        ry = line(rx, ry, t("shipment.stage." + order.getString("stage")), rw, TITLE);
-        if (!order.getString("blocked").equals("NONE"))
-            ry = wrapped(rx, ry, t("shipment.blocked." + order.getString("blocked")), rw, BAD, 2);
-        ry = line(rx, ry, t("shipment.delivered", order.getInt("delivered"), order.getInt("quantity")), rw);
-        ry = line(rx, ry, t("shipment.held_returned", order.getInt("held"), order.getInt("returned")), rw);
-        if (order.getString("stage").equals("IN_TRANSIT"))
-            ry = line(rx, ry, t("shipment.remaining", seconds(order.getLong("remainingTicks"))), rw);
-        shipmentButton(rx, ry + 2, rw, t(confirmShipmentCancel ? "shipment.confirm_cancel" : "shipment.cancel"),
-                b
-                -> {
-                    if (confirmShipmentCancel) {
-                        confirmShipmentCancel = false;
-                        send(KingdomActionPayload.of("SHIPMENT_CANCEL", order.getUUID("id")));
-                    } else {
-                        confirmShipmentCancel = true;
-                        rebuildWidgets();
-                    }
-                },
-                order.getBoolean("canCancel"),
-                t(order.getBoolean("refundable") ? "shipment.refund_note" : "shipment.earned_fee_note"));
-        ry += 21;
-        if (order.getBoolean("canResume"))
-            shipmentButton(rx, ry, rw, t("shipment.resume"),
-                    b
-                    -> send(KingdomActionPayload.of("SHIPMENT_RESUME", order.getUUID("id"))),
-                    true, t("shipment.resume_note"));
-    }
-    private void shipmentVillage(int x, int y, int width, CompoundTag s, ListTag villages, boolean source) {
-        String key = source ? "source" : "target";
-        UUID current = s.getUUID(key), other = s.getUUID(source ? "target" : "source");
-        int index = 0;
-        for (int n = 0; n < villages.size(); n++)
-            if (villages.getCompound(n).getUUID("id").equals(current))
-                index = n;
-        var village = villages.getCompound(index);
-        CompoundTag next = village;
-        for (int offset = 1; offset < villages.size(); offset++) {
-            var candidate = villages.getCompound((index + offset) % villages.size());
-            if (source || !candidate.getUUID("id").equals(other)) {
-                next = candidate;
-                break;
-            }
-        }
-        UUID nextId = next.getUUID("id");
-        Component label = t("shipment." + key, village.getString("name"));
-        if (!village.getBoolean("loaded"))
-            label = Component.empty().append(label).append(" · ").append(t("shipment.unavailable"));
-        shipmentButton(x, y, width, label,
-                b
-                -> send(KingdomActionPayload.of(source ? "SHIPMENT_SOURCE" : "SHIPMENT_TARGET", nextId)),
-                !nextId.equals(current),
-                Component.empty().append(label).append("\n").append(
-                        t(source ? "shipment.source_note" : "shipment.target_note")));
-    }
-    private static Component shipmentReason(String reason) {
-        return t("shipment.reason." + (reason.isEmpty() ? "SERVICE_UNAVAILABLE" : reason));
-    }
-    private static Component shipmentReason(CompoundTag state) {
-        return state.getString("reason").equals("INSUFFICIENT_STOCK")
-                ? t("shipment.insufficient_stock_detail", state.getInt("quantity"), state.getInt("available"),
-                          state.getInt("retained"))
-                : shipmentReason(state.getString("reason"));
-    }
-    private static Component shipmentStockDetails(CompoundTag state) {
-        if (!state.contains("physical"))
-            return null;
-        var summary = t("shipment.stock_summary", state.getInt("physical"), state.getInt("retained"));
-        if (!state.contains("reserve", Tag.TAG_COMPOUND))
-            return summary;
-        var reserve = state.getCompound("reserve");
-        return summary.append("\n").append(
-                t("shipment.stock_details", reserve.getInt("target"), reserve.getInt("construction"),
-                        reserve.getInt("residents"), reserve.getInt("minimum"), reserve.getInt("nativeProtected")));
-    }
-    private static Component shipmentItem(String id) {
-        var item = net.minecraft.core.registries.BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse(id));
-        return item.<Component>map(i -> Component.translatable(i.getDescriptionId()))
-                .orElseGet(() -> Component.literal(id));
-    }
     void chooseShipmentProduct(String id) {
         send(new KingdomActionPayload("SHIPMENT_PRODUCT", Optional.empty(), Optional.empty(), 0, id));
-    }
-    private static long seconds(long ticks) {
-        return ticks / 20 + (ticks % 20 == 0 ? 0 : 1);
-    }
-
-    private void shipmentButton(
-            int x, int y, int width, Component label, Consumer<Button> press, boolean active, Component hint) {
-        var button = Button.builder(label, press::accept).bounds(x, y, width, 16).build();
-        button.active = active;
-        if (hint != null)
-            button.setTooltip(Tooltip.create(hint));
-        addRenderableWidget(button);
     }
 
     // ---------------------------------------------------------------- tabs
@@ -953,10 +664,10 @@ public final class KingdomScreen extends Screen {
             return Component.literal(value);
         }
     }
-    private static MutableComponent t(String key, Object... args) {
+    static MutableComponent t(String key, Object... args) {
         return ClientText.component("millenairekingdoms.gui." + key, args);
     }
-    private static String coins(long deniers) {
+    static String coins(long deniers) {
         long gold = deniers / 4096, rest = deniers % 4096, silver = rest / 64, bronze = rest % 64;
         StringBuilder b = new StringBuilder();
         if (gold > 0)
@@ -977,18 +688,32 @@ public final class KingdomScreen extends Screen {
         if (kingdom != null)
             send(KingdomActionPayload.of("VIEW", kingdom));
     }
-    private void send(KingdomActionPayload request) {
+    void send(KingdomActionPayload request) {
         KingdomClient.send(request);
     }
+    void rebuild() {
+        rebuildWidgets();
+    }
+    Font font() {
+        return font;
+    }
+    void openScreen(Screen next) {
+        minecraft.setScreen(next);
+    }
+    <T extends net.minecraft.client.gui.components.events.GuiEventListener& net.minecraft.client.gui.components
+                    .Renderable& net.minecraft.client.gui.narration.NarratableEntry> T
+    widget(T w) {
+        return addRenderableWidget(w);
+    }
 
-    private int line(int x, int y, Component text, int w) {
+    int line(int x, int y, Component text, int w) {
         return line(x, y, text, w, TEXT);
     }
-    private int line(int x, int y, Component text, int w, int color) {
+    int line(int x, int y, Component text, int w, int color) {
         text(x, y, text, color, w);
         return y + 11;
     }
-    private int wrapped(int x, int y, Component text, int w, int color, int maxLines) {
+    int wrapped(int x, int y, Component text, int w, int color, int maxLines) {
         if (text == null)
             return y;
         var parts = font.split(text, w);
@@ -999,17 +724,16 @@ public final class KingdomScreen extends Screen {
         }
         return y + 1;
     }
-    private void text(int x, int y, Component text, int color, int width) {
+    void text(int x, int y, Component text, int color, int width) {
         texts.add(new Text(x, y, text, color, width, null));
     }
-    private RowList list(int x, int y, int w, int h) {
+    RowList list(int x, int y, int w, int h) {
         RowList l = new RowList(x, y, w, Math.max(12, h));
         l.scroll = scrolls.getOrDefault(tab + ":" + lists.size(), 0);
         lists.add(l);
         return l;
     }
-    private void button(
-            int x, int y, int w, Component label, Consumer<Button> press, boolean active, Component whyNot) {
+    void button(int x, int y, int w, Component label, Consumer<Button> press, boolean active, Component whyNot) {
         Button b = Button.builder(label, press::accept).bounds(x, y, w, 16).build();
         b.active = active;
         if (!active && whyNot != null)
