@@ -53,7 +53,7 @@ See the [release notes](releases/1.2.2/RELEASE_NOTES.md), [changelog](CHANGELOG.
 
 - **Royal commissions.** Pay real capital coins for one culturally eligible autonomous-village construction request. The original village chooses the site and its own builders use real materials; saved progress and explicit cancellation/recovery preserve natural projects.
 - **Royal shipments.** Pay normal logistics costs to transfer actual surplus with at most50 protected units per product between member villages over server-tick travel time. Full/unloaded destinations retain held cargo; normal Millénaire trade stays unrestricted.
-- **Capital ethos.** Exact native capital types give a Warlike, Peaceful, Traditionalist, Industrious or Pragmatic ethos (Karakter in Turkish). Bounded NPC decisions use the same paid services, actual needs/reserves and persistent cooldowns. War increases military preference for every type; player rule excludes new NPC economics.
+- **Capital ethos.** Exact native capital types give a Warlike, Peaceful, Traditionalist, Industrious or Pragmatic ethos. Bounded NPC decisions use the same paid services, actual needs/reserves and persistent cooldowns. War increases military preference for every type; player rule excludes new NPC economics.
 
 Existing per-world configuration values remain in effect until edited. Configurable chances, distances and intervals can be adjusted per world. See the bilingual [player/operator guide](docs/1.2.0_USER_GUIDE.md) and [save/downgrade policy](docs/1.2.0_SAVE_COMPATIBILITY.md).
 
