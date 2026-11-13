@@ -71,7 +71,7 @@ public final class RoyalCancellationGameTests {
             var payments = new RoyalPaymentService(f.level());
             payments.payNpc(f.kingdom(), intent.id(), Purpose.CONSTRUCTION, intent.id(), intent.fee());
             store.change(intent.id(), Stage.REQUESTED, Stage.PAID, Blocked.NONE, null);
-            h.assertTrue(f.value() == 64, "Fixture uses an actual acknowledged debit");
+            h.assertTrue(f.value() == 96, "Fixture uses an actual acknowledged debit");
             var service = new RoyalConstructionService(f.level());
             var cancelled = service.cancelNpc(f.kingdom(), intent.id());
             h.assertTrue(cancelled.stage() == Stage.CANCELLED && cancelled.cancellationFrom() == Stage.PAID
@@ -131,7 +131,7 @@ public final class RoyalCancellationGameTests {
             } catch (IllegalStateException expected) {
                 interrupted = true;
             }
-            h.assertTrue(interrupted && f.value() == 64
+            h.assertTrue(interrupted && f.value() == 96
                             && new RoyalPaymentService(f.level()).inspectNpc(f.kingdom(), intent.id()).state()
                                     == State.PREPARED,
                     "Real unacknowledged debit remains PREPARED");
@@ -175,7 +175,7 @@ public final class RoyalCancellationGameTests {
                     "Full inventory retains the cancellation decision and unrefunded receipt instead of deleting goods or resuming construction");
             f.chest().setItem(0, ItemStack.EMPTY);
             var result = service.retryNpc(f.kingdom(), intent.id());
-            h.assertTrue(result.stage() == Stage.CANCELLED && f.value() == 64
+            h.assertTrue(result.stage() == Stage.CANCELLED && f.value() == 32
                             && f.chest().getItem(1).is(Items.COBBLESTONE)
                             && payments.inspectNpc(f.kingdom(), intent.id()).state() == State.REFUNDED
                             && f.village().getPendingProject() == null,
@@ -196,14 +196,14 @@ public final class RoyalCancellationGameTests {
             var pending = f.village().getPendingProject();
             var result = service.cancelNpc(f.kingdom(), id);
             h.assertTrue(result.stage() == Stage.CANCELLED && result.cancellationFrom() == Stage.QUEUED
-                            && f.value() == 64
+                            && f.value() == 96
                             && new RoyalPaymentService(f.level()).inspectNpc(f.kingdom(), id).state()
                                     == State.COMMITTED&& f.village().getPendingProject()
                                     == pending&& f.village().getOwnerUUID() == null,
                     "Accepted cancellation stops tracking, preserves earned patronage and does not erase/control autonomous work");
             service.cancelNpc(f.kingdom(), id);
             service.retryNpc(f.kingdom(), id);
-            h.assertTrue(f.value() == 64 && f.village().getPendingProject() == pending,
+            h.assertTrue(f.value() == 96 && f.village().getPendingProject() == pending,
                     "Accepted cancellation replay cannot refund or duplicate pending work");
             h.succeed();
         } finally {
@@ -226,7 +226,7 @@ public final class RoyalCancellationGameTests {
             f.village().setPendingProject(coincident);
             var result = new RoyalConstructionService(f.level()).cancelNpc(f.kingdom(), intent.id());
             h.assertTrue(result.stage() == Stage.RECOVERY_REQUIRED && result.cancellationFrom() == Stage.QUEUING
-                            && result.blocked() == Blocked.AMBIGUOUS_ENGINE_STATE && f.value() == 64
+                            && result.blocked() == Blocked.AMBIGUOUS_ENGINE_STATE && f.value() == 96
                             && f.village().getPendingProject() == coincident
                             && new RoyalPaymentService(f.level()).inspectNpc(f.kingdom(), intent.id()).state()
                                     == State.PAID,
@@ -372,7 +372,7 @@ public final class RoyalCancellationGameTests {
                 h.assertTrue(result.stage() == Stage.CANCELLED
                                 && result.cancellationFrom() == (accepted ? Stage.QUEUED : Stage.PAID)
                                 && RoyalTreasurySnapshot.forNpc(level, tag.getUUID("kingdom")).spendableValue()
-                                        == (accepted ? 64 : 128)
+                                        == (accepted ? 96 : 128)
                                 && receipt.state() == (accepted ? State.COMMITTED : State.REFUNDED)
                                 && (village.getPendingProject() != null) == accepted,
                         "Separate JVM resumes the durable decision: only unaccepted patronage refunds, autonomous accepted work survives");

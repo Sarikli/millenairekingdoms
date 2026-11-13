@@ -65,7 +65,7 @@ public final class RoyalNpcBudgetGameTests {
     }
     private static Decision approval(
             RoyalShipmentSupport.Realm r, UUID order, ResourceLocation plan, long reserve, int share) {
-        return approval(r, order, new Choice(Kind.CONSTRUCTION, r.from(), null, plan, 0, 64, 0, null), reserve, share);
+        return approval(r, order, new Choice(Kind.CONSTRUCTION, r.from(), null, plan, 0, 32, 0, null), reserve, share);
     }
     private static void refused(GameTestHelper h, Runnable action) {
         boolean failed = false;
@@ -164,15 +164,15 @@ public final class RoyalNpcBudgetGameTests {
             store(h).begin(approval(r, id, c.planSet(), 128, 250));
             var service = new RoyalConstructionService(r.level());
             var e = service.requestNpc(r.kingdom(), r.from(), c.planSet(), id);
-            h.assertTrue(e.stage() == RoyalConstructionStore.Stage.QUEUED && r.coins() == 192
+            h.assertTrue(e.stage() == RoyalConstructionStore.Stage.QUEUED && r.coins() == 224
                             && new RoyalPaymentService(r.level()).inspectNpc(r.kingdom(), id).state()
                                     == State.COMMITTED,
-                    "Real NPC fee64 from256 obeys quarter/reserve and precedes native pending acknowledgement");
+                    "Real NPC fee32 from256 obeys quarter/reserve and precedes native pending acknowledgement");
             int old = RoyalNpcConfig.TREASURY_RESERVE.get();
             try {
                 RoyalNpcConfig.TREASURY_RESERVE.set(256);
                 service.retryNpc(r.kingdom(), id);
-                h.assertTrue(r.coins() == 192 && r.source().getPendingProject() != null,
+                h.assertTrue(r.coins() == 224 && r.source().getPendingProject() != null,
                         "Existing paid/committed work is not recharged or guessed unpaid under a later higher reserve");
             } finally {
                 RoyalNpcConfig.TREASURY_RESERVE.set(old);
@@ -198,7 +198,7 @@ public final class RoyalNpcBudgetGameTests {
                     "Original unpaid domain intent cannot debit below reserve or create financial proof during delayed recovery");
             funds(r, 4);
             service.retryNpc(r.kingdom(), id);
-            h.assertTrue(orders(h).load(id).stage() == RoyalConstructionStore.Stage.QUEUED && r.coins() == 192,
+            h.assertTrue(orders(h).load(id).stage() == RoyalConstructionStore.Stage.QUEUED && r.coins() == 224,
                     "Known fixture deposit128 permits the same bound first fee, with one expense and no new request ID");
             h.succeed();
         }
@@ -209,7 +209,7 @@ public final class RoyalNpcBudgetGameTests {
             funds(r, 8);
             var c = choice(r);
             var id = UUID.randomUUID();
-            store(h).begin(approval(r, id, c.planSet(), 200, 250));
+            store(h).begin(approval(r, id, c.planSet(), 230, 250));
             funds(r, 4);
             int reserve = RoyalNpcConfig.TREASURY_RESERVE.get(), share = RoyalNpcConfig.FEE_SHARE.get();
             try {
@@ -218,10 +218,10 @@ public final class RoyalNpcBudgetGameTests {
                 var service = new RoyalConstructionService(r.level());
                 refused(h, () -> service.requestNpc(r.kingdom(), r.from(), c.planSet(), id));
                 h.assertTrue(r.coins() == 256 && new RoyalPaymentService(r.level()).inspectNpc(r.kingdom(), id) == null,
-                        "New weaker config cannot erase original200-denier budget;256-64 is insufficient");
+                        "New weaker config cannot erase original230-denier budget;256-32 is insufficient");
                 funds(r, 8);
                 service.retryNpc(r.kingdom(), id);
-                h.assertTrue(r.coins() == 448, "Actual512 permits exact64 under both retained and current limits");
+                h.assertTrue(r.coins() == 480, "Actual512 permits exact32 under both retained and current limits");
             } finally {
                 RoyalNpcConfig.TREASURY_RESERVE.set(reserve);
                 RoyalNpcConfig.FEE_SHARE.set(share);
@@ -305,16 +305,16 @@ public final class RoyalNpcBudgetGameTests {
                 if (held.get() != null)
                     held.get().close();
             }
-            h.assertTrue(r.payments().load(id).state() == State.PREPARED && r.coins() == 192
+            h.assertTrue(r.payments().load(id).state() == State.PREPARED && r.coins() == 224
                             && r.source().getPendingProject() == null,
-                    "Real native64 debit/proof survives an actual OS-lock failure before PAID acknowledgement");
+                    "Real native32 debit/proof survives an actual OS-lock failure before PAID acknowledgement");
             int old = RoyalNpcConfig.TREASURY_RESERVE.get();
             boolean enabled = RoyalNpcConfig.ECONOMIC_ENABLED.get();
             try {
                 RoyalNpcConfig.TREASURY_RESERVE.set(256);
                 RoyalNpcConfig.ECONOMIC_ENABLED.set(false);
                 new RoyalConstructionService(r.level()).retryNpc(r.kingdom(), id);
-                h.assertTrue(r.coins() == 192 && r.payments().load(id).state() == State.COMMITTED
+                h.assertTrue(r.coins() == 224 && r.payments().load(id).state() == State.COMMITTED
                                 && orders(h).load(id).stage() == RoyalConstructionStore.Stage.QUEUED,
                         "Original applied proof reconciles without new expense/refund despite disabled new spending and current reserve256");
             } finally {
@@ -331,24 +331,24 @@ public final class RoyalNpcBudgetGameTests {
             var c = choice(r);
             var id = UUID.randomUUID();
             store(h).begin(approval(r, id, c.planSet(), 0, 250));
-            funds(r, 3);
+            funds(r, 1);
             int reserve = RoyalNpcConfig.TREASURY_RESERVE.get(), share = RoyalNpcConfig.FEE_SHARE.get();
             var service = new RoyalConstructionService(r.level());
             try {
                 RoyalNpcConfig.TREASURY_RESERVE.set(0);
                 RoyalNpcConfig.FEE_SHARE.set(1000);
                 refused(h, () -> service.requestNpc(r.kingdom(), r.from(), c.planSet(), id));
-                h.assertTrue(r.coins() == 192 && r.payments().load(id) == null,
-                        "Frozen quarter share blocks64/192 despite weaker current100% and zero reserve");
-                funds(r, 4);
+                h.assertTrue(r.coins() == 64 && r.payments().load(id) == null,
+                        "Frozen quarter share blocks32/64 despite weaker current100% and zero reserve");
+                funds(r, 2);
                 RoyalNpcConfig.FEE_SHARE.set(200);
                 refused(h, () -> service.retryNpc(r.kingdom(), id));
-                h.assertTrue(r.coins() == 256 && r.payments().load(id) == null,
-                        "New stricter20% blocks64/256 even though frozen25% would permit it");
-                funds(r, 5);
+                h.assertTrue(r.coins() == 128 && r.payments().load(id) == null,
+                        "New stricter20% blocks32/128 even though frozen25% would permit it");
+                funds(r, 3);
                 service.retryNpc(r.kingdom(), id);
-                h.assertTrue(r.coins() == 256 && r.payments().load(id).state() == State.COMMITTED,
-                        "Actual320 permits exact64 under both independent share limits; no prior debit or duplicate request");
+                h.assertTrue(r.coins() == 160 && r.payments().load(id).state() == State.COMMITTED,
+                        "Actual192 permits exact32 under both independent share limits; no prior debit or duplicate request");
             } finally {
                 RoyalNpcConfig.TREASURY_RESERVE.set(reserve);
                 RoyalNpcConfig.FEE_SHARE.set(share);
@@ -450,11 +450,11 @@ public final class RoyalNpcBudgetGameTests {
                 refused(h, () -> service.retryNpc(r.kingdom(), id));
                 funds(r, 4);
                 service.retryNpc(r.kingdom(), id);
-                h.assertTrue(r.coins() == 192 && orders(h).load(id).stage() == RoyalConstructionStore.Stage.QUEUED
+                h.assertTrue(r.coins() == 224 && orders(h).load(id).stage() == RoyalConstructionStore.Stage.QUEUED
                                 && r.payments().load(id).state() == State.COMMITTED
                                 && store(h).load(id).outcome() == Outcome.ISSUING,
-                        "New JVM domain recovery rechecks actual reserve before first64; uncertain policy result never becomes a replayed second proposal");
-                System.out.println("ROYAL_NPC_BUDGET_RESTART_READ_PASS treasury=192 fee=64 nextDay=16 attempt=ISSUING");
+                        "New JVM domain recovery rechecks actual reserve before first32; uncertain policy result never becomes a replayed second proposal");
+                System.out.println("ROYAL_NPC_BUDGET_RESTART_READ_PASS treasury=224 fee=32 nextDay=16 attempt=ISSUING");
                 h.succeed();
                 return;
             }

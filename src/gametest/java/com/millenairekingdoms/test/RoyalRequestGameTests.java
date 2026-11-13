@@ -44,7 +44,7 @@ public final class RoyalRequestGameTests {
             var service = new RoyalConstructionService(f.level());
             int original = f.village().getBuildings().size();
             var order = service.requestNpc(f.kingdom(), f.village().getId().uuid(), choice.planSet(), id);
-            h.assertTrue(order.stage() == Stage.QUEUED && funds(f) == 64,
+            h.assertTrue(order.stage() == Stage.QUEUED && funds(f) == 96,
                     "Real patronage is deducted exactly once before queue acceptance");
             var pending = f.village().getPendingProject();
             h.assertTrue(pending != null && pending.planSetId().equals(choice.planSet())
@@ -54,7 +54,7 @@ public final class RoyalRequestGameTests {
             h.assertTrue(new RoyalPaymentService(f.level()).inspectNpc(f.kingdom(), id).state() == State.COMMITTED,
                     "Patronage commits only after original pending metadata was acknowledged");
             var replay = service.requestNpc(f.kingdom(), f.village().getId().uuid(), choice.planSet(), id);
-            h.assertTrue(replay.stage() == Stage.QUEUED && funds(f) == 64
+            h.assertTrue(replay.stage() == Stage.QUEUED && funds(f) == 96
                             && pending.equals(f.village().getPendingProject())
                             && original == f.village().getBuildings().size(),
                     "Identical retry neither charges/queues twice nor injects a finished building");
@@ -66,7 +66,7 @@ public final class RoyalRequestGameTests {
                     ()
                             -> service.requestNpc(
                                     f.kingdom(), f.village().getId().uuid(), choice.planSet(), UUID.randomUUID()));
-            h.assertTrue(funds(f) == 64, "Conflicting/new active requests cannot take more coins");
+            h.assertTrue(funds(f) == 96, "Conflicting/new active requests cannot take more coins");
             var ruler = new FakePlayer(f.level(), new GameProfile(UUID.randomUUID(), "Receipt ruler"));
             f.village().addReputation(
                     ruler.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION - f.village().getCombinedReputation(f.level(), ruler.getUUID()));
@@ -74,7 +74,7 @@ public final class RoyalRequestGameTests {
             var receipts = new RoyalPaymentService(f.level());
             refused(h, () -> receipts.inspectNpc(f.kingdom(), id));
             refused(h, () -> receipts.inspectPlayer(ruler, id));
-            h.assertTrue(f.value() == 64,
+            h.assertTrue(f.value() == 96,
                     "Changed government cannot inspect/rebind the old NPC receipt as its own player request");
             h.succeed();
         } finally {
@@ -126,11 +126,11 @@ public final class RoyalRequestGameTests {
             refused(h, () -> interrupted.requestNpc(f.kingdom(), f.village().getId().uuid(), choice.planSet(), id));
             h.assertTrue(store(f.level()).load(id).stage() == Stage.QUEUING
                             && new RoyalPaymentService(f.level()).inspectNpc(f.kingdom(), id).state()
-                                    == State.PAID&& funds(f) == 0,
+                                    == State.PAID&& funds(f) == 32,
                     "A live pending slot alone cannot commit patronage or report a durable queued order");
             RoyalEconomyConfig.CONSTRUCTION_FEE.set(128);
             var recovered = new RoyalConstructionService(f.level()).retryNpc(f.kingdom(), id);
-            h.assertTrue(recovered.stage() == Stage.QUEUED && recovered.intent().fee() == 64 && funds(f) == 0
+            h.assertTrue(recovered.stage() == Stage.QUEUED && recovered.intent().fee() == 32 && funds(f) == 32
                             && new RoyalPaymentService(f.level()).inspectNpc(f.kingdom(), id).state()
                                     == State.COMMITTED,
                     "Actual domain save/read-back completes the original price without a second debit after config change");
@@ -161,7 +161,7 @@ public final class RoyalRequestGameTests {
                             && order.intent().planSet().toString().equals(tag.getString("planSet"))
                             && new RoyalPaymentService(level).inspectNpc(kingdom, id).state()
                                     == State.COMMITTED&& RoyalTreasurySnapshot.forNpc(level, kingdom).spendableValue()
-                                    == 0,
+                                    == 32,
                     "Separate JVM preserves the accepted order/payment and does not charge another patronage fee");
             System.out.println("ROYAL_PAID_QUEUE_RESTART_READ_PASS");
             h.succeed();
@@ -174,7 +174,7 @@ public final class RoyalRequestGameTests {
         var id = UUID.randomUUID();
         var order = new RoyalConstructionService(level).requestNpc(
                 f.kingdom(), f.village().getId().uuid(), choice.planSet(), id);
-        h.assertTrue(order.stage() == Stage.QUEUED && funds(f) == 0,
+        h.assertTrue(order.stage() == Stage.QUEUED && funds(f) == 32,
                 "Write JVM has real paid and acknowledged pending work");
         f.village().setActive(false);
         var tag = new CompoundTag();

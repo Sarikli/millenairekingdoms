@@ -64,7 +64,7 @@ public final class RoyalRuntimeGameTests {
                     old.planSetId(), old.variant(), old.level(), old.isUpgrade(), old.buildingId());
             f.village().setPendingProject(coincident);
             var result = new RoyalConstructionService(f.level()).retryNpc(f.kingdom(), id);
-            h.assertTrue(result.stage() == Stage.RECOVERY_REQUIRED && f.value() == 64
+            h.assertTrue(result.stage() == Stage.RECOVERY_REQUIRED && f.value() == 96
                             && f.village().getPendingProject() == coincident
                             && new RoyalPaymentService(f.level()).inspectNpc(f.kingdom(), id).state() == State.PAID,
                     "Field equality does not establish publication ownership: preserve possibly natural work and paid recovery reservation");
@@ -87,7 +87,7 @@ public final class RoyalRuntimeGameTests {
             f.village().setActive(false);
             int chunks = f.level().getChunkSource().getLoadedChunksCount();
             var result = new RoyalConstructionService(f.level()).observe(intent.id());
-            h.assertTrue(result.stage() == Stage.QUEUED && result.blocked() == Blocked.UNLOADED && f.value() == 64
+            h.assertTrue(result.stage() == Stage.QUEUED && result.blocked() == Blocked.UNLOADED && f.value() == 96
                             && payments.inspectConstruction(intent.id(), intent.kingdom(), intent.capital(),
                                                intent.actor(), intent.fee())
                                             .state()
@@ -102,7 +102,7 @@ public final class RoyalRuntimeGameTests {
             } catch (IllegalArgumentException expected) {
                 refused = true;
             }
-            h.assertTrue(refused && f.value() == 64,
+            h.assertTrue(refused && f.value() == 96,
                     "Offline acknowledgement never rebinds a stored player receipt to another actor");
             h.succeed();
         } finally {
@@ -125,7 +125,7 @@ public final class RoyalRuntimeGameTests {
                 var result = new RoyalConstructionService(f.level()).observe(intent.id());
                 h.assertTrue(result.stage() == Stage.RECOVERY_REQUIRED
                                 && result.blocked() == Blocked.AMBIGUOUS_ENGINE_STATE
-                                && f.value() == (collision ? 64 : 128) && result.building() == null
+                                && f.value() == (collision ? 96 : 128) && result.building() == null
                                 && f.village().getPendingProject() != null,
                         "Missing/wrong-purpose receipt cannot become accepted construction, free completion or an unrelated refund");
             } finally {
@@ -155,7 +155,7 @@ public final class RoyalRuntimeGameTests {
                 h.assertTrue(jobs >= 0 && jobs <= 1, "Each scheduler step processes at most its distinct-order budget");
             }
             h.assertTrue(store.load(ia.id()).stage() == Stage.QUEUED && store.load(ib.id()).stage() == Stage.QUEUED
-                            && a.value() == 64 && b.value() == 64,
+                            && a.value() == 96 && b.value() == 96,
                     "Round-robin tracking eventually resumes both genuine authorized NPC requests, charging each once");
             h.assertTrue(store.load(ip.id()).stage() == Stage.REQUESTED && offline.value() == 128
                             && offline.village().getPendingProject() == null
@@ -190,7 +190,7 @@ public final class RoyalRuntimeGameTests {
                 level.getChunkAt(pos);
             h.assertTrue(new RoyalPaymentService(level).inspectNpc(tag.getUUID("kingdom"), id).state()
                             == State.PAID&& RoyalTreasurySnapshot.forNpc(level, tag.getUUID("kingdom")).spendableValue()
-                            == 64,
+                            == 96,
                     "Independent JVM preserves actual debit/receipt/reservation without a speculative refund or new request");
             System.out.println("ROYAL_PUBLICATION_STARTUP_READ_PASS");
             h.succeed();

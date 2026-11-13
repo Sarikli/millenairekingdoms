@@ -42,7 +42,7 @@ public final class RoyalMonitorGameTests {
             var service = new RoyalConstructionService(f.level());
             var order = service.requestNpc(f.kingdom(), f.village().getId().uuid(), choice.planSet(), id);
             h.assertTrue(order.stage() == Stage.QUEUED && service.observe(id).blocked() == Blocked.MATERIALS
-                            && f.value() == 64,
+                            && f.value() == 96,
                     "Missing real required stock blocks work after earned patronage, without pretending to construct");
             var definition =
                     ModCultures.getBuildingPlanSet(order.intent().planSet()).getLevel(order.intent().variant(), 0);
@@ -54,7 +54,7 @@ public final class RoyalMonitorGameTests {
                                         == resource.getValue(),
                         "Fixture supplies enter the original physical storage");
             }
-            h.assertTrue(service.observe(id).blocked() == Blocked.NONE && f.value() == 64
+            h.assertTrue(service.observe(id).blocked() == Blocked.NONE && f.value() == 96
                             && new RoyalPaymentService(f.level()).inspectNpc(f.kingdom(), id).state()
                                     == State.COMMITTED,
                     "Depositing actual materials unblocks the same order without another fee");
@@ -79,7 +79,7 @@ public final class RoyalMonitorGameTests {
             h.assertTrue(result.stage() == Stage.CANCELLING && result.blocked() == Blocked.AUTHORITY
                             && result.cancellationFrom() == Stage.QUEUED,
                     "Local village control change is observed independently of political snapshots");
-            h.assertTrue(service.settleRetired(id).stage() == Stage.CANCELLED && f.value() == 64
+            h.assertTrue(service.settleRetired(id).stage() == Stage.CANCELLED && f.value() == 96
                             && f.village().getPendingProject() == pending && f.village().getOwnerUUID() != null,
                     "Retirement never overrides local ownership, deletes pending work or refunds accepted patronage");
             h.succeed();
@@ -106,7 +106,7 @@ public final class RoyalMonitorGameTests {
             h.assertTrue(result.stage() == Stage.CANCELLING && result.blocked() == Blocked.AUTHORITY
                             && f.level().getServer().getPlayerList().getPlayer(player.getUUID()) == null,
                     "UUID-bound reputation checks work while the original ruler is offline");
-            h.assertTrue(service.settleRetired(id).stage() == Stage.CANCELLED && f.value() == 64
+            h.assertTrue(service.settleRetired(id).stage() == Stage.CANCELLED && f.value() == 96
                             && f.village().getPendingProject() == pending,
                     "Historical closure grants no new authority or spending to an offline low-reputation ruler");
             h.succeed();
@@ -127,7 +127,7 @@ public final class RoyalMonitorGameTests {
             f.village().setPendingProject(null);
             var result = service.observe(id);
             h.assertTrue(result.stage() == Stage.RECOVERY_REQUIRED && result.blocked() == Blocked.AMBIGUOUS_ENGINE_STATE
-                            && f.value() == 64 && f.village().getPendingProject() == null && result.building() == null,
+                            && f.value() == 96 && f.village().getPendingProject() == null && result.building() == null,
                     "Unexpected external queue loss retains paid recovery state instead of inventing completion or reissuing ambiguous work");
             h.succeed();
         } finally {
@@ -150,7 +150,7 @@ public final class RoyalMonitorGameTests {
             var result = service.observe(id);
             h.assertTrue(result.stage() == Stage.CANCELLING && result.blocked() == Blocked.AUTHORITY
                             && service.settleRetired(id).stage() == Stage.CANCELLED
-                            && manager.getVillage(f.village().getId()) == null && f.value() == 64,
+                            && manager.getVillage(f.village().getId()) == null && f.value() == 96,
                     "Missing original village is retired explicitly, never replaced by a synthetic village, builder or treasury");
             h.succeed();
         } finally {

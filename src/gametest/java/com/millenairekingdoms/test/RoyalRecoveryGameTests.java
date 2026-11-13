@@ -71,7 +71,7 @@ public final class RoyalRecoveryGameTests {
                                   .getChild("kingdoms")
                                   .getChild("royal_recovery");
             h.assertTrue(!command.canUse(low) && command.canUse(op(f.level()))
-                            && audit(f.level()).entries().equals(before) && f.value() == 64
+                            && audit(f.level()).entries().equals(before) && f.value() == 96
                             && orders(f.level()).load(i.id()).stage() == Stage.RECOVERY_REQUIRED,
                     "Both command and service deny unprivileged review without any economic or audit mutation");
             h.succeed();
@@ -89,7 +89,7 @@ public final class RoyalRecoveryGameTests {
             var authorized = service.authorize(op(f.level()), id, i.id(), Mode.ADOPT_PENDING, null,
                     "Reviewed exact original pending after restart");
             h.assertTrue(authorized.state() == State.AUTHORIZED && authorized.intent().order().equals(i)
-                            && f.value() == 64 && orders(f.level()).load(i.id()).stage() == Stage.RECOVERY_REQUIRED,
+                            && f.value() == 96 && orders(f.level()).load(i.id()).stage() == Stage.RECOVERY_REQUIRED,
                     "Audit must be durable while the order is still quarantined");
             h.assertTrue(
                     service.authorize(op(f.level()), id, i.id(), Mode.ADOPT_PENDING, null, authorized.intent().reason())
@@ -108,11 +108,11 @@ public final class RoyalRecoveryGameTests {
             var done = service.resume(op(f.level()), id);
             var order = orders(f.level()).load(i.id());
             h.assertTrue(done.state() == State.DONE && order.stage() == Stage.QUEUED
-                            && id.equals(order.recoveryDecision()) && f.value() == 64
+                            && id.equals(order.recoveryDecision()) && f.value() == 96
                             && f.village().getPendingProject() == pending
                             && paid(f, i).state() == RoyalPaymentJournal.State.COMMITTED,
                     "Adoption binds only existing original work and retains the one paid fee");
-            h.assertTrue(service.resume(op(f.level()), id).equals(done) && f.value() == 64,
+            h.assertTrue(service.resume(op(f.level()), id).equals(done) && f.value() == 96,
                     "Resolution retry returns immutable completed audit");
             new RoyalConstructionService(f.level()).cancelNpc(f.kingdom(), i.id());
             h.succeed();
@@ -150,11 +150,11 @@ public final class RoyalRecoveryGameTests {
                 var done = service.resume(op(f.level()), decision);
                 var order = orders(f.level()).load(intent.id());
                 h.assertTrue(done.state() == State.DONE && order.stage() == Stage.QUEUED
-                                && order.intent().id().equals(intent.id()) && f.value() == 64
+                                && order.intent().id().equals(intent.id()) && f.value() == 96
                                 && paid(f, intent).state() == RoyalPaymentJournal.State.COMMITTED
                                 && f.village().getPendingProject() == pending,
-                        "Operator recovery acknowledges the same exact original pending/paid64 identity without a replacement request, project or debit");
-                h.assertTrue(service.resume(op(f.level()), decision).equals(done) && f.value() == 64,
+                        "Operator recovery acknowledges the same exact original pending/paid32 identity without a replacement request, project or debit");
+                h.assertTrue(service.resume(op(f.level()), decision).equals(done) && f.value() == 96,
                         "Recovery replay cannot charge another fee");
             } finally {
                 Files.write(file, original);
@@ -175,7 +175,7 @@ public final class RoyalRecoveryGameTests {
             service.resume(op(f.level()), id);
             var order = orders(f.level()).load(i.id());
             h.assertTrue(order.stage() == Stage.CANCELLED && order.blocked() == Blocked.OPERATOR_FORFEIT
-                            && f.value() == 64 && paid(f, i).state() == RoyalPaymentJournal.State.COMMITTED
+                            && f.value() == 96 && paid(f, i).state() == RoyalPaymentJournal.State.COMMITTED
                             && f.village().getPendingProject() == pending,
                     "Explicit forfeiture never refunds or erases independent world work");
             refused(h,
@@ -198,7 +198,7 @@ public final class RoyalRecoveryGameTests {
             service.authorize(op(f.level()), id, i.id(), Mode.ADOPT_PENDING, null, "Initial inspection");
             var abandoned = service.abandon(op(f.level()), id, "Operator withdrew review; leave quarantined");
             h.assertTrue(abandoned.state() == State.ABANDONED && service.resume(op(f.level()), id).equals(abandoned)
-                            && f.value() == 64 && orders(f.level()).load(i.id()).stage() == Stage.RECOVERY_REQUIRED,
+                            && f.value() == 96 && orders(f.level()).load(i.id()).stage() == Stage.RECOVERY_REQUIRED,
                     "Abandon only ends the audit decision, preserving finance and quarantine");
             var replacement = UUID.randomUUID();
             service.authorize(op(f.level()), replacement, i.id(), Mode.FORFEIT_FEE, null, "Second explicit review");
@@ -226,7 +226,7 @@ public final class RoyalRecoveryGameTests {
                     ()
                             -> service.authorize(op(f.level()), UUID.randomUUID(), i.id(), Mode.ADOPT_BUILDING,
                                     UUID.randomUUID(), "Unknown building"));
-            h.assertTrue(audit(f.level()).entries().equals(before) && f.value() == 64,
+            h.assertTrue(audit(f.level()).entries().equals(before) && f.value() == 96,
                     "Missing or wrong original evidence cannot authorize adoption");
             f.village().setPendingProject(pending(i));
             var id = UUID.randomUUID();
@@ -255,7 +255,7 @@ public final class RoyalRecoveryGameTests {
             refused(h, () -> service.resume(op(f.level()), id));
             var retired = orders(f.level()).load(i.id());
             h.assertTrue(retired.stage() == Stage.RECOVERY_REQUIRED && retired.blocked() == Blocked.AUTHORITY
-                            && retired.cancellationFrom() != null && f.value() == 64,
+                            && retired.cancellationFrom() != null && f.value() == 96,
                     "Quarantined mandate keeps permanent retirement even if political state returns in the same tick");
             service.abandon(op(f.level()), id, "Original mandate was retired");
             var next = UUID.randomUUID();
@@ -263,7 +263,7 @@ public final class RoyalRecoveryGameTests {
                     "Stop retired tracking without refunding accepted-risk patronage");
             service.resume(op(f.level()), next);
             h.assertTrue(orders(f.level()).load(i.id()).stage() == Stage.CANCELLED
-                            && f.village().getPendingProject() != null && f.value() == 64,
+                            && f.village().getPendingProject() != null && f.value() == 96,
                     "Retired recovery can forfeit but never adopt");
             h.succeed();
         }
@@ -284,7 +284,7 @@ public final class RoyalRecoveryGameTests {
             service.authorize(op(f.level()), id, i.id(), Mode.FORFEIT_FEE, null,
                     "Explicitly retain paid fee in fallen kingdom; no alternate treasury");
             service.resume(op(f.level()), id);
-            h.assertTrue(orders(f.level()).load(i.id()).stage() == Stage.CANCELLED && f.value() == 64
+            h.assertTrue(orders(f.level()).load(i.id()).stage() == Stage.CANCELLED && f.value() == 96
                             && paid(f, i).state() == RoyalPaymentJournal.State.COMMITTED
                             && f.village().getPendingProject() == null,
                     "OP closes a paid retired liability without refund redirection or new engine work");
@@ -309,7 +309,7 @@ public final class RoyalRecoveryGameTests {
                         ()
                                 -> service.authorize(op(f.level()), id, i.id(), Mode.FORFEIT_FEE, null,
                                         "Cannot invent a matching financial receipt"));
-                h.assertTrue(audit(f.level()).load(id) == null && f.value() == (wrong ? 64 : 128),
+                h.assertTrue(audit(f.level()).load(id) == null && f.value() == (wrong ? 96 : 128),
                         "OP permission cannot replace exact purpose/actor/capital/order/amount binding");
             }
         h.succeed();
@@ -335,7 +335,7 @@ public final class RoyalRecoveryGameTests {
                         ()
                                 -> RoyalPaymentGameTests.service(f.level(), payments(f.level()), failure)
                                         .payNpc(f.kingdom(), i.id(), Purpose.CONSTRUCTION, i.id(), i.fee()));
-                h.assertTrue(paid(f, i).state() == RoyalPaymentJournal.State.PREPARED && f.value() == 64,
+                h.assertTrue(paid(f, i).state() == RoyalPaymentJournal.State.PREPARED && f.value() == 96,
                         "Cut leaves an unacknowledged journal and an actual applied native debit proof");
                 if (ambiguous) {
                     // Genuine ambiguous evidence requires losing the same-container proof. A matching proof
@@ -358,7 +358,7 @@ public final class RoyalRecoveryGameTests {
                                 && paid(f, i).state()
                                         == (ambiguous ? RoyalPaymentJournal.State.RECOVERY_REQUIRED
                                                       : RoyalPaymentJournal.State.PREPARED)
-                                && f.value() == (ambiguous ? 63 : 64),
+                                && f.value() == (ambiguous ? 95 : 96),
                         "Neither PREPARED nor RECOVERY_REQUIRED is proof of durable patronage; all physical evidence remains unchanged");
             }
         h.succeed();
@@ -389,7 +389,7 @@ public final class RoyalRecoveryGameTests {
                     "Declared native inventory activity spends the remaining64 and supplies63 after the already applied debit");
             var receipt = new RoyalPaymentService(f.level()).payNpc(
                     f.kingdom(), i.id(), Purpose.CONSTRUCTION, i.id(), i.fee());
-            h.assertTrue(receipt.state() == RoyalPaymentJournal.State.PAID && f.value() == 63,
+            h.assertTrue(receipt.state() == RoyalPaymentJournal.State.PAID && f.value() == 95,
                     "Matching bound proof preserves later native63 exactly, without recharging, restoring64 or false ambiguity");
             orders(f.level()).change(
                     i.id(), Stage.REQUESTED, Stage.RECOVERY_REQUIRED, Blocked.AMBIGUOUS_ENGINE_STATE, null);
@@ -398,7 +398,7 @@ public final class RoyalRecoveryGameTests {
             service.authorize(op(f.level()), decision, i.id(), Mode.FORFEIT_FEE, null,
                     "Exact native proof reconciled; retain paid patronage and current inventory");
             service.resume(op(f.level()), decision);
-            h.assertTrue(f.value() == 63 && paid(f, i).state() == RoyalPaymentJournal.State.COMMITTED
+            h.assertTrue(f.value() == 95 && paid(f, i).state() == RoyalPaymentJournal.State.COMMITTED
                             && orders(f.level()).load(i.id()).stage() == Stage.CANCELLED,
                     "Audited forfeit commits only the original paid fee and never credits guessed coins");
             h.succeed();
@@ -421,7 +421,7 @@ public final class RoyalRecoveryGameTests {
             refused(h, () -> service.resume(op(f.level()), id));
             h.assertTrue(orders(f.level()).load(i.id()).stage() == Stage.RECOVERY_REQUIRED
                             && audit(f.level()).load(id).state() == State.AUTHORIZED
-                            && paid(f, i).state() == RoyalPaymentJournal.State.PAID && f.value() == 64,
+                            && paid(f, i).state() == RoyalPaymentJournal.State.PAID && f.value() == 96,
                     "No acceptance/commit can precede acknowledged original evidence");
             new RoyalRecoveryService(f.level()).resume(op(f.level()), id);
             new RoyalConstructionService(f.level()).cancelNpc(f.kingdom(), i.id());
@@ -470,7 +470,7 @@ public final class RoyalRecoveryGameTests {
             refused(h, () -> service.abandon(op(f.level()), id, "Cannot abandon an already applied decision"));
             var done = service.resume(op(f.level()), id);
             h.assertTrue(done.state() == State.DONE && orders(f.level()).load(i.id()).equals(retired)
-                            && retired.stage() == Stage.CANCELLING && f.value() == 64
+                            && retired.stage() == Stage.CANCELLING && f.value() == 96
                             && f.village().getPendingProject() != null,
                     "Retry only closes its audit after later retirement; it never reopens tracking or charges again");
             h.succeed();
@@ -575,12 +575,12 @@ public final class RoyalRecoveryGameTests {
                     "Bounded production scheduler resumes only the OP's existing persisted decision");
             for (var pos : village.getTownhall().getInventory().getChestPositions())
                 level.getChunkAt(pos);
-            h.assertTrue(RoyalTreasurySnapshot.forNpc(level, tag.getUUID("kingdom")).spendableValue() == 64
+            h.assertTrue(RoyalTreasurySnapshot.forNpc(level, tag.getUUID("kingdom")).spendableValue() == 96
                             && new RoyalPaymentService(level).inspectNpc(tag.getUUID("kingdom"), order).state()
                                     == RoyalPaymentJournal.State.COMMITTED,
                     "Separate JVM adoption retains exactly one real patronage debit");
             new RoyalConstructionService(level).cancelNpc(tag.getUUID("kingdom"), order);
-            System.out.println("ROYAL_RECOVERY_RESTART_READ_PASS decision=" + id + " remaining=64");
+            System.out.println("ROYAL_RECOVERY_RESTART_READ_PASS decision=" + id + " remaining=96");
             h.succeed();
             return;
         }
@@ -598,7 +598,7 @@ public final class RoyalRecoveryGameTests {
         tag.putUUID("kingdom", f.kingdom());
         NbtIo.writeCompressed(tag, marker);
         VillageSavedData.get(level).setDirty();
-        System.out.println("ROYAL_RECOVERY_RESTART_WRITE_PASS decision=" + id + " remaining=64");
+        System.out.println("ROYAL_RECOVERY_RESTART_WRITE_PASS decision=" + id + " remaining=96");
         h.succeed();
     }
 

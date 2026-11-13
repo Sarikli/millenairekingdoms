@@ -78,12 +78,12 @@ public final class EconomicQueueGameTests {
                 RoyalConstructionRuntime.beforeNativeGrowth(r.level(), r.source());
                 var decision = new RoyalNpcDecisionStore(RoyalNpcDecisionStore.directory(r.level())).load(parent.id());
                 h.assertTrue(decision != null && decision.choice().kind() == RoyalNpcDecisionStore.Kind.CONSTRUCTION
-                                && r.coins() == 64 && r.source().getPendingProject() != null
+                                && r.coins() == 96 && r.source().getPendingProject() != null
                                 && store.read(r.kingdom(), Lane.DEVELOPMENT).id().equals(parent.id()),
                         "The native handoff honors the exact ready unpaid NPC mandate before selecting unrelated natural work; decision="
                                 + decision + " coins=" + r.coins());
                 RoyalConstructionRuntime.beforeNativeGrowth(r.level(), r.source());
-                h.assertTrue(r.coins() == 64
+                h.assertTrue(r.coins() == 96
                                 && r.payments().load(parent.id()).state() == RoyalPaymentJournal.State.COMMITTED,
                         "Repeated native growth callbacks cannot replay the original mandate's fee");
                 h.succeed();
@@ -132,15 +132,15 @@ public final class EconomicQueueGameTests {
                 RoyalConstructionRuntime.beforeNativeGrowth(r.level(), r.source());
                 var decision = new RoyalNpcDecisionStore(RoyalNpcDecisionStore.directory(r.level())).load(parent.id());
                 h.assertTrue(decision != null && decision.choice().kind() == RoyalNpcDecisionStore.Kind.CONSTRUCTION
-                                && r.coins() == 448 && r.source().getPendingProject() != null
+                                && r.coins() == 480 && r.source().getPendingProject() != null
                                 && r.target().getPendingProject() == shortage.pending(),
                         "A ready exact unpaid building must claim its native slot despite an unrelated supply proposal; decision="
                                 + decision + " coins=" + r.coins()
                                 + " plan=" + store.read(r.kingdom(), Lane.DEVELOPMENT));
                 RoyalConstructionRuntime.beforeNativeGrowth(r.level(), r.source());
-                h.assertTrue(r.coins() == 448
+                h.assertTrue(r.coins() == 480
                                 && r.payments().load(parent.id()).state() == RoyalPaymentJournal.State.COMMITTED,
-                        "Repeated handoffs retain the actual single64 fee");
+                        "Repeated handoffs retain the actual single 32 fee");
                 var supply = service.step(r.kingdom(), 11, RandomSource.create(23));
                 h.assertTrue(supply != null && supply.kind() == RoyalNpcDecisionStore.Kind.SHIPMENT
                                 && !supply.attempt().equals(parent.id())
@@ -166,9 +166,9 @@ public final class EconomicQueueGameTests {
             try {
                 var result = new RoyalStrategyService(r.level()).step(r.kingdom(), 10, RandomSource.create(14));
                 h.assertTrue(result != null && result.kind() == RoyalNpcDecisionStore.Kind.CONSTRUCTION
-                                && r.coins() == 64 && r.source().getPendingProject() != null
+                                && r.coins() == 96 && r.source().getPendingProject() != null
                                 && r.payments().load(result.attempt()).state() == RoyalPaymentJournal.State.COMMITTED,
-                        "An actual64 fee is half the128 treasury, leaves64 real coins and acknowledges genuine original pending work");
+                        "An actual 32 fee leaves 96 real coins (>= 64 reserve) and acknowledges genuine original pending work");
                 h.succeed();
             } finally {
                 builder.discard();
@@ -473,7 +473,7 @@ public final class EconomicQueueGameTests {
             var builder = RoyalNpcEconomyGameTests.builder(h, r);
             try (var policy = new Policy(); var autonomy = new HandoffPolicy()) {
                 RoyalConstructionRuntime.beforeNativeGrowth(r.level(), r.source());
-                h.assertTrue(r.coins() == 64 && r.payments().load(saved.getUUID("development")) != null
+                h.assertTrue(r.coins() == 96 && r.payments().load(saved.getUUID("development")) != null
                                 && r.payments().load(saved.getUUID("development")).state()
                                         == RoyalPaymentJournal.State.COMMITTED
                                 && new RoyalStrategyStore(r.level())
@@ -484,7 +484,7 @@ public final class EconomicQueueGameTests {
                         "The separate JVM rebuilds the exact unpaid handoff before native growth without replacing its logistics sibling; portfolio="
                                 + new RoyalStrategyStore(r.level()).portfolio(r.kingdom()) + " coins=" + r.coins());
                 System.out.println("ECONOMIC_HANDOFF_REOPEN waited=" + waited
-                        + " committedFee=64 retained=64 plan=" + saved.getUUID("development"));
+                        + " committedFee=32 retained=96 plan=" + saved.getUUID("development"));
             } finally {
                 builder.discard();
             }

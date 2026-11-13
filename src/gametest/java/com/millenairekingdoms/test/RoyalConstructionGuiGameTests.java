@@ -64,7 +64,7 @@ public final class RoyalConstructionGuiGameTests {
             var frame = frame(f.player);
             var offer = first(frame);
             var again = first(frame(f.player));
-            h.assertTrue(offer.getUUID("offer").equals(again.getUUID("offer")) && offer.getLong("fee") == 64
+            h.assertTrue(offer.getUUID("offer").equals(again.getUUID("offer")) && offer.getLong("fee") == 32
                             && offer.getBoolean("canOrder") && !offer.getString("name").isBlank()
                             && frame.getLong("spendable") == 128 && frame.getBoolean("available"),
                     "Repeated read-only snapshots retain one bounded server offer and actual spendable funds");
@@ -88,13 +88,13 @@ public final class RoyalConstructionGuiGameTests {
             send(f.player, request);
             var current = store(f.f.level()).load(offer.getUUID("offer"));
             h.assertTrue(current.stage() == Stage.QUEUED && current.intent().actor().equals(f.player.getUUID())
-                            && current.intent().fee() == 64 && f.f.value() == 64
+                            && current.intent().fee() == 32 && f.f.value() == 96
                             && f.f.village().getPendingProject() == pending
                             && receipt(f, current).state() == RoyalPaymentJournal.State.COMMITTED,
                     "Forged client amount cannot set price; identical payload retains the same immutable order and one actual charge");
             var snapshot = frame(f.player).getCompound("order");
             h.assertTrue(snapshot.getUUID("id").equals(current.intent().id()) && snapshot.getBoolean("canCancel")
-                            && snapshot.getString("stage").equals("QUEUED") && snapshot.getLong("fee") == 64,
+                            && snapshot.getString("stage").equals("QUEUED") && snapshot.getLong("fee") == 32,
                     "Screen exposes exact acknowledged stage, original fee and server cancellation permission");
             h.assertTrue(KingdomActions.handle(
                                  f.player, KingdomActionPayload.of("CONSTRUCTION_CANCEL", current.intent().id()))
@@ -149,8 +149,8 @@ public final class RoyalConstructionGuiGameTests {
                 RoyalEconomyConfig.CONSTRUCTION_FEE.set(256);
                 clock.setGameTime(now + 2000);
                 send(f.player, request);
-                h.assertTrue(f.f.value() == 64 && f.f.village().getPendingProject() == pending
-                                && store(f.f.level()).load(current.getUUID("offer")).intent().fee() == 64,
+                h.assertTrue(f.f.value() == 96 && f.f.village().getPendingProject() == pending
+                                && store(f.f.level()).load(current.getUUID("offer")).intent().fee() == 32,
                         "A durable existing order ignores offer expiry/new prices and never loses its original quote or charges again");
             } finally {
                 RoyalEconomyConfig.CONSTRUCTION_FEE.set(previous);
@@ -197,7 +197,7 @@ public final class RoyalConstructionGuiGameTests {
             data.claimRule(f.f.kingdom(), next.getUUID(), "New builder ruler", 42);
             send(next, KingdomActionPayload.of("CONSTRUCTION_RESUME", offer.getUUID("offer")));
             h.assertTrue(store(f.f.level()).load(offer.getUUID("offer")).stage() == Stage.CANCELLING
-                            && f.f.value() == 64 && f.f.village().getPendingProject() == pending,
+                            && f.f.value() == 96 && f.f.village().getPendingProject() == pending,
                     "Old and new screen actors cannot revive or rebind an authority-retired order; native work and earned fee stay intact");
             h.succeed();
         }
@@ -257,7 +257,7 @@ public final class RoyalConstructionGuiGameTests {
                     "Failed debit keeps unpaid intent, never a free accepted order");
             f.f.chest().setItem(0, new ItemStack(ModItems.DENIER_ARGENT.get(), 2));
             send(f.player, KingdomActionPayload.of("CONSTRUCTION_RESUME", entry.intent().id()));
-            h.assertTrue(store(f.f.level()).load(entry.intent().id()).stage() == Stage.QUEUED && f.f.value() == 64
+            h.assertTrue(store(f.f.level()).load(entry.intent().id()).stage() == Stage.QUEUED && f.f.value() == 96
                             && f.f.village().getPendingProject() != null,
                     "Resume acts on the same saved unpaid intent after real deposit");
             h.succeed();
@@ -273,7 +273,7 @@ public final class RoyalConstructionGuiGameTests {
             var pending = f.f.village().getPendingProject();
             send(f.player, KingdomActionPayload.of("CONSTRUCTION_CANCEL", offer.getUUID("offer")));
             send(f.player, KingdomActionPayload.of("CONSTRUCTION_CANCEL", offer.getUUID("offer")));
-            h.assertTrue(store(f.f.level()).load(offer.getUUID("offer")).stage() == Stage.CANCELLED && f.f.value() == 64
+            h.assertTrue(store(f.f.level()).load(offer.getUUID("offer")).stage() == Stage.CANCELLED && f.f.value() == 96
                             && f.f.village().getPendingProject() == pending,
                     "Accepted cancel/replay only stops royal tracking and never refunds or erases native work");
             unpaid.f.chest().setItem(0, ItemStack.EMPTY);
@@ -289,7 +289,7 @@ public final class RoyalConstructionGuiGameTests {
             unpaid.f.chest().setItem(0, new ItemStack(ModItems.DENIER_ARGENT.get(), 2));
             send(unpaid.player, order(unpaid, fresh, 0));
             h.assertTrue(store(unpaid.f.level()).load(fresh.getUUID("offer")).stage() == Stage.QUEUED
-                            && unpaid.f.value() == 64,
+                            && unpaid.f.value() == 96,
                     "A new valid purchase works immediately after unpaid cancellation without reviving its old identity");
             h.succeed();
         }
@@ -313,7 +313,7 @@ public final class RoyalConstructionGuiGameTests {
                                     .planSet()
                                     .toString()
                                     .equals(first.getString("plan"))
-                            && f.f.village().getPendingProject() == pending && f.f.value() == 64,
+                            && f.f.village().getPendingProject() == pending && f.f.value() == 96,
                     "Colliding payload cannot change the bound village/plan/price or spend again");
             h.succeed();
         }
@@ -444,10 +444,10 @@ public final class RoyalConstructionGuiGameTests {
                     new KingdomActionPayload("CONSTRUCTION_ORDER", Optional.of(tag.getUUID("village")), Optional.of(id),
                             1, old.intent().planSet().toString()));
             h.assertTrue(store(level).load(id).stage() == Stage.QUEUED
-                            && RoyalTreasurySnapshot.forPlayer(player).spendableValue() == 64
+                            && RoyalTreasurySnapshot.forPlayer(player).spendableValue() == 96
                             && frame(player).getCompound("order").getUUID("id").equals(id),
                     "Empty new-JVM offer cache does not invalidate durable identity, reprice or recharge saved work");
-            System.out.println("ROYAL_GUI_RESTART_READ_PASS order=" + id + " remaining=64");
+            System.out.println("ROYAL_GUI_RESTART_READ_PASS order=" + id + " remaining=96");
             h.succeed();
             return;
         }
@@ -518,7 +518,7 @@ public final class RoyalConstructionGuiGameTests {
             var accepted = store(f.f.level()).load(id);
             h.assertTrue(accepted.stage() == Stage.QUEUED && accepted.building() == null
                             && accepted.intent().originalBuildings().contains(nativeBuilding.getId().uuid())
-                            && f.f.value() == 64 && nativeBuilding.getStatus() == BuildingInstance.Status.COMPLETE
+                            && f.f.value() == 96 && nativeBuilding.getStatus() == BuildingInstance.Status.COMPLETE
                             && f.f.village().getPendingProject() != null
                             && receipt(f, accepted).state() == RoyalPaymentJournal.State.COMMITTED,
                     "Actual bounded scheduler pays once only after the native upgrade finishes and publishes a new royal request: "
@@ -562,10 +562,10 @@ public final class RoyalConstructionGuiGameTests {
                 f.f.chest().setItem(0, new ItemStack(ModItems.DENIER_ARGENT.get(), 1));
                 var accepted = service.retryPlayer(f.player, id);
                 service.retryPlayer(f.player, id);
-                h.assertTrue(accepted.stage() == Stage.QUEUED && accepted.intent().fee() == 64 && f.f.value() == 0
-                                && receipt(f, accepted).amount() == 64
+                h.assertTrue(accepted.stage() == Stage.QUEUED && accepted.intent().fee() == 32 && f.f.value() == 32
+                                && receipt(f, accepted).amount() == 32
                                 && receipt(f, accepted).state() == RoyalPaymentJournal.State.COMMITTED,
-                        "Later funds pay exactly the reviewed64 quote once, even after config price rises to128");
+                        "Later funds pay exactly the reviewed 32 quote once, even after config price rises to 128");
             } finally {
                 RoyalEconomyConfig.CONSTRUCTION_FEE.set(old);
             }
@@ -670,11 +670,11 @@ public final class RoyalConstructionGuiGameTests {
                             0, accepted.intent().planSet().toString()));
             h.assertTrue(accepted.stage() == Stage.QUEUED
                             && accepted.intent().originalBuildings().contains(completed.getId().uuid())
-                            && RoyalTreasurySnapshot.forPlayer(player).spendableValue() == 64
+                            && RoyalTreasurySnapshot.forPlayer(player).spendableValue() == 96
                             && new RoyalPaymentService(level).inspectPlayer(player, id).state()
                                     == RoyalPaymentJournal.State.COMMITTED,
                     "Original actor return automatically revalidates, publishes and pays once across JVMs, excluding prior native completion");
-            System.out.println("ROYAL_WAITING_RESTART_READ_PASS waiting->QUEUED one64fee remaining64");
+            System.out.println("ROYAL_WAITING_RESTART_READ_PASS waiting->QUEUED one32fee remaining96");
             h.succeed();
             return;
         }

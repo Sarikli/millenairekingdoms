@@ -217,15 +217,15 @@ public final class RoyalNpcEconomyGameTests {
                 var d = decisions(r).load(result.attempt());
                 var pending = r.source().getPendingProject();
                 h.assertTrue(result.kind() == Kind.CONSTRUCTION && result.outcome() == Outcome.ACCEPTED
-                                && r.coins() == 192 && pending != null
+                                && r.coins() == 224 && pending != null
                                 && pending.planSetId().equals(d.choice().selection())
                                 && r.payments().load(result.attempt()).state() == State.COMMITTED,
-                        "Actual NPC fee64 follows persisted cooldown and uses existing original pending/SavedData acknowledgement, never free or instantly built work");
+                        "Actual NPC fee 32 follows persisted cooldown and uses existing original pending/SavedData acknowledgement, never free or instantly built work");
                 h.assertTrue(
-                        svc.evaluate(r.kingdom(), 10, RandomSource.create(2)).attempt() == null && r.coins() == 192,
+                        svc.evaluate(r.kingdom(), 10, RandomSource.create(2)).attempt() == null && r.coins() == 224,
                         "Same-period evaluation cannot issue another fee or request");
                 var later = svc.evaluate(r.kingdom(), 13, RandomSource.create(2));
-                h.assertTrue(later.kind() == Kind.NONE && r.coins() == 192 && r.source().getPendingProject() == pending,
+                h.assertTrue(later.kind() == Kind.NONE && r.coins() == 224 && r.source().getPendingProject() == pending,
                         "A tracked major project blocks another commission after the generic attempt cooldown");
                 h.succeed();
             } finally {

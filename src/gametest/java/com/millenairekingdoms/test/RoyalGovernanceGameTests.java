@@ -56,7 +56,7 @@ public final class RoyalGovernanceGameTests {
                     "Taking rule durably retires the prior NPC mandate synchronously");
             refused(h, () -> service.retryNpc(f.kingdom(), id));
             var retired = service.settleRetired(id);
-            h.assertTrue(retired.stage() == Stage.CANCELLED && f.value() == 64
+            h.assertTrue(retired.stage() == Stage.CANCELLED && f.value() == 96
                             && f.village().getPendingProject() == pending
                             && journal(f.level()).load(id).state() == State.COMMITTED,
                     "Accepted retirement preserves work and earned patronage without impersonating the new ruler");
@@ -117,7 +117,7 @@ public final class RoyalGovernanceGameTests {
             data.setActive(f.kingdom(), false);
             var service = new RoyalConstructionService(f.level());
             refused(h, () -> service.settleRetired(intent.id()));
-            h.assertTrue(store(f.level()).load(intent.id()).stage() == Stage.CANCELLING && f.value() == 64
+            h.assertTrue(store(f.level()).load(intent.id()).stage() == Stage.CANCELLING && f.value() == 96
                             && journal(f.level()).load(intent.id()).state() == State.PAID,
                     "An inactive treasury is not credited or replaced; retirement remains pending");
             data.setActive(f.kingdom(), true);
@@ -142,7 +142,7 @@ public final class RoyalGovernanceGameTests {
             detached.abdicate(f.kingdom(), player.getUUID());
             h.assertTrue(tag.getInt("format") == 7 && data.ruler(f.kingdom()) != null
                             && detached.ruler(f.kingdom()) == null
-                            && store(f.level()).load(intent.id()).stage() == Stage.PAID && f.value() == 64,
+                            && store(f.level()).load(intent.id()).stage() == Stage.PAID && f.value() == 96,
                     "Detached migrations/simulations retain political format 6 and have no live order side effects");
             new RoyalConstructionService(f.level()).cancelPlayer(player, intent.id());
             h.succeed();
@@ -163,7 +163,7 @@ public final class RoyalGovernanceGameTests {
                 refused(h, () -> data.claimRule(f.kingdom(), player.getUUID(), "Locked ruler", 42));
             }
             h.assertTrue(data.ruler(f.kingdom()) == null && store(f.level()).load(intent.id()).stage() == Stage.PAID
-                            && f.value() == 64,
+                            && f.value() == 96,
                     "A real order-index file lock prevents publishing new authority before durable retirement");
             data.claimRule(f.kingdom(), player.getUUID(), "Unlocked ruler", 42);
             h.assertTrue(store(f.level()).load(intent.id()).stage() == Stage.CANCELLING
@@ -192,7 +192,7 @@ public final class RoyalGovernanceGameTests {
             h.assertTrue(data.kingdom(f.kingdom()).fallen()
                             && attacker.kingdom().equals(data.owner(f.village().getId().uuid()))
                             && retired.stage() == Stage.CANCELLED && retired.cancellationFrom() == Stage.QUEUED
-                            && f.value() == 64 && attacker.value() == 128 && f.village().getPendingProject() == pending,
+                            && f.value() == 96 && attacker.value() == 128 && f.village().getPendingProject() == pending,
                     "Actual capital-collapse snapshot retires old royal tracking while autonomous work and paid value survive");
             h.succeed();
         } finally {
@@ -208,7 +208,7 @@ public final class RoyalGovernanceGameTests {
             refused(h, () -> new RoyalConstructionService(f.level()).settleRetired(intent.id()));
             h.assertTrue(store(f.level()).load(intent.id()).stage() == Stage.CANCELLING
                             && store(f.level()).load(intent.id()).blocked() == Blocked.AUTHORITY
-                            && journal(f.level()).load(intent.id()).state() == State.PAID && f.value() == 64
+                            && journal(f.level()).load(intent.id()).state() == State.PAID && f.value() == 96
                             && attacker.value() == 128 && f.village().getPendingProject() == null,
                     "Destroyed original government keeps a diagnostic pending receipt; it cannot mint or redirect refunds into another kingdom");
             h.succeed();
@@ -222,7 +222,7 @@ public final class RoyalGovernanceGameTests {
         try (var f = fixture(h, "active-guard")) {
             var intent = paidNpc(f);
             refused(h, () -> new RoyalConstructionService(f.level()).settleRetired(intent.id()));
-            h.assertTrue(store(f.level()).load(intent.id()).stage() == Stage.PAID && f.value() == 64
+            h.assertTrue(store(f.level()).load(intent.id()).stage() == Stage.PAID && f.value() == 96
                             && journal(f.level()).load(intent.id()).state() == State.PAID,
                     "The order recovery entry point requires an existing durable authority cancellation decision");
             new RoyalConstructionService(f.level()).cancelNpc(f.kingdom(), intent.id());
