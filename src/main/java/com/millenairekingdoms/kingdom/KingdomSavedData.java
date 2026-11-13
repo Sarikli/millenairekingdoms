@@ -123,7 +123,11 @@ public final class KingdomSavedData extends SavedData {
      * expiresGameTime is dropped.
      */
     public record RaidOrder(UUID id, UUID kingdom, UUID target, UUID source, UUID warId, UUID issuer,
-            long issuedGameTime, long dueGameTime, long expiresGameTime) {
+            long issuedGameTime, long dueGameTime, long expiresGameTime, long quotedCost, int quotedStrength) {
+        public RaidOrder(UUID id, UUID kingdom, UUID target, UUID source, UUID warId, UUID issuer,
+                long issuedGameTime, long dueGameTime, long expiresGameTime) {
+            this(id, kingdom, target, source, warId, issuer, issuedGameTime, dueGameTime, expiresGameTime, 0L, 0);
+        }
         public boolean byNpc() {
             return issuer == null;
         }
@@ -748,15 +752,23 @@ public final class KingdomSavedData extends SavedData {
     /** Records a pending conquest order after the political checks it carries; one order per kingdom and per target. */
     public RaidOrder addOrder(UUID kingdomId, UUID target, UUID source, UUID issuer, long gameTime, long dueGameTime,
             long expiresGameTime) {
+        return addOrder(UUID.randomUUID(), kingdomId, target, source, issuer, gameTime, dueGameTime, expiresGameTime,
+                0L, 0);
+    }
+    /** Records a pending conquest order with an explicit ID and optional upfront expedition quote. */
+    public RaidOrder addOrder(UUID orderId, UUID kingdomId, UUID target, UUID source, UUID issuer, long gameTime,
+            long dueGameTime, long expiresGameTime, long quotedCost, int quotedStrength) {
+        check(orderId != null, "Order id is required.");
         check(gameTime >= 0 && dueGameTime >= gameTime && expiresGameTime >= dueGameTime, "Invalid order times.");
+        check(quotedCost >= 0 && quotedStrength >= 0, "Invalid expedition quote.");
         check(orderOf(kingdomId) == null, "This kingdom already has a conquest raid waiting to start.");
         check(orderAgainst(target) == null && !involves(target),
                 "Another conquest raid is already prepared against this village.");
         check(source == null || kingdomId.equals(owner(source)), "The raiding village must belong to the kingdom.");
         Campaign context = campaignFor(kingdomId, target);
         check(wins(context) < requiredWins(context), "This conquest campaign is complete.");
-        var order = new RaidOrder(UUID.randomUUID(), kingdomId, target, source, context.warId, issuer, gameTime,
-                dueGameTime, expiresGameTime);
+        var order = new RaidOrder(orderId, kingdomId, target, source, context.warId, issuer, gameTime,
+                dueGameTime, expiresGameTime, quotedCost, quotedStrength);
         var orders = new HashMap<>(state.ledger.orders);
         orders.put(order.id, order);
         publishLedger(state.ledger.withOrders(orders));
@@ -839,7 +851,8 @@ public final class KingdomSavedData extends SavedData {
      * twice.
      */
     public Raid begin(UUID attacker, UUID target, long startGameTime, UUID initiator, UUID orderId) {
-        return beginIdentified(attacker, target, startGameTime, initiator, orderId, UUID.randomUUID());
+        return beginIdentified(
+                attacker, target, startGameTime, initiator, orderId, orderId != null ? orderId : UUID.randomUUID());
     }
     /** Internal durable-operation entry: the exact external operation ID cannot acquire a second political result. */
     @org.jetbrains.annotations.ApiStatus.Internal

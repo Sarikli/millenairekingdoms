@@ -120,7 +120,7 @@ public final class DiplomacyGameTests {
             var pete = player(h, "Pete", own);
             own.setOwner(olga.getUUID(), "Olga");
             reputation(h, capital, olga.getUUID(), 8192);
-            reputation(h, capital, pete.getUUID(), 100000);
+            reputation(h, capital, pete.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             relation(capital, own, 100);
             h.assertTrue(run(pete, "kingdom join " + k.id()) == 0 && data.owner(EconomyGameTests.id(own)) == null,
                     "Another player cannot attach a village that is not theirs");
@@ -157,7 +157,7 @@ public final class DiplomacyGameTests {
             var data = KingdomSavedData.get(h.getLevel());
             var k = kingdom(h, capital);
             var rex = player(h, "Rex", capital);
-            reputation(h, capital, rex.getUUID(), 40000);
+            reputation(h, capital, rex.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             run(rex, "kingdom claim");
             var olga = player(h, "Olga", own);
             own.setOwner(olga.getUUID(), "Olga");
@@ -167,7 +167,7 @@ public final class DiplomacyGameTests {
                             && data.joinRequest(EconomyGameTests.id(own)) != null,
                     "An owner's application waits for the ruler");
             var mallory = player(h, "Mallory", capital);
-            reputation(h, capital, mallory.getUUID(), 100000);
+            reputation(h, capital, mallory.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             h.assertTrue(run(mallory, "kingdom accept " + EconomyGameTests.id(own)) == 0
                             && data.owner(EconomyGameTests.id(own)) == null,
                     "Only the ruler accepts");
@@ -202,11 +202,11 @@ public final class DiplomacyGameTests {
             var kn = kingdom(h, npcCapital);
             var kr = kingdom(h, ruledCapital);
             var rex = player(h, "Rex", ruledCapital);
-            reputation(h, ruledCapital, rex.getUUID(), 40000);
+            reputation(h, ruledCapital, rex.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             run(rex, "kingdom claim");
             var dan = player(h, "Dan", first);
             reputation(h, npcCapital, dan.getUUID(), 8192);
-            reputation(h, ruledCapital, dan.getUUID(), 100000);
+            reputation(h, ruledCapital, dan.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             relation(npcCapital, first, 49);
             h.assertTrue(run(dan, "kingdom join " + kn.id()) == 0, "NPC leader and village need relation 50");
             relation(npcCapital, first, 50);

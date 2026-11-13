@@ -30,16 +30,20 @@ public final class RoyalPriceGameTests {
             var data = KingdomSavedData.get(h.getLevel());
             data.attach(k.id(), m.getId().uuid());
             long income = EconomyService.dailyIncome(h.getLevel(), data, k.id());
-            h.assertTrue(income == 12 && RoyalPrices.construction(RoyalEconomyConfig.Settings.DEFAULTS) == 64,
-                    "Default64-denier patronage stays fixed; RC.8 capital4 plus level2 member8 yields12 per day");
-            chest(h, c).setItem(0, new ItemStack(ModItems.DENIER_ARGENT.get()));
+            h.assertTrue(income == 12 && RoyalPrices.construction(RoyalEconomyConfig.Settings.DEFAULTS) == 32
+                            && RoyalPrices.upgrade(RoyalEconomyConfig.Settings.DEFAULTS, 1) == 64
+                            && RoyalPrices.upgrade(RoyalEconomyConfig.Settings.DEFAULTS, 2) == 96
+                            && RoyalPrices.upgrade(RoyalEconomyConfig.Settings.DEFAULTS, 3) == 128
+                            && RoyalPrices.shipment(RoyalEconomyConfig.Settings.DEFAULTS, 64, 1000) == 13,
+                    "1.2.3 economy defaults: 32d construction, 32*(level) upgrade, 13d for 64 items @ 1000b, 4d/lvl income");
+            chest(h, c).setItem(0, new ItemStack(ModItems.DENIER.get(), 32));
             var id = UUID.randomUUID();
             var service = new RoyalPaymentService(h.getLevel());
             h.assertTrue(
-                    service.payNpc(k.id(), id, RoyalPaymentService.Purpose.CONSTRUCTION, UUID.randomUUID(), 64).state()
+                    service.payNpc(k.id(), id, RoyalPaymentService.Purpose.CONSTRUCTION, UUID.randomUUID(), 32).state()
                                     == State.PAID
                             && RoyalTreasurySnapshot.forNpc(h.getLevel(), k.id()).spendableValue() == 0,
-                    "Default patronage actually removes its real silver coin");
+                    "Default patronage actually removes its real coins");
             service.commitNpc(k.id(), id);
             h.assertTrue(EconomyService.dailyIncome(h.getLevel(), data, k.id()) == 12 && data.owed(k.id()) == 0,
                     "Administrative charge neither changes taxation nor creates owed income");

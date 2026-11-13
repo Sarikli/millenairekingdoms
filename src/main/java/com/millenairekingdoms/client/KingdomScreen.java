@@ -311,6 +311,34 @@ public final class KingdomScreen extends Screen {
                 ry = line(rx, ry, t("select_target"), rw, MUTED);
             ry += 2;
             ry = sourceButton(rx, ry, rw);
+            long quotedCost = 0L;
+            if (selected != null && !rights.contains("order")) {
+                CompoundTag effectiveSource = resolveEffectiveSource(selected);
+                if (effectiveSource != null && effectiveSource.getInt("strength") > 0) {
+                    int s = effectiveSource.getInt("strength");
+                    double dist = Math.hypot((double) effectiveSource.getInt("x") - selected.getInt("x"),
+                            (double) effectiveSource.getInt("z") - selected.getInt("z"));
+                    int offset = view.contains("expeditionOffset") ? view.getInt("expeditionOffset")
+                                                                   : com.millenairekingdoms.economy.RoyalEconomyConfig
+                                                                             .DEFAULT_EXPEDITION_DISTANCE_OFFSET;
+                    int divisor = view.contains("expeditionDivisor") ? view.getInt("expeditionDivisor")
+                                                                     : com.millenairekingdoms.economy.RoyalEconomyConfig
+                                                                               .DEFAULT_EXPEDITION_STRENGTH_DIVISOR;
+                    var econSettings = new com.millenairekingdoms.economy.RoyalEconomyConfig.Settings(
+                            32, 4, 1, 1, offset, divisor);
+                    quotedCost = com.millenairekingdoms.economy.RoyalPrices.expedition(econSettings, s, dist);
+                    ry = wrapped(rx, ry,
+                            t("expedition_quote", effectiveSource.getString("name"), s, Math.round(dist), quotedCost),
+                            rw, TEXT, 2);
+                    long spendable = view.contains("spendableTreasury") ? view.getLong("spendableTreasury") : -1L;
+                    if (spendable < 0)
+                        ry = line(rx, ry, t("expedition_treasury_unloaded"), rw, BAD);
+                    else if (spendable < quotedCost)
+                        ry = line(rx, ry, t("expedition_insufficient", quotedCost, spendable), rw, BAD);
+                    else
+                        ry = line(rx, ry, t("expedition_treasury", spendable), rw, GOOD);
+                }
+            }
             if (rights.contains("order")) {
                 // A waiting order replaces the start button with "call off" and its status.
                 CompoundTag o = rights.getCompound("order");
@@ -323,10 +351,23 @@ public final class KingdomScreen extends Screen {
                                 com.millenairekingdoms.localization.PublicText.error(o.getString("waiting"))),
                         rw, MUTED, Math.max(1, (bottom() - 22 - ry) / 10));
             } else {
+                final long confirmCost = quotedCost;
+                long spendable = view.contains("spendableTreasury") ? view.getLong("spendableTreasury") : -1L;
+                CompoundTag effectiveSource = selected == null ? null : resolveEffectiveSource(selected);
+                boolean sourceReady = selected != null && effectiveSource != null && !effectiveSource.getBoolean("busy")
+                        && effectiveSource.getBoolean("carries") && effectiveSource.getInt("raiders") > 0
+                        && effectiveSource.getInt("strength") > 0
+                        && selected.getInt("defence") < 2 * effectiveSource.getInt("strength");
+                boolean canAfford = confirmCost <= 0 || (spendable >= 0 && spendable >= confirmCost);
+                Component blockHint = selected == null ? t("select_target")
+                        : !sourceReady ? t("source_hint")
+                        : (confirmCost > 0 && spendable < 0) ? t("expedition_treasury_unloaded")
+                        : (confirmCost > 0 && spendable < confirmCost)
+                                ? t("expedition_insufficient", confirmCost, spendable)
+                                : null;
                 button(rx, ry, rw, t("start_raid"),
-                        b
-                        -> send(KingdomActionPayload.of("RAID", selectedTarget, selectedSource)),
-                        selected != null && selected.getBoolean("ready"), selected == null ? t("select_target") : null);
+                        b -> send(KingdomActionPayload.of("RAID", selectedTarget, selectedSource, confirmCost)),
+                        selected != null && selected.getBoolean("ready") && sourceReady && canAfford, blockHint);
                 ry += 20;
             }
         } else {
@@ -344,6 +385,43 @@ public final class KingdomScreen extends Screen {
                     w, r.getBoolean("ours") ? GOOD : BAD);
         }
         warControls(bottom() - 18);
+    }
+
+    private CompoundTag resolveEffectiveSource(CompoundTag target) {
+        ListTag sources = view.getList("sources", Tag.TAG_COMPOUND);
+        if (selectedSource != null) {
+            for (int i = 0; i < sources.size(); i++) {
+                CompoundTag s = sources.getCompound(i);
+                if (selectedSource.equals(s.getUUID("id")))
+                    return s;
+            }
+            return null;
+        }
+        if (target.hasUUID("autoSource")) {
+            UUID autoId = target.getUUID("autoSource");
+            for (int i = 0; i < sources.size(); i++) {
+                CompoundTag s = sources.getCompound(i);
+                if (autoId.equals(s.getUUID("id")))
+                    return s;
+            }
+        }
+        CompoundTag best = null;
+        double bestDistSq = Double.MAX_VALUE;
+        for (int i = 0; i < sources.size(); i++) {
+            CompoundTag s = sources.getCompound(i);
+            if (s.getBoolean("busy") || !s.getBoolean("carries") || s.getInt("raiders") <= 0
+                    || s.getInt("strength") <= 0 || target.getInt("defence") >= 2 * s.getInt("strength"))
+                continue;
+            double dx = (double) s.getInt("x") - target.getInt("x");
+            double dz = (double) s.getInt("z") - target.getInt("z");
+            double distSq = dx * dx + dz * dz;
+            if (best == null || s.getInt("strength") > best.getInt("strength")
+                    || (s.getInt("strength") == best.getInt("strength") && distSq < bestDistSq)) {
+                best = s;
+                bestDistSq = distSq;
+            }
+        }
+        return best;
     }
 
     private int sourceButton(int x, int y, int w) {

@@ -235,7 +235,7 @@ public final class RoyalRuntimeGameTests {
     private static FakePlayer player(RoyalPaymentGameTests.Fixture f) {
         var player = new FakePlayer(f.level(), new GameProfile(UUID.randomUUID(), "Runtime ruler"));
         f.village().addReputation(
-                player.getUUID(), 32768 - f.village().getCombinedReputation(f.level(), player.getUUID()));
+                player.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION - f.village().getCombinedReputation(f.level(), player.getUUID()));
         KingdomSavedData.get(f.level()).claimRule(f.kingdom(), player.getUUID(), "Runtime ruler", 42);
         return player;
     }

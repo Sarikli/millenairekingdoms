@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.2.3 — 2026-11-13 — By Royal Decree
+
+- **Millénaire 9.1.0 compatibility:** Built and verified against `millenaire-9.1.0.jar`, adapting `NormalGrowthBridge`, `NativeStockBridge`, and `NaturalCapitalGrowth` to 9.1.0 APIs without modifying the dependency JAR.
+- **Rulership & war request reputation (`160000` / `32796`):** Acquiring a kingdom's rule now requires `160000` combined reputation at its capital (`PoliticsService.CLAIM_REPUTATION`), and requesting war from an NPC leader requires `32796` (`PoliticsService.WAR_REQUEST_REPUTATION`). Political decisions remain at `8192`, and existing saved rulers below `160000` retain their titles.
+- **Balanced economy defaults:**
+  - Village income remains `sum(completed town hall level) * 4` deniers/day (including the capital).
+  - Default royal construction base administration fee lowered from `64` to `32` deniers (`32 * target display level` for upgrades).
+  - Royal shipping retains `4 + ceil(horizontal distance / 128) + ceil(quantity / 64)` deniers.
+  - Existing worlds keep their saved `serverconfig/millenairekingdoms-server.toml` values without silent overwrites; delete or edit `constructionFeeDeniers = 32` to opt into the new defaults on an existing world.
+- **Upfront expedition pricing & durable payment:**
+  - Conquest expeditions now charge an upfront fee in base deniers: `ceil(S * (1000 + L) / 10000)`, where `S` is the source village's available raiding strength (`getVillageRaidingStrength()`) and `L` is horizontal source-to-target distance in blocks. Coefficients (`expeditionDistanceOffsetBlocks = 1000`, `expeditionStrengthDivisor = 10000`) are configurable in `royalEconomy`.
+  - Quotes are validated without loading chunks; player orders require reconfirmation if the quoted price changes before acceptance; payments commit once on raid departure (no refund on defeat or after departure) and refund on cancellation, expiration, or retirement before departure; legacy unpaid `RaidOrder`s (`quotedCost = 0`) remain compatible.
+- **NPC reserve & source/target selection:**
+  - NPC kingdoms enforce an economic reserve `R = max(32, 2 * dailyIncome)` and only order expeditions when spendable treasury `H >= C + R`.
+  - NPC source selection filters ready member villages with `S / D >= 1.30` (or `S > 0` when `D == 0`; unknown defence excluded), keeps candidates within `C <= 1.25 * Cmin`, maximizes quality `Q = min(S / (1.60 * D), 1)`, and tie-breaks deterministically by lower cost, shorter distance, and source UUID; equal-priority targets tie-break by `remaining_wins * C`.
+
 ## 1.2.2 — 2026-11-02 — By Royal Decree
 
 - NPC kingdoms keep persistent unpaid building plans that wait behind native village work and claim the next free native construction slot through the pre-growth handoff.

@@ -69,6 +69,7 @@ public final class RoyalConsolidationService {
         var k = data.kingdom(kingdom);
         if (k == null || !k.active() || k.fallen())
             return new Result(null, Status.DEFERRED, 0, 0, "Current active capital is unavailable");
+        new RoyalPaymentService(level).reconcileExpeditions(data);
         return RoyalPaymentService.withCapitalLock(level, k.capital(), () -> {
             for (var entry : current())
                 if (entry.intent().getString("dimension").equals(dimension())
@@ -195,9 +196,13 @@ public final class RoyalConsolidationService {
                 if (!request.contains("dimension", Tag.TAG_STRING) || !request.hasUUID("capital"))
                     throw new IllegalStateException("Unknown unresolved payment authority; consolidation deferred");
                 if (request.getString("dimension").equals(dimension())
-                        && request.getUUID("capital").equals(quote.capital()))
+                        && request.getUUID("capital").equals(quote.capital())) {
+                    if (entry.state() == State.PAID && "EXPEDITION".equals(request.getString("purpose"))
+                            && KingdomSavedData.get(level).order(entry.id()) != null)
+                        continue;
                     throw new IllegalStateException("Capital has active payment/refund/recovery reservation "
                             + entry.id() + "/" + entry.state());
+                }
             }
         RoyalEconomicReservations.requireTreasuryAvailable(level, quote.positions(), own);
     }

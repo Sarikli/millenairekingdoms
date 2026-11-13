@@ -2,6 +2,9 @@ package com.millenairekingdoms.autonomy;
 
 import com.millenairekingdoms.autonomy.AutonomyConfig.Settings;
 import com.millenairekingdoms.conquest.ConquestService;
+import com.millenairekingdoms.economy.EconomyService;
+import com.millenairekingdoms.economy.RoyalPaymentService;
+import com.millenairekingdoms.economy.RoyalPaymentService.Purpose;
 import com.millenairekingdoms.kingdom.KingdomSavedData;
 import com.millenairekingdoms.kingdom.KingdomSavedData.Kingdom;
 import com.millenairekingdoms.kingdom.KingdomSavedData.RaidOrder;
@@ -62,6 +65,7 @@ public final class RaidOrderService {
     /** Attempts every due order once; returns how many raids started. */
     public static int process(ServerLevel level) {
         var data = KingdomSavedData.get(level);
+        new RoyalPaymentService(level).reconcileExpeditions(data);
         if (data.orders().isEmpty())
             return 0;
         Settings s = AutonomyConfig.current();
@@ -82,12 +86,15 @@ public final class RaidOrderService {
                 attempt = Attempt.dropped("an unexpected error (see the server log)");
             }
             if (attempt.status() == Status.STARTED || attempt.status() == Status.RESOLVED) {
+                if (attempt.status() == Status.RESOLVED)
+                    acknowledgeOrderPayment(level, data, order);
                 started++;
                 WAITING.remove(order.id());
                 continue;
             }
             if (attempt.status() == Status.DROPPED || now >= order.expiresGameTime()) {
                 data.removeOrder(order.id());
+                refundOrder(level, data, order);
                 String previous = WAITING.remove(order.id());
                 String why = attempt.status() == Status.DROPPED ? attempt.reason()
                                                                 : "expired while waiting: " + attempt.reason();
@@ -170,8 +177,23 @@ public final class RaidOrderService {
             return Attempt.waiting(PoliticsService.name(target) + " is not loaded (no player nearby)");
         if (!level.getChunkSource().hasChunk(source.getCenter().getX() >> 4, source.getCenter().getZ() >> 4))
             return Attempt.waiting(PoliticsService.name(source) + " is not loaded (no player nearby)");
+        if (order.quotedCost() > 0) {
+            int currentStrength = source.getVillageRaidingStrength();
+            if (currentStrength <= 0)
+                return Attempt.dropped("the raiding village no longer has available raiding strength");
+            if (order.byNpc()) {
+                int targetDefense = target.getVillageDefendingStrength();
+                if (targetDefense < 0 || (targetDefense > 0 && 10L * currentStrength < 13L * targetDefense)
+                        || currentStrength != order.quotedStrength())
+                    return Attempt.dropped("source raiding strength changed; NPC will replan");
+            } else if (currentStrength > order.quotedStrength()) {
+                return Attempt.dropped(
+                        "source raiding strength increased since quoting; place a new order at the updated cost");
+            }
+        }
         try {
             var raid = ConquestService.launch(level, source.getId().uuid(), order.target(), order.issuer(), order.id());
+            acknowledgeOrderPayment(level, data, order);
             LOGGER.info("[Kingdoms] Conquest order {} started raid {}: {} -> {}.", order.id(), raid.id(),
                     PoliticsService.name(source), PoliticsService.name(target));
             tell(level, data, order,
@@ -197,22 +219,80 @@ public final class RaidOrderService {
      * order waits (for example until the target village is loaded) and expires after ORDER_LIFETIME.
      */
     public static Attempt order(ServerPlayer player, UUID targetId, UUID sourceId) {
+        return order(player, targetId, sourceId, 0L);
+    }
+
+    public static Attempt order(ServerPlayer player, UUID targetId, UUID sourceId, long expectedCost) {
         ServerLevel level = player.serverLevel();
         var data = KingdomSavedData.get(level);
         ConquestService.reconcile(level);
         Kingdom kingdom = validate(player, targetId, sourceId);
+        Village target = PoliticsService.village(level, targetId);
+        Village source = sourceId != null ? PoliticsService.village(level, sourceId)
+                                          : Military.bestSource(level, data, kingdom.id(), target);
+        KingdomException.check(source != null, "millenairekingdoms.raid.no_source",
+                "No village of your kingdom is ready to raid %s (raiders at home and enough strength are needed).",
+                PoliticsService.name(target));
+        var quote = ExpeditionPricingService.quote(level, data, kingdom.id(), source, target, false);
+        if (expectedCost > 0 && quote.cost() != expectedCost) {
+            throw new KingdomException("millenairekingdoms.raid.price_changed",
+                    "Expedition cost changed from %s to %s; confirm the updated price to launch.",
+                    EconomyService.format(expectedCost), EconomyService.format(quote.cost()));
+        }
+        KingdomException.check(quote.treasuryKnown(), "millenairekingdoms.raid.treasury_unloaded",
+                "Capital treasury storage is not loaded; cannot pay expedition cost of %s.",
+                EconomyService.format(quote.cost()));
+        KingdomException.check(quote.playerCanAfford(), "millenairekingdoms.raid.insufficient_funds",
+                "Insufficient treasury: expedition costs %s, but only %s is spendable.",
+                EconomyService.format(quote.cost()), EconomyService.format(quote.spendableTreasury()));
+        UUID orderId = UUID.randomUUID();
+        var payments = new RoyalPaymentService(level);
+        try {
+            payments.payPlayer(player, orderId, Purpose.EXPEDITION, orderId, quote.cost());
+        } catch (IllegalStateException | IllegalArgumentException unavailable) {
+            throw new KingdomException("millenairekingdoms.raid.payment_failed",
+                    "Could not pay expedition fee (%s): %s.", EconomyService.format(quote.cost()),
+                    unavailable.getMessage());
+        }
         long now = level.getGameTime();
-        RaidOrder order =
-                data.addOrder(kingdom.id(), targetId, sourceId, player.getUUID(), now, now, now + ORDER_LIFETIME);
+        RaidOrder order;
+        try {
+            order = data.addOrder(orderId, kingdom.id(), targetId, source.getId().uuid(), player.getUUID(), now, now,
+                    now + ORDER_LIFETIME, quote.cost(), quote.strength());
+        } catch (RuntimeException addFailed) {
+            payments.refundPlayer(player, orderId);
+            throw addFailed;
+        }
         Attempt attempt = attempt(level, data, order, AutonomyConfig.current());
         if (attempt.status() == Status.DROPPED) {
             data.removeOrder(order.id());
+            refundOrder(level, data, order);
             throw new KingdomException("millenairekingdoms.raid.refused", "The raid cannot start: %s.",
                     com.millenairekingdoms.localization.PublicText.error(attempt.reason()));
         }
         if (attempt.status() == Status.WAITING)
             WAITING.put(order.id(), attempt.reason());
         return attempt;
+    }
+
+    /** Creates an NPC-governed paid expedition order after verifying reserve H >= C + R. */
+    public static RaidOrder orderNpc(ServerLevel level, KingdomSavedData data, UUID kingdomId, UUID targetId,
+            UUID sourceId, long dueGameTime, long expiresGameTime) {
+        Village target = PoliticsService.village(level, targetId);
+        Village source = PoliticsService.village(level, sourceId);
+        var quote = ExpeditionPricingService.quote(level, data, kingdomId, source, target, true);
+        if (!quote.npcCanAfford())
+            throw new IllegalStateException("NPC treasury does not cover expedition cost plus reserve");
+        UUID orderId = UUID.randomUUID();
+        var payments = new RoyalPaymentService(level);
+        payments.payNpc(kingdomId, orderId, Purpose.EXPEDITION, orderId, quote.cost());
+        try {
+            return data.addOrder(orderId, kingdomId, targetId, sourceId, null, level.getGameTime(), dueGameTime,
+                    expiresGameTime, quote.cost(), quote.strength());
+        } catch (RuntimeException addFailed) {
+            payments.refundNpc(kingdomId, orderId);
+            throw addFailed;
+        }
     }
 
     /**
@@ -258,16 +338,43 @@ public final class RaidOrderService {
         return kingdom;
     }
 
-    /** The ruler cancels the kingdom's waiting order. */
+    /** The ruler cancels the kingdom's waiting order, refunding any upfront expedition fee. */
     public static RaidOrder cancel(ServerPlayer player) {
-        var data = KingdomSavedData.get(player.serverLevel());
+        var level = player.serverLevel();
+        var data = KingdomSavedData.get(level);
         Kingdom kingdom = PoliticsService.ruledKingdom(player);
         RaidOrder order = data.orderOf(kingdom.id());
         KingdomException.check(
                 order != null, "millenairekingdoms.raid.no_order", "Your kingdom has no conquest raid waiting.");
         data.removeOrder(order.id());
         WAITING.remove(order.id());
+        refundOrder(level, data, order);
         return order;
+    }
+
+    static void acknowledgeOrderPayment(ServerLevel level, KingdomSavedData data, RaidOrder order) {
+        if (order.quotedCost() <= 0)
+            return;
+        Kingdom k = data.kingdom(order.kingdom());
+        if (k == null)
+            return;
+        new RoyalPaymentService(level).acknowledgeExpedition(
+                order.id(), order.kingdom(), k.capital(), order.issuer(), order.quotedCost());
+    }
+
+    static void refundOrder(ServerLevel level, KingdomSavedData data, RaidOrder order) {
+        if (order.quotedCost() <= 0)
+            return;
+        Kingdom k = data.kingdom(order.kingdom());
+        if (k == null)
+            return;
+        try {
+            new RoyalPaymentService(level).settleRetiredExpedition(
+                    order.id(), order.kingdom(), k.capital(), order.issuer(), order.quotedCost(), true);
+        } catch (RuntimeException deferred) {
+            LOGGER.warn("[Kingdoms] Deferred refund for retired expedition {} ({}): {}", order.id(),
+                    order.quotedCost(), deferred.getMessage());
+        }
     }
 
     private static String targetName(ServerLevel level, RaidOrder order) {

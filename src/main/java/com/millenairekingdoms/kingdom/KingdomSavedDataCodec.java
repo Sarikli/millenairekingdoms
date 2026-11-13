@@ -227,6 +227,10 @@ final class KingdomSavedDataCodec {
             e.putLong("issuedGameTime", o.issuedGameTime());
             e.putLong("dueGameTime", o.dueGameTime());
             e.putLong("expiresGameTime", o.expiresGameTime());
+            if (o.quotedCost() > 0)
+                e.putLong("quotedCost", o.quotedCost());
+            if (o.quotedStrength() > 0)
+                e.putInt("quotedStrength", o.quotedStrength());
             orders.add(e);
         });
         autonomy.put("orders", orders);
@@ -376,7 +380,9 @@ final class KingdomSavedDataCodec {
                 var o = new RaidOrder(e.getUUID("id"), e.getUUID("kingdom"), e.getUUID("target"),
                         e.hasUUID("source") ? e.getUUID("source") : null, e.hasUUID("war") ? e.getUUID("war") : null,
                         e.hasUUID("issuer") ? e.getUUID("issuer") : null, e.getLong("issuedGameTime"),
-                        e.getLong("dueGameTime"), e.getLong("expiresGameTime"));
+                        e.getLong("dueGameTime"), e.getLong("expiresGameTime"),
+                        e.contains("quotedCost", Tag.TAG_LONG) ? e.getLong("quotedCost") : 0L,
+                        e.contains("quotedStrength", Tag.TAG_INT) ? e.getInt("quotedStrength") : 0);
                 unique(orders, o.id(), o);
             }
             ledger = ledger.withDecision(a.getLong("nextDecisionDay"))

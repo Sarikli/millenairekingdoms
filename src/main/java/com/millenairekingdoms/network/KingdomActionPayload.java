@@ -37,4 +37,7 @@ public record KingdomActionPayload(String action, Optional<UUID> first, Optional
     public static KingdomActionPayload of(String action, UUID first, UUID second) {
         return new KingdomActionPayload(action, Optional.ofNullable(first), Optional.ofNullable(second), 0, "");
     }
+    public static KingdomActionPayload of(String action, UUID first, UUID second, long amount) {
+        return new KingdomActionPayload(action, Optional.ofNullable(first), Optional.ofNullable(second), amount, "");
+    }
 }

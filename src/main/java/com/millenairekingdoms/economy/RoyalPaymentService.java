@@ -26,7 +26,7 @@ import net.minecraft.world.level.storage.LevelResource;
  * exists.
  */
 public final class RoyalPaymentService {
-    public enum Purpose { CONSTRUCTION, SHIPMENT_FEE, ADMINISTRATIVE }
+    public enum Purpose { CONSTRUCTION, SHIPMENT_FEE, EXPEDITION, ADMINISTRATIVE }
     public record Receipt(UUID id, State state, long amount, Purpose purpose, UUID reference) {}
     private static final Map<MinecraftServer, Set<UUID>> BUSY = new WeakHashMap<>();
     private final ServerLevel level;
@@ -163,16 +163,8 @@ public final class RoyalPaymentService {
     /** Trusted shipment ledger inspection, including an offline original actor. Never creates/reconciles spending. */
     @org.jetbrains.annotations.ApiStatus.Internal
     public Receipt inspectShipment(UUID id, UUID kingdom, UUID capital, UUID actor, long amount) {
-        if (!level.getServer().isSameThread())
-            throw new IllegalStateException("Shipment receipt inspection requires the server thread");
-        var entry = journal.load(id);
-        if (entry == null)
-            return null;
-        var request = new Request(
-                id, level.dimension().location().toString(), kingdom, capital, actor, Purpose.SHIPMENT_FEE, id, amount);
-        if (!entry.intent().equals(request.save()))
-            throw new IllegalArgumentException("Shipment does not match its original transport fee intent");
-        return receipt(request, entry);
+        return inspectPurpose(id, kingdom, capital, actor, Purpose.SHIPMENT_FEE, amount,
+                "Shipment does not match its original transport fee intent");
     }
 
     /**
@@ -180,7 +172,111 @@ public final class RoyalPaymentService {
      */
     @org.jetbrains.annotations.ApiStatus.Internal
     public Receipt acknowledgeShipment(UUID id, UUID kingdom, UUID capital, UUID actor, long amount) {
-        var inspected = inspectShipment(id, kingdom, capital, actor, amount);
+        return acknowledgePurpose(id, kingdom, capital, actor, Purpose.SHIPMENT_FEE, amount,
+                "Shipment does not match its original transport fee intent");
+    }
+
+    /**
+     * Caller has persisted cancellation before settlement. Only the original existing fee can settle: no new charge,
+     * purpose substitution or refund redirect. Original capital/storage eligibility still gates actual refunds.
+     */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public Receipt settleRetiredShipment(UUID id, UUID kingdom, UUID capital, UUID actor, long amount, boolean refund) {
+        return settleRetiredPurpose(id, kingdom, capital, actor, Purpose.SHIPMENT_FEE, amount, refund,
+                "Shipment does not match its original transport fee intent");
+    }
+
+    /** Trusted expedition ledger inspection, including an offline original actor. Never creates/reconciles spending. */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public Receipt inspectExpedition(UUID id, UUID kingdom, UUID capital, UUID actor, long amount) {
+        return inspectPurpose(id, kingdom, capital, actor, Purpose.EXPEDITION, amount,
+                "Expedition does not match its original fee intent");
+    }
+
+    /** Commit an existing matching PAID expedition fee when the raid departs. Nonrefundable once committed. */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public Receipt acknowledgeExpedition(UUID id, UUID kingdom, UUID capital, UUID actor, long amount) {
+        return acknowledgePurpose(id, kingdom, capital, actor, Purpose.EXPEDITION, amount,
+                "Expedition does not match its original fee intent");
+    }
+
+    /** Settle a cancelled/expired/retired expedition order before departure. */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public Receipt settleRetiredExpedition(UUID id, UUID kingdom, UUID capital, UUID actor, long amount, boolean refund) {
+        return settleRetiredPurpose(id, kingdom, capital, actor, Purpose.EXPEDITION, amount, refund,
+                "Expedition does not match its original fee intent");
+    }
+
+    /**
+     * Reconciles any PAID/REFUND_PREPARED expedition payments whose order is no longer waiting in KingdomSavedData
+     * (either because it departed or because it was retired/pruned while the capital was unloaded).
+     */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public void reconcileExpeditions(KingdomSavedData data) {
+        if (!level.getServer().isSameThread())
+            return;
+        String dim = level.dimension().location().toString();
+        java.util.List<Entry> entries;
+        try {
+            entries = journal.entries();
+        } catch (RuntimeException e) {
+            return;
+        }
+        for (Entry entry : entries) {
+            if (entry.state() != State.PAID && entry.state() != State.REFUND_PREPARED)
+                continue;
+            Request req;
+            try {
+                req = Request.read(entry.id(), entry.intent());
+            } catch (RuntimeException e) {
+                continue;
+            }
+            if (req.purpose != Purpose.EXPEDITION || !req.dimension.equals(dim))
+                continue;
+            if (entry.state() == State.PAID && data.order(entry.id()) != null)
+                continue;
+            boolean launched = data.activeRaids().stream().anyMatch(r -> r.id().equals(entry.id()))
+                    || data.receipt(entry.id()) != null;
+            if (!launched) {
+                try {
+                    var op = new com.millenairekingdoms.autonomy.StrategicBattleStore(level).read(entry.id());
+                    launched = op != null
+                            && op.status() != com.millenairekingdoms.autonomy.StrategicBattleStore.Status.ABORTED;
+                } catch (RuntimeException ignored) {
+                }
+            }
+            try {
+                if (launched && entry.state() == State.PAID) {
+                    acknowledgeExpedition(entry.id(), req.kingdom, req.capital, req.actor, req.amount);
+                } else {
+                    var k = data.kingdom(req.kingdom);
+                    if (k != null && !k.fallen() && req.capital.equals(k.capital())
+                            && TreasuryService.loaded(level, k)) {
+                        settleRetiredExpedition(entry.id(), req.kingdom, req.capital, req.actor, req.amount, true);
+                    }
+                }
+            } catch (RuntimeException ignored) {
+            }
+        }
+    }
+
+    private Receipt inspectPurpose(UUID id, UUID kingdom, UUID capital, UUID actor, Purpose purpose, long amount,
+            String mismatchMessage) {
+        if (!level.getServer().isSameThread())
+            throw new IllegalStateException("Royal receipt inspection requires the server thread");
+        var entry = journal.load(id);
+        if (entry == null)
+            return null;
+        var request = new Request(
+                id, level.dimension().location().toString(), kingdom, capital, actor, purpose, id, amount);
+        if (!entry.intent().equals(request.save()))
+            throw new IllegalArgumentException(mismatchMessage);
+        return receipt(request, entry);
+    }
+
+    private Receipt acknowledgePurpose(UUID id, UUID kingdom, UUID capital, UUID actor, Purpose purpose, long amount,
+            String mismatchMessage) {
+        var inspected = inspectPurpose(id, kingdom, capital, actor, purpose, amount, mismatchMessage);
         if (inspected == null)
             return null;
         return exclusive(capital, () -> {
@@ -193,17 +289,13 @@ public final class RoyalPaymentService {
         });
     }
 
-    /**
-     * Caller has persisted cancellation before settlement. Only the original existing fee can settle: no new charge,
-     * purpose substitution or refund redirect. Original capital/storage eligibility still gates actual refunds.
-     */
-    @org.jetbrains.annotations.ApiStatus.Internal
-    public Receipt settleRetiredShipment(UUID id, UUID kingdom, UUID capital, UUID actor, long amount, boolean refund) {
-        var inspected = inspectShipment(id, kingdom, capital, actor, amount);
+    private Receipt settleRetiredPurpose(UUID id, UUID kingdom, UUID capital, UUID actor, Purpose purpose, long amount,
+            boolean refund, String mismatchMessage) {
+        var inspected = inspectPurpose(id, kingdom, capital, actor, purpose, amount, mismatchMessage);
         if (inspected == null)
             return null;
         if (!refund)
-            return acknowledgeShipment(id, kingdom, capital, actor, amount);
+            return acknowledgePurpose(id, kingdom, capital, actor, purpose, amount, mismatchMessage);
         if (inspected.state() == State.REFUNDED)
             return inspected;
         if (inspected.state() != State.PREPARED && inspected.state() != State.PAID
@@ -379,6 +471,9 @@ public final class RoyalPaymentService {
                 continue;
             var pending = Request.read(other.id(), other.intent());
             if (pending.dimension.equals(request.dimension) && pending.capital.equals(request.capital)) {
+                if (pending.purpose == Purpose.EXPEDITION && other.state() == State.PAID
+                        && KingdomSavedData.get(level).order(other.id()) != null)
+                    continue;
                 throw new IllegalStateException("Capital has unresolved payment " + other.id() + " (" + other.state()
                         + "); settle it before another expense");
             }

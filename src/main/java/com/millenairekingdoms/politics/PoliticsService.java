@@ -27,13 +27,12 @@ import org.millenaire.village.VillageSavedData;
  * Reads Millénaire reputation and relations, never writes them, and never touches village ownership.
  */
 public final class PoliticsService {
-    /**
-     * Millénaire's "friend of the village": request a war from an NPC leader, and the floor for a ruler's decisions.
-     */
-    public static final int WAR_REQUEST_REPUTATION = ReputationConstants.FRIEND_OF_THE_VILLAGE;
+    /** Reputation required to request a war from an NPC leader. */
+    public static final int WAR_REQUEST_REPUTATION = 32_796;
+    /** Millénaire's "friend of the village": floor for a ruler's decisions and NPC village-join petitions. */
     public static final int DECISION_REPUTATION = ReputationConstants.FRIEND_OF_THE_VILLAGE;
-    /** Millénaire's "one of us": take over a kingdom's rule. */
-    public static final int CLAIM_REPUTATION = ReputationConstants.ONE_OF_US;
+    /** Reputation required at a kingdom's capital to take over its rule. */
+    public static final int CLAIM_REPUTATION = 160_000;
     public static final double CAPITAL_REACH = 64.0;
     /**
      * An NPC leader grants a war request against a capital it regards as BAD (-30) or worse, and an NPC attacker
@@ -269,9 +268,9 @@ public final class PoliticsService {
                     kingdom.name());
         else {
             int reputation = capital.getCombinedReputation(level, player.getUUID());
-            check(reputation >= WAR_REQUEST_REPUTATION, "friends_only",
+            check(reputation >= DECISION_REPUTATION, "friends_only",
                     "The leader of %s only listens to friends of the village (reputation %s); yours is %s.",
-                    kingdom.name(), WAR_REQUEST_REPUTATION, reputation);
+                    kingdom.name(), DECISION_REPUTATION, reputation);
         }
         if (!owned || ruler == null)
             check(relation >= JOIN_RELATION, owned ? "join_relation_leader" : "join_relation_elders",

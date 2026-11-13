@@ -93,7 +93,7 @@ public final class RoyalMonitorGameTests {
         try (var f = fixture(h, "monitor-reputation")) {
             var player = new FakePlayer(f.level(), new GameProfile(UUID.randomUUID(), "Monitor ruler"));
             f.village().addReputation(
-                    player.getUUID(), 32768 - f.village().getCombinedReputation(f.level(), player.getUUID()));
+                    player.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION - f.village().getCombinedReputation(f.level(), player.getUUID()));
             KingdomSavedData.get(f.level()).claimRule(f.kingdom(), player.getUUID(), "Monitor ruler", 42);
             var choice = RoyalConstructionCatalog.forPlayer(player, f.village().getId().uuid()).options().getFirst();
             var id = UUID.randomUUID();

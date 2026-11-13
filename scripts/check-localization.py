@@ -73,13 +73,15 @@ def main():
             if slots(source) != slots(target):
                 raise ValueError(f"{locale}/{key}: semantic parameter identity/type/multiplicity differs")
 
-    original = ROOT / "millenaire-9.0.3.jar"
+    props = dict(re.findall(r'^([a-z_][a-z0-9_]*)=(.*)$', (ROOT / "gradle.properties").read_text(), re.M))
+    mv = props.get("millenaire_version", "9.1.0")
+    original = ROOT / f"millenaire-{mv}.jar"
     if original.exists():
         with zipfile.ZipFile(original) as native:
             codes = sorted(re.fullmatch(r"assets/millenaire/lang/([^/]+)\.json", name)[1]
                            for name in native.namelist() if re.fullmatch(r"assets/millenaire/lang/([^/]+)\.json", name))
         if sorted(locales) != codes or len(codes) != 26:
-            raise ValueError("Locale manifest differs from the original9.0.3 asset locale list")
+            raise ValueError(f"Locale manifest differs from the original {mv} asset locale list")
 
     baseline = ROOT / "releases/1.2.0-rc8-alpha.dev8/millenairekingdoms-1.2.0-rc8-alpha.dev8.jar"
     if baseline.exists():

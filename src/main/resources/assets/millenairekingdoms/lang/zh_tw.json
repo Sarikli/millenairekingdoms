@@ -1484,5 +1484,16 @@
   "millenairekingdoms.chronicle.compact.title.construction_complete": "完成的工作",
   "millenairekingdoms.chronicle.compact.title.investment": "財務投資",
   "millenairekingdoms.chronicle.compact.title.shipment": "收到的商品",
-  "millenairekingdoms.chronicle.compact.title.strategic_battle": "遠方軍事交鋒"
+  "millenairekingdoms.chronicle.compact.title.strategic_battle": "遠方軍事交鋒",
+  "millenairekingdoms.gui.expedition_quote": "Cost: %s (str %s, %s blocks) -> %s deniers",
+  "millenairekingdoms.gui.expedition_treasury": "Spendable treasury: %s deniers",
+  "millenairekingdoms.gui.expedition_treasury_unloaded": "Capital treasury unloaded; cannot pay upfront.",
+  "millenairekingdoms.gui.expedition_insufficient": "Needs %s deniers (spendable: %s).",
+  "millenairekingdoms.raid.invalid_villages": "Both raiding and target villages must exist and differ.",
+  "millenairekingdoms.raid.source_not_member": "The raiding village must belong to the kingdom.",
+  "millenairekingdoms.raid.no_strength": "%s has no available raiding strength.",
+  "millenairekingdoms.raid.price_changed": "Expedition cost changed from %s to %s; confirm the updated price to launch.",
+  "millenairekingdoms.raid.treasury_unloaded": "Capital treasury storage is not loaded; cannot pay expedition cost of %s.",
+  "millenairekingdoms.raid.insufficient_funds": "Insufficient treasury: expedition costs %s, but only %s is spendable.",
+  "millenairekingdoms.raid.payment_failed": "Could not pay expedition fee (%s): %s."
 }

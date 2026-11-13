@@ -94,7 +94,7 @@ public final class AutonomyGameTests {
             var k = kingdom(d, capital);
             var e = kingdom(d, enemy);
             var rex = Stage5Support.player(h, "Rex", capital);
-            Stage5Support.reputation(h, capital, rex.getUUID(), 40000);
+            Stage5Support.reputation(h, capital, rex.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             h.assertTrue(Stage5Support.run(rex, "kingdom claim") == 1, "Rex rules the kingdom");
             owned.setOwner(UUID.randomUUID(), "Olga");
             relation(capital, owned, 100);
@@ -324,6 +324,8 @@ public final class AutonomyGameTests {
             UUID owner = UUID.randomUUID();
             target.setOwner(owner, "Local lord");
             raider(src);
+            Stage5Support.chest(h, kc).setItem(
+                    0, new net.minecraft.world.item.ItemStack(org.millenaire.item.ModItems.DENIER_OR.get(), 2));
             var war = d.declareWar(k.id(), t.id(), level.getGameTime());
             long day = Math.max(0, d.day());
             h.assertTrue(AutonomyService.warTargets(d, war).equals(java.util.List.of(id(target))),
@@ -399,6 +401,8 @@ public final class AutonomyGameTests {
             var d = KingdomSavedData.get(level);
             var k = kingdom(d, kc);
             raider(kc);
+            Stage5Support.chest(h, kc).setItem(
+                    0, new net.minecraft.world.item.ItemStack(org.millenaire.item.ModItems.DENIER_OR.get(), 2));
             relation(kc, free, -90);
             relation(kc, other, -90);
             var settings = ON;
@@ -533,11 +537,13 @@ public final class AutonomyGameTests {
             d.attach(e.id(), id(em));
             d.attach(e.id(), id(em2));
             var ruler = Stage5Support.player(h, "Ruth", kc);
-            Stage5Support.reputation(h, kc, ruler.getUUID(), 40000);
+            Stage5Support.reputation(h, kc, ruler.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             Stage5Support.run(ruler, "kingdom claim");
+            Stage5Support.chest(h, kc).setItem(
+                    0, new net.minecraft.world.item.ItemStack(org.millenaire.item.ModItems.DENIER_OR.get(), 2));
             var raiderRecord = raider(kc);
             var stranger = Stage5Support.player(h, "Sam", kc);
-            Stage5Support.reputation(h, kc, stranger.getUUID(), 100000);
+            Stage5Support.reputation(h, kc, stranger.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             h.assertTrue(Stage5Support.run(stranger, "kingdom raid " + id(free)) == 0 && kc.getRaidTarget() == null,
                     "16. A non-ruler cannot order raids");
             raiderRecord.setKilled(true);
@@ -596,7 +602,7 @@ public final class AutonomyGameTests {
             long now = level.getGameTime();
             var npcOrder = d.addOrder(k.id(), id(free), null, null, now, now, now + 1000);
             var heir = Stage5Support.player(h, "Heir", kc);
-            Stage5Support.reputation(h, kc, heir.getUUID(), 40000);
+            Stage5Support.reputation(h, kc, heir.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             Stage5Support.run(heir, "kingdom claim");
             var before = millenaire(h);
             var a = RaidOrderService.attempt(level, d, npcOrder, ON);
@@ -607,7 +613,7 @@ public final class AutonomyGameTests {
             Stage5Support.reputation(h, kc, heir.getUUID(), 8191);
             h.assertTrue(RaidOrderService.attempt(level, d, rulerOrder, ON).status() == RaidOrderService.Status.WAITING,
                     "M2. Low reputation: the order waits");
-            Stage5Support.reputation(h, kc, heir.getUUID(), 40000);
+            Stage5Support.reputation(h, kc, heir.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             Stage5Support.run(heir, "kingdom abdicate");
             h.assertTrue(RaidOrderService.attempt(level, d, rulerOrder, ON).status() == RaidOrderService.Status.DROPPED
                             && before.equals(millenaire(h)),

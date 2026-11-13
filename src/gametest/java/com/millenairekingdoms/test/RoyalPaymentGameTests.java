@@ -146,7 +146,7 @@ public final class RoyalPaymentGameTests {
     public static void playerPaymentsUseRealRulerAndReputationChecks(GameTestHelper h) throws Exception {
         try (var f = fixture(h, "player")) {
             var p = new FakePlayer(f.level, new GameProfile(UUID.randomUUID(), "Royal payer"));
-            f.village.addReputation(p.getUUID(), 32768 - f.village.getCombinedReputation(f.level, p.getUUID()));
+            f.village.addReputation(p.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION - f.village.getCombinedReputation(f.level, p.getUUID()));
             KingdomSavedData.get(f.level).claimRule(f.kingdom, p.getUUID(), "Royal payer", 1);
             f.chest().setItem(0, new ItemStack(ModItems.DENIER.get(), 10));
             var s = f.service();

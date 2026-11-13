@@ -125,7 +125,7 @@ public final class RoyalCatalogGameTests {
         try (var f = eligible(h); var other = eligible(h)) {
             refused(h, () -> RoyalConstructionCatalog.forNpc(f.level, other.kingdom, f.village.getId().uuid()));
             var p = new FakePlayer(f.level, new GameProfile(UUID.randomUUID(), "Royal catalog ruler"));
-            f.village.addReputation(p.getUUID(), 32768 - f.village.getCombinedReputation(f.level, p.getUUID()));
+            f.village.addReputation(p.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION - f.village.getCombinedReputation(f.level, p.getUUID()));
             var data = KingdomSavedData.get(f.level);
             data.claimRule(f.kingdom, p.getUUID(), "Royal catalog ruler", 1);
             refused(h, () -> f.catalog());

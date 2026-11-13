@@ -136,7 +136,7 @@ public final class RoyalUpgradeLiveGameTests {
                     kingdom = bank.kingdom();
                     ruler = new FakePlayer(level, new GameProfile(UUID.randomUUID(), "Upgrade ruler"));
                     capital.addReputation(
-                            ruler.getUUID(), 32768 - capital.getCombinedReputation(level, ruler.getUUID()));
+                            ruler.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION - capital.getCombinedReputation(level, ruler.getUUID()));
                     KingdomSavedData.get(level).claimRule(kingdom, ruler.getUUID(), "Upgrade ruler", 84);
                 }
                 forceArea(anchor, 8);

@@ -193,7 +193,7 @@ public final class RoyalConstructionGuiGameTests {
             send(f.player, KingdomActionPayload.of("CONSTRUCTION_RESUME", offer.getUUID("offer")));
             var next = new Stage5Support.TestPlayer(f.f.level(), "New builder ruler");
             f.f.village().addReputation(
-                    next.getUUID(), 32768 - f.f.village().getCombinedReputation(f.f.level(), next.getUUID()));
+                    next.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION - f.f.village().getCombinedReputation(f.f.level(), next.getUUID()));
             data.claimRule(f.f.kingdom(), next.getUUID(), "New builder ruler", 42);
             send(next, KingdomActionPayload.of("CONSTRUCTION_RESUME", offer.getUUID("offer")));
             h.assertTrue(store(f.f.level()).load(offer.getUUID("offer")).stage() == Stage.CANCELLING
@@ -735,7 +735,7 @@ public final class RoyalConstructionGuiGameTests {
         f.chest().setItem(0, new ItemStack(ModItems.DENIER_ARGENT.get(), 2));
         var player = new Stage5Support.TestPlayer(f.level(), "Builder ruler");
         f.village().addReputation(
-                player.getUUID(), 32768 - f.village().getCombinedReputation(f.level(), player.getUUID()));
+                player.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION - f.village().getCombinedReputation(f.level(), player.getUUID()));
         KingdomSavedData.get(f.level()).claimRule(f.kingdom(), player.getUUID(), "Builder ruler", 42);
         return new Fixture(f, player);
     }

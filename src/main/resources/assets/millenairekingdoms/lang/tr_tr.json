@@ -1484,5 +1484,16 @@
   "millenairekingdoms.chronicle.compact.title.construction_complete": "İnşaat tamamlandı",
   "millenairekingdoms.chronicle.compact.title.investment": "Hazine yatırımı",
   "millenairekingdoms.chronicle.compact.title.shipment": "Sevkiyat ulaştı",
-  "millenairekingdoms.chronicle.compact.title.strategic_battle": "Stratejik çarpışma"
+  "millenairekingdoms.chronicle.compact.title.strategic_battle": "Stratejik çarpışma",
+  "millenairekingdoms.gui.expedition_quote": "Bedel: %s (güç %s, %s blok) -> %s denier",
+  "millenairekingdoms.gui.expedition_treasury": "Harcanabilir hazine: %s denier",
+  "millenairekingdoms.gui.expedition_treasury_unloaded": "Başkent hazinesi yüklü değil; peşin ödeme yapılamıyor.",
+  "millenairekingdoms.gui.expedition_insufficient": "%s denier gerekli (harcanabilir: %s).",
+  "millenairekingdoms.raid.invalid_villages": "Saldıran ve hedef köyler mevcut ve farklı olmalıdır.",
+  "millenairekingdoms.raid.source_not_member": "Saldıran köy krallığa ait olmalıdır.",
+  "millenairekingdoms.raid.no_strength": "%s köyünün kullanılabilir baskın gücü yok.",
+  "millenairekingdoms.raid.price_changed": "Sefer bedeli %s -> %s olarak değişti; başlatmak için yeni bedeli onaylayın.",
+  "millenairekingdoms.raid.treasury_unloaded": "Başkent hazine deposu yüklü değil; %s sefer bedeli ödenemiyor.",
+  "millenairekingdoms.raid.insufficient_funds": "Yetersiz hazine: sefer bedeli %s, harcanabilir tutar %s.",
+  "millenairekingdoms.raid.payment_failed": "Sefer bedeli ödenemedi (%s): %s."
 }

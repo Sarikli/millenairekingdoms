@@ -133,7 +133,7 @@ public final class RoyalStockGameTests {
             refused(h, () -> RoyalVillageStock.forNpc(f.level(), other.kingdom(), f.village().getId().uuid()));
             var player = new FakePlayer(f.level(), new GameProfile(UUID.randomUUID(), "Stock ruler"));
             f.village().addReputation(
-                    player.getUUID(), 32768 - f.village().getCombinedReputation(f.level(), player.getUUID()));
+                    player.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION - f.village().getCombinedReputation(f.level(), player.getUUID()));
             KingdomSavedData.get(f.level()).claimRule(f.kingdom(), player.getUUID(), "Stock ruler", 42);
             refused(h, original::requireUnchanged);
             refused(h, () -> stock(f));

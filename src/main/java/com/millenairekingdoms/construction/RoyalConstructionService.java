@@ -390,6 +390,7 @@ public final class RoyalConstructionService {
             if (!eligible(current, intent))
                 return blocked(entry, Blocked.MISSING_PLAN);
             template(intent.plan());
+            payments.reconcileExpeditions(KingdomSavedData.get(level));
             var receipt = player == null
                     ? payments.payNpc(intent.kingdom(), intent.id(), Purpose.CONSTRUCTION, intent.id(), intent.fee())
                     : payments.payPlayer(player, intent.id(), Purpose.CONSTRUCTION, intent.id(), intent.fee());

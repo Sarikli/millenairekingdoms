@@ -138,7 +138,7 @@ public final class GuiGameTests {
                     "Military: named targets with status and sources");
             var rights = view.getCompound("rights");
             h.assertTrue(rights.contains("decideOk") && rights.contains("withdrawOk")
-                            && rights.getInt("reputation") == 40000,
+                            && rights.getInt("reputation") == com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION,
                     "Rulership rights");
             var guest = Stage5Support.player(h, "Viewer", r.capital());
             var other = KingdomScreens.build(guest);
@@ -193,12 +193,14 @@ public final class GuiGameTests {
             h.assertTrue(Stage5Support.run(guest, "kingdoms info " + quote.apply(k.name())) == -1,
                     "Name resolution grants no operator permission");
             d.claimRule(k.id(), guest.getUUID(), "NameGuest", level.getGameTime());
-            Stage5Support.reputation(h, capital, guest.getUUID(), 40000);
+            Stage5Support.reputation(h, capital, guest.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             d.requestJoin(id(duplicate), k.id(), null, "", level.getGameTime());
             h.assertTrue(Stage5Support.run(guest, "kingdom refuse \"Other named village\"") == 1
                             && d.joinRequest(id(duplicate)) == null,
                     "Player application commands accept village names with the same ruler checks");
             raider(capital);
+            Stage5Support.chest(h, capital).setItem(
+                    0, new net.minecraft.world.item.ItemStack(org.millenaire.item.ModItems.DENIER_OR.get(), 2));
             h.assertTrue(Stage5Support.run(guest, "kingdom raid \"Other named village\" \"Named capital\"") == 1
                             && d.raid(id(duplicate)) != null,
                     "Named source and target start a real raid through the existing service");

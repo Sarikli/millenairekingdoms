@@ -52,7 +52,7 @@ public final class RoyalSnapshotGameTests {
             var data = KingdomSavedData.get(h.getLevel());
             var before = RoyalTreasurySnapshot.forNpc(h.getLevel(), k.id());
             var ruler = player(h, "Royal ruler", v);
-            reputation(h, v, ruler.getUUID(), 32768);
+            reputation(h, v, ruler.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             data.claimRule(k.id(), ruler.getUUID(), "Royal ruler", 1);
             rejected(h, () -> before.requireUnchanged());
             rejected(h, () -> RoyalTreasurySnapshot.forNpc(h.getLevel(), k.id()));

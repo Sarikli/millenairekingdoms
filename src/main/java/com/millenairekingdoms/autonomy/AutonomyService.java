@@ -1,6 +1,8 @@
 package com.millenairekingdoms.autonomy;
 
 import com.millenairekingdoms.autonomy.AutonomyConfig.Settings;
+import com.millenairekingdoms.economy.EconomyService;
+import com.millenairekingdoms.economy.RoyalPrices;
 import com.millenairekingdoms.kingdom.KingdomSavedData;
 import com.millenairekingdoms.kingdom.KingdomSavedData.Kingdom;
 import com.millenairekingdoms.kingdom.KingdomSavedData.War;
@@ -376,13 +378,19 @@ public final class AutonomyService {
 
     // ---- Package C: NPC conquest raid orders ----
 
-    private record Plan(Village target, Village source, double distance) {}
+    private record Plan(Village target, ExpeditionPricingService.NpcCandidate chosen,
+            java.math.BigInteger campaignCost) {}
 
     /**
-     * The nearest (target, ready source) pair among the candidates, skipping targets on cooldown or already engaged.
+     * Evaluates politically legal targets with NPC source selection and economic reserve, tie-breaking equal-priority
+     * targets by remaining required wins * selected expedition cost, then distance, then target UUID.
      */
     private static Plan plan(
             ServerLevel level, KingdomSavedData data, UUID kingdom, List<UUID> targets, long day, Settings s) {
+        long spendable = ExpeditionPricingService.spendableTreasury(level, data, kingdom);
+        if (spendable < 0)
+            return null;
+        long reserve = RoyalPrices.npcReserve(EconomyService.dailyIncome(level, data, kingdom));
         Plan best = null;
         for (UUID id : targets) {
             long last = data.lastRaidDay(id);
@@ -391,14 +399,34 @@ public final class AutonomyService {
             Village target = PoliticsService.village(level, id);
             if (target == null || Military.busy(target))
                 continue;
-            Village source = Military.bestSource(level, data, kingdom, target);
-            if (source == null)
+            KingdomSavedData.Campaign campaign;
+            try {
+                campaign = data.campaignFor(kingdom, id);
+            } catch (IllegalArgumentException ineligible) {
                 continue;
-            double distance = source.getCenter().distSqr(target.getCenter());
-            if (best == null || distance < best.distance)
-                best = new Plan(target, source, distance);
+            }
+            int remainingWins = Math.max(1, KingdomSavedData.requiredWins(campaign) - data.wins(campaign));
+            var selection = ExpeditionPricingService.selectNpcSource(level, data, kingdom, target, spendable, reserve);
+            if (!selection.ok())
+                continue;
+            var chosen = selection.chosen();
+            java.math.BigInteger campaignCost =
+                    java.math.BigInteger.valueOf(remainingWins).multiply(java.math.BigInteger.valueOf(chosen.cost()));
+            if (best == null || isBetterPlan(target, chosen, campaignCost, best))
+                best = new Plan(target, chosen, campaignCost);
         }
         return best;
+    }
+
+    private static boolean isBetterPlan(Village target, ExpeditionPricingService.NpcCandidate chosen,
+            java.math.BigInteger campaignCost, Plan best) {
+        int costCmp = campaignCost.compareTo(best.campaignCost);
+        if (costCmp != 0)
+            return costCmp < 0;
+        int distCmp = Double.compare(chosen.distance(), best.chosen.distance());
+        if (distCmp != 0)
+            return distCmp < 0;
+        return target.getId().uuid().compareTo(best.target.getId().uuid()) < 0;
     }
 
     /**
@@ -466,13 +494,13 @@ public final class AutonomyService {
         UUID target = plan.target.getId().uuid();
         KingdomSavedData.RaidOrder order;
         try {
-            order = data.addOrder(k.id(), target, plan.source.getId().uuid(), null, now,
+            order = RaidOrderService.orderNpc(level, data, k.id(), target, plan.chosen.sourceId(),
                     now + RaidOrderService.NPC_PREPARATION, now + RaidOrderService.ORDER_LIFETIME);
-        } catch (IllegalArgumentException refused) {
+        } catch (IllegalArgumentException | IllegalStateException refused) {
             return null;
         }
-        LOGGER.info("[Kingdoms] {} prepares a conquest raid from {} on {}{}.", k.name(),
-                PoliticsService.name(plan.source), PoliticsService.name(plan.target),
+        LOGGER.info("[Kingdoms] {} prepares a conquest raid from {} on {} for {} deniers{}.", k.name(),
+                plan.chosen.sourceName(), PoliticsService.name(plan.target), order.quotedCost(),
                 attacking ? " (war on " + data.kingdom(war.defenderKingdom()).name() + ")" : " (independent village)");
         if (attacking)
             PoliticsService.notifyRuler(level, war.defenderKingdom(),

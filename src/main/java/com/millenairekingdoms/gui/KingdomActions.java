@@ -152,7 +152,7 @@ public final class KingdomActions {
                 yield ok("founded", "You founded and rule %s.", k.name());
             }
             case RAID -> {
-                var attempt = RaidOrderService.order(player, nonNull(first), second);
+                var attempt = RaidOrderService.order(player, nonNull(first), second, r.amount());
                 yield attempt.status() == RaidOrderService.Status.STARTED
                         ? ok("raid_started", "Conquest raid started.")
                         : ok("raid_waiting", "Conquest raid ordered; it starts when possible (%s).", attempt.reason());

@@ -286,7 +286,7 @@ public final class RoyalSiteGameTests {
         if (playerOrder) {
             player = new FakePlayer(f.level(), new GameProfile(UUID.randomUUID(), "Site ruler"));
             f.village().addReputation(
-                    player.getUUID(), 32768 - f.village().getCombinedReputation(f.level(), player.getUUID()));
+                    player.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION - f.village().getCombinedReputation(f.level(), player.getUUID()));
             KingdomSavedData.get(f.level()).claimRule(f.kingdom(), player.getUUID(), "Site ruler", 42);
         }
         var choices = player == null

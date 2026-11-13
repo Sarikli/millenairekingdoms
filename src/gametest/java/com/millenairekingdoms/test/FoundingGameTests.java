@@ -726,7 +726,7 @@ public final class FoundingGameTests {
                             && view.getCompound("kingdom").getString("name").equals(k.name())
                             && view.getCompound("kingdom").getList("members", Tag.TAG_COMPOUND).size() == 2,
                     "26. The kingdom screen shows the new kingdom");
-            Stage5Support.reputation(h, founder, player.getUUID(), 40000);
+            Stage5Support.reputation(h, founder, player.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             h.assertTrue(Stage5Support.run(player, "kingdom claim") == 1
                             && player.getUUID().equals(d.ruler(k.id()).player()) && !d.npcGoverned(k.id()),
                     "24. A player with enough reputation takes over its rule");

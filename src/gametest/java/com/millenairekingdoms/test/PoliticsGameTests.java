@@ -29,10 +29,10 @@ public final class PoliticsGameTests {
             var l = kingdom(h, d);
             var alice = player(h, "Alice", c);
             var bob = player(h, "Bob", c);
-            reputation(h, c, alice.getUUID(), 32767);
+            reputation(h, c, alice.getUUID(), 159999);
             h.assertTrue(
-                    run(alice, "kingdom claim") == 0 && data.ruler(k.id()) == null, "Below 32768 the claim is refused");
-            reputation(h, c, alice.getUUID(), 32768);
+                    run(alice, "kingdom claim") == 0 && data.ruler(k.id()) == null, "Below 160000 the claim is refused");
+            reputation(h, c, alice.getUUID(), 160000);
             moveTo(alice, c, 65);
             h.assertTrue(run(alice, "kingdom claim") == 0 && data.ruledBy(alice.getUUID()) == null,
                     "More than 64 blocks from the capital is refused");
@@ -41,16 +41,16 @@ public final class PoliticsGameTests {
             var relations = c.getRelations();
             var reputation = c.getReputation().get(alice.getUUID());
             h.assertTrue(run(alice, "kingdom claim") == 1 && alice.getUUID().equals(data.ruler(k.id()).player()),
-                    "At 32768 within 64 blocks the claim succeeds");
+                    "At 160000 within 64 blocks the claim succeeds");
             h.assertTrue(java.util.Objects.equals(owner, c.getOwnerUUID()) && c.getOwnerUUID() == null
                             && relations.equals(c.getRelations())
                             && reputation == c.getReputation().get(alice.getUUID()),
                     "Ruling changes no Millénaire ownership, relation or reputation");
-            reputation(h, c, bob.getUUID(), 100000);
+            reputation(h, c, bob.getUUID(), 200000);
             h.assertTrue(run(bob, "kingdom claim") == 0 && alice.getUUID().equals(data.ruler(k.id()).player()),
                     "A second player cannot take a ruled kingdom");
             moveTo(alice, d, 0);
-            reputation(h, d, alice.getUUID(), 100000);
+            reputation(h, d, alice.getUUID(), 200000);
             h.assertTrue(run(alice, "kingdom claim") == 0 && data.ruler(l.id()) == null,
                     "A ruler cannot claim a second kingdom");
             h.assertTrue(
@@ -73,8 +73,11 @@ public final class PoliticsGameTests {
             var k = kingdom(h, c);
             var l = kingdom(h, d);
             var alice = player(h, "Alice", c);
-            reputation(h, c, alice.getUUID(), 40000);
+            reputation(h, c, alice.getUUID(), 160000);
             run(alice, "kingdom claim");
+            reputation(h, c, alice.getUUID(), 100000);
+            h.assertTrue(alice.getUUID().equals(data.ruler(k.id()).player()),
+                    "An existing ruler below 160000 retains rulership");
             reputation(h, c, alice.getUUID(), 8191);
             h.assertTrue(run(alice, "kingdom war declare " + l.id()) == 0 && data.activeWar(k.id()) == null,
                     "Below 8192 decisions are blocked");
@@ -106,8 +109,8 @@ public final class PoliticsGameTests {
             var m = kingdom(h, e);
             var alice = player(h, "Alice", c);
             var bob = player(h, "Bob", d);
-            reputation(h, c, alice.getUUID(), 40000);
-            reputation(h, d, bob.getUUID(), 40000);
+            reputation(h, c, alice.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
+            reputation(h, d, bob.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             run(alice, "kingdom claim");
             run(bob, "kingdom claim");
             h.assertTrue(run(alice, "kingdom war declare " + l.id()) == 1, "Ruler A declares war");
@@ -143,11 +146,11 @@ public final class PoliticsGameTests {
             var k = kingdom(h, c);
             var l = kingdom(h, d);
             var carol = player(h, "Carol", c);
-            reputation(h, c, carol.getUUID(), 8191);
+            reputation(h, c, carol.getUUID(), 32_795);
             relation(c, d, -30);
             h.assertTrue(run(carol, "kingdom war request " + l.id()) == 0 && data.activeWar(k.id()) == null,
-                    "Below 8192 the leader does not listen");
-            reputation(h, c, carol.getUUID(), 8192);
+                    "Below 32796 the leader does not listen");
+            reputation(h, c, carol.getUUID(), 32_796);
             relation(c, d, -29);
             h.assertTrue(run(carol, "kingdom war request " + l.id()) == 0 && data.activeWar(k.id()) == null,
                     "Relations -29 are not hostile enough");
@@ -157,14 +160,14 @@ public final class PoliticsGameTests {
             moveTo(carol, c, 0);
             int relationBefore = c.getRelation(d.getId());
             h.assertTrue(run(carol, "kingdom war request " + l.id()) == 1,
-                    "At 8192 and relations -30 the NPC leader declares war");
+                    "At 32796 and relations -30 the NPC leader declares war");
             var war = data.activeWar(k.id());
             h.assertTrue(war.attackerKingdom().equals(k.id()) && war.defenderKingdom().equals(l.id())
                             && data.ruler(k.id()) == null && c.getRelation(d.getId()) == relationBefore,
                     "War of the NPC-governed kingdom; Millénaire relations untouched");
             data.peace(war.id());
             var dave = player(h, "Dave", c);
-            reputation(h, c, dave.getUUID(), 40000);
+            reputation(h, c, dave.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             run(dave, "kingdom claim");
             h.assertTrue(run(carol, "kingdom war request " + l.id()) == 0 && data.activeWar(k.id()) == null,
                     "A ruled kingdom's NPC leader cannot be asked: the ruler decides");
@@ -196,7 +199,7 @@ public final class PoliticsGameTests {
             chief.moveTo(c.getCenter().getX() + 0.5, c.getCenter().getY() + 1, c.getCenter().getZ() + 0.5);
             h.assertTrue(ChiefInteraction.isChief(chief), "Fixture is a real Millénaire chief");
             var erin = player(h, "Erin", c);
-            reputation(h, c, erin.getUUID(), 40000);
+            reputation(h, c, erin.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             relation(c, d, -50);
             h.assertTrue(CommonHooks.onInteractEntity(erin, chief, InteractionHand.MAIN_HAND) == null,
                     "The interaction event is not cancelled, so Millénaire's chief screen still opens");
@@ -234,7 +237,7 @@ public final class PoliticsGameTests {
                             && !dispatcher.getRoot().getChild("kingdoms").canUse(console.withPermission(0)),
                     "/kingdom is permission 0, /kingdoms stays operator-only");
             var gina = player(h, "Gina", c);
-            reputation(h, c, gina.getUUID(), 40000);
+            reputation(h, c, gina.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             h.assertTrue(run(gina, "kingdoms list") == -1, "A normal player cannot use operator commands");
             h.assertTrue(run(gina, "kingdom info") == 1 && gina.text().contains(k.name()),
                     "/kingdom info works for a player");

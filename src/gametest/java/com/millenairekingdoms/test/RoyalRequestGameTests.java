@@ -69,7 +69,7 @@ public final class RoyalRequestGameTests {
             h.assertTrue(funds(f) == 64, "Conflicting/new active requests cannot take more coins");
             var ruler = new FakePlayer(f.level(), new GameProfile(UUID.randomUUID(), "Receipt ruler"));
             f.village().addReputation(
-                    ruler.getUUID(), 32768 - f.village().getCombinedReputation(f.level(), ruler.getUUID()));
+                    ruler.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION - f.village().getCombinedReputation(f.level(), ruler.getUUID()));
             KingdomSavedData.get(f.level()).claimRule(f.kingdom(), ruler.getUUID(), "Receipt ruler", 1);
             var receipts = new RoyalPaymentService(f.level());
             refused(h, () -> receipts.inspectNpc(f.kingdom(), id));

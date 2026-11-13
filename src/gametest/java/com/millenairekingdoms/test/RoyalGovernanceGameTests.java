@@ -326,7 +326,7 @@ public final class RoyalGovernanceGameTests {
     private static FakePlayer player(RoyalPaymentGameTests.Fixture f) {
         var player = new FakePlayer(f.level(), new GameProfile(UUID.randomUUID(), "Royal test ruler"));
         f.village().addReputation(
-                player.getUUID(), 32768 - f.village().getCombinedReputation(f.level(), player.getUUID()));
+                player.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION - f.village().getCombinedReputation(f.level(), player.getUUID()));
         return player;
     }
     private static Intent paidPlayer(RoyalPaymentGameTests.Fixture f, FakePlayer player) {

@@ -270,6 +270,7 @@ public final class RoyalShipmentService {
                             "Original player must be online before a new or unacknowledged fee can be charged");
             }
             try {
+                payments.reconcileExpeditions(KingdomSavedData.get(level));
                 receipt = actor == null
                         ? payments.payNpc(
                                   intent.kingdom(), intent.id(), Purpose.SHIPMENT_FEE, intent.id(), intent.fee())

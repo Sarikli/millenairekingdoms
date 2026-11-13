@@ -37,8 +37,8 @@ final class NativeStockBridge {
         return List.copyOf(result);
     }
     private static Fields resolve() {
-        if (!"9.0.3".equals(Millenaire.getModVersion()))
-            throw new IllegalStateException("Royal stock adapter requires the audited original Millenaire9.0.3");
+        if (!"9.1.0".equals(Millenaire.getModVersion()))
+            throw new IllegalStateException("Royal stock adapter requires the audited original Millenaire 9.1.0");
         try {
             var furnaces = BuildingInventory.class.getDeclaredField("furnacePositions");
             var firepits = BuildingInventory.class.getDeclaredField("firepitPositions");

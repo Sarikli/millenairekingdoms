@@ -31,7 +31,7 @@ public final class TreasuryGameTests {
         var d = KingdomSavedData.get(h.getLevel());
         var k = AutonomySupport.kingdom(d, capital);
         var ruler = Stage5Support.player(h, "R" + name.hashCode(), capital);
-        Stage5Support.reputation(h, capital, ruler.getUUID(), 40000);
+        Stage5Support.reputation(h, capital, ruler.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
         h.assertTrue(Stage5Support.run(ruler, "kingdom claim") == 1, "Ruler claims " + name);
         return new Realm(capital, k, ruler, (ChestBlockEntity) h.getLevel().getBlockEntity(capital.getCenter()));
     }
@@ -138,7 +138,7 @@ public final class TreasuryGameTests {
             Stage5Support.moveTo(r.ruler, r.capital, 0);
             Stage5Support.reputation(h, r.capital, r.ruler.getUUID(), 8191);
             AutonomySupport.rejected(h, () -> TreasuryService.withdraw(r.ruler, 64)); // Decisions need 8192.
-            Stage5Support.reputation(h, r.capital, r.ruler.getUUID(), 40000);
+            Stage5Support.reputation(h, r.capital, r.ruler.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
             h.assertTrue(Stage5Support.run(r.ruler, "kingdom treasury withdraw 64") == 1 && value(r.ruler) == 64
                             && r.chest.countItem(silver()) == 9,
                     "The ruler at the capital withdraws through the command too");
@@ -186,7 +186,7 @@ public final class TreasuryGameTests {
         var k = d.create("Restart treasury " + UUID.randomUUID().toString().substring(0, 8), id(capital));
         var ruler = new Stage5Support.TestPlayer(level, "Treasurer");
         ruler.moveTo(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
-        Stage5Support.reputation(h, capital, ruler.getUUID(), 40000);
+        Stage5Support.reputation(h, capital, ruler.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
         d.claimRule(k.id(), ruler.getUUID(), "Treasurer", 1);
         chest.setItem(0, new ItemStack(gold(), 1));
         chest.setItem(1, new ItemStack(silver(), 1));

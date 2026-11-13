@@ -130,6 +130,9 @@ public final class StrategicBattleService {
             if (d.defense() >= 2 * a.attack())
                 return RaidOrderService.Attempt.waiting(
                         "Native target is too strong for this available military force");
+            if (order.quotedCost() > 0
+                    && (a.attack() != order.quotedStrength() || 10L * a.attack() < 13L * d.defense()))
+                return RaidOrderService.Attempt.dropped("source raiding strength changed; NPC will replan");
             acknowledgePolitical(level, data);
             var settings = StrategicCombatConfig.settings();
             var roll = OpposedDice.roll(a.attack(), d.defense(), level.getRandom(), settings);
@@ -212,11 +215,13 @@ public final class StrategicBattleService {
         if (receipt.outcome() != KingdomSavedData.Outcome.WON && receipt.outcome() != KingdomSavedData.Outcome.LOST) {
             store.finish(op, Status.ABORTED,
                     "Political context invalidated the military result; no strategic success published");
+            RaidOrderService.refundOrder(level, data, op.order());
             return;
         }
         HistoryHooks.store(level).append(op.narrative());
         store.finish(op, Status.RESOLVED,
                 receipt.outcome() + "; exact acknowledged political receipt; no physical NPC losses or loot implied");
+        RaidOrderService.acknowledgeOrderPayment(level, data, op.order());
         LogUtils.getLogger().info(
                 "[Kingdoms] STRATEGIC_BATTLE operation={} strength={}/{} dice={}/{} modifier={} attackerWon={} political={} transferred={}",
                 op.id(), op.attack().attack(), op.defense().defense(), op.roll().attackDie(), op.roll().defenseDie(),
@@ -230,6 +235,7 @@ public final class StrategicBattleService {
             data.finish(raid, KingdomSavedData.Outcome.ABORTED);
         acknowledgePolitical(level, data);
         store.finish(op, Status.ABORTED, reason);
+        RaidOrderService.refundOrder(level, data, op.order());
     }
     private static String problem(
             ServerLevel level, KingdomSavedData data, KingdomSavedData.RaidOrder order, boolean committed) {

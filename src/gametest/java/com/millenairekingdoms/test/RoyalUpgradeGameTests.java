@@ -48,7 +48,7 @@ public final class RoyalUpgradeGameTests {
         bank.village().setNoProjectsLeftUntil(Long.MAX_VALUE);
         bank.chest().setItem(0, new ItemStack(ModItems.DENIER_ARGENT.get(), 8));
         var player = new Stage5Support.TestPlayer(bank.level(), "Upgrade ruler");
-        bank.village().addReputation(player.getUUID(), 32768);
+        bank.village().addReputation(player.getUUID(), com.millenairekingdoms.politics.PoliticsService.CLAIM_REPUTATION);
         KingdomSavedData.get(bank.level()).claimRule(bank.kingdom(), player.getUUID(), "Upgrade ruler", 72);
         for (var set : ModCultures.getAllBuildingPlanSets()
                         .values()

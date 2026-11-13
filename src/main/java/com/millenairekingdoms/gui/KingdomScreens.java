@@ -103,6 +103,12 @@ public final class KingdomScreens {
         view.put("construction", RoyalConstructionView.build(player, focus.id()));
         view.put("shipments", RoyalShipmentView.build(player, focus.id()));
         if (isRuler) {
+            var economy = com.millenairekingdoms.economy.RoyalEconomyConfig.current();
+            view.putInt("expeditionOffset", economy.expeditionDistanceOffset());
+            view.putInt("expeditionDivisor", economy.expeditionStrengthDivisor());
+            view.putLong("spendableTreasury",
+                    com.millenairekingdoms.autonomy.ExpeditionPricingService.spendableTreasury(
+                            level, data, focus.id()));
             view.put("targets", targets(player, level, data, focus));
             view.put("sources", sources(level, data, focus));
             view.put("requests", requests(level, data, focus));
@@ -269,6 +275,8 @@ public final class KingdomScreens {
                 o.putString("waiting", waiting);
             o.putLong("expiresIn", Math.max(0, order.expiresGameTime() - level.getGameTime()));
             o.putBoolean("npc", order.byNpc());
+            if (order.quotedCost() > 0)
+                o.putLong("quotedCost", order.quotedCost());
             e.put("order", o);
         }
         return e;
@@ -324,6 +332,8 @@ public final class KingdomScreens {
             if (capital != null)
                 e.putInt("distance", (int) Math.sqrt(capital.getCenter().distSqr(v.getCenter())));
             e.putInt("defence", v.getVillageDefendingStrength());
+            e.putInt("x", v.getCenter().getX());
+            e.putInt("z", v.getCenter().getZ());
             try {
                 var campaign = data.campaignFor(k.id(), id);
                 e.putInt("wins", data.wins(campaign));
@@ -331,6 +341,9 @@ public final class KingdomScreens {
             } catch (IllegalArgumentException ignored) { /* Status below explains it. */
             }
             e.putLong("cooldown", RaidOrderService.cooldownLeft(data, id, settings));
+            Village autoSource = Military.bestSource(level, data, k.id(), v);
+            if (autoSource != null)
+                e.putUUID("autoSource", autoSource.getId().uuid());
             try {
                 RaidOrderService.validate(player, id, null);
                 e.putBoolean("ready", true);
@@ -358,6 +371,8 @@ public final class KingdomScreens {
                     e.putInt("strength", v.getVillageRaidingStrength());
                     e.putBoolean("carries", Military.carriesRaids(v));
                     e.putBoolean("busy", Military.busy(v));
+                    e.putInt("x", v.getCenter().getX());
+                    e.putInt("z", v.getCenter().getZ());
                     list.add(e);
                 });
         return list;

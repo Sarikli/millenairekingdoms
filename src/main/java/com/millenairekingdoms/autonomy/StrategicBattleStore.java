@@ -156,6 +156,10 @@ public final class StrategicBattleStore {
         o.putLong("issued", op.order().issuedGameTime());
         o.putLong("due", op.order().dueGameTime());
         o.putLong("expires", op.order().expiresGameTime());
+        if (op.order().quotedCost() > 0)
+            o.putLong("quotedCost", op.order().quotedCost());
+        if (op.order().quotedStrength() > 0)
+            o.putInt("quotedStrength", op.order().quotedStrength());
         t.put("order", o);
         t.putLong("targetRevision", op.targetRevision());
         t.put("attack", op.attack().save());
@@ -192,6 +196,10 @@ public final class StrategicBattleStore {
         var keys = new HashSet<>(Set.of("id", "kingdom", "source", "target", "issued", "due", "expires"));
         if (format == 1)
             keys.add("war");
+        if (o.contains("quotedCost"))
+            keys.add("quotedCost");
+        if (o.contains("quotedStrength"))
+            keys.add("quotedStrength");
         HistoryFiles.keys(o, keys);
         for (var k : List.of("id", "kingdom", "source", "target"))
             if (!o.hasUUID(k))
@@ -200,9 +208,15 @@ public final class StrategicBattleStore {
             throw new IllegalArgumentException("Invalid strategic war UUID");
         for (var k : List.of("issued", "due", "expires"))
             require(o, k, Tag.TAG_LONG);
+        if (o.contains("quotedCost"))
+            require(o, "quotedCost", Tag.TAG_LONG);
+        if (o.contains("quotedStrength"))
+            require(o, "quotedStrength", Tag.TAG_INT);
+        long quotedCost = o.contains("quotedCost", Tag.TAG_LONG) ? o.getLong("quotedCost") : 0L;
+        int quotedStrength = o.contains("quotedStrength", Tag.TAG_INT) ? o.getInt("quotedStrength") : 0;
         var order = new KingdomSavedData.RaidOrder(o.getUUID("id"), o.getUUID("kingdom"), o.getUUID("target"),
                 o.getUUID("source"), format == 1 ? o.getUUID("war") : null, null, o.getLong("issued"), o.getLong("due"),
-                o.getLong("expires"));
+                o.getLong("expires"), quotedCost, quotedStrength);
         var attack = MilitarySnapshot.read(t.getCompound("attack"));
         var defense = MilitarySnapshot.read(t.getCompound("defense"));
         var settings = new OpposedDice.Settings(t.getDouble("scale"), t.getInt("cap"), t.getInt("home"));
