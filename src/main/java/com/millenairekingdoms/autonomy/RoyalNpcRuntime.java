@@ -77,7 +77,7 @@ public final class RoyalNpcRuntime {
                 session.nextTick = Long.MAX_VALUE;
                 LOGGER.error(
                         "[Kingdoms] NPC economy startup unavailable in {}; no automatic spending, original history preserved.",
-                        level.dimension().location(), unsupported);
+                        level.dimension().identifier(), unsupported);
             }
         }
     }
@@ -141,7 +141,7 @@ public final class RoyalNpcRuntime {
                 return;
             }
             new RoyalStrategyService(level).step(
-                    handoff.kingdom, Math.max(0, level.getDayTime()) / EconomyService.DAY_TICKS, level.getRandom());
+                    handoff.kingdom, Math.max(0, level.getOverworldClockTime()) / EconomyService.DAY_TICKS, level.getRandom());
         } catch (RuntimeException failure) {
             long now = level.getGameTime();
             if (now - handoff.lastDiagnostic >= 1200) {
@@ -176,7 +176,7 @@ public final class RoyalNpcRuntime {
             if (session.lastError == Long.MIN_VALUE || now - session.lastError >= 1200) {
                 session.lastError = now;
                 LOGGER.error("[Kingdoms] NPC economy check unavailable in {}; retry delayed, no speculative reset.",
-                        level.dimension().location(), failure);
+                        level.dimension().identifier(), failure);
             }
         }
     }
@@ -205,8 +205,8 @@ public final class RoyalNpcRuntime {
                 kingdoms.stream().map(KingdomSavedData.Kingdom::id).collect(java.util.stream.Collectors.toSet()));
         if (kingdoms.isEmpty())
             return session.last = new Report(0, 0, System.nanoTime() - started);
-        var dimension = level.dimension().location().toString();
-        long day = Math.max(0, level.getDayTime()) / EconomyService.DAY_TICKS;
+        var dimension = level.dimension().identifier().toString();
+        long day = Math.max(0, level.getOverworldClockTime()) / EconomyService.DAY_TICKS;
         // Validate the old financial authorization history even when every kingdom is unloaded.
         var path = RoyalNpcDecisionStore.directory(level);
         if (Files.exists(path.resolve("decisions.dat")))

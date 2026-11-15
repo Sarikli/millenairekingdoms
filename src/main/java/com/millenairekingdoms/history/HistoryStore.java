@@ -190,7 +190,7 @@ public final class HistoryStore {
     private void validateSchema() {
         var t = HistoryFiles.read(root.resolve("schema.dat"));
         HistoryFiles.keys(t, Set.of("format"));
-        if (!t.contains("format", 3) || t.getInt("format") != 1)
+        if (!t.contains("format") || t.getIntOr("format", 0) != 1)
             throw new IllegalStateException("Unsupported historical archive; original bytes preserved");
     }
 }

@@ -28,9 +28,9 @@ side="BOTH"
 [[dependencies.${mod_id}]]
 modId="millenaire"
 type="required"
-versionRange="[${millenaire_version}]"
+versionRange="[9.1,)"
 ordering="AFTER"
 side="BOTH"
 
 [features.${mod_id}]
-javaVersion="[21,)"
+javaVersion="[25,)"

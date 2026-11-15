@@ -18,7 +18,6 @@ import org.millenaire.village.VillageSavedData;
  * Acknowledge original Millenaire metadata through its own serializer/NeoForge worker, then inspect the actual file.
  * No chunk load, queue insertion, building creation, completion claim or direct rewrite of the dependency's format.
  */
-@org.jetbrains.annotations.ApiStatus.Internal
 public class RoyalVillagePersistence {
     public void pending(ServerLevel level, UUID villageId, Village.PendingProject expected) {
         thread(level);
@@ -28,8 +27,8 @@ public class RoyalVillagePersistence {
         preflight(level);
         flush(level);
         var saved = readVillage(level, villageId);
-        if (!saved.contains("pending_project", Tag.TAG_COMPOUND)
-                || !expectedPending(expected).equals(saved.getCompound("pending_project"))
+        if (!saved.contains("pending_project")
+                || !expectedPending(expected).equals(saved.getCompoundOrEmpty("pending_project"))
                 || !expected.equals(village.getPendingProject())) {
             throw new IllegalStateException(
                     "Saved/live pending project differs from royal acceptance intent; do not commit patronage");
@@ -51,28 +50,28 @@ public class RoyalVillagePersistence {
         flush(level);
         var saved = readVillage(level, villageId);
         CompoundTag found = null;
-        for (Tag raw : saved.getList("buildings", Tag.TAG_COMPOUND)) {
+        for (Tag raw : saved.getListOrEmpty("buildings")) {
             var tag = (CompoundTag) raw;
-            if (tag.hasUUID("id") && tag.getUUID("id").equals(expected.getId().uuid())) {
+            if (com.millenairekingdoms.compat.KNbt.hasUUID(tag, "id") && com.millenairekingdoms.compat.KNbt.getUUID(tag, "id").equals(expected.getId().uuid())) {
                 if (found != null)
                     throw new IllegalStateException("Duplicate saved construction building identity");
                 found = tag;
             }
         }
-        if (found == null || !found.getString("plan").equals(expected.getPlanId().toString())
-                || !found.getString("status").equals(expected.getStatus().name())
-                || found.getInt("level") != expected.getLevel()
-                || !java.util.Arrays.equals(found.getIntArray("origin"),
+        if (found == null || !found.getStringOr("plan", "").equals(expected.getPlanId().toString())
+                || !found.getStringOr("status", "").equals(expected.getStatus().name())
+                || found.getIntOr("level", 0) != expected.getLevel()
+                || !java.util.Arrays.equals(com.millenairekingdoms.compat.KNbt.intArray(found, "origin"),
                         new int[] {
                                 expected.getOrigin().getX(), expected.getOrigin().getY(), expected.getOrigin().getZ()})
-                || !found.getString("rotation").equals(expected.getRotation().name())
+                || !found.getStringOr("rotation", "").equals(expected.getRotation().name())
                 || (expected.getPlanSetId() == null
                                 ? found.contains("plan_set")
-                                : !found.getString("plan_set").equals(expected.getPlanSetId().toString()))
+                                : !found.getStringOr("plan_set", "").equals(expected.getPlanSetId().toString()))
                 || (expected.getVariant() == null ? found.contains("variant")
-                                                  : !found.getString("variant").equals(expected.getVariant()))
+                                                  : !found.getStringOr("variant", "").equals(expected.getVariant()))
                 || (expected.getConstructionTask() == null ? found.contains("construction_task")
-                                                           : !found.getCompound("construction_task")
+                                                           : !found.getCompoundOrEmpty("construction_task")
                                                                      .equals(expected.getConstructionTask().save()))) {
             throw new IllegalStateException(
                     "Saved construction building differs from current engine record; do not commit patronage or progress");
@@ -94,9 +93,7 @@ public class RoyalVillagePersistence {
 
     protected void flush(ServerLevel level) {
         VillageSavedData.get(level).setDirty();
-        level.getDataStorage().save();
-        // SavedData.save schedules asynchronous work and can swallow IOException. Wait, then require file evidence.
-        IOUtilities.waitUntilIOWorkerComplete();
+        level.getDataStorage().saveAndJoin();
     }
 
     private static CompoundTag expectedPending(Village.PendingProject expected) {
@@ -106,7 +103,7 @@ public class RoyalVillagePersistence {
         tag.putInt("level", expected.level());
         tag.putBoolean("is_upgrade", expected.isUpgrade());
         if (expected.buildingId() != null)
-            tag.putUUID("building_id", expected.buildingId().uuid());
+            com.millenairekingdoms.compat.KNbt.putUUID(tag, "building_id", expected.buildingId().uuid());
         if (expected.plannedLocation() != null) {
             var location = expected.plannedLocation();
             tag.putInt("planned_x", location.position().getX());
@@ -131,7 +128,7 @@ public class RoyalVillagePersistence {
     }
     private static Path file(ServerLevel level) {
         return DimensionType.getStorageFolder(level.dimension(), level.getServer().getWorldPath(LevelResource.ROOT))
-                .resolve("data/millenaire_villages.dat");
+                .resolve("data/millenaire/villages.dat");
     }
     private static void thread(ServerLevel level) {
         if (!level.getServer().isSameThread())

@@ -1,7 +1,7 @@
 package com.millenairekingdoms.autonomy;
 
 import com.millenairekingdoms.kingdom.KingdomSavedData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.millenaire.Millenaire;
@@ -56,7 +56,7 @@ public final class RoyalBuilderCargo {
         return false;
     }
     private record ProtectedDelivery(VillagerGoal original) implements VillagerGoal {
-        public ResourceLocation id() {
+        public Identifier id() {
             return original.id();
         }
         public int computePriority(GoalContext c) {

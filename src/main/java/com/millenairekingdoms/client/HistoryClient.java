@@ -13,16 +13,16 @@ public final class HistoryClient {
     }
     public static void open(Screen parent, UUID kingdom, UUID village) {
         var screen = new ChronicleScreen(parent, kingdom, village);
-        Minecraft.getInstance().setScreen(screen);
+        Minecraft.getInstance().gui.setScreen(screen);
         screen.request(null);
     }
     public static void openAtlas(Screen parent, UUID kingdom, UUID event, UUID village) {
         var screen = new AtlasScreen(parent, kingdom, event, village);
-        Minecraft.getInstance().setScreen(screen);
+        Minecraft.getInstance().gui.setScreen(screen);
         screen.refresh();
     }
     public static void receive(CompoundTag view) {
-        Screen screen = Minecraft.getInstance().screen;
+        Screen screen = Minecraft.getInstance().gui.screen();
         for (int depth = 0; screen != null && depth < 64; depth++) {
             if (screen instanceof ChronicleScreen chronicle)
                 chronicle.receive(view);
@@ -37,7 +37,7 @@ public final class HistoryClient {
     }
     /** Late management responses refresh the retained parent without replacing an open chronicle/atlas. */
     public static boolean updateManagement(CompoundTag view) {
-        Screen screen = Minecraft.getInstance().screen;
+        Screen screen = Minecraft.getInstance().gui.screen();
         if (!(screen instanceof ChronicleScreen || screen instanceof ChronicleFilterScreen
                     || screen instanceof AtlasScreen))
             return false;

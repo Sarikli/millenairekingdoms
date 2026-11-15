@@ -17,7 +17,7 @@ public final class RoyalRecoveryCommands {
     private RoyalRecoveryCommands() {}
     public static LiteralArgumentBuilder<CommandSourceStack> tree() {
         return Commands.literal("royal_recovery")
-                .requires(s -> s.hasPermission(2))
+                .requires(s -> s.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER))
                 .then(Commands.literal("list").executes(c
                         -> guarded(c,
                                 () -> {

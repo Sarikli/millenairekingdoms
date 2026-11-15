@@ -35,7 +35,7 @@ public final class RoyalShipmentRuntime {
                 session.nextTick = Long.MAX_VALUE;
                 LOGGER.error(
                         "[Kingdoms] Shipment startup index unavailable in {}; tracking paused with original data preserved.",
-                        level.dimension().location(), failure);
+                        level.dimension().identifier(), failure);
             }
         }
     }
@@ -55,7 +55,7 @@ public final class RoyalShipmentRuntime {
         } catch (RuntimeException failure) {
             session.nextTick = Math.max(session.nextTick, now + 1200);
             LOGGER.error("[Kingdoms] Shipment index unavailable; retry delayed, no speculative reset in {}.",
-                    level.dimension().location(), failure);
+                    level.dimension().identifier(), failure);
         }
     }
     public static int step(ServerLevel level, int limit) {
@@ -64,7 +64,7 @@ public final class RoyalShipmentRuntime {
         var directory = RoyalShipmentService.directory(level);
         if (!Files.exists(directory.resolve("shipments.dat")))
             return 0;
-        var dimension = level.dimension().location().toString();
+        var dimension = level.dimension().identifier().toString();
         var entries = new RoyalShipmentStore(directory)
                               .entries()
                               .stream()

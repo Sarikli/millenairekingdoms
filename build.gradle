@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    // Minecraft 26.3 : version de ModDevGradle à confirmer (non testé ici, voir README_MC26.3.md)
     id 'net.neoforged.moddev' version '2.0.148'
 }
 
@@ -7,7 +8,7 @@ version = mod_version
 group = mod_group_id
 base.archivesName = mod_id
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)   // Minecraft 26.3 : Java 25
 
 sourceSets {
     gametest {

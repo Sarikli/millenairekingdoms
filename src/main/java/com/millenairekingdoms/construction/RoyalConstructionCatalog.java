@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import org.millenaire.culture.ModCultures;
@@ -20,14 +20,14 @@ import org.millenaire.village.Village;
  * No placement, ownership, pending-project, resource or chunk mutation. An order service must revalidate before paying.
  */
 public final class RoyalConstructionCatalog {
-    public record Option(ResourceLocation planSet, ResourceLocation plan, String variant, String nativeName,
-            long patronageFee, Map<ResourceLocation, Integer> requiredMaterials, UUID upgradeBuilding,
+    public record Option(Identifier planSet, Identifier plan, String variant, String nativeName,
+            long patronageFee, Map<Identifier, Integer> requiredMaterials, UUID upgradeBuilding,
             int targetLevel) {
         public Option {
             requiredMaterials = Map.copyOf(requiredMaterials);
         }
-        public Option(ResourceLocation set, ResourceLocation plan, String variant, String name, long fee,
-                Map<ResourceLocation, Integer> materials) {
+        public Option(Identifier set, Identifier plan, String variant, String name, long fee,
+                Map<Identifier, Integer> materials) {
             this(set, plan, variant, name, fee, materials, null, 0);
         }
         public String key() {
@@ -56,8 +56,8 @@ public final class RoyalConstructionCatalog {
         return read(level, kingdom, village, null);
     }
     public static Catalog forPlayer(ServerPlayer player, UUID village) {
-        thread(player.serverLevel());
-        return read(player.serverLevel(), PoliticsService.ruledKingdom(player).id(), village, player.getUUID());
+        thread(player.level());
+        return read(player.level(), PoliticsService.ruledKingdom(player).id(), village, player.getUUID());
     }
     /** Already-issued work only, after the monitor rechecks its original UUID-bound mandate. No new spending agency. */
     static Catalog forIssuedOrder(ServerLevel level, RoyalConstructionStore.Intent intent) {
@@ -80,7 +80,7 @@ public final class RoyalConstructionCatalog {
                     "Royal construction is available only for recognized autonomous NPC villages");
         }
         var upgrades = new java.util.ArrayList<Option>();
-        var choices = new LinkedHashMap<ResourceLocation, Option>();
+        var choices = new LinkedHashMap<Identifier, Option>();
         long fee = RoyalPrices.construction(RoyalEconomyConfig.current());
         for (var candidate : NormalGrowthBridge.candidates(level, village, type)) {
             var set = candidate.set();

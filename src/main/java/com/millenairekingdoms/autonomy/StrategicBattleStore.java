@@ -56,7 +56,7 @@ public final class StrategicBattleStore {
     private final Path directory;
     private final String dimension;
     public StrategicBattleStore(ServerLevel level) {
-        this(HistoryHooks.directory(level).resolve("strategic-military"), level.dimension().location().toString());
+        this(HistoryHooks.directory(level).resolve("strategic-military"), level.dimension().identifier().toString());
     }
     public StrategicBattleStore(Path directory, String dimension) {
         this.directory = directory;
@@ -141,18 +141,20 @@ public final class StrategicBattleStore {
     private static void sync(Path directory) throws IOException {
         try (var ch = FileChannel.open(directory, StandardOpenOption.READ)) {
             ch.force(true);
+        } catch (java.io.IOException windows) {
+            // Windows ne sait pas ouvrir un dossier comme un fichier ; l'écriture elle-même est déjà faite
         }
     }
     public static CompoundTag encode(Operation op) {
         var t = new CompoundTag();
         t.putInt("format", op.order().warId() == null ? 2 : 1);
         var o = new CompoundTag();
-        o.putUUID("id", op.id());
-        o.putUUID("kingdom", op.order().kingdom());
-        o.putUUID("source", op.order().source());
-        o.putUUID("target", op.order().target());
+        com.millenairekingdoms.compat.KNbt.putUUID(o, "id", op.id());
+        com.millenairekingdoms.compat.KNbt.putUUID(o, "kingdom", op.order().kingdom());
+        com.millenairekingdoms.compat.KNbt.putUUID(o, "source", op.order().source());
+        com.millenairekingdoms.compat.KNbt.putUUID(o, "target", op.order().target());
         if (op.order().warId() != null)
-            o.putUUID("war", op.order().warId());
+            com.millenairekingdoms.compat.KNbt.putUUID(o, "war", op.order().warId());
         o.putLong("issued", op.order().issuedGameTime());
         o.putLong("due", op.order().dueGameTime());
         o.putLong("expires", op.order().expiresGameTime());
@@ -180,7 +182,7 @@ public final class StrategicBattleStore {
         HistoryFiles.keys(t,
                 Set.of("format", "order", "targetRevision", "attack", "defense", "scale", "cap", "home", "attackDie",
                         "defenseDie", "day", "tick", "narrative", "status", "reason"));
-        int format = t.getInt("format");
+        int format = t.getIntOr("format", 0);
         if (format != 1 && format != 2)
             throw new IllegalArgumentException("Unsupported strategic operation format; original preserved");
         for (var k : List.of("format", "cap", "home", "attackDie", "defenseDie"))
@@ -192,7 +194,7 @@ public final class StrategicBattleStore {
         for (var k : List.of("status", "reason"))
             require(t, k, Tag.TAG_STRING);
         require(t, "scale", Tag.TAG_DOUBLE);
-        var o = t.getCompound("order");
+        var o = t.getCompoundOrEmpty("order");
         var keys = new HashSet<>(Set.of("id", "kingdom", "source", "target", "issued", "due", "expires"));
         if (format == 1)
             keys.add("war");
@@ -202,9 +204,9 @@ public final class StrategicBattleStore {
             keys.add("quotedStrength");
         HistoryFiles.keys(o, keys);
         for (var k : List.of("id", "kingdom", "source", "target"))
-            if (!o.hasUUID(k))
+            if (!com.millenairekingdoms.compat.KNbt.hasUUID(o, k))
                 throw new IllegalArgumentException("Invalid strategic order UUID");
-        if (format == 1 && !o.hasUUID("war"))
+        if (format == 1 && !com.millenairekingdoms.compat.KNbt.hasUUID(o, "war"))
             throw new IllegalArgumentException("Invalid strategic war UUID");
         for (var k : List.of("issued", "due", "expires"))
             require(o, k, Tag.TAG_LONG);
@@ -212,22 +214,22 @@ public final class StrategicBattleStore {
             require(o, "quotedCost", Tag.TAG_LONG);
         if (o.contains("quotedStrength"))
             require(o, "quotedStrength", Tag.TAG_INT);
-        long quotedCost = o.contains("quotedCost", Tag.TAG_LONG) ? o.getLong("quotedCost") : 0L;
-        int quotedStrength = o.contains("quotedStrength", Tag.TAG_INT) ? o.getInt("quotedStrength") : 0;
-        var order = new KingdomSavedData.RaidOrder(o.getUUID("id"), o.getUUID("kingdom"), o.getUUID("target"),
-                o.getUUID("source"), format == 1 ? o.getUUID("war") : null, null, o.getLong("issued"), o.getLong("due"),
-                o.getLong("expires"), quotedCost, quotedStrength);
-        var attack = MilitarySnapshot.read(t.getCompound("attack"));
-        var defense = MilitarySnapshot.read(t.getCompound("defense"));
-        var settings = new OpposedDice.Settings(t.getDouble("scale"), t.getInt("cap"), t.getInt("home"));
-        return new Operation(order, t.getLong("targetRevision"), attack, defense, settings,
+        long quotedCost = o.contains("quotedCost") ? o.getLongOr("quotedCost", 0L) : 0L;
+        int quotedStrength = o.contains("quotedStrength") ? o.getIntOr("quotedStrength", 0) : 0;
+        var order = new KingdomSavedData.RaidOrder(com.millenairekingdoms.compat.KNbt.getUUID(o, "id"), com.millenairekingdoms.compat.KNbt.getUUID(o, "kingdom"), com.millenairekingdoms.compat.KNbt.getUUID(o, "target"),
+                com.millenairekingdoms.compat.KNbt.getUUID(o, "source"), format == 1 ? com.millenairekingdoms.compat.KNbt.getUUID(o, "war") : null, null, o.getLongOr("issued", 0L), o.getLongOr("due", 0L),
+                o.getLongOr("expires", 0L), quotedCost, quotedStrength);
+        var attack = MilitarySnapshot.read(t.getCompoundOrEmpty("attack"));
+        var defense = MilitarySnapshot.read(t.getCompoundOrEmpty("defense"));
+        var settings = new OpposedDice.Settings(t.getDoubleOr("scale", 0.0), t.getIntOr("cap", 0), t.getIntOr("home", 0));
+        return new Operation(order, t.getLongOr("targetRevision", 0L), attack, defense, settings,
                 OpposedDice.compare(
-                        attack.attack(), defense.defense(), t.getInt("attackDie"), t.getInt("defenseDie"), settings),
-                t.getLong("day"), t.getLong("tick"), HistoryEvent.load(t.getCompound("narrative")),
-                Status.valueOf(t.getString("status")), t.getString("reason"));
+                        attack.attack(), defense.defense(), t.getIntOr("attackDie", 0), t.getIntOr("defenseDie", 0), settings),
+                t.getLongOr("day", 0L), t.getLongOr("tick", 0L), HistoryEvent.load(t.getCompoundOrEmpty("narrative")),
+                Status.valueOf(t.getStringOr("status", "")), t.getStringOr("reason", ""));
     }
     private static void require(CompoundTag t, String key, int type) {
-        if (!t.contains(key, type))
+        if (!t.contains(key))
             throw new IllegalArgumentException("Invalid strategic operation field: " + key);
     }
 }

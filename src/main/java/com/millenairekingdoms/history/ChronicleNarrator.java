@@ -13,7 +13,9 @@ public final class ChronicleNarrator {
     }
     private static final String P = LocalizedResources.PREFIX;
     private static final Set<String> CULTURES =
-            Set.of("norman", "byzantines", "seljuk", "indian", "japanese", "mayan", "inuits");
+            Set.of("norman", "byzantines", "seljuk", "indian", "japanese", "mayan", "inuits",
+                    // Portage 26.3 : cultures ajoutées
+                    "andalus", "reconquista", "viking", "polish", "huari", "toltec", "zimbabwean", "spanish", "song", "viet", "german", "teuton", "civnormans", "orcish", "aliens", "ghanaians", "romans");
     private static final Set<String> ETHOS = Set.of("MILITARY", "RELIGIOUS", "AGRICULTURAL", "ARTISAN", "GENERAL");
     private ChronicleNarrator() {}
     public static Account render(HistoryEvent event, UUID perspective, String language) {

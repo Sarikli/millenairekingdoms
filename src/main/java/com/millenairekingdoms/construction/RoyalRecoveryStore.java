@@ -125,22 +125,22 @@ public final class RoyalRecoveryStore {
             return entries;
         var root = NbtIo.readCompressed(file, NbtAccounter.create(MAX_BYTES));
         keys(root, Set.of("format", "decisions"));
-        if (!root.contains("format", Tag.TAG_INT) || (root.getInt("format") < 1 || root.getInt("format") > FORMAT)
-                || !root.contains("decisions", Tag.TAG_LIST))
+        if (!root.contains("format") || (root.getIntOr("format", 0) < 1 || root.getIntOr("format", 0) > FORMAT)
+                || !root.contains("decisions"))
             throw new IllegalStateException("Unsupported recovery audit; original preserved");
-        var list = root.getList("decisions", Tag.TAG_COMPOUND);
+        var list = root.getListOrEmpty("decisions");
         if (list.size() > MAX_DECISIONS || list.size() != ((ListTag) root.get("decisions")).size())
             throw new IllegalStateException("Invalid recovery audit list");
         var active = new HashSet<UUID>();
         for (Tag raw : list) {
             var tag = (CompoundTag) raw;
             keys(tag, Set.of("intent", "state", "result"));
-            if (!tag.contains("intent", Tag.TAG_COMPOUND) || !tag.contains("state", Tag.TAG_STRING)
-                    || tag.contains("result") && !tag.contains("result", Tag.TAG_COMPOUND))
+            if (!tag.contains("intent") || !tag.contains("state")
+                    || tag.contains("result") && !tag.contains("result"))
                 throw new IllegalStateException("Incomplete recovery audit");
-            var intent = loadIntent(tag.getCompound("intent"), root.getInt("format") >= 2);
-            var state = State.valueOf(tag.getString("state"));
-            var entry = new Entry(intent, state, tag.contains("result") ? loadResult(tag.getCompound("result")) : null);
+            var intent = loadIntent(tag.getCompoundOrEmpty("intent"), root.getIntOr("format", 0) >= 2);
+            var state = State.valueOf(tag.getStringOr("state", ""));
+            var entry = new Entry(intent, state, tag.contains("result") ? loadResult(tag.getCompoundOrEmpty("result")) : null);
             if (entries.putIfAbsent(intent.id(), entry) != null
                     || state == State.AUTHORIZED && !active.add(intent.order().id()))
                 throw new IllegalStateException("Duplicate recovery identity/reservation");
@@ -179,13 +179,13 @@ public final class RoyalRecoveryStore {
     }
     private static CompoundTag saveIntent(Intent i) {
         var tag = new CompoundTag();
-        tag.putUUID("id", i.id());
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "id", i.id());
         tag.put("order", RoyalConstructionStore.saveIntent(i.order()));
         tag.putString("mode", i.mode().name());
         if (i.building() != null)
-            tag.putUUID("building", i.building());
+            com.millenairekingdoms.compat.KNbt.putUUID(tag, "building", i.building());
         if (i.operator() != null)
-            tag.putUUID("operator", i.operator());
+            com.millenairekingdoms.compat.KNbt.putUUID(tag, "operator", i.operator());
         tag.putString("source", i.source());
         tag.putString("reason", i.reason());
         tag.putLong("issued", i.issued());
@@ -193,21 +193,21 @@ public final class RoyalRecoveryStore {
     }
     private static Intent loadIntent(CompoundTag tag, boolean upgradesAllowed) {
         keys(tag, Set.of("id", "order", "mode", "building", "operator", "source", "reason", "issued"));
-        if (!tag.hasUUID("id") || !tag.contains("order", Tag.TAG_COMPOUND) || !tag.contains("mode", Tag.TAG_STRING)
-                || !tag.contains("source", Tag.TAG_STRING) || !tag.contains("reason", Tag.TAG_STRING)
-                || !tag.contains("issued", Tag.TAG_LONG) || tag.contains("building") && !tag.hasUUID("building")
-                || tag.contains("operator") && !tag.hasUUID("operator"))
+        if (!com.millenairekingdoms.compat.KNbt.hasUUID(tag, "id") || !tag.contains("order") || !tag.contains("mode")
+                || !tag.contains("source") || !tag.contains("reason")
+                || !tag.contains("issued") || tag.contains("building") && !com.millenairekingdoms.compat.KNbt.hasUUID(tag, "building")
+                || tag.contains("operator") && !com.millenairekingdoms.compat.KNbt.hasUUID(tag, "operator"))
             throw new IllegalStateException("Incomplete recovery intent");
-        return new Intent(tag.getUUID("id"),
-                RoyalConstructionStore.loadIntent(tag.getCompound("order"), upgradesAllowed),
-                Mode.valueOf(tag.getString("mode")), tag.hasUUID("building") ? tag.getUUID("building") : null,
-                tag.hasUUID("operator") ? tag.getUUID("operator") : null, tag.getString("source"),
-                tag.getString("reason"), tag.getLong("issued"));
+        return new Intent(com.millenairekingdoms.compat.KNbt.getUUID(tag, "id"),
+                RoyalConstructionStore.loadIntent(tag.getCompoundOrEmpty("order"), upgradesAllowed),
+                Mode.valueOf(tag.getStringOr("mode", "")), com.millenairekingdoms.compat.KNbt.hasUUID(tag, "building") ? com.millenairekingdoms.compat.KNbt.getUUID(tag, "building") : null,
+                com.millenairekingdoms.compat.KNbt.hasUUID(tag, "operator") ? com.millenairekingdoms.compat.KNbt.getUUID(tag, "operator") : null, tag.getStringOr("source", ""),
+                tag.getStringOr("reason", ""), tag.getLongOr("issued", 0L));
     }
     private static CompoundTag saveResult(Result r) {
         var tag = new CompoundTag();
         if (r.operator() != null)
-            tag.putUUID("operator", r.operator());
+            com.millenairekingdoms.compat.KNbt.putUUID(tag, "operator", r.operator());
         tag.putString("source", r.source());
         tag.putString("reason", r.reason());
         tag.putLong("time", r.time());
@@ -215,11 +215,11 @@ public final class RoyalRecoveryStore {
     }
     private static Result loadResult(CompoundTag tag) {
         keys(tag, Set.of("operator", "source", "reason", "time"));
-        if (!tag.contains("source", Tag.TAG_STRING) || !tag.contains("reason", Tag.TAG_STRING)
-                || !tag.contains("time", Tag.TAG_LONG) || tag.contains("operator") && !tag.hasUUID("operator"))
+        if (!tag.contains("source") || !tag.contains("reason")
+                || !tag.contains("time") || tag.contains("operator") && !com.millenairekingdoms.compat.KNbt.hasUUID(tag, "operator"))
             throw new IllegalStateException("Incomplete recovery result");
-        return new Result(tag.hasUUID("operator") ? tag.getUUID("operator") : null, tag.getString("source"),
-                tag.getString("reason"), tag.getLong("time"));
+        return new Result(com.millenairekingdoms.compat.KNbt.hasUUID(tag, "operator") ? com.millenairekingdoms.compat.KNbt.getUUID(tag, "operator") : null, tag.getStringOr("source", ""),
+                tag.getStringOr("reason", ""), tag.getLongOr("time", 0L));
     }
     private static String valid(String value, int max) {
         if (value == null || value.isBlank() || value.strip().length() > max
@@ -228,12 +228,14 @@ public final class RoyalRecoveryStore {
         return value.strip();
     }
     private static void keys(CompoundTag tag, Set<String> allowed) {
-        if (!allowed.containsAll(tag.getAllKeys()))
+        if (!allowed.containsAll(tag.keySet()))
             throw new IllegalStateException("Unknown recovery data; original preserved");
     }
     private static void sync(Path path) throws IOException {
         try (var channel = FileChannel.open(path, StandardOpenOption.READ)) {
             channel.force(true);
+        } catch (java.io.IOException windows) {
+            // Windows ne sait pas ouvrir un dossier comme un fichier ; l'écriture elle-même est déjà faite
         }
     }
     private static IllegalStateException failure(IOException e) {

@@ -6,7 +6,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Server to client: one read-only snapshot of what the kingdom screen shows (built by KingdomScreens for this player).
@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceLocation;
  */
 public record KingdomViewPayload(CompoundTag view) implements CustomPacketPayload {
     public static final Type<KingdomViewPayload> TYPE =
-            new Type<>(ResourceLocation.fromNamespaceAndPath(MillenaireKingdoms.MOD_ID, "view"));
+            new Type<>(Identifier.fromNamespaceAndPath(MillenaireKingdoms.MOD_ID, "view"));
     public static final StreamCodec<RegistryFriendlyByteBuf, KingdomViewPayload> CODEC =
             StreamCodec.composite(ByteBufCodecs.COMPOUND_TAG, KingdomViewPayload::view, KingdomViewPayload::new);
     @Override

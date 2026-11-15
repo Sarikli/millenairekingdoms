@@ -8,7 +8,6 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
-import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 
 /**
@@ -19,16 +18,17 @@ import org.slf4j.Logger;
  */
 public final class KingdomKeys {
     private static final Logger LOGGER = LogUtils.getLogger();
-    public static final String CATEGORY = "key.categories.millenairekingdoms";
+    public static final KeyMapping.Category CATEGORY =
+            new KeyMapping.Category(net.minecraft.resources.Identifier.fromNamespaceAndPath("millenairekingdoms", "main"));
     static final String COMMAND = "kingdom gui";
-    public static final KeyMapping OPEN = new KeyMapping("key.millenairekingdoms.open_kingdom",
-            KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, CATEGORY);
+    public static final KeyMapping OPEN = new KeyMapping("key.millenairekingdoms.open_kingdom", InputConstants.KEY_K, CATEGORY);
     /** A press was used; set until the bound key is physically released. */
     private static boolean held;
 
     private KingdomKeys() {}
 
     public static void register(RegisterKeyMappingsEvent event) {
+        event.registerCategory(CATEGORY);
         event.register(OPEN);
     }
 
@@ -42,7 +42,7 @@ public final class KingdomKeys {
         if (!pressed || held)
             return;
         held = true;
-        if (minecraft.screen != null || minecraft.player == null || minecraft.getOverlay() != null)
+        if (minecraft.gui.screen() != null || minecraft.player == null || false)
             return;
         ClientPacketListener connection = minecraft.getConnection();
         // The server sends only the commands this player may run; without it (no addon on the server) nothing is sent.
@@ -62,11 +62,7 @@ public final class KingdomKeys {
         InputConstants.Key key = OPEN.getKey();
         if (key.equals(InputConstants.UNKNOWN))
             return false;
-        long window = minecraft.getWindow().getWindow();
-        return switch (key.getType()) {
-            case KEYSYM -> InputConstants.isKeyDown(window, key.getValue());
-            case MOUSE -> GLFW.glfwGetMouseButton(window, key.getValue()) == GLFW.GLFW_PRESS;
-            case SCANCODE -> OPEN.isDown();
-        };
+        // portage 26.3 : plus de GLFW (SDL) ; l'état du clavier se lit sans poignée de fenêtre
+        return key.getType() == InputConstants.Type.KEYBOARD ? InputConstants.isKeyDown(key.getValue()) : OPEN.isDown();
     }
 }

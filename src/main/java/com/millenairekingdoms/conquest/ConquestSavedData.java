@@ -30,12 +30,15 @@ public final class ConquestSavedData extends SavedData {
     public enum Outcome { WON, LOST, ABORTED }
     public record Result(UUID raidId, UUID attacker, Outcome outcome) {}
 
-    public static Factory<ConquestSavedData> factory() {
-        return new Factory<>(ConquestSavedData::new, ConquestSavedData::load, null);
+    private static final net.minecraft.world.level.saveddata.SavedDataType<ConquestSavedData> TYPE = com.millenairekingdoms.compat.KNbt.savedType(NAME, ConquestSavedData::new,
+            ConquestSavedData::load, (data, registries) -> data.save(new CompoundTag(), registries));
+
+    public static net.minecraft.world.level.saveddata.SavedDataType<ConquestSavedData> factory() {
+        return TYPE;
     }
 
     public static ConquestSavedData get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(factory(), NAME);
+        return level.getDataStorage().computeIfAbsent(factory());
     }
 
     public int wins(UUID target) {
@@ -87,13 +90,12 @@ public final class ConquestSavedData extends SavedData {
         setDirty();
     }
 
-    @Override
     public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         tag.putInt("format", FORMAT);
         ListTag progress = new ListTag();
         wins.forEach((target, count) -> {
             CompoundTag entry = new CompoundTag();
-            entry.putUUID("target", target);
+            com.millenairekingdoms.compat.KNbt.putUUID(entry, "target", target);
             entry.putInt("wins", count);
             progress.add(entry);
         });
@@ -101,12 +103,12 @@ public final class ConquestSavedData extends SavedData {
         ListTag raids = new ListTag();
         for (Raid raid : active.values()) {
             CompoundTag entry = new CompoundTag();
-            entry.putUUID("id", raid.id());
-            entry.putUUID("attacker", raid.attacker());
-            entry.putUUID("target", raid.target());
+            com.millenairekingdoms.compat.KNbt.putUUID(entry, "id", raid.id());
+            com.millenairekingdoms.compat.KNbt.putUUID(entry, "attacker", raid.attacker());
+            com.millenairekingdoms.compat.KNbt.putUUID(entry, "target", raid.target());
             entry.putLong("startGameTime", raid.startGameTime());
             if (raid.initiator() != null)
-                entry.putUUID("initiator", raid.initiator());
+                com.millenairekingdoms.compat.KNbt.putUUID(entry, "initiator", raid.initiator());
             entry.putBoolean("victoryRecorded", raid.victoryRecorded());
             raids.add(entry);
         }
@@ -114,9 +116,9 @@ public final class ConquestSavedData extends SavedData {
         ListTag results = new ListTag();
         lastResults.forEach((target, result) -> {
             CompoundTag entry = new CompoundTag();
-            entry.putUUID("target", target);
-            entry.putUUID("id", result.raidId());
-            entry.putUUID("attacker", result.attacker());
+            com.millenairekingdoms.compat.KNbt.putUUID(entry, "target", target);
+            com.millenairekingdoms.compat.KNbt.putUUID(entry, "id", result.raidId());
+            com.millenairekingdoms.compat.KNbt.putUUID(entry, "attacker", result.attacker());
             entry.putString("outcome", result.outcome().name());
             results.add(entry);
         });
@@ -125,32 +127,32 @@ public final class ConquestSavedData extends SavedData {
     }
 
     public static ConquestSavedData load(CompoundTag tag, HolderLookup.Provider registries) {
-        if (tag.getInt("format") != FORMAT)
+        if (tag.getIntOr("format", 0) != FORMAT)
             throw new IllegalStateException("Unsupported conquest data format");
         ConquestSavedData data = new ConquestSavedData();
-        for (Tag value : tag.getList("progress", Tag.TAG_COMPOUND)) {
+        for (Tag value : tag.getListOrEmpty("progress")) {
             CompoundTag entry = (CompoundTag) value;
-            int count = entry.getInt("wins");
+            int count = entry.getIntOr("wins", 0);
             if (count < 0 || count > REQUIRED_WINS)
                 throw new IllegalStateException("Invalid conquest progress");
-            data.wins.put(entry.getUUID("target"), count);
+            data.wins.put(com.millenairekingdoms.compat.KNbt.getUUID(entry, "target"), count);
         }
-        for (Tag value : tag.getList("active", Tag.TAG_COMPOUND)) {
+        for (Tag value : tag.getListOrEmpty("active")) {
             CompoundTag entry = (CompoundTag) value;
-            Raid raid = new Raid(entry.getUUID("id"), entry.getUUID("attacker"), entry.getUUID("target"),
-                    entry.getLong("startGameTime"), entry.hasUUID("initiator") ? entry.getUUID("initiator") : null,
-                    entry.getBoolean("victoryRecorded"));
+            Raid raid = new Raid(com.millenairekingdoms.compat.KNbt.getUUID(entry, "id"), com.millenairekingdoms.compat.KNbt.getUUID(entry, "attacker"), com.millenairekingdoms.compat.KNbt.getUUID(entry, "target"),
+                    entry.getLongOr("startGameTime", 0L), com.millenairekingdoms.compat.KNbt.hasUUID(entry, "initiator") ? com.millenairekingdoms.compat.KNbt.getUUID(entry, "initiator") : null,
+                    entry.getBooleanOr("victoryRecorded", false));
             if (raid.startGameTime() <= 0 || raid.attacker().equals(raid.target()) || data.involves(raid.attacker())
                     || data.involves(raid.target()) || (raid.victoryRecorded() && data.wins(raid.target()) == 0)) {
                 throw new IllegalStateException("Invalid active conquest raid");
             }
             data.active.put(raid.target(), raid);
         }
-        for (Tag value : tag.getList("lastResults", Tag.TAG_COMPOUND)) {
+        for (Tag value : tag.getListOrEmpty("lastResults")) {
             CompoundTag entry = (CompoundTag) value;
-            data.lastResults.put(entry.getUUID("target"),
-                    new Result(entry.getUUID("id"), entry.getUUID("attacker"),
-                            Outcome.valueOf(entry.getString("outcome"))));
+            data.lastResults.put(com.millenairekingdoms.compat.KNbt.getUUID(entry, "target"),
+                    new Result(com.millenairekingdoms.compat.KNbt.getUUID(entry, "id"), com.millenairekingdoms.compat.KNbt.getUUID(entry, "attacker"),
+                            Outcome.valueOf(entry.getStringOr("outcome", ""))));
         }
         return data;
     }

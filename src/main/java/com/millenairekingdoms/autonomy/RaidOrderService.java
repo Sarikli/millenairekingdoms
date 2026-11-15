@@ -223,7 +223,7 @@ public final class RaidOrderService {
     }
 
     public static Attempt order(ServerPlayer player, UUID targetId, UUID sourceId, long expectedCost) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         var data = KingdomSavedData.get(level);
         ConquestService.reconcile(level);
         Kingdom kingdom = validate(player, targetId, sourceId);
@@ -300,7 +300,7 @@ public final class RaidOrderService {
      * Returns the player's kingdom or throws the reason.
      */
     public static Kingdom validate(ServerPlayer player, UUID targetId, UUID sourceId) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         var data = KingdomSavedData.get(level);
         Kingdom kingdom = PoliticsService.ruledKingdom(player);
         Village target = PoliticsService.village(level, targetId);
@@ -340,7 +340,7 @@ public final class RaidOrderService {
 
     /** The ruler cancels the kingdom's waiting order, refunding any upfront expedition fee. */
     public static RaidOrder cancel(ServerPlayer player) {
-        var level = player.serverLevel();
+        var level = player.level();
         var data = KingdomSavedData.get(level);
         Kingdom kingdom = PoliticsService.ruledKingdom(player);
         RaidOrder order = data.orderOf(kingdom.id());

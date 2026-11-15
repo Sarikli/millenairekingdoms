@@ -138,25 +138,25 @@ public final class RoyalPaymentJournal {
         if (!Files.exists(file))
             return null;
         CompoundTag tag = NbtIo.readCompressed(file, NbtAccounter.create(MAX_NBT_BYTES));
-        if (tag.getInt("format") != FORMAT)
+        if (tag.getIntOr("format", 0) != FORMAT)
             throw new IllegalStateException("Unsupported royal payment format; original journal preserved");
-        if (!tag.hasUUID("id") || !id.equals(tag.getUUID("id")) || !tag.contains("intent", 10)
-                || !tag.contains("recovery", 10)) {
+        if (!com.millenairekingdoms.compat.KNbt.hasUUID(tag, "id") || !id.equals(com.millenairekingdoms.compat.KNbt.getUUID(tag, "id")) || !tag.contains("intent")
+                || !tag.contains("recovery")) {
             throw new IllegalStateException("Invalid royal payment journal; original journal preserved");
         }
         State state;
         try {
-            state = State.valueOf(tag.getString("state"));
+            state = State.valueOf(tag.getStringOr("state", ""));
         } catch (IllegalArgumentException e) {
             throw new IllegalStateException("Unknown royal payment state; original journal preserved", e);
         }
-        return new Entry(id, state, tag.getCompound("intent"), tag.getCompound("recovery"));
+        return new Entry(id, state, tag.getCompoundOrEmpty("intent"), tag.getCompoundOrEmpty("recovery"));
     }
 
     private void write(Entry entry) throws IOException {
         CompoundTag tag = new CompoundTag();
         tag.putInt("format", FORMAT);
-        tag.putUUID("id", entry.id);
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "id", entry.id);
         tag.putString("state", entry.state.name());
         tag.put("intent", entry.intent.copy());
         tag.put("recovery", entry.recovery.copy());
@@ -182,6 +182,8 @@ public final class RoyalPaymentJournal {
     private static void syncDirectory(Path directory) throws IOException {
         try (FileChannel parent = FileChannel.open(directory, StandardOpenOption.READ)) {
             parent.force(true);
+        } catch (java.io.IOException windows) {
+            // Windows ne sait pas ouvrir un dossier comme un fichier ; l'écriture elle-même est déjà faite
         }
     }
 

@@ -18,7 +18,7 @@ public final class ChronicleViews {
         PacketDistributor.sendToPlayer(player, new ChronicleViewPayload(respond(player, request)));
     }
     public static CompoundTag respond(ServerPlayer player, ChronicleRequestPayload request) {
-        long now = player.serverLevel().getGameTime();
+        long now = player.level().getGameTime();
         var last = LAST.get(player.getUUID());
         if (last != null && now >= last && now - last < 4) {
             var retry = header(player, request);
@@ -41,17 +41,17 @@ public final class ChronicleViews {
     }
     public static CompoundTag header(ServerPlayer player, ChronicleRequestPayload request) {
         var view = new CompoundTag();
-        view.putUUID("session", request.session());
+        com.millenairekingdoms.compat.KNbt.putUUID(view, "session", request.session());
         view.putLong("serial", request.serial());
         view.putString("mode", request.mode());
-        view.putString("dimension", player.serverLevel().dimension().location().toString());
+        view.putString("dimension", player.level().dimension().identifier().toString());
         return view;
     }
     public static CompoundTag build(ServerPlayer player, ChronicleRequestPayload request) {
-        if (!player.serverLevel().getServer().isSameThread())
+        if (!player.level().getServer().isSameThread())
             throw new IllegalStateException("Chronicles require server thread");
         var view = header(player, request);
-        var level = player.serverLevel();
+        var level = player.level();
         var data = KingdomSavedData.get(level);
         var store = HistoryHooks.store(level);
         if (request.mode().equals("ATLAS") || request.mode().equals("INFO"))
@@ -83,14 +83,14 @@ public final class ChronicleViews {
             for (int n = start; n < Math.min(start + 64, realms.size()); n++) {
                 var r = realms.get(n);
                 var tag = new CompoundTag();
-                tag.putUUID("id", r.id());
+                com.millenairekingdoms.compat.KNbt.putUUID(tag, "id", r.id());
                 tag.putString("name", r.name());
                 tag.putBoolean("fallen", data.kingdom(r.id()) == null || data.kingdom(r.id()).fallen());
                 list.add(tag);
             }
             view.put("realms", list);
             if (start + 64 < realms.size())
-                view.putUUID("next", realms.get(start + 63).id());
+                com.millenairekingdoms.compat.KNbt.putUUID(view, "next", realms.get(start + 63).id());
             return view;
         }
         if (!request.mode().equals("CHRONICLE"))
@@ -108,9 +108,9 @@ public final class ChronicleViews {
                             .save());
         view.put("events", list);
         if (page.next() != null)
-            view.putUUID("next", page.next());
+            com.millenairekingdoms.compat.KNbt.putUUID(view, "next", page.next());
         request.kingdom().ifPresent(id -> {
-            view.putUUID("focus", id);
+            com.millenairekingdoms.compat.KNbt.putUUID(view, "focus", id);
             var k = data.kingdom(id);
             if (k != null) {
                 view.putString("name", k.name());
@@ -137,7 +137,7 @@ public final class ChronicleViews {
                         .findFirst()
                         .ifPresent(p -> view.putString("villageName", p.name()));
         });
-        view.putLong("today", Math.max(0, level.getDayTime() / 24000));
+        view.putLong("today", Math.max(0, level.getOverworldClockTime() / 24000));
         return view;
     }
 }

@@ -22,7 +22,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Own atomic order intent/index, independent of political format 6 and Millenaire's building save.
@@ -65,7 +65,7 @@ public final class RoyalConstructionStore {
 
     public record
             Intent(UUID id, String dimension, UUID kingdom, UUID capital, UUID village, UUID actor, long rulerSince,
-                    ResourceLocation villageType, ResourceLocation planSet, ResourceLocation plan, String variant,
+                    Identifier villageType, Identifier planSet, Identifier plan, String variant,
                     long fee, long issuedGameTime, Set<UUID> originalBuildings, UUID upgradeBuilding, int targetLevel) {
         public Intent {
             Objects.requireNonNull(id);
@@ -76,11 +76,11 @@ public final class RoyalConstructionStore {
             Objects.requireNonNull(planSet);
             Objects.requireNonNull(plan);
             Objects.requireNonNull(variant);
-            if (dimension == null || ResourceLocation.tryParse(dimension) == null || variant.isBlank()
+            if (dimension == null || Identifier.tryParse(dimension) == null || variant.isBlank()
                     || variant.length() > 128 || fee <= 0 || issuedGameTime < 0 || rulerSince < 0
                     || (actor == null && rulerSince != 0))
                 throw new IllegalArgumentException("Invalid royal construction intent");
-            dimension = ResourceLocation.parse(dimension).toString();
+            dimension = Identifier.parse(dimension).toString();
             originalBuildings = Set.copyOf(originalBuildings);
             if ((upgradeBuilding == null) != (targetLevel == 0) || targetLevel < 0 || targetLevel > 256
                     || upgradeBuilding != null && (actor == null || !originalBuildings.contains(upgradeBuilding)))
@@ -89,7 +89,7 @@ public final class RoyalConstructionStore {
                 throw new IllegalArgumentException("Too many original building identities");
         }
         public Intent(UUID id, String dimension, UUID kingdom, UUID capital, UUID village, UUID actor, long rulerSince,
-                ResourceLocation villageType, ResourceLocation planSet, ResourceLocation plan, String variant, long fee,
+                Identifier villageType, Identifier planSet, Identifier plan, String variant, long fee,
                 long issued, Set<UUID> originalBuildings) {
             this(id, dimension, kingdom, capital, village, actor, rulerSince, villageType, planSet, plan, variant, fee,
                     issued, originalBuildings, null, 0);
@@ -326,11 +326,11 @@ public final class RoyalConstructionStore {
             return result;
         var tag = NbtIo.readCompressed(file, NbtAccounter.create(MAX_BYTES));
         keys(tag, Set.of("format", "orders"));
-        if (!tag.contains("format", Tag.TAG_INT) || tag.getInt("format") < 1 || tag.getInt("format") > FORMAT
-                || !tag.contains("orders", Tag.TAG_LIST))
+        if (!tag.contains("format") || tag.getIntOr("format", 0) < 1 || tag.getIntOr("format", 0) > FORMAT
+                || !tag.contains("orders"))
             throw new IllegalStateException("Unsupported royal order format; original file preserved");
-        int format = tag.getInt("format");
-        var list = tag.getList("orders", Tag.TAG_COMPOUND);
+        int format = tag.getIntOr("format", 0);
+        var list = tag.getListOrEmpty("orders");
         if (list.size() > MAX_ORDERS || list.size() != ((ListTag) tag.get("orders")).size()) {
             throw new IllegalStateException("Invalid royal order index");
         }
@@ -342,27 +342,27 @@ public final class RoyalConstructionStore {
                             : format == 2
                             ? Set.of("intent", "stage", "blocked", "building", "cancellationFrom")
                             : Set.of("intent", "stage", "blocked", "building", "cancellationFrom", "recoveryDecision"));
-            if (!item.contains("intent", Tag.TAG_COMPOUND) || !item.contains("stage", Tag.TAG_STRING)
-                    || !item.contains("blocked", Tag.TAG_STRING)
-                    || (item.contains("building") && !item.hasUUID("building"))
-                    || (item.contains("cancellationFrom") && !item.contains("cancellationFrom", Tag.TAG_STRING))
-                    || (item.contains("recoveryDecision") && !item.hasUUID("recoveryDecision")))
+            if (!item.contains("intent") || !item.contains("stage")
+                    || !item.contains("blocked")
+                    || (item.contains("building") && !com.millenairekingdoms.compat.KNbt.hasUUID(item, "building"))
+                    || (item.contains("cancellationFrom") && !item.contains("cancellationFrom"))
+                    || (item.contains("recoveryDecision") && !com.millenairekingdoms.compat.KNbt.hasUUID(item, "recoveryDecision")))
                 throw new IllegalStateException("Incomplete royal order entry");
-            var stage = Stage.valueOf(item.getString("stage"));
+            var stage = Stage.valueOf(item.getStringOr("stage", ""));
             if (format < 4
-                    && (stage == Stage.WAITING || item.getString("cancellationFrom").equals("WAITING")
+                    && (stage == Stage.WAITING || item.getStringOr("cancellationFrom", "").equals("WAITING")
                             || Set.of("RULER_UNAVAILABLE", "TREASURY_UNAVAILABLE", "INSUFFICIENT_FUNDS")
-                                    .contains(item.getString("blocked"))))
+                                    .contains(item.getStringOr("blocked", ""))))
                 throw new IllegalStateException("Waiting mandate requires order format4; original file preserved");
             // v1 did not retain the origin. An unresolved legacy cancellation is explicitly ambiguous, never assumed
             // refundable.
             Stage origin = format == 1 && (stage == Stage.CANCELLING || stage == Stage.CANCELLED) ? Stage.CANCELLING
-                    : item.contains("cancellationFrom") ? Stage.valueOf(item.getString("cancellationFrom"))
+                    : item.contains("cancellationFrom") ? Stage.valueOf(item.getStringOr("cancellationFrom", ""))
                                                         : null;
-            var entry = new Entry(loadIntent(item.getCompound("intent"), format >= 5), stage,
-                    Blocked.valueOf(item.getString("blocked")),
-                    item.hasUUID("building") ? item.getUUID("building") : null, origin,
-                    item.hasUUID("recoveryDecision") ? item.getUUID("recoveryDecision") : null);
+            var entry = new Entry(loadIntent(item.getCompoundOrEmpty("intent"), format >= 5), stage,
+                    Blocked.valueOf(item.getStringOr("blocked", "")),
+                    com.millenairekingdoms.compat.KNbt.hasUUID(item, "building") ? com.millenairekingdoms.compat.KNbt.getUUID(item, "building") : null, origin,
+                    com.millenairekingdoms.compat.KNbt.hasUUID(item, "recoveryDecision") ? com.millenairekingdoms.compat.KNbt.getUUID(item, "recoveryDecision") : null);
             if (result.putIfAbsent(entry.intent.id, entry) != null)
                 throw new IllegalStateException("Duplicate royal order identity");
             if (!entry.terminal() && !active.add(entry.intent.dimension + "/" + entry.intent.village))
@@ -383,9 +383,9 @@ public final class RoyalConstructionStore {
             if (entry.cancellationFrom != null)
                 item.putString("cancellationFrom", entry.cancellationFrom.name());
             if (entry.recoveryDecision != null)
-                item.putUUID("recoveryDecision", entry.recoveryDecision);
+                com.millenairekingdoms.compat.KNbt.putUUID(item, "recoveryDecision", entry.recoveryDecision);
             if (entry.building != null)
-                item.putUUID("building", entry.building);
+                com.millenairekingdoms.compat.KNbt.putUUID(item, "building", entry.building);
             list.add(item);
         }
         tag.put("orders", list);
@@ -409,13 +409,13 @@ public final class RoyalConstructionStore {
 
     public static CompoundTag saveIntent(Intent intent) {
         var tag = new CompoundTag();
-        tag.putUUID("id", intent.id);
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "id", intent.id);
         tag.putString("dimension", intent.dimension);
-        tag.putUUID("kingdom", intent.kingdom);
-        tag.putUUID("capital", intent.capital);
-        tag.putUUID("village", intent.village);
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "kingdom", intent.kingdom);
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "capital", intent.capital);
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "village", intent.village);
         if (intent.actor != null)
-            tag.putUUID("actor", intent.actor);
+            com.millenairekingdoms.compat.KNbt.putUUID(tag, "actor", intent.actor);
         tag.putLong("rulerSince", intent.rulerSince);
         tag.putString("villageType", intent.villageType.toString());
         tag.putString("planSet", intent.planSet.toString());
@@ -426,12 +426,12 @@ public final class RoyalConstructionStore {
         var ids = new ListTag();
         for (UUID id : intent.originalBuildings.stream().sorted().toList()) {
             var item = new CompoundTag();
-            item.putUUID("id", id);
+            com.millenairekingdoms.compat.KNbt.putUUID(item, "id", id);
             ids.add(item);
         }
         tag.put("originalBuildings", ids);
         if (intent.upgrade()) {
-            tag.putUUID("upgradeBuilding", intent.upgradeBuilding());
+            com.millenairekingdoms.compat.KNbt.putUUID(tag, "upgradeBuilding", intent.upgradeBuilding());
             tag.putInt("targetLevel", intent.targetLevel());
         }
         return tag;
@@ -446,39 +446,39 @@ public final class RoyalConstructionStore {
                         "targetLevel"));
         boolean upgrade = tag.contains("upgradeBuilding") || tag.contains("targetLevel");
         if (upgrade
-                && (!upgradesAllowed || !tag.hasUUID("upgradeBuilding") || !tag.contains("targetLevel", Tag.TAG_INT)
-                        || tag.getInt("targetLevel") < 1))
+                && (!upgradesAllowed || !com.millenairekingdoms.compat.KNbt.hasUUID(tag, "upgradeBuilding") || !tag.contains("targetLevel")
+                        || tag.getIntOr("targetLevel", 0) < 1))
             throw new IllegalStateException("Upgrade target requires construction format5; original preserved");
         for (String key : List.of("id", "kingdom", "capital", "village"))
-            if (!tag.hasUUID(key))
+            if (!com.millenairekingdoms.compat.KNbt.hasUUID(tag, key))
                 throw new IllegalStateException("Incomplete royal order identity: " + key);
         for (String key : List.of("dimension", "villageType", "planSet", "plan", "variant"))
-            if (!tag.contains(key, Tag.TAG_STRING))
+            if (!tag.contains(key))
                 throw new IllegalStateException("Incomplete royal order field: " + key);
         for (String key : List.of("rulerSince", "fee", "issued"))
-            if (!tag.contains(key, Tag.TAG_LONG))
+            if (!tag.contains(key))
                 throw new IllegalStateException("Incomplete royal order amount/time: " + key);
-        if (!tag.contains("originalBuildings", Tag.TAG_LIST) || (tag.contains("actor") && !tag.hasUUID("actor")))
+        if (!tag.contains("originalBuildings") || (tag.contains("actor") && !com.millenairekingdoms.compat.KNbt.hasUUID(tag, "actor")))
             throw new IllegalStateException("Incomplete royal order authority/building snapshot");
         var ids = new HashSet<UUID>();
-        var list = tag.getList("originalBuildings", Tag.TAG_COMPOUND);
+        var list = tag.getListOrEmpty("originalBuildings");
         if (list.size() != ((ListTag) tag.get("originalBuildings")).size())
             throw new IllegalStateException("Invalid original building snapshot");
         for (Tag raw : list) {
             var item = (CompoundTag) raw;
             keys(item, Set.of("id"));
-            if (!item.hasUUID("id") || !ids.add(item.getUUID("id")))
+            if (!com.millenairekingdoms.compat.KNbt.hasUUID(item, "id") || !ids.add(com.millenairekingdoms.compat.KNbt.getUUID(item, "id")))
                 throw new IllegalStateException("Duplicate/invalid original building identity");
         }
-        return new Intent(tag.getUUID("id"), tag.getString("dimension"), tag.getUUID("kingdom"), tag.getUUID("capital"),
-                tag.getUUID("village"), tag.hasUUID("actor") ? tag.getUUID("actor") : null, tag.getLong("rulerSince"),
-                ResourceLocation.parse(tag.getString("villageType")), ResourceLocation.parse(tag.getString("planSet")),
-                ResourceLocation.parse(tag.getString("plan")), tag.getString("variant"), tag.getLong("fee"),
-                tag.getLong("issued"), ids, upgrade ? tag.getUUID("upgradeBuilding") : null,
-                upgrade ? tag.getInt("targetLevel") : 0);
+        return new Intent(com.millenairekingdoms.compat.KNbt.getUUID(tag, "id"), tag.getStringOr("dimension", ""), com.millenairekingdoms.compat.KNbt.getUUID(tag, "kingdom"), com.millenairekingdoms.compat.KNbt.getUUID(tag, "capital"),
+                com.millenairekingdoms.compat.KNbt.getUUID(tag, "village"), com.millenairekingdoms.compat.KNbt.hasUUID(tag, "actor") ? com.millenairekingdoms.compat.KNbt.getUUID(tag, "actor") : null, tag.getLongOr("rulerSince", 0L),
+                Identifier.parse(tag.getStringOr("villageType", "")), Identifier.parse(tag.getStringOr("planSet", "")),
+                Identifier.parse(tag.getStringOr("plan", "")), tag.getStringOr("variant", ""), tag.getLongOr("fee", 0L),
+                tag.getLongOr("issued", 0L), ids, upgrade ? com.millenairekingdoms.compat.KNbt.getUUID(tag, "upgradeBuilding") : null,
+                upgrade ? tag.getIntOr("targetLevel", 0) : 0);
     }
     private static void keys(CompoundTag tag, Set<String> allowed) {
-        if (!allowed.containsAll(tag.getAllKeys()))
+        if (!allowed.containsAll(tag.keySet()))
             throw new IllegalStateException("Unknown royal order data; original file preserved");
     }
     private static boolean sameVillage(Intent a, Intent b) {
@@ -487,6 +487,8 @@ public final class RoyalConstructionStore {
     private static void sync(Path directory) throws IOException {
         try (var channel = FileChannel.open(directory, StandardOpenOption.READ)) {
             channel.force(true);
+        } catch (java.io.IOException windows) {
+            // Windows ne sait pas ouvrir un dossier comme un fichier ; l'écriture elle-même est déjà faite
         }
     }
     private <T> T locked(Function<Map<UUID, Entry>, T> operation) {

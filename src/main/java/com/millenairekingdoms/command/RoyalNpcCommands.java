@@ -19,13 +19,13 @@ public final class RoyalNpcCommands {
     private RoyalNpcCommands() {}
     public static LiteralArgumentBuilder<CommandSourceStack> tree() {
         return Commands.literal("economy")
-                .requires(s -> s.hasPermission(2))
+                .requires(s -> s.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER))
                 .then(Commands.literal("explain").then(PoliticalArguments.kingdomArgument("kingdom").executes(c
                         -> guarded(c,
                                 () -> {
                                     var level = c.getSource().getLevel();
                                     var id = PoliticalArguments.kingdom(c, "kingdom");
-                                    long day = Math.max(0, level.getDayTime()) / EconomyService.DAY_TICKS;
+                                    long day = Math.max(0, level.getOverworldClockTime()) / EconomyService.DAY_TICKS;
                                     var portfolio =
                                             new com.millenairekingdoms.autonomy.RoyalStrategyStore(level).portfolio(id);
                                     var project = portfolio.development();
@@ -84,7 +84,7 @@ public final class RoyalNpcCommands {
                     var level = c.getSource().getLevel();
                     var id = PoliticalArguments.kingdom(c, "kingdom");
                     var path = RoyalNpcDecisionStore.directory(level);
-                    var dimension = level.dimension().location().toString();
+                    var dimension = level.dimension().identifier().toString();
                     if (!Files.exists(path.resolve("decisions.dat"))) {
                         reply(c,
                                 com.millenairekingdoms.localization.PublicText.of(

@@ -14,7 +14,6 @@ import net.minecraft.world.level.storage.LevelResource;
  * First-fee guard for persisted policy-owned domain IDs, including delayed previously-unpaid requests. Existing
  * PREPARED/native-proof reconciliation, paid acknowledgements/refunds and player requests do not create new spending.
  */
-@org.jetbrains.annotations.ApiStatus.Internal
 public final class RoyalNpcBudget {
     private RoyalNpcBudget() {}
     static void requireNewSpend(ServerLevel level, RoyalTreasurySnapshot treasury, UUID id,
@@ -30,7 +29,7 @@ public final class RoyalNpcBudget {
         var budget = decision.budget();
         var choice = decision.choice();
         var capital = com.millenairekingdoms.politics.PoliticsService.village(level, budget.capital());
-        if (!limits.enabled() || !decision.dimension().equals(level.dimension().location().toString())
+        if (!limits.enabled() || !decision.dimension().equals(level.dimension().identifier().toString())
                 || !decision.kingdom().equals(treasury.kingdom()) || !budget.capital().equals(treasury.capital())
                 || !profile.specialized() || !java.util.Objects.equals(budget.capitalType(), profile.villageType())
                 || capital == null || capital.getOwnerUUID() != null || !id.equals(reference) || choice.fee() != amount)

@@ -24,9 +24,9 @@ public final class LocalizedComponents {
         var style = source.getStyle();
         var hover = style.getHoverEvent();
         if (hover != null) {
-            var text = hover.getValue(HoverEvent.Action.SHOW_TEXT);
+            var text = (hover instanceof HoverEvent.ShowText st ? st.value() : null);
             if (text != null)
-                style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, numbers(text, language)));
+                style = style.withHoverEvent(new HoverEvent.ShowText(numbers(text, language)));
         }
         result.setStyle(style);
         for (var sibling : source.getSiblings())

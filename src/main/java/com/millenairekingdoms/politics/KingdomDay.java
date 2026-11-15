@@ -24,7 +24,7 @@ public final class KingdomDay {
         if (!(event.getLevel() instanceof ServerLevel level) || level.getGameTime() % 20 != 0)
             return;
         var data = KingdomSavedData.get(level);
-        long day = Math.max(0, level.getDayTime()) / EconomyService.DAY_TICKS;
+        long day = Math.max(0, level.getOverworldClockTime()) / EconomyService.DAY_TICKS;
         // A new world or an upgraded save starts counting today; the first payment comes at the next day start.
         if (data.day() < 0)
             data.startDay(day, Map.of());

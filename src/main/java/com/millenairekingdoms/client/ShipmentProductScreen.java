@@ -3,21 +3,21 @@ package com.millenairekingdoms.client;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 /** Client selection only: the server still validates the source/product and issues its own price/stock offer. */
 final class ShipmentProductScreen extends Screen {
     private Object languageState;
     private final KingdomScreen parent;
-    private final List<ResourceLocation> products = new ArrayList<>();
+    private final List<Identifier> products = new ArrayList<>();
     private final String selected;
     private EditBox search;
     private KingdomScreen.RowList rows;
@@ -28,7 +28,7 @@ final class ShipmentProductScreen extends Screen {
         this.parent = parent;
         this.selected = selected;
         for (int n = 0; n < Math.min(128, products.size()); n++) {
-            var id = ResourceLocation.tryParse(products.getCompound(n).getString("id"));
+            var id = Identifier.tryParse(products.getCompoundOrEmpty(n).getStringOr("id", ""));
             if (id != null && BuiltInRegistries.ITEM.containsKey(id))
                 this.products.add(id);
         }
@@ -60,34 +60,36 @@ final class ShipmentProductScreen extends Screen {
         rows = new KingdomScreen.RowList(left + 12, top + 52, panelWidth - 24, Math.max(20, panelHeight - 84), 20);
         String needle = query.strip().toLowerCase(Locale.ROOT);
         for (var id : products) {
-            var item = BuiltInRegistries.ITEM.get(id);
+            var item = BuiltInRegistries.ITEM.getValue(id);
             var stack = new ItemStack(item);
             var name = stack.getHoverName();
             if (!name.getString().toLowerCase(Locale.ROOT).contains(needle) && !id.toString().contains(needle))
                 continue;
             rows.addIcon(name, id.toString().equals(selected), () -> {
-                minecraft.setScreen(parent);
+                minecraft.gui.setScreen(parent);
                 parent.chooseShipmentProduct(id.toString());
             }, stack);
         }
     }
     @Override
-    public void renderBackground(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+    public void extractBackground(GuiGraphicsExtractor g, int mouseX, int mouseY, float partialTick) {
         g.fill(left, top, left + panelWidth, top + panelHeight, 0xFFF0DDB0);
-        g.renderOutline(left, top, panelWidth, panelHeight, 0xFF62442B);
+        g.outline(left, top, panelWidth, panelHeight, 0xFF62442B);
     }
     @Override
-    public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-        super.render(g, mouseX, mouseY, partialTick);
-        g.drawString(font, title, left + 12, top + 10, 0xFF493321, false);
+    public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(g, mouseX, mouseY, partialTick);
+        g.text(font, title, left + 12, top + 10, 0xFF493321, false);
         rows.render(g, font, mouseX, mouseY);
         if (rows.rows.isEmpty())
-            g.drawString(font, Component.translatable("millenairekingdoms.gui.shipment.no_product_match"), left + 16,
+            g.text(font, Component.translatable("millenairekingdoms.gui.shipment.no_product_match"), left + 16,
                     top + 58, 0xFF493321, false);
     }
     @Override
-    public boolean mouseClicked(double x, double y, int button) {
-        return super.mouseClicked(x, y, button) || button == 0 && rows.click(x, y);
+    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent kEvent, boolean kDouble) {
+        double x = kEvent.x(), y = kEvent.y();
+        int button = kEvent.button();
+        return super.mouseClicked(kEvent, kDouble) || button == 0 && rows.click(x, y);
     }
     @Override
     public boolean mouseScrolled(double x, double y, double dx, double dy) {
@@ -95,7 +97,7 @@ final class ShipmentProductScreen extends Screen {
     }
     @Override
     public void onClose() {
-        minecraft.setScreen(parent);
+        minecraft.gui.setScreen(parent);
     }
     @Override
     public void tick() {

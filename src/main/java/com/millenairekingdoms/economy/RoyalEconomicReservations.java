@@ -13,7 +13,6 @@ import net.minecraft.world.level.storage.LevelResource;
  * Loaded physical container serialization across money and cargo protocols. Ordinary native trade is unchanged;
  * its activity is handled by same-container proofs or explicit unreceipted-image quarantine.
  */
-@org.jetbrains.annotations.ApiStatus.Internal
 public final class RoyalEconomicReservations {
     private RoyalEconomicReservations() {}
 
@@ -28,7 +27,7 @@ public final class RoyalEconomicReservations {
         if (!Files.exists(directory.resolve("shipments.dat")))
             return;
         var requested = new HashSet<>(positions);
-        var dimension = level.dimension().location().toString();
+        var dimension = level.dimension().identifier().toString();
         for (var entry : new RoyalShipmentStore(directory).entries())
             if (entry.intent().dimension().equals(dimension)) {
                 for (var op : entry.operations())
@@ -56,23 +55,23 @@ public final class RoyalEconomicReservations {
                 level.getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-payments");
         if (!Files.exists(directory))
             return;
-        var dimension = level.dimension().location().toString();
+        var dimension = level.dimension().identifier().toString();
         for (var entry : new RoyalPaymentJournal(directory).entries()) {
             if (entry.state() != RoyalPaymentJournal.State.PREPARED
                     && entry.state() != RoyalPaymentJournal.State.REFUND_PREPARED
                     && entry.state() != RoyalPaymentJournal.State.RECOVERY_REQUIRED)
                 continue;
             var intent = entry.intent();
-            if (!intent.contains("dimension", Tag.TAG_STRING))
+            if (!intent.contains("dimension"))
                 throw new IllegalStateException(
                         "Unresolved payment has unknown dimension; preserve its physical evidence");
-            if (!dimension.equals(intent.getString("dimension")))
+            if (!dimension.equals(intent.getStringOr("dimension", "")))
                 continue;
             boolean found = false;
             for (var key : List.of("debit", "refund"))
-                if (entry.recovery().contains(key, Tag.TAG_COMPOUND)) {
+                if (entry.recovery().contains(key)) {
                     found = true;
-                    var image = RoyalTreasuryImage.read(level, entry.recovery().getCompound(key));
+                    var image = RoyalTreasuryImage.read(level, entry.recovery().getCompoundOrEmpty(key));
                     if (image.chests().stream().anyMatch(c -> requested.contains(c.position())))
                         throw new IllegalStateException("Physical cargo container has unresolved royal payment "
                                 + entry.id() + " in requested storage");

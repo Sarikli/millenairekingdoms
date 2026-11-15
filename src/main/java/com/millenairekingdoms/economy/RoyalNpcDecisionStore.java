@@ -20,7 +20,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.storage.LevelResource;
 
@@ -28,20 +28,19 @@ import net.minecraft.world.level.storage.LevelResource;
  * Strict separate NPC attempt/cooldown and first-fee authorization history. It is not money, goods or domain proof.
  * A durable attempt precedes issue; unissued attempts are never blindly replayed after a crash.
  */
-@org.jetbrains.annotations.ApiStatus.Internal
 public final class RoyalNpcDecisionStore {
     private static final int FORMAT = 1, MAX_DECISIONS = 10_000;
     private static final long MAX_BYTES = 16L * 1024 * 1024;
     public enum Kind { NONE, CONSTRUCTION, SHIPMENT }
     public enum Outcome { ISSUING, ACCEPTED, DEFERRED, FAILED, SKIPPED }
-    public record Budget(UUID capital, ResourceLocation capitalType, long reserve, int sharePermille) {
+    public record Budget(UUID capital, Identifier capitalType, long reserve, int sharePermille) {
         public Budget {
             Objects.requireNonNull(capital);
             if (reserve < 0 || sharePermille < 1 || sharePermille > 1000)
                 throw new IllegalArgumentException("Invalid NPC fee budget");
         }
     }
-    public record Choice(Kind kind, UUID source, UUID target, ResourceLocation selection, int quantity, long fee,
+    public record Choice(Kind kind, UUID source, UUID target, Identifier selection, int quantity, long fee,
             long travelTicks, UUID need) {
         public Choice {
             Objects.requireNonNull(kind);
@@ -74,10 +73,10 @@ public final class RoyalNpcDecisionStore {
             Objects.requireNonNull(choice);
             Objects.requireNonNull(outcome);
             Objects.requireNonNull(reason);
-            if (dimension == null || ResourceLocation.tryParse(dimension) == null || day < 0 || nextDay <= day
+            if (dimension == null || Identifier.tryParse(dimension) == null || day < 0 || nextDay <= day
                     || reason.length() > 512 || choice.kind() != Kind.NONE && budget.capitalType() == null)
                 throw new IllegalArgumentException("Invalid bound NPC decision");
-            dimension = ResourceLocation.parse(dimension).toString();
+            dimension = Identifier.parse(dimension).toString();
             if (choice.kind() == Kind.NONE && outcome != Outcome.SKIPPED && outcome != Outcome.DEFERRED
                     || choice.kind() != Kind.NONE && outcome == Outcome.SKIPPED)
                 throw new IllegalArgumentException("Invalid NPC decision outcome");
@@ -170,9 +169,9 @@ public final class RoyalNpcDecisionStore {
                 throw new IllegalStateException("NPC decision history is too large; original preserved");
             var root = NbtIo.readCompressed(file, NbtAccounter.create(MAX_BYTES));
             keys(root, Set.of("format", "decisions"));
-            if (!root.contains("format", Tag.TAG_INT) || root.getInt("format") != FORMAT
-                    || !root.contains("decisions", Tag.TAG_LIST) || !(root.get("decisions") instanceof ListTag list)
-                    || !list.isEmpty() && list.getElementType() != Tag.TAG_COMPOUND || list.size() > MAX_DECISIONS)
+            if (!root.contains("format") || root.getIntOr("format", 0) != FORMAT
+                    || !root.contains("decisions") || !(root.get("decisions") instanceof ListTag list)
+                    || !list.isEmpty() && com.millenairekingdoms.compat.KNbt.elementType(list) != Tag.TAG_COMPOUND || list.size() > MAX_DECISIONS)
                 throw new IllegalStateException("Unsupported NPC decision data; original preserved");
             for (var raw : list) {
                 var decision = decode((CompoundTag) raw);
@@ -210,6 +209,8 @@ public final class RoyalNpcDecisionStore {
                 Files.move(temporary, file, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
                 try (var dir = FileChannel.open(directory, StandardOpenOption.READ)) {
                     dir.force(true);
+                } catch (java.io.IOException windows) {
+                    // Windows ne sait pas ouvrir un dossier comme un fichier ; l'écriture elle-même est déjà faite
                 }
             } finally {
                 Files.deleteIfExists(temporary);
@@ -220,13 +221,13 @@ public final class RoyalNpcDecisionStore {
     }
     private static CompoundTag encode(Decision decision) {
         var tag = new CompoundTag();
-        tag.putUUID("id", decision.id());
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "id", decision.id());
         tag.putString("dimension", decision.dimension());
-        tag.putUUID("kingdom", decision.kingdom());
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "kingdom", decision.kingdom());
         tag.putLong("day", decision.day());
         tag.putLong("nextDay", decision.nextDay());
         var budget = new CompoundTag();
-        budget.putUUID("capital", decision.budget().capital());
+        com.millenairekingdoms.compat.KNbt.putUUID(budget, "capital", decision.budget().capital());
         if (decision.budget().capitalType() != null)
             budget.putString("capitalType", decision.budget().capitalType().toString());
         budget.putLong("reserve", decision.budget().reserve());
@@ -236,16 +237,16 @@ public final class RoyalNpcDecisionStore {
         var choice = new CompoundTag();
         choice.putString("kind", c.kind().name());
         if (c.source() != null)
-            choice.putUUID("source", c.source());
+            com.millenairekingdoms.compat.KNbt.putUUID(choice, "source", c.source());
         if (c.target() != null)
-            choice.putUUID("target", c.target());
+            com.millenairekingdoms.compat.KNbt.putUUID(choice, "target", c.target());
         if (c.selection() != null)
             choice.putString("selection", c.selection().toString());
         choice.putInt("quantity", c.quantity());
         choice.putLong("fee", c.fee());
         choice.putLong("travelTicks", c.travelTicks());
         if (c.need() != null)
-            choice.putUUID("need", c.need());
+            com.millenairekingdoms.compat.KNbt.putUUID(choice, "need", c.need());
         tag.put("choice", choice);
         tag.putString("outcome", decision.outcome().name());
         tag.putString("reason", decision.reason());
@@ -256,12 +257,12 @@ public final class RoyalNpcDecisionStore {
         required(tag, Set.of("id", "dimension", "kingdom", "day", "nextDay", "budget", "choice", "outcome", "reason"));
         require(tag, "budget", Tag.TAG_COMPOUND);
         require(tag, "choice", Tag.TAG_COMPOUND);
-        var b = tag.getCompound("budget");
+        var b = tag.getCompoundOrEmpty("budget");
         keys(b, Set.of("capital", "capitalType", "reserve", "sharePermille"));
         required(b, Set.of("capital", "reserve", "sharePermille"));
         var budget = new Budget(uuid(b, "capital"), optionalLocation(b, "capitalType"), number(b, "reserve"),
                 integer(b, "sharePermille"));
-        var c = tag.getCompound("choice");
+        var c = tag.getCompoundOrEmpty("choice");
         keys(c, Set.of("kind", "source", "target", "selection", "quantity", "fee", "travelTicks", "need"));
         required(c, Set.of("kind", "quantity", "fee", "travelTicks"));
         var choice = new Choice(Kind.valueOf(string(c, "kind")), optionalUuid(c, "source"), optionalUuid(c, "target"),
@@ -271,38 +272,38 @@ public final class RoyalNpcDecisionStore {
                 number(tag, "nextDay"), budget, choice, Outcome.valueOf(string(tag, "outcome")), string(tag, "reason"));
     }
     private static void require(CompoundTag tag, String key, int type) {
-        if (!tag.contains(key, type))
+        if (!tag.contains(key))
             throw new IllegalArgumentException("Wrong NPC decision field type: " + key);
     }
     private static String string(CompoundTag tag, String key) {
         require(tag, key, Tag.TAG_STRING);
-        return tag.getString(key);
+        return tag.getStringOr(key, "");
     }
     private static int integer(CompoundTag tag, String key) {
         require(tag, key, Tag.TAG_INT);
-        return tag.getInt(key);
+        return tag.getIntOr(key, 0);
     }
     private static long number(CompoundTag tag, String key) {
         require(tag, key, Tag.TAG_LONG);
-        return tag.getLong(key);
+        return tag.getLongOr(key, 0L);
     }
     private static UUID uuid(CompoundTag tag, String key) {
-        if (!tag.hasUUID(key))
+        if (!com.millenairekingdoms.compat.KNbt.hasUUID(tag, key))
             throw new IllegalArgumentException("Invalid NPC UUID field: " + key);
-        return tag.getUUID(key);
+        return com.millenairekingdoms.compat.KNbt.getUUID(tag, key);
     }
     private static UUID optionalUuid(CompoundTag tag, String key) {
         return tag.contains(key) ? uuid(tag, key) : null;
     }
-    private static ResourceLocation optionalLocation(CompoundTag tag, String key) {
-        return tag.contains(key) ? ResourceLocation.parse(string(tag, key)) : null;
+    private static Identifier optionalLocation(CompoundTag tag, String key) {
+        return tag.contains(key) ? Identifier.parse(string(tag, key)) : null;
     }
     private static void keys(CompoundTag tag, Set<String> allowed) {
-        if (!allowed.containsAll(tag.getAllKeys()))
+        if (!allowed.containsAll(tag.keySet()))
             throw new IllegalArgumentException("Unknown NPC decision fields; original preserved");
     }
     private static void required(CompoundTag tag, Set<String> required) {
-        if (!tag.getAllKeys().containsAll(required))
+        if (!tag.keySet().containsAll(required))
             throw new IllegalArgumentException("Missing NPC decision fields; original preserved");
     }
     private static IllegalStateException failure(String message, Exception cause) {

@@ -8,7 +8,7 @@ import com.millenairekingdoms.personality.KingdomPersonality;
 import com.millenairekingdoms.politics.PoliticsService;
 import java.nio.file.Files;
 import java.util.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import org.millenaire.building.BuildingInstance;
@@ -19,7 +19,7 @@ import org.millenaire.building.BuildingInstance;
 public final class RoyalStrategyService {
     private final ServerLevel level;
     private final RoyalStrategyStore store;
-    private record Need(UUID target, ResourceLocation selection, int weight, String reason) {}
+    private record Need(UUID target, Identifier selection, int weight, String reason) {}
 
     public RoyalStrategyService(ServerLevel level) {
         if (!level.getServer().isSameThread())
@@ -355,7 +355,7 @@ public final class RoyalStrategyService {
             store.write(lane, plan, plan.status(Status.INVALIDATED, reason));
     }
     private String dimension() {
-        return level.dimension().location().toString();
+        return level.dimension().identifier().toString();
     }
     private long tick() {
         return Math.max(0, level.getGameTime());

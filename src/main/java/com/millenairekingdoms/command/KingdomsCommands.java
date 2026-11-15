@@ -23,7 +23,7 @@ public final class KingdomsCommands {
     private KingdomsCommands() {}
 
     public static void register(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("kingdoms").requires(source -> source.hasPermission(2))
+        event.getDispatcher().register(Commands.literal("kingdoms").requires(source -> source.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER))
                 .then(RoyalRecoveryCommands.tree())
                 .then(RoyalNpcCommands.tree())
                 .then(Commands.literal("war")
@@ -133,7 +133,7 @@ public final class KingdomsCommands {
                     reply(c, com.millenairekingdoms.localization.PublicText.of("%s | kingdom=%s | capital=%s | revision=%s", village, (owner == null ? com.millenairekingdoms.localization.PublicText.of("unassigned") : owner + " (" + data.kingdom(owner).name() + ")"), data.isCapital(village), data.revision(village)));
                 }))))
                 .then(Commands.literal("list").executes(c -> guarded(c, () -> {
-                    var data = data(c); reply(c, com.millenairekingdoms.localization.PublicText.of("Kingdoms in %s: %s", c.getSource().getLevel().dimension().location(), data.kingdoms().size()));
+                    var data = data(c); reply(c, com.millenairekingdoms.localization.PublicText.of("Kingdoms in %s: %s", c.getSource().getLevel().dimension().identifier(), data.kingdoms().size()));
                     data.kingdoms().stream().sorted(Comparator.comparing(KingdomSavedData.Kingdom::name))
                             .forEach(k -> reply(c, describe(data, k)));
                 })))
@@ -292,7 +292,7 @@ public final class KingdomsCommands {
         long offset = ((long) page - 1) * 10;
         reply(context,
                 com.millenairekingdoms.localization.PublicText.of("Villages in %s (%s); page %s. IDs are plain UUIDs:",
-                        source.getLevel().dimension().location(), villages.size(), page));
+                        source.getLevel().dimension().identifier(), villages.size(), page));
         villages.stream().skip(offset).limit(10).forEach(v
                 -> reply(context,
                         v.getId().uuid() + " | " + ConquestService.name(v) + " | " + v.getCenter().toShortString()));

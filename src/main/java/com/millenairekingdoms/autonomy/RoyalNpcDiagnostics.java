@@ -24,7 +24,7 @@ public final class RoyalNpcDiagnostics {
                           .stream()
                           .filter(d
                                   -> d.kingdom().equals(id)
-                                          && d.dimension().equals(level.dimension().location().toString()))
+                                          && d.dimension().equals(level.dimension().identifier().toString()))
                           .max(Comparator.comparingLong(RoyalNpcDecisionStore.Decision::day))
                 : Optional.<RoyalNpcDecisionStore.Decision>empty();
         boolean loaded = capital != null && level.isLoaded(capital.getCenter());

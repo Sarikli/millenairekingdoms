@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 
 /**
@@ -18,12 +18,12 @@ import net.minecraft.server.level.ServerLevel;
 public final class RoyalInvestmentPolicy {
     public enum Role { MILITARY, AGRICULTURAL, RELIGIOUS, ARTISAN, CIVIC, UNCLASSIFIED }
     public record Context(KingdomPersonality.Profile profile, boolean war, boolean threatened) {}
-    private static final Map<ResourceLocation, Role> ROLES = roles();
+    private static final Map<Identifier, Role> ROLES = roles();
     private RoyalInvestmentPolicy() {}
-    public static Map<ResourceLocation, Role> buildings() {
+    public static Map<Identifier, Role> buildings() {
         return ROLES;
     }
-    public static Role role(ResourceLocation plan) {
+    public static Role role(Identifier plan) {
         return ROLES.getOrDefault(plan, Role.UNCLASSIFIED);
     }
     /** Real active war and original saved enemy village positions only; no chunk loads or political mutation. */
@@ -83,8 +83,8 @@ public final class RoyalInvestmentPolicy {
             throw new IllegalArgumentException("Invalid existing NPC chance");
         return Math.min(0.95, existingChance * settings.aggression(base));
     }
-    private static Map<ResourceLocation, Role> roles() {
-        var r = new LinkedHashMap<ResourceLocation, Role>();
+    private static Map<Identifier, Role> roles() {
+        var r = new LinkedHashMap<Identifier, Role>();
         add(r, Role.MILITARY, "byzantines", "watchtower");
         add(r, Role.MILITARY, "indian", "armyforge", "soldierhouse");
         add(r, Role.MILITARY, "inuits", "armourerhouse", "armoury");
@@ -131,11 +131,15 @@ public final class RoyalInvestmentPolicy {
         add(r, Role.CIVIC, "mayan", "mayanballcourt", "mayanlibrary");
         add(r, Role.CIVIC, "norman", "archives", "fountain", "largefountain", "well", "residence");
         add(r, Role.CIVIC, "seljuk", "bigwell", "cesme", "golgealti", "hamambath", "well");
+        // Portage 26.3 : bâtiments des cultures ajoutées ; les entrées d'origine restent prioritaires.
+        var extra = new LinkedHashMap<Identifier, String>();
+        com.millenairekingdoms.compat.ExtraCultureMappings.buildings(extra);
+        extra.forEach((id, role) -> r.putIfAbsent(id, Role.valueOf(role)));
         return Collections.unmodifiableMap(r);
     }
-    private static void add(Map<ResourceLocation, Role> roles, Role role, String culture, String... names) {
+    private static void add(Map<Identifier, Role> roles, Role role, String culture, String... names) {
         for (var name : names)
-            if (roles.put(ResourceLocation.fromNamespaceAndPath("millenaire", culture + "/" + name), role) != null)
+            if (roles.put(Identifier.fromNamespaceAndPath("millenaire", culture + "/" + name), role) != null)
                 throw new IllegalStateException("Duplicate native building function mapping");
     }
 }

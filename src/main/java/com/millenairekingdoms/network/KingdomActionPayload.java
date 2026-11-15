@@ -8,7 +8,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Client to server: a request from the kingdom screen. It names only what the player picked (a kingdom, a village, an
@@ -17,7 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 public record KingdomActionPayload(String action, Optional<UUID> first, Optional<UUID> second, long amount, String text)
         implements CustomPacketPayload {
     public static final Type<KingdomActionPayload> TYPE =
-            new Type<>(ResourceLocation.fromNamespaceAndPath(MillenaireKingdoms.MOD_ID, "action"));
+            new Type<>(Identifier.fromNamespaceAndPath(MillenaireKingdoms.MOD_ID, "action"));
     public static final StreamCodec<RegistryFriendlyByteBuf, KingdomActionPayload> CODEC = StreamCodec.composite(
             ByteBufCodecs.stringUtf8(32), KingdomActionPayload::action, ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC),
             KingdomActionPayload::first, ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), KingdomActionPayload::second,

@@ -24,13 +24,13 @@ public final class AtlasViews {
         return type != null && !type.loneBuilding() && village.getTownhall() != null;
     }
     public static CompoundTag build(ServerPlayer player, ChronicleRequestPayload request) {
-        var level = player.serverLevel();
+        var level = player.level();
         var data = KingdomSavedData.get(level);
         var view = ChronicleViews.header(player, request);
         var known = AtlasDiscovery.known(player);
         if (request.mode().equals("INFO")) {
             var id = request.kingdom().orElseThrow(() -> new IllegalArgumentException("Select an atlas kingdom"));
-            view.putUUID("focus", id);
+            com.millenairekingdoms.compat.KNbt.putUUID(view, "focus", id);
             view.put("info", info(player, id, known, request.cursor().orElse(null)));
             return view;
         }
@@ -48,7 +48,7 @@ public final class AtlasViews {
         colors.ensure(data.kingdoms().stream().map(KingdomSavedData.Kingdom::id).toList());
         if (sites.size() > AtlasSnapshotAssembler.MAX_SITES)
             throw new IllegalStateException("Visible atlas exceeds supported snapshot bound");
-        var fingerprint = new StringBuilder(level.dimension().location().toString());
+        var fingerprint = new StringBuilder(level.dimension().identifier().toString());
         for (var v : sites) {
             var owner = data.owner(v.getId().uuid());
             fingerprint.append('|')
@@ -95,7 +95,7 @@ public final class AtlasViews {
             var v = sites.get(n);
             var tag = new CompoundTag();
             var id = v.getId().uuid();
-            tag.putUUID("id", id);
+            com.millenairekingdoms.compat.KNbt.putUUID(tag, "id", id);
             tag.putString("name", PoliticsService.name(v));
             tag.putInt("x", v.getCenter().getX());
             tag.putInt("z", v.getCenter().getZ());
@@ -105,7 +105,7 @@ public final class AtlasViews {
             tag.putString("typeName", type == null ? "?" : type.name());
             var icon = type == null
                     ? null
-                    : net.minecraft.resources.ResourceLocation.tryParse(type.icon() == null ? "" : type.icon());
+                    : net.minecraft.resources.Identifier.tryParse(type.icon() == null ? "" : type.icon());
             tag.putString("icon",
                     icon != null && net.minecraft.core.registries.BuiltInRegistries.ITEM.containsKey(icon)
                             ? icon.toString()
@@ -115,7 +115,7 @@ public final class AtlasViews {
             var owner = data.owner(id);
             tag.putInt("politicalColor", colors.color(owner));
             if (owner != null) {
-                tag.putUUID("kingdom", owner);
+                com.millenairekingdoms.compat.KNbt.putUUID(tag, "kingdom", owner);
                 tag.putString("kingdomName", data.kingdom(owner).name());
                 ids.add(owner);
             }
@@ -123,17 +123,17 @@ public final class AtlasViews {
         }
         view.put("settlements", list);
         if (start + PAGE_SIZE < sites.size())
-            view.putUUID("next", sites.get(start + PAGE_SIZE - 1).getId().uuid());
+            com.millenairekingdoms.compat.KNbt.putUUID(view, "next", sites.get(start + PAGE_SIZE - 1).getId().uuid());
         var realms = new ListTag();
         for (var id : ids.stream().sorted().toList()) {
             var k = data.kingdom(id);
             if (k == null)
                 continue;
             var t = new CompoundTag();
-            t.putUUID("id", id);
+            com.millenairekingdoms.compat.KNbt.putUUID(t, "id", id);
             t.putString("name", k.name());
             t.putInt("color", colors.color(id));
-            t.putUUID("capital", k.capital());
+            com.millenairekingdoms.compat.KNbt.putUUID(t, "capital", k.capital());
             var r = HistoryHooks.realm(level, id);
             t.putString("culture", r.culture());
             t.putString("ethos", r.ethos());
@@ -145,15 +145,15 @@ public final class AtlasViews {
             if (w.status() == KingdomSavedData.WarStatus.ACTIVE
                     && (ids.contains(w.attackerKingdom()) || ids.contains(w.defenderKingdom()))) {
                 var t = new CompoundTag();
-                t.putUUID("id", w.id());
-                t.putUUID("attacker", w.attackerKingdom());
-                t.putUUID("defender", w.defenderKingdom());
+                com.millenairekingdoms.compat.KNbt.putUUID(t, "id", w.id());
+                com.millenairekingdoms.compat.KNbt.putUUID(t, "attacker", w.attackerKingdom());
+                com.millenairekingdoms.compat.KNbt.putUUID(t, "defender", w.defenderKingdom());
                 wars.add(t);
             }
         view.put("wars", wars);
         request.event().ifPresent(id -> {
             var event = HistoryHooks.store(level).get(id);
-            if (event == null || !event.dimension().equals(level.dimension().location().toString()))
+            if (event == null || !event.dimension().equals(level.dimension().identifier().toString()))
                 return;
             var filtered = HistoryVisibility.redact(event, known, false);
             var location =
@@ -169,8 +169,8 @@ public final class AtlasViews {
                             .findFirst();
             location.ifPresent(p -> {
                 var pin = new CompoundTag();
-                pin.putUUID("event", event.id());
-                pin.putUUID("village", p.id());
+                com.millenairekingdoms.compat.KNbt.putUUID(pin, "event", event.id());
+                com.millenairekingdoms.compat.KNbt.putUUID(pin, "village", p.id());
                 pin.putString("name", p.name());
                 pin.putLong("day", event.day());
                 pin.putInt("x", p.x());
@@ -200,16 +200,16 @@ public final class AtlasViews {
         }
         return true;
     }
-    private static net.minecraft.resources.ResourceLocation resourceLocation(String id) {
-        var parsed = net.minecraft.resources.ResourceLocation.tryParse(id);
-        return parsed == null ? net.minecraft.resources.ResourceLocation.parse("millenaire:unknown") : parsed;
+    private static net.minecraft.resources.Identifier resourceLocation(String id) {
+        var parsed = net.minecraft.resources.Identifier.tryParse(id);
+        return parsed == null ? net.minecraft.resources.Identifier.parse("millenaire:unknown") : parsed;
     }
     private static CompoundTag info(ServerPlayer player, UUID id, Set<UUID> known, UUID cursor) {
-        var level = player.serverLevel();
+        var level = player.level();
         var data = KingdomSavedData.get(level);
         var k = data.kingdom(id);
         var out = new CompoundTag();
-        out.putUUID("id", id);
+        com.millenairekingdoms.compat.KNbt.putUUID(out, "id", id);
         var historical =
                 HistoryHooks.store(level).archives().stream().filter(r -> r.id().equals(id)).findFirst().orElse(null);
         if (k == null && historical == null)
@@ -231,7 +231,7 @@ public final class AtlasViews {
             out.putBoolean("active", k.active());
             var capital = PoliticsService.village(level, k.capital());
             out.putString("capital", capital == null ? "?" : PoliticsService.name(capital));
-            out.putUUID("capitalId", k.capital());
+            com.millenairekingdoms.compat.KNbt.putUUID(out, "capitalId", k.capital());
             var ruler = data.ruler(id);
             out.putString("ruler", ruler == null ? "" : ruler.lastKnownName());
             var war = data.activeWar(id);
@@ -272,7 +272,7 @@ public final class AtlasViews {
             for (int n = start; n < Math.min(start + PAGE_SIZE, visible.size()); n++) {
                 var v = visible.get(n);
                 var t = new CompoundTag();
-                t.putUUID("id", v.getId().uuid());
+                com.millenairekingdoms.compat.KNbt.putUUID(t, "id", v.getId().uuid());
                 t.putString("name", PoliticsService.name(v));
                 t.putString("type", v.getVillageTypeId().toString());
                 var type = org.millenaire.culture.ModCultures.getVillageType(v.getVillageTypeId());
@@ -282,13 +282,13 @@ public final class AtlasViews {
                 members.add(t);
             }
             if (start + PAGE_SIZE < visible.size())
-                out.putUUID("next", visible.get(start + PAGE_SIZE - 1).getId().uuid());
+                com.millenairekingdoms.compat.KNbt.putUUID(out, "next", visible.get(start + PAGE_SIZE - 1).getId().uuid());
             if (id.equals(data.ruledBy(player.getUUID()))) {
                 out.putBoolean("economicRights", true);
                 out.putLong("income", EconomyService.dailyIncome(level, data, id));
                 out.putLong("owed", data.owed(id));
                 out.putBoolean("storageLoaded", treasuryLoaded(level, k));
-                if (out.getBoolean("storageLoaded"))
+                if (out.getBooleanOr("storageLoaded", false))
                     out.putLong("treasury", TreasuryService.stored(level, k).value());
             }
         }

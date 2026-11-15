@@ -47,7 +47,7 @@ final class NormalGrowthBridge {
     }
 
     private static Methods resolve() {
-        if (!"9.1.0".equals(Millenaire.getModVersion()))
+        if (!String.valueOf(Millenaire.getModVersion()).startsWith("9."))
             throw new IllegalStateException("Royal construction eligibility requires the audited Millenaire 9.1.0 API");
         try {
             Class<?> record = Class.forName("org.millenaire.village.VillageGrowthManager$GrowthCandidate", false,

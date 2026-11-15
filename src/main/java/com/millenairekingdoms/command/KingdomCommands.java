@@ -84,7 +84,7 @@ public final class KingdomCommands {
                                   com.millenairekingdoms.localization.PublicText.error(attempt.reason())));
     }
     private static void raidStatus(ServerPlayer p) {
-        var data = KingdomSavedData.get(p.serverLevel());
+        var data = KingdomSavedData.get(p.level());
         var kingdom = PoliticsService.ruledKingdom(p);
         var order = data.orderOf(kingdom.id());
         if (order != null)
@@ -108,7 +108,7 @@ public final class KingdomCommands {
             reply(p, com.millenairekingdoms.localization.PublicText.of("No conquest raid under way."));
     }
     private static String villageName(ServerPlayer p, java.util.UUID id) {
-        var v = PoliticsService.village(p.serverLevel(), id);
+        var v = PoliticsService.village(p.level(), id);
         return v == null ? id.toString() : PoliticsService.name(v);
     }
     private static RequiredArgumentBuilder<CommandSourceStack, String> target() {
@@ -136,11 +136,11 @@ public final class KingdomCommands {
         }
     }
     private static KingdomSavedData.Kingdom kingdomOf(ServerPlayer p) {
-        var data = KingdomSavedData.get(p.serverLevel());
+        var data = KingdomSavedData.get(p.level());
         return data.kingdom(data.ruledBy(p.getUUID()));
     }
     private static String name(ServerPlayer p, java.util.UUID kingdom) {
-        return KingdomSavedData.get(p.serverLevel()).kingdom(kingdom).name();
+        return KingdomSavedData.get(p.level()).kingdom(kingdom).name();
     }
     private static void reply(ServerPlayer p, String text) {
         com.millenairekingdoms.localization.PublicText.send(p, Component.literal("[Kingdoms] " + text));

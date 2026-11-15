@@ -14,17 +14,17 @@ public final class AtlasDiscovery {
     public static final int LIMIT = 16384;
     private AtlasDiscovery() {}
     public static Set<UUID> known(ServerPlayer player) {
-        var level = player.serverLevel();
+        var level = player.level();
         var file = HistoryHooks.directory(level).resolve("discovery").resolve(player.getUUID() + ".dat");
         var known = new HashSet<UUID>();
         if (Files.exists(file)) {
             var tag = HistoryFiles.read(file);
             HistoryFiles.keys(tag, Set.of("format", "villages"));
-            if (!tag.contains("format", Tag.TAG_INT) || tag.getInt("format") != 1
-                    || !tag.contains("villages", Tag.TAG_LIST))
+            if (!tag.contains("format") || tag.getIntOr("format", 0) != 1
+                    || !tag.contains("villages"))
                 throw new IllegalStateException("Unsupported discovery history; bytes preserved");
             var list = (ListTag) tag.get("villages");
-            if (list.size() > LIMIT || !list.isEmpty() && list.getElementType() != Tag.TAG_INT_ARRAY)
+            if (list.size() > LIMIT || !list.isEmpty() && com.millenairekingdoms.compat.KNbt.elementType(list) != Tag.TAG_INT_ARRAY)
                 throw new IllegalStateException("Invalid discovery history");
             for (var raw : list) {
                 var array = ((IntArrayTag) raw).getAsIntArray();

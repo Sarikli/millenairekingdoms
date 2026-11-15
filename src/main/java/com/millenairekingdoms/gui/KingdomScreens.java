@@ -51,7 +51,7 @@ public final class KingdomScreens {
     public static void send(ServerPlayer player, Component message) {
         CompoundTag view = build(player);
         if (message != null)
-            view.putString("message", Component.Serializer.toJson(message, player.serverLevel().registryAccess()));
+            view.putString("message", com.millenairekingdoms.compat.KNbt.componentJson(message, player.level().registryAccess()));
         PacketDistributor.sendToPlayer(player, new KingdomViewPayload(view));
     }
     static void focus(ServerPlayer player, UUID kingdom) {
@@ -79,21 +79,21 @@ public final class KingdomScreens {
     }
 
     public static CompoundTag build(ServerPlayer player) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         ConquestService.reconcile(level);
         var data = KingdomSavedData.get(level);
         CompoundTag view = new CompoundTag();
         view.putLong("day", Math.max(0, data.day()));
         UUID ruled = data.ruledBy(player.getUUID());
         if (ruled != null)
-            view.putUUID("ruled", ruled);
+            com.millenairekingdoms.compat.KNbt.putUUID(view, "ruled", ruled);
         Kingdom focus = focusOf(player, data);
         view.put("kingdoms", kingdoms(level, data, focus));
         view.put("nearby", nearby(player, data));
         if (focus == null)
             return view;
         boolean isRuler = focus.id().equals(ruled);
-        view.putUUID("focus", focus.id());
+        com.millenairekingdoms.compat.KNbt.putUUID(view, "focus", focus.id());
         view.putBoolean("isRuler", isRuler);
         view.put("kingdom", kingdom(level, data, focus, isRuler));
         var war = data.activeWar(focus.id());
@@ -121,7 +121,7 @@ public final class KingdomScreens {
         ListTag list = new ListTag();
         data.kingdoms().stream().filter(k -> !k.fallen()).sorted(Comparator.comparing(Kingdom::name)).forEach(k -> {
             CompoundTag e = new CompoundTag();
-            e.putUUID("id", k.id());
+            com.millenairekingdoms.compat.KNbt.putUUID(e, "id", k.id());
             e.putString("name", k.name());
             e.putBoolean("active", k.active());
             Village capital = PoliticsService.village(level, k.capital());
@@ -176,7 +176,7 @@ public final class KingdomScreens {
                 .sorted(Comparator.comparing(v -> !v.getId().uuid().equals(k.capital())))
                 .forEach(v -> {
                     CompoundTag m = new CompoundTag();
-                    m.putUUID("id", v.getId().uuid());
+                    com.millenairekingdoms.compat.KNbt.putUUID(m, "id", v.getId().uuid());
                     m.putString("name", PoliticsService.name(v));
                     m.putBoolean("capital", v.getId().uuid().equals(k.capital()));
                     int townhall = EconomyService.centerLevel(v);
@@ -201,7 +201,7 @@ public final class KingdomScreens {
 
     private static CompoundTag war(ServerLevel level, KingdomSavedData data, KingdomSavedData.War war, Kingdom focus) {
         CompoundTag e = new CompoundTag();
-        e.putUUID("id", war.id());
+        com.millenairekingdoms.compat.KNbt.putUUID(e, "id", war.id());
         e.putString("attacker", data.kingdom(war.attackerKingdom()).name());
         e.putString("defender", data.kingdom(war.defenderKingdom()).name());
         e.putBoolean("attacking", war.attackerKingdom().equals(focus.id()));
@@ -221,7 +221,7 @@ public final class KingdomScreens {
     }
 
     private static CompoundTag rights(ServerPlayer player, KingdomSavedData data, Kingdom focus, boolean isRuler) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         CompoundTag e = new CompoundTag();
         Village capital = PoliticsService.village(level, focus.capital());
         int reputation = capital == null ? 0 : capital.getCombinedReputation(level, player.getUUID());
@@ -283,7 +283,7 @@ public final class KingdomScreens {
     }
     private static void put(CompoundTag e, String key, Component problem, ServerLevel level) {
         if (problem != null)
-            e.putString(key, Component.Serializer.toJson(problem, level.registryAccess()));
+            e.putString(key, com.millenairekingdoms.compat.KNbt.componentJson(problem, level.registryAccess()));
         else
             e.putBoolean(key + "Ok", true);
     }
@@ -322,7 +322,7 @@ public final class KingdomScreens {
         for (Village v : candidates) {
             UUID id = v.getId().uuid();
             CompoundTag e = new CompoundTag();
-            e.putUUID("id", id);
+            com.millenairekingdoms.compat.KNbt.putUUID(e, "id", id);
             e.putString("name", PoliticsService.name(v));
             UUID owner = data.owner(id);
             if (owner != null)
@@ -343,13 +343,13 @@ public final class KingdomScreens {
             e.putLong("cooldown", RaidOrderService.cooldownLeft(data, id, settings));
             Village autoSource = Military.bestSource(level, data, k.id(), v);
             if (autoSource != null)
-                e.putUUID("autoSource", autoSource.getId().uuid());
+                com.millenairekingdoms.compat.KNbt.putUUID(e, "autoSource", autoSource.getId().uuid());
             try {
                 RaidOrderService.validate(player, id, null);
                 e.putBoolean("ready", true);
             } catch (IllegalArgumentException blocked) {
                 e.putString(
-                        "status", Component.Serializer.toJson(KingdomException.of(blocked), level.registryAccess()));
+                        "status", com.millenairekingdoms.compat.KNbt.componentJson(KingdomException.of(blocked), level.registryAccess()));
             }
             list.add(e);
         }
@@ -365,7 +365,7 @@ public final class KingdomScreens {
                 .sorted(Comparator.comparing(PoliticsService::name))
                 .forEach(v -> {
                     CompoundTag e = new CompoundTag();
-                    e.putUUID("id", v.getId().uuid());
+                    com.millenairekingdoms.compat.KNbt.putUUID(e, "id", v.getId().uuid());
                     e.putString("name", PoliticsService.name(v));
                     e.putInt("raiders", Military.availableRaiders(v));
                     e.putInt("strength", v.getVillageRaidingStrength());
@@ -383,7 +383,7 @@ public final class KingdomScreens {
         data.joinRequests().entrySet().stream().filter(e -> e.getValue().kingdom().equals(k.id())).forEach(e -> {
             CompoundTag r = new CompoundTag();
             Village v = PoliticsService.village(level, e.getKey());
-            r.putUUID("village", e.getKey());
+            com.millenairekingdoms.compat.KNbt.putUUID(r, "village", e.getKey());
             r.putString("name", v == null ? e.getKey().toString() : PoliticsService.name(v));
             r.putString("from", e.getValue().playerName());
             r.putBoolean("npc", e.getValue().fromNpcVillage());
@@ -421,8 +421,8 @@ public final class KingdomScreens {
         Village v = PoliticsService.nearbyIndependentVillage(player);
         if (v == null)
             return e;
-        ServerLevel level = player.serverLevel();
-        e.putUUID("id", v.getId().uuid());
+        ServerLevel level = player.level();
+        com.millenairekingdoms.compat.KNbt.putUUID(e, "id", v.getId().uuid());
         e.putString("name", PoliticsService.name(v));
         e.putInt("level", EconomyService.centerLevel(v));
         e.putString("owner", v.getOwnerUUID() == null ? "" : v.getOwnerName() == null ? "?" : v.getOwnerName());
@@ -441,7 +441,7 @@ public final class KingdomScreens {
                     if (capital == null)
                         return;
                     CompoundTag r = new CompoundTag();
-                    r.putUUID("id", k.id());
+                    com.millenairekingdoms.compat.KNbt.putUUID(r, "id", k.id());
                     r.putString("name", k.name());
                     r.putInt("relation", capital.getRelation(v.getId()));
                     relations.add(r);

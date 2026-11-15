@@ -20,7 +20,7 @@ import java.util.WeakHashMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 /** Bounded server-owned selection and expiring offers. Reading a screen never advances shipments or loads chunks. */
@@ -33,7 +33,7 @@ public final class RoyalShipmentView {
         String dimension;
         UUID kingdom, capital, source, target;
         long tenure;
-        ResourceLocation product;
+        Identifier product;
         int quantity = 40;
         Offer offer;
     }
@@ -44,7 +44,7 @@ public final class RoyalShipmentView {
 
     public static void selectVillage(ServerPlayer player, UUID village, boolean source) {
         var k = PoliticsService.ruledKingdom(player);
-        var data = KingdomSavedData.get(player.serverLevel());
+        var data = KingdomSavedData.get(player.level());
         if (village == null || !k.id().equals(data.owner(village)))
             throw declined();
         var state = session(player, k);
@@ -60,7 +60,7 @@ public final class RoyalShipmentView {
         }
         normalize(state, data);
     }
-    public static void selectProduct(ServerPlayer player, ResourceLocation product) {
+    public static void selectProduct(ServerPlayer player, Identifier product) {
         var state = session(player, PoliticsService.ruledKingdom(player));
         if (RoyalVillageStock.forPlayer(player, state.source)
                         .products()
@@ -85,7 +85,7 @@ public final class RoyalShipmentView {
 
     public static CompoundTag build(ServerPlayer player, UUID focused) {
         var out = new CompoundTag();
-        var level = player.serverLevel();
+        var level = player.level();
         var data = KingdomSavedData.get(level);
         if (!focused.equals(data.ruledBy(player.getUUID()))) {
             forget(player.getUUID());
@@ -101,15 +101,15 @@ public final class RoyalShipmentView {
                 if (village == null)
                     continue;
                 var v = new CompoundTag();
-                v.putUUID("id", id);
+                com.millenairekingdoms.compat.KNbt.putUUID(v, "id", id);
                 v.putString("name", PoliticsService.name(village));
                 v.putBoolean("loaded", village.isActive() && level.isLoaded(village.getCenter()));
                 villages.add(v);
             }
             out.put("villages", villages);
-            out.putUUID("source", state.source);
+            com.millenairekingdoms.compat.KNbt.putUUID(out, "source", state.source);
             if (state.target != null)
-                out.putUUID("target", state.target);
+                com.millenairekingdoms.compat.KNbt.putUUID(out, "target", state.target);
             out.putInt("quantity", state.quantity);
             out.putInt("maximumQuantity", RoyalShipmentConfig.current().maximumQuantity());
             var path = RoyalShipmentService.directory(level);
@@ -131,7 +131,7 @@ public final class RoyalShipmentView {
             for (var entry : selected.stream().limit(MAX_HISTORY).toList()) {
                 var i = entry.intent();
                 var order = new CompoundTag();
-                order.putUUID("id", i.id());
+                com.millenairekingdoms.compat.KNbt.putUUID(order, "id", i.id());
                 order.putString("product", i.product().toString());
                 order.putString("destination", name(player, i.destination().village()));
                 order.putString("stage",
@@ -198,7 +198,7 @@ public final class RoyalShipmentView {
                 return out;
             }
             out.putString("product", state.product.toString());
-            var availability = stock.availability(BuiltInRegistries.ITEM.get(state.product));
+            var availability = stock.availability(BuiltInRegistries.ITEM.getValue(state.product));
             out.putInt("physical", availability.physical());
             out.putInt("available", availability.available());
             out.putInt("retained", availability.retained());
@@ -215,7 +215,7 @@ public final class RoyalShipmentView {
             if (state.offer == null || expired(state.offer, now) || !sameTerms(state.offer.quote, quote)
                     || history.stream().anyMatch(e -> e.intent().id().equals(state.offer.id)))
                 state.offer = new Offer(UUID.randomUUID(), quote, now);
-            out.putUUID("offer", state.offer.id);
+            com.millenairekingdoms.compat.KNbt.putUUID(out, "offer", state.offer.id);
             out.putLong("fee", quote.fee());
             out.putLong("travelTicks", quote.travelTicks());
             out.putLong("distance", quote.distance());
@@ -244,7 +244,7 @@ public final class RoyalShipmentView {
 
     public static Entry order(ServerPlayer player, UUID offerId) {
         var k = PoliticsService.ruledKingdom(player);
-        var level = player.serverLevel();
+        var level = player.level();
         var path = RoyalShipmentService.directory(level);
         var old = Files.exists(path.resolve("shipments.dat")) ? new RoyalShipmentStore(path).load(offerId) : null;
         var service = new RoyalShipmentService(level);
@@ -278,11 +278,11 @@ public final class RoyalShipmentView {
         return now < offer.issued || now - offer.issued > OFFER_TICKS;
     }
     private static Session session(ServerPlayer player, KingdomSavedData.Kingdom k) {
-        var level = player.serverLevel();
+        var level = player.level();
         var data = KingdomSavedData.get(level);
         var ruler = data.ruler(k.id());
         var state = SESSIONS.computeIfAbsent(player, p -> new Session());
-        String dimension = level.dimension().location().toString();
+        String dimension = level.dimension().identifier().toString();
         if (!dimension.equals(state.dimension) || !k.id().equals(state.kingdom) || !k.capital().equals(state.capital)
                 || state.tenure != ruler.sinceGameTime()) {
             state.dimension = dimension;
@@ -319,7 +319,7 @@ public final class RoyalShipmentView {
         }
     }
     private static String name(ServerPlayer player, UUID id) {
-        var v = PoliticsService.village(player.serverLevel(), id);
+        var v = PoliticsService.village(player.level(), id);
         return v == null ? "?" : PoliticsService.name(v);
     }
     private static KingdomException declined() {

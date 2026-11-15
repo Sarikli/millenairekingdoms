@@ -4,7 +4,7 @@ import java.util.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Stages bounded pages of ONE revision. A renderer receives a complete immutable frame, never mixed borders/markers.
@@ -51,76 +51,76 @@ public final class AtlasSnapshotAssembler {
                                          wars = new LinkedHashMap<>();
     private CompoundTag pin = new CompoundTag();
     public Frame accept(CompoundTag page, UUID cursor) {
-        if (!page.contains("revision", Tag.TAG_STRING) || !page.contains("dimension", Tag.TAG_STRING)
-                || ResourceLocation.tryParse(page.getString("dimension")) == null
-                || !page.contains("total", Tag.TAG_INT) || page.getInt("total") < 0 || page.getInt("total") > MAX_SITES)
+        if (!page.contains("revision") || !page.contains("dimension")
+                || Identifier.tryParse(page.getStringOr("dimension", "")) == null
+                || !page.contains("total") || page.getIntOr("total", 0) < 0 || page.getIntOr("total", 0) > MAX_SITES)
             throw new IllegalArgumentException("Invalid atlas snapshot header");
-        UUID.fromString(page.getString("revision"));
+        UUID.fromString(page.getStringOr("revision", ""));
         if (cursor == null) {
-            revision = page.getString("revision");
-            dimension = page.getString("dimension");
-            total = page.getInt("total");
+            revision = page.getStringOr("revision", "");
+            dimension = page.getStringOr("dimension", "");
+            total = page.getIntOr("total", 0);
             sites.clear();
             kingdoms.clear();
             wars.clear();
-            pin = page.getCompound("historicalPin").copy();
+            pin = page.getCompoundOrEmpty("historicalPin").copy();
             next = null;
             last = null;
-        } else if (!cursor.equals(next) || !page.getString("revision").equals(revision)
-                || !page.getString("dimension").equals(dimension) || page.getInt("total") != total)
+        } else if (!cursor.equals(next) || !page.getStringOr("revision", "").equals(revision)
+                || !page.getStringOr("dimension", "").equals(dimension) || page.getIntOr("total", 0) != total)
             throw new Changed();
         var list = list(page, "settlements");
         if (list.size() > AtlasViews.PAGE_SIZE || list.isEmpty() && total > 0)
             throw new IllegalArgumentException("Invalid atlas page size");
         for (var raw : list) {
             var site = (CompoundTag) raw;
-            if (!site.hasUUID("id") || !site.contains("x", Tag.TAG_INT) || !site.contains("z", Tag.TAG_INT))
+            if (!com.millenairekingdoms.compat.KNbt.hasUUID(site, "id") || !site.contains("x") || !site.contains("z"))
                 throw new IllegalArgumentException("Invalid atlas village");
-            var id = site.getUUID("id");
+            var id = com.millenairekingdoms.compat.KNbt.getUUID(site, "id");
             if (last != null && last.compareTo(id) >= 0)
                 throw new IllegalArgumentException("Repeated/out-of-order atlas village");
             last = id;
-            if (Math.abs((long) site.getInt("x")) > 30_000_000 || Math.abs((long) site.getInt("z")) > 30_000_000)
+            if (Math.abs((long) site.getIntOr("x", 0)) > 30_000_000 || Math.abs((long) site.getIntOr("z", 0)) > 30_000_000)
                 throw new IllegalArgumentException("Invalid atlas position");
-            if (!site.contains("politicalColor", Tag.TAG_INT) || site.getInt("politicalColor") >>> 24 != 255
-                    || site.hasUUID("kingdom") && !site.contains("kingdomName", Tag.TAG_STRING))
+            if (!site.contains("politicalColor") || site.getIntOr("politicalColor", 0) >>> 24 != 255
+                    || com.millenairekingdoms.compat.KNbt.hasUUID(site, "kingdom") && !site.contains("kingdomName"))
                 throw new IllegalArgumentException("Missing political identity");
             for (var field : List.of("name", "type", "typeName", "culture", "ethos", "icon"))
-                if (!site.contains(field, Tag.TAG_STRING) || site.getString(field).length() > 256)
+                if (!site.contains(field) || site.getStringOr(field, "").length() > 256)
                     throw new IllegalArgumentException("Invalid atlas village description");
-            if (ResourceLocation.tryParse(site.getString("icon")) == null || sites.putIfAbsent(id, site.copy()) != null)
+            if (Identifier.tryParse(site.getStringOr("icon", "")) == null || sites.putIfAbsent(id, site.copy()) != null)
                 throw new IllegalArgumentException("Invalid atlas icon/identity");
         }
         merge(kingdoms, list(page, "kingdoms"));
         merge(wars, list(page, "wars"));
         if (sites.size() > total || kingdoms.size() > MAX_SITES || wars.size() > MAX_SITES)
             throw new IllegalArgumentException("Atlas frame exceeds declared limits");
-        if (page.hasUUID("next")) {
-            next = page.getUUID("next");
+        if (com.millenairekingdoms.compat.KNbt.hasUUID(page, "next")) {
+            next = com.millenairekingdoms.compat.KNbt.getUUID(page, "next");
             if (!next.equals(last) || sites.size() >= total)
                 throw new IllegalArgumentException("Invalid atlas continuation cursor");
             return null;
         }
         next = null;
         for (var site : sites.values()) {
-            if (site.hasUUID("kingdom")) {
-                var owner = kingdoms.get(site.getUUID("kingdom"));
-                if (owner == null || owner.getInt("color") != site.getInt("politicalColor")
-                        || !owner.getString("name").equals(site.getString("kingdomName")))
+            if (com.millenairekingdoms.compat.KNbt.hasUUID(site, "kingdom")) {
+                var owner = kingdoms.get(com.millenairekingdoms.compat.KNbt.getUUID(site, "kingdom"));
+                if (owner == null || owner.getIntOr("color", 0) != site.getIntOr("politicalColor", 0)
+                        || !owner.getStringOr("name", "").equals(site.getStringOr("kingdomName", "")))
                     throw new IllegalArgumentException("Inconsistent kingdom identity");
-            } else if (site.getInt("politicalColor") != AtlasColors.NEUTRAL)
+            } else if (site.getIntOr("politicalColor", 0) != AtlasColors.NEUTRAL)
                 throw new IllegalArgumentException("Invalid independent color");
         }
         if (sites.size() != total)
             throw new IllegalArgumentException("Truncated atlas snapshot");
         return new Frame(revision, dimension, List.copyOf(sites.values()), List.copyOf(kingdoms.values()),
-                List.copyOf(wars.values()), pin, page.getLong("observedTime"));
+                List.copyOf(wars.values()), pin, page.getLongOr("observedTime", 0L));
     }
     private static ListTag list(CompoundTag page, String key) {
-        if (!page.contains(key, Tag.TAG_LIST))
+        if (!page.contains(key))
             throw new IllegalArgumentException("Missing atlas list");
         var list = (ListTag) page.get(key);
-        if (!list.isEmpty() && list.getElementType() != Tag.TAG_COMPOUND)
+        if (!list.isEmpty() && com.millenairekingdoms.compat.KNbt.elementType(list) != Tag.TAG_COMPOUND)
             throw new IllegalArgumentException("Invalid atlas list type");
         return list;
     }
@@ -129,9 +129,9 @@ public final class AtlasSnapshotAssembler {
             throw new IllegalArgumentException("Atlas metadata page too large");
         for (var raw : list) {
             var tag = (CompoundTag) raw;
-            if (!tag.hasUUID("id"))
+            if (!com.millenairekingdoms.compat.KNbt.hasUUID(tag, "id"))
                 throw new IllegalArgumentException("Invalid atlas metadata UUID");
-            var old = into.putIfAbsent(tag.getUUID("id"), tag.copy());
+            var old = into.putIfAbsent(com.millenairekingdoms.compat.KNbt.getUUID(tag, "id"), tag.copy());
             if (old != null && !old.equals(tag))
                 throw new Changed();
         }

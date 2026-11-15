@@ -27,11 +27,11 @@ public final class ChiefInteraction {
             return;
         if (!isChief(villager) || villager.getVillageId() == null)
             return;
-        var data = KingdomSavedData.get(player.serverLevel());
+        var data = KingdomSavedData.get(player.level());
         UUID village = villager.getVillageId().uuid(), kingdom = data.owner(village);
         if (kingdom == null || !data.isCapital(village))
             return;
-        long now = player.serverLevel().getGameTime();
+        long now = player.level().getGameTime();
         Long last = lastShown.get(player.getUUID());
         if (last != null && now >= last && now - last < COOLDOWN_TICKS)
             return;
