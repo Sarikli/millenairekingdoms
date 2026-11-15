@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import org.millenaire.culture.ModCultures;
 
@@ -26,19 +26,19 @@ public final class KingdomPersonality {
         CONTROLLED_TYPE,
         LONE_BUILDING
     }
-    public record Profile(UUID capital, ResourceLocation villageType, Category category, Status status) {
+    public record Profile(UUID capital, Identifier villageType, Category category, Status status) {
         public boolean specialized() {
             return status == Status.MAPPED;
         }
     }
-    private static final Map<ResourceLocation, Category> TYPES = mapping();
+    private static final Map<Identifier, Category> TYPES = mapping();
     private KingdomPersonality() {}
 
-    public static Map<ResourceLocation, Category> types() {
+    public static Map<Identifier, Category> types() {
         return TYPES;
     }
     /** Unknown/custom/controlled/lone types retain their records and use an explicit balanced fallback. */
-    public static Profile forType(UUID capital, ResourceLocation type) {
+    public static Profile forType(UUID capital, Identifier type) {
         var nativeType = type == null ? null : ModCultures.getVillageType(type);
         Status status = nativeType == null      ? Status.UNKNOWN_TYPE
                 : nativeType.loneBuilding()     ? Status.LONE_BUILDING
@@ -63,8 +63,8 @@ public final class KingdomPersonality {
                 + profile.capital() + " | type=" + profile.villageType() + " | classification=" + profile.status();
     }
 
-    private static Map<ResourceLocation, Category> mapping() {
-        var types = new LinkedHashMap<ResourceLocation, Category>();
+    private static Map<Identifier, Category> mapping() {
+        var types = new LinkedHashMap<Identifier, Category>();
         add(types, Category.MILITARY, "indian/fort", "indian/fort_hamlet", "norman/militaire",
                 "seljuk/military_village_seljuks", "mayan/military", "byzantines/militaryvillage", "japanese/gunji");
         add(types, Category.AGRICULTURAL, "indian/agricole", "indian/agricole_hamlet", "norman/agricole",
@@ -78,11 +78,15 @@ public final class KingdomPersonality {
                 "inuits/artisanalvillage");
         add(types, Category.GENERAL, "indian/palace", "indian/palace_autonomous", "norman/bourg_autonome",
                 "norman/grosbourg", "japanese/seiji", "inuits/communityvillage");
+        // Portage 26.3 : cultures ajoutées (packs convertis, CivCraft, orcs) ; les entrées d'origine restent prioritaires.
+        var extra = new LinkedHashMap<Identifier, String>();
+        com.millenairekingdoms.compat.ExtraCultureMappings.villageTypes(extra);
+        extra.forEach((id, category) -> types.putIfAbsent(id, Category.valueOf(category)));
         return Collections.unmodifiableMap(types);
     }
-    private static void add(Map<ResourceLocation, Category> types, Category category, String... paths) {
+    private static void add(Map<Identifier, Category> types, Category category, String... paths) {
         for (var path : paths)
-            if (types.put(ResourceLocation.fromNamespaceAndPath("millenaire", path), category) != null)
+            if (types.put(Identifier.fromNamespaceAndPath("millenaire", path), category) != null)
                 throw new IllegalStateException("Duplicate capital personality mapping");
     }
 }

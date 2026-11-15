@@ -17,7 +17,7 @@ import java.util.UUID;
 import java.util.WeakHashMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.storage.LevelResource;
 import org.millenaire.building.BuildingId;
@@ -30,7 +30,7 @@ public final class RoyalConstructionView {
     private static final int MAX_PLANS = 128;
     private static final Map<ServerPlayer, Session> SESSIONS = new WeakHashMap<>();
     private record Offer(
-            UUID id, UUID village, ResourceLocation plan, long fee, long expires, UUID building, int targetLevel) {}
+            UUID id, UUID village, Identifier plan, long fee, long expires, UUID building, int targetLevel) {}
     private static final class Session {
         String dimension;
         UUID kingdom, capital, village;
@@ -44,7 +44,7 @@ public final class RoyalConstructionView {
 
     public static void select(ServerPlayer player, UUID village) {
         var k = PoliticsService.ruledKingdom(player);
-        var data = KingdomSavedData.get(player.serverLevel());
+        var data = KingdomSavedData.get(player.level());
         if (village == null || !k.id().equals(data.owner(village)))
             throw refused("foreign_village", "Choose a village belonging to your active kingdom.");
         var state = session(player, k);
@@ -56,7 +56,7 @@ public final class RoyalConstructionView {
 
     public static CompoundTag build(ServerPlayer player, UUID focusedKingdom) {
         var out = new CompoundTag();
-        var level = player.serverLevel();
+        var level = player.level();
         var data = KingdomSavedData.get(level);
         if (!focusedKingdom.equals(data.ruledBy(player.getUUID()))) {
             out.putString("reason", "RULER_ONLY");
@@ -71,7 +71,7 @@ public final class RoyalConstructionView {
                 if (v == null)
                     continue;
                 var tag = new CompoundTag();
-                tag.putUUID("id", id);
+                com.millenairekingdoms.compat.KNbt.putUUID(tag, "id", id);
                 tag.putString("name", PoliticsService.name(v));
                 tag.putBoolean("active", v.isActive() && level.isLoaded(v.getCenter()));
                 villages.add(tag);
@@ -82,7 +82,7 @@ public final class RoyalConstructionView {
                 out.putString("reason", "MISSING_VILLAGE");
                 return out;
             }
-            out.putUUID("village", state.village);
+            com.millenairekingdoms.compat.KNbt.putUUID(out, "village", state.village);
             out.putBoolean("available", village.isActive() && level.isLoaded(village.getCenter()));
             out.putBoolean("naturalPending", RoyalConstructionCatalog.naturalWorkPending(village));
             var type = ModCultures.getVillageType(village.getVillageTypeId());
@@ -95,7 +95,7 @@ public final class RoyalConstructionView {
             var usedIds = history.stream().map(e -> e.intent().id()).collect(java.util.stream.Collectors.toSet());
             var current = history.stream()
                                   .filter(e
-                                          -> e.intent().dimension().equals(level.dimension().location().toString())
+                                          -> e.intent().dimension().equals(level.dimension().identifier().toString())
                                                   && e.intent().village().equals(state.village))
                                   .sorted(Comparator.comparing(RoyalConstructionStore.Entry::terminal)
                                                   .thenComparing(Comparator
@@ -109,7 +109,7 @@ public final class RoyalConstructionView {
             if (current != null) {
                 var order = new CompoundTag();
                 var i = current.intent();
-                order.putUUID("id", i.id());
+                com.millenairekingdoms.compat.KNbt.putUUID(order, "id", i.id());
                 order.putString("plan", i.planSet().toString());
                 var set = ModCultures.getBuildingPlanSet(i.planSet());
                 order.putString("name", set == null ? i.planSet().toString() : set.nativeName());
@@ -147,7 +147,7 @@ public final class RoyalConstructionView {
             String reason = type == null || type.playerControlled() || village.getOwnerUUID() != null ? "CONTROLLED"
                     : MillenaireServerConfig.SERVER.ignoreResourceCost.get() ? "RESOURCE_COSTS_DISABLED"
                     : busy                                                   ? "ORDER_PENDING"
-                    : !out.getBoolean("available")                           ? "UNLOADED"
+                    : !out.getBooleanOr("available", false)                           ? "UNLOADED"
                                                                              : "";
             long funds = 0;
             boolean treasury = false;
@@ -181,7 +181,7 @@ public final class RoyalConstructionView {
                             : funds < offer.fee()             ? "INSUFFICIENT_FUNDS"
                                                               : "";
                     var p = new CompoundTag();
-                    p.putUUID("offer", offer.id());
+                    com.millenairekingdoms.compat.KNbt.putUUID(p, "offer", offer.id());
                     p.putString("plan", choice.planSet().toString());
                     p.putString("name", choice.nativeName());
                     p.putString("key", choice.key());
@@ -189,7 +189,7 @@ public final class RoyalConstructionView {
                     p.putInt("targetLevel", choice.targetLevel());
                     if (choice.upgradeBuilding() != null) {
                         var target = village.getBuilding(new BuildingId(choice.upgradeBuilding()));
-                        p.putUUID("building", choice.upgradeBuilding());
+                        com.millenairekingdoms.compat.KNbt.putUUID(p, "building", choice.upgradeBuilding());
                         p.putInt("x", target.getOrigin().getX());
                         p.putInt("z", target.getOrigin().getZ());
                     }
@@ -218,8 +218,8 @@ public final class RoyalConstructionView {
             out.remove("plans");
             out.putString("reason", "SERVICE_UNAVAILABLE");
             if (out.contains("order")) {
-                out.getCompound("order").putBoolean("canCancel", false);
-                out.getCompound("order").putBoolean("canResume", false);
+                out.getCompoundOrEmpty("order").putBoolean("canCancel", false);
+                out.getCompoundOrEmpty("order").putBoolean("canResume", false);
             }
             var state = SESSIONS.get(player);
             if (state != null)
@@ -229,8 +229,8 @@ public final class RoyalConstructionView {
     }
 
     public static RoyalConstructionStore.Entry order(
-            ServerPlayer player, UUID village, UUID offerId, ResourceLocation plan) {
-        var level = player.serverLevel();
+            ServerPlayer player, UUID village, UUID offerId, Identifier plan) {
+        var level = player.level();
         var k = PoliticsService.ruledKingdom(player);
         var path = level.getServer()
                            .getWorldPath(LevelResource.ROOT)
@@ -253,11 +253,11 @@ public final class RoyalConstructionView {
                                                   offer.building(), offer.id(), offer.fee(), offer.targetLevel());
     }
     private static Session session(ServerPlayer player, KingdomSavedData.Kingdom kingdom) {
-        var level = player.serverLevel();
+        var level = player.level();
         var data = KingdomSavedData.get(level);
         var ruler = data.ruler(kingdom.id());
         var state = SESSIONS.computeIfAbsent(player, p -> new Session());
-        String dimension = level.dimension().location().toString();
+        String dimension = level.dimension().identifier().toString();
         if (!dimension.equals(state.dimension) || !kingdom.id().equals(state.kingdom)
                 || !kingdom.capital().equals(state.capital) || state.tenure != ruler.sinceGameTime()) {
             state.dimension = dimension;

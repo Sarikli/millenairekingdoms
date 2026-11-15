@@ -45,19 +45,19 @@ public final class RoyalConstructionRuntime {
             try {
                 int count = new RoyalConstructionService(level).quarantineInterruptedPublications();
                 for (var entry : new RoyalConstructionStore(directory(level)).entries())
-                    if (entry.intent().dimension().equals(level.dimension().location().toString()))
+                    if (entry.intent().dimension().equals(level.dimension().identifier().toString()))
                         watchWaiting(level, entry);
                 if (count > 0)
                     LOGGER.warn(
                             "[Kingdoms] Preserved {} interrupted royal publications in {} for explicit recovery; no refund/reissue or engine deletion.",
-                            count, level.dimension().location());
+                            count, level.dimension().identifier());
             } catch (RuntimeException failure) {
                 // No economic work is allowed when the original index cannot be inspected. Preserve it and diagnose.
                 var session = SESSIONS.computeIfAbsent(level, key -> new Session());
                 session.nextTick = Long.MAX_VALUE;
                 LOGGER.error(
                         "[Kingdoms] Royal construction startup recovery failed in {}; tracking remains paused; original data preserved.",
-                        level.dimension().location(), failure);
+                        level.dimension().identifier(), failure);
             }
         }
     }
@@ -77,7 +77,7 @@ public final class RoyalConstructionRuntime {
             session.nextTick = Math.max(session.nextTick, now + 1200);
             LOGGER.error(
                     "[Kingdoms] Royal construction index unavailable in {}; retry delayed; no speculative state reset.",
-                    level.dimension().location(), failure);
+                    level.dimension().identifier(), failure);
         }
     }
 
@@ -121,7 +121,7 @@ public final class RoyalConstructionRuntime {
         if (!waiting.armed)
             return;
         var player = level.getServer().getPlayerList().getPlayer(waiting.actor);
-        if (player == null || player.serverLevel() != level)
+        if (player == null || player.level() != level)
             return;
         waiting.armed = false;
         try {
@@ -150,7 +150,7 @@ public final class RoyalConstructionRuntime {
         if (!Files.exists(directory(level).resolve("orders.dat")))
             return 0;
         var orders = new RoyalConstructionStore(directory(level));
-        String dimension = level.dimension().location().toString();
+        String dimension = level.dimension().identifier().toString();
         // A persisted OP decision replaces its order's ordinary job, sharing the same total budget and cursor.
         var decisions = new HashMap<UUID, UUID>();
         if (Files.exists(RoyalRecoveryService.directory(level).resolve("decisions.dat"))) {
@@ -209,7 +209,7 @@ public final class RoyalConstructionRuntime {
                         entry = service.retryNpc(entry.intent().kingdom(), id);
                     else {
                         var player = level.getServer().getPlayerList().getPlayer(entry.intent().actor());
-                        if (player != null && player.serverLevel() == level)
+                        if (player != null && player.level() == level)
                             entry = service.retryPlayer(player, id);
                     }
                 }

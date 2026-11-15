@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
@@ -44,12 +44,11 @@ import org.slf4j.Logger;
  * Bounded need discovery and one shared paid action, never native growth/placement/currency simulation. All automatic
  * callers persist an attempt before issuing; existing domain runtimes own recovery, not replayed policy proposals.
  */
-@org.jetbrains.annotations.ApiStatus.Internal
 public final class RoyalNpcEconomyService {
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final ResourceLocation BUILD = ResourceLocation.parse("millenaire:build");
+    private static final Identifier BUILD = Identifier.parse("millenaire:build");
     /** An unpaid development mandate; materials are re-read from the current original catalog. */
-    public record ProjectNeed(UUID id, UUID village, ResourceLocation planSet) {
+    public record ProjectNeed(UUID id, UUID village, Identifier planSet) {
         public ProjectNeed {
             java.util.Objects.requireNonNull(id);
             java.util.Objects.requireNonNull(village);
@@ -123,7 +122,7 @@ public final class RoyalNpcEconomyService {
         var existing = decisions.load(attempt);
         if (existing != null) {
             if (!existing.kingdom().equals(kingdom)
-                    || !existing.dimension().equals(level.dimension().location().toString())
+                    || !existing.dimension().equals(level.dimension().identifier().toString())
                     || !eligible.test(new Proposal(existing.choice(), 1, existing.reason())))
                 throw new IllegalArgumentException("Conditional identity belongs to another economic authorization");
             return result(existing);
@@ -143,7 +142,7 @@ public final class RoyalNpcEconomyService {
         var chosen = choose(preview.candidates().stream().filter(eligible).toList(), random);
         var capital = PoliticsService.village(level, k.capital());
         var choice = chosen == null ? Choice.none() : chosen.choice();
-        var decision = new Decision(attempt, level.dimension().location().toString(), kingdom, day,
+        var decision = new Decision(attempt, level.dimension().identifier().toString(), kingdom, day,
                 Math.addExact(day, cadence.attemptDays()),
                 new Budget(k.capital(), capital == null ? null : capital.getVillageTypeId(), limits.reserve(),
                         limits.sharePermille()),
@@ -222,13 +221,13 @@ public final class RoyalNpcEconomyService {
         var shipments = shipmentHistory()
                                 .stream()
                                 .filter(e
-                                        -> e.intent().dimension().equals(level.dimension().location().toString())
+                                        -> e.intent().dimension().equals(level.dimension().identifier().toString())
                                                 && e.intent().kingdom().equals(k.id()) && !e.terminal())
                                 .toList();
         var construction = constructionHistory()
                                    .stream()
                                    .filter(e
-                                           -> e.intent().dimension().equals(level.dimension().location().toString())
+                                           -> e.intent().dimension().equals(level.dimension().identifier().toString())
                                                    && e.intent().kingdom().equals(k.id()) && !e.terminal())
                                    .toList();
         var proposals = new ArrayList<Proposal>();
@@ -344,8 +343,8 @@ public final class RoyalNpcEconomyService {
             if (!usable(target))
                 continue;
             var pending = target.getPendingProject();
-            ResourceLocation planSet;
-            Map<ResourceLocation, Integer> requiredMaterials;
+            Identifier planSet;
+            Map<Identifier, Integer> requiredMaterials;
             UUID need;
             String description;
             if (pending != null) {
@@ -390,7 +389,7 @@ public final class RoyalNpcEconomyService {
             } catch (IllegalArgumentException | IllegalStateException unavailable) {
                 continue;
             }
-            Map<ResourceLocation, Integer> missing;
+            Map<Identifier, Integer> missing;
             try {
                 missing = targetStock.missing(requiredMaterials);
             } catch (IllegalArgumentException | IllegalStateException unavailable) {
@@ -513,7 +512,7 @@ public final class RoyalNpcEconomyService {
         return decisions.entries()
                 .stream()
                 .filter(d
-                        -> d.dimension().equals(level.dimension().location().toString()) && d.kingdom().equals(kingdom))
+                        -> d.dimension().equals(level.dimension().identifier().toString()) && d.kingdom().equals(kingdom))
                 .toList();
     }
     private List<RoyalConstructionStore.Entry> constructionHistory() {

@@ -12,7 +12,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import org.millenaire.building.BuildingInstance;
 import org.millenaire.building.BuildingPlan;
@@ -189,11 +189,11 @@ public final class NaturalCapitals {
                     return false;
             footprints.add(first);
         }
-        Set<ResourceLocation> chain = chain(hall);
+        Set<Identifier> chain = chain(hall);
         for (VillageType.LayoutSlot slot : type.layout())
             if (!isCentre(slot.role()) && chain.contains(slot.plan()))
                 return false;
-        for (ResourceLocation subId : chain) {
+        for (Identifier subId : chain) {
             if (subId.equals(hall.id()))
                 continue;
             BuildingPlanSet sub = ModCultures.getBuildingPlanSet(subId);
@@ -250,7 +250,7 @@ public final class NaturalCapitals {
         // Plans keep their own ground level (cellars reach below the surface); sub-buildings are placed at the town
         // hall origin.
         int base = hall.getOrigin().getY() - current.groundLevel(), tallestSub = 0;
-        for (ResourceLocation id : chain(set)) {
+        for (Identifier id : chain(set)) {
             BuildingPlanSet sub = id.equals(set.id()) ? null : ModCultures.getBuildingPlanSet(id);
             if (sub != null)
                 for (List<BuildingPlanSet.LevelDef> levels : sub.variants().values())
@@ -262,7 +262,7 @@ public final class NaturalCapitals {
             if (plan == null || plan.width() != current.width() || plan.depth() != current.depth())
                 return "upgrade leaves reserved footprint";
             int y = base + plan.groundLevel();
-            if (y < level.getMinBuildHeight() || y + Math.max(plan.height(), tallestSub) > level.getMaxBuildHeight())
+            if (y < level.getMinY() || y + Math.max(plan.height(), tallestSub) > level.getMaxY() + 1)
                 return "level " + l.level() + " leaves the world height (from y " + y + ")";
         }
         for (BuildingInstance other : village.getBuildings()) {
@@ -369,13 +369,13 @@ public final class NaturalCapitals {
     }
 
     /** The town hall plan set and every sub-building it can place, resolved as Millénaire's SubBuildingHelper does. */
-    public static Set<ResourceLocation> chain(BuildingPlanSet hall) {
-        Set<ResourceLocation> chain = new HashSet<>();
+    public static Set<Identifier> chain(BuildingPlanSet hall) {
+        Set<Identifier> chain = new HashSet<>();
         chain.add(hall.id());
         List<String> keys = new ArrayList<>(hall.startingSubBuildings());
         hall.variants().values().forEach(levels -> levels.forEach(l -> keys.addAll(l.subBuildings())));
         for (String key : keys)
-            chain.add(ResourceLocation.fromNamespaceAndPath(
+            chain.add(Identifier.fromNamespaceAndPath(
                     "millenaire", hall.culture().getPath() + "/" + key.toLowerCase(java.util.Locale.ROOT)));
         return chain;
     }

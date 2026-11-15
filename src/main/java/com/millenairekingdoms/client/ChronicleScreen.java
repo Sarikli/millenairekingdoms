@@ -3,7 +3,7 @@ package com.millenairekingdoms.client;
 import com.millenairekingdoms.history.*;
 import com.millenairekingdoms.network.ChronicleRequestPayload;
 import java.util.*;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
@@ -41,12 +41,12 @@ final class ChronicleScreen extends Screen {
         retryTicks = 0;
         pending = new ChronicleRequestPayload(session, serial, "CHRONICLE", Optional.ofNullable(scope), kind, from, to,
                 Optional.ofNullable(cursor), "", Optional.empty(), Optional.ofNullable(villageScope));
-        PacketDistributor.sendToServer(pending);
+        net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(pending);
     }
     @Override
     public void tick() {
         if (retryTicks > 0 && --retryTicks == 0 && pending != null)
-            PacketDistributor.sendToServer(pending);
+            net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(pending);
         if (languageState != net.minecraft.locale.Language.getInstance()) {
             languageState = net.minecraft.locale.Language.getInstance();
             rebuildWidgets();
@@ -57,17 +57,17 @@ final class ChronicleScreen extends Screen {
         request(null);
     }
     void receive(CompoundTag incoming) {
-        if (!incoming.getUUID("session").equals(session) || incoming.getLong("serial") != serial)
+        if (!com.millenairekingdoms.compat.KNbt.getUUID(incoming, "session").equals(session) || incoming.getLongOr("serial", 0L) != serial)
             return;
-        if (incoming.getInt("retryAfter") > 0) {
-            retryTicks = Math.min(20, incoming.getInt("retryAfter"));
+        if (incoming.getIntOr("retryAfter", 0) > 0) {
+            retryTicks = Math.min(20, incoming.getIntOr("retryAfter", 0));
             return;
         }
         pending = null;
         retryTicks = 0;
         view = incoming;
-        events = incoming.getList("events", 10).stream().map(t -> HistoryEvent.load((CompoundTag) t)).toList();
-        next = incoming.hasUUID("next") ? incoming.getUUID("next") : null;
+        events = incoming.getListOrEmpty("events").stream().map(t -> HistoryEvent.load((CompoundTag) t)).toList();
+        next = com.millenairekingdoms.compat.KNbt.hasUUID(incoming, "next") ? com.millenairekingdoms.compat.KNbt.getUUID(incoming, "next") : null;
         if (events.stream().noneMatch(e -> e.id().equals(selected)))
             selected = events.isEmpty() ? null : events.getFirst().id();
         rebuildWidgets();
@@ -85,7 +85,7 @@ final class ChronicleScreen extends Screen {
         top = (height - ph) / 2;
         int third = (pw - 24) / 3;
         button(left + 8, top + 25, third, t("kingdom"),
-                () -> { minecraft.setScreen(new ChronicleFilterScreen(this, true)); });
+                () -> { minecraft.gui.setScreen(new ChronicleFilterScreen(this, true)); });
         button(left + 10 + third, top + 25, third, t("world"), () -> {
             scope = null;
             villageScope = null;
@@ -93,7 +93,7 @@ final class ChronicleScreen extends Screen {
         });
         button(left + 12 + 2 * third, top + 25, third, t("atlas"),
                 () -> HistoryClient.openAtlas(this, scope, null, null));
-        button(left + 8, top + 47, 74, t("filters"), () -> minecraft.setScreen(new ChronicleFilterScreen(this, false)));
+        button(left + 8, top + 47, 74, t("filters"), () -> minecraft.gui.setScreen(new ChronicleFilterScreen(this, false)));
         int mainTop = top + 70, bottom = top + ph - 48, listWidth = Math.max(96, (pw - 24) * 2 / 5);
         entries = new KingdomScreen.RowList(left + 8, mainTop, listWidth, Math.max(22, bottom - mainTop), 22);
         for (var e : events) {
@@ -110,9 +110,9 @@ final class ChronicleScreen extends Screen {
         var chosen = events.stream().filter(e -> e.id().equals(selected)).findFirst().orElse(null);
         if (scope != null) {
             prose.addWrapped(font,
-                    view.contains("founded") ? t("founded", view.getLong("founded")) : t("founding_unknown"),
+                    view.contains("founded") ? t("founded", view.getLongOr("founded", 0L)) : t("founding_unknown"),
                     0xFF705237);
-            if (view.getBoolean("fallen"))
+            if (view.getBooleanOr("fallen", false))
                 prose.addWrapped(font, t("fallen"), 0xFF705237);
         }
         if (chosen != null) {
@@ -155,23 +155,25 @@ final class ChronicleScreen extends Screen {
         return addRenderableWidget(Button.builder(label, b -> action.run()).bounds(x, y, w, 18).build());
     }
     @Override
-    public void renderBackground(GuiGraphics g, int mx, int my, float tick) {
+    public void extractBackground(GuiGraphicsExtractor g, int mx, int my, float tick) {
         g.fill(left, top, left + pw, top + ph, 0xFFF0DDB0);
-        g.renderOutline(left, top, pw, ph, 0xFF62442B);
+        g.outline(left, top, pw, ph, 0xFF62442B);
     }
     @Override
-    public void render(GuiGraphics g, int mx, int my, float tick) {
-        super.render(g, mx, my, tick);
-        g.drawString(font, title, left + 8, top + 9, 0xFF493321, false);
+    public void extractRenderState(GuiGraphicsExtractor g, int mx, int my, float tick) {
+        super.extractRenderState(g, mx, my, tick);
+        g.text(font, title, left + 8, top + 9, 0xFF493321, false);
         String context =
-                view.getString("name") + (view.contains("villageName") ? " · " + view.getString("villageName") : "");
-        g.drawString(font, font.plainSubstrByWidth(context, pw - 100), left + 88, top + 52, 0xFF705237, false);
+                view.getStringOr("name", "") + (view.contains("villageName") ? " · " + view.getStringOr("villageName", "") : "");
+        g.text(font, font.plainSubstrByWidth(context, pw - 100), left + 88, top + 52, 0xFF705237, false);
         entries.render(g, font, mx, my);
         prose.render(g, font, mx, my);
     }
     @Override
-    public boolean mouseClicked(double x, double y, int b) {
-        return super.mouseClicked(x, y, b) || b == 0 && (entries.click(x, y) || prose.click(x, y));
+    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent kEvent, boolean kDouble) {
+        double x = kEvent.x(), y = kEvent.y();
+        int b = kEvent.button();
+        return super.mouseClicked(kEvent, kDouble) || b == 0 && (entries.click(x, y) || prose.click(x, y));
     }
     @Override
     public boolean mouseScrolled(double x, double y, double dx, double dy) {
@@ -179,7 +181,7 @@ final class ChronicleScreen extends Screen {
     }
     @Override
     public void onClose() {
-        minecraft.setScreen(parent);
+        minecraft.gui.setScreen(parent);
     }
     @Override
     public boolean isPauseScreen() {

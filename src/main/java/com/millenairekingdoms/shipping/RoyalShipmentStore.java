@@ -22,13 +22,12 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Own durable shipment accounting. A stage or an acknowledgement here is NOT physical inventory/payment proof.
  * Only the future server coordinator may acknowledge operations after native contents/proof read-back.
  */
-@org.jetbrains.annotations.ApiStatus.Internal
 public final class RoyalShipmentStore {
     private static final int FORMAT = 1, MAX_SHIPMENTS = 10_000, MAX_OPERATIONS = 512;
     private static final long MAX_BYTES = 16L * 1024 * 1024;
@@ -46,7 +45,7 @@ public final class RoyalShipmentStore {
     public enum Outcome { PREPARED, APPLIED, CANCELLED }
     public enum Blocked { NONE, UNLOADED, FULL, STOCK, AUTHORITY, MEMBERSHIP, STORAGE, PAYMENT, PHYSICAL_PROOF }
 
-    public record Endpoint(UUID village, ResourceLocation type, UUID townhall, BlockPos center, UUID localOwner) {
+    public record Endpoint(UUID village, Identifier type, UUID townhall, BlockPos center, UUID localOwner) {
         public Endpoint {
             Objects.requireNonNull(village);
             Objects.requireNonNull(type);
@@ -57,7 +56,7 @@ public final class RoyalShipmentStore {
         }
     }
     public record Intent(UUID id, String dimension, UUID kingdom, UUID capital, UUID actor, long rulerSince,
-            Endpoint source, Endpoint destination, ResourceLocation product, int quantity, long fee, long issued,
+            Endpoint source, Endpoint destination, Identifier product, int quantity, long fee, long issued,
             long travelTicks) {
         public Intent {
             Objects.requireNonNull(id);
@@ -66,12 +65,12 @@ public final class RoyalShipmentStore {
             Objects.requireNonNull(source);
             Objects.requireNonNull(destination);
             Objects.requireNonNull(product);
-            if (dimension == null || ResourceLocation.tryParse(dimension) == null
+            if (dimension == null || Identifier.tryParse(dimension) == null
                     || source.village.equals(destination.village) || source.townhall.equals(destination.townhall)
                     || quantity < 1 || quantity > 65536 || fee < 1 || issued < 0 || travelTicks < 1 || rulerSince < 0
                     || actor == null && rulerSince != 0)
                 throw new IllegalArgumentException("Invalid immutable royal shipment intent");
-            dimension = ResourceLocation.parse(dimension).toString();
+            dimension = Identifier.parse(dimension).toString();
             Math.addExact(issued, travelTicks);
         }
     }
@@ -93,12 +92,12 @@ public final class RoyalShipmentStore {
                 throw new IllegalArgumentException("Invalid physical shipment quantity");
             image = Objects.requireNonNull(image).copy();
             keys(image, Set.of("format", "state", "before", "after"));
-            if (!image.contains("format", Tag.TAG_INT) || image.getInt("format") != 1
-                    || !image.contains("state", Tag.TAG_COMPOUND))
+            if (!image.contains("format") || image.getIntOr("format", 0) != 1
+                    || !image.contains("state"))
                 throw new IllegalArgumentException("Unsupported physical cargo image");
             for (var key : List.of("before", "after"))
-                if (!image.contains(key, Tag.TAG_LIST) || !(image.get(key) instanceof ListTag slots)
-                        || slots.size() != 27 || slots.getElementType() != Tag.TAG_COMPOUND)
+                if (!image.contains(key) || !(image.get(key) instanceof ListTag slots)
+                        || slots.size() != 27 || com.millenairekingdoms.compat.KNbt.elementType(slots) != Tag.TAG_COMPOUND)
                     throw new IllegalArgumentException("Incomplete physical cargo slot image");
         }
         @Override
@@ -455,32 +454,32 @@ public final class RoyalShipmentStore {
             return result;
         var tag = NbtIo.readCompressed(file, NbtAccounter.create(MAX_BYTES));
         keys(tag, Set.of("format", "shipments"));
-        require(tag.contains("format", Tag.TAG_INT) && tag.getInt("format") == FORMAT,
+        require(tag.contains("format") && tag.getIntOr("format", 0) == FORMAT,
                 "Unsupported shipment format; original file preserved");
         var list = list(tag, "shipments");
         require(list.size() <= MAX_SHIPMENTS, "Shipment history exceeds supported limit");
         for (Tag raw : list) {
             var item = (CompoundTag) raw;
             keys(item, Set.of("intent", "stage", "blocked", "diagnosis", "due", "cancellationRequested", "operations"));
-            require(item.contains("intent", Tag.TAG_COMPOUND) && item.contains("due", Tag.TAG_LONG)
-                            && item.contains("cancellationRequested", Tag.TAG_BYTE)
-                            && (item.getByte("cancellationRequested") == 0
-                                    || item.getByte("cancellationRequested") == 1),
+            require(item.contains("intent") && item.contains("due")
+                            && item.contains("cancellationRequested")
+                            && (item.getByteOr("cancellationRequested", (byte) 0) == 0
+                                    || item.getByteOr("cancellationRequested", (byte) 0) == 1),
                     "Incomplete shipment lifecycle");
             var operations = new ArrayList<Operation>();
             for (Tag opRaw : list(item, "operations")) {
                 var op = (CompoundTag) opRaw;
                 keys(op, Set.of("id", "role", "container", "position", "quantity", "image", "outcome"));
-                require(op.hasUUID("id") && op.hasUUID("container") && op.contains("position", Tag.TAG_LONG)
-                                && op.contains("quantity", Tag.TAG_INT) && op.contains("image", Tag.TAG_COMPOUND),
+                require(com.millenairekingdoms.compat.KNbt.hasUUID(op, "id") && com.millenairekingdoms.compat.KNbt.hasUUID(op, "container") && op.contains("position")
+                                && op.contains("quantity") && op.contains("image"),
                         "Incomplete physical shipment operation");
-                operations.add(new Operation(op.getUUID("id"), Role.valueOf(string(op, "role")),
-                        op.getUUID("container"), BlockPos.of(op.getLong("position")), op.getInt("quantity"),
-                        op.getCompound("image"), Outcome.valueOf(string(op, "outcome"))));
+                operations.add(new Operation(com.millenairekingdoms.compat.KNbt.getUUID(op, "id"), Role.valueOf(string(op, "role")),
+                        com.millenairekingdoms.compat.KNbt.getUUID(op, "container"), BlockPos.of(op.getLongOr("position", 0L)), op.getIntOr("quantity", 0),
+                        op.getCompoundOrEmpty("image"), Outcome.valueOf(string(op, "outcome"))));
             }
-            var entry = new Entry(loadIntent(item.getCompound("intent")), Stage.valueOf(string(item, "stage")),
-                    Blocked.valueOf(string(item, "blocked")), string(item, "diagnosis"), item.getLong("due"),
-                    item.getBoolean("cancellationRequested"), operations);
+            var entry = new Entry(loadIntent(item.getCompoundOrEmpty("intent")), Stage.valueOf(string(item, "stage")),
+                    Blocked.valueOf(string(item, "blocked")), string(item, "diagnosis"), item.getLongOr("due", 0L),
+                    item.getBooleanOr("cancellationRequested", false), operations);
             require(result.putIfAbsent(entry.intent.id, entry) == null, "Duplicate shipment identity");
         }
         validate(result);
@@ -501,9 +500,9 @@ public final class RoyalShipmentStore {
             var operations = new ListTag();
             for (var op : entry.operations) {
                 var raw = new CompoundTag();
-                raw.putUUID("id", op.id);
+                com.millenairekingdoms.compat.KNbt.putUUID(raw, "id", op.id);
                 raw.putString("role", op.role.name());
-                raw.putUUID("container", op.container);
+                com.millenairekingdoms.compat.KNbt.putUUID(raw, "container", op.container);
                 raw.putLong("position", op.position.asLong());
                 raw.putInt("quantity", op.quantity);
                 raw.put("image", op.image.copy());
@@ -533,12 +532,12 @@ public final class RoyalShipmentStore {
     }
     public static CompoundTag saveIntent(Intent intent) {
         var tag = new CompoundTag();
-        tag.putUUID("id", intent.id);
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "id", intent.id);
         tag.putString("dimension", intent.dimension);
-        tag.putUUID("kingdom", intent.kingdom);
-        tag.putUUID("capital", intent.capital);
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "kingdom", intent.kingdom);
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "capital", intent.capital);
         if (intent.actor != null)
-            tag.putUUID("actor", intent.actor);
+            com.millenairekingdoms.compat.KNbt.putUUID(tag, "actor", intent.actor);
         tag.putLong("rulerSince", intent.rulerSince);
         tag.put("source", saveEndpoint(intent.source));
         tag.put("destination", saveEndpoint(intent.destination));
@@ -554,53 +553,55 @@ public final class RoyalShipmentStore {
                 Set.of("id", "dimension", "kingdom", "capital", "actor", "rulerSince", "source", "destination",
                         "product", "quantity", "fee", "issued", "travelTicks"));
         for (var key : List.of("id", "kingdom", "capital"))
-            require(tag.hasUUID(key), "Incomplete shipment identity: " + key);
+            require(com.millenairekingdoms.compat.KNbt.hasUUID(tag, key), "Incomplete shipment identity: " + key);
         for (var key : List.of("rulerSince", "fee", "issued", "travelTicks"))
-            require(tag.contains(key, Tag.TAG_LONG), "Incomplete shipment amount/time: " + key);
-        require((!tag.contains("actor") || tag.hasUUID("actor")) && tag.contains("quantity", Tag.TAG_INT)
-                        && tag.contains("source", Tag.TAG_COMPOUND) && tag.contains("destination", Tag.TAG_COMPOUND),
+            require(tag.contains(key), "Incomplete shipment amount/time: " + key);
+        require((!tag.contains("actor") || com.millenairekingdoms.compat.KNbt.hasUUID(tag, "actor")) && tag.contains("quantity")
+                        && tag.contains("source") && tag.contains("destination"),
                 "Incomplete shipment mandate/endpoints");
-        return new Intent(tag.getUUID("id"), string(tag, "dimension"), tag.getUUID("kingdom"), tag.getUUID("capital"),
-                tag.hasUUID("actor") ? tag.getUUID("actor") : null, tag.getLong("rulerSince"),
-                loadEndpoint(tag.getCompound("source")), loadEndpoint(tag.getCompound("destination")),
-                ResourceLocation.parse(string(tag, "product")), tag.getInt("quantity"), tag.getLong("fee"),
-                tag.getLong("issued"), tag.getLong("travelTicks"));
+        return new Intent(com.millenairekingdoms.compat.KNbt.getUUID(tag, "id"), string(tag, "dimension"), com.millenairekingdoms.compat.KNbt.getUUID(tag, "kingdom"), com.millenairekingdoms.compat.KNbt.getUUID(tag, "capital"),
+                com.millenairekingdoms.compat.KNbt.hasUUID(tag, "actor") ? com.millenairekingdoms.compat.KNbt.getUUID(tag, "actor") : null, tag.getLongOr("rulerSince", 0L),
+                loadEndpoint(tag.getCompoundOrEmpty("source")), loadEndpoint(tag.getCompoundOrEmpty("destination")),
+                Identifier.parse(string(tag, "product")), tag.getIntOr("quantity", 0), tag.getLongOr("fee", 0L),
+                tag.getLongOr("issued", 0L), tag.getLongOr("travelTicks", 0L));
     }
     private static CompoundTag saveEndpoint(Endpoint endpoint) {
         var tag = new CompoundTag();
-        tag.putUUID("village", endpoint.village);
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "village", endpoint.village);
         tag.putString("type", endpoint.type.toString());
-        tag.putUUID("townhall", endpoint.townhall);
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "townhall", endpoint.townhall);
         tag.putLong("center", endpoint.center.asLong());
         if (endpoint.localOwner != null)
-            tag.putUUID("localOwner", endpoint.localOwner);
+            com.millenairekingdoms.compat.KNbt.putUUID(tag, "localOwner", endpoint.localOwner);
         return tag;
     }
     private static Endpoint loadEndpoint(CompoundTag tag) {
         keys(tag, Set.of("village", "type", "townhall", "center", "localOwner"));
-        require(tag.hasUUID("village") && tag.hasUUID("townhall") && tag.contains("center", Tag.TAG_LONG)
-                        && (!tag.contains("localOwner") || tag.hasUUID("localOwner")),
+        require(com.millenairekingdoms.compat.KNbt.hasUUID(tag, "village") && com.millenairekingdoms.compat.KNbt.hasUUID(tag, "townhall") && tag.contains("center")
+                        && (!tag.contains("localOwner") || com.millenairekingdoms.compat.KNbt.hasUUID(tag, "localOwner")),
                 "Incomplete shipment endpoint");
-        return new Endpoint(tag.getUUID("village"), ResourceLocation.parse(string(tag, "type")),
-                tag.getUUID("townhall"), BlockPos.of(tag.getLong("center")),
-                tag.hasUUID("localOwner") ? tag.getUUID("localOwner") : null);
+        return new Endpoint(com.millenairekingdoms.compat.KNbt.getUUID(tag, "village"), Identifier.parse(string(tag, "type")),
+                com.millenairekingdoms.compat.KNbt.getUUID(tag, "townhall"), BlockPos.of(tag.getLongOr("center", 0L)),
+                com.millenairekingdoms.compat.KNbt.hasUUID(tag, "localOwner") ? com.millenairekingdoms.compat.KNbt.getUUID(tag, "localOwner") : null);
     }
     private static String string(CompoundTag tag, String key) {
-        require(tag.contains(key, Tag.TAG_STRING), "Missing shipment string: " + key);
-        return tag.getString(key);
+        require(tag.contains(key), "Missing shipment string: " + key);
+        return tag.getStringOr(key, "");
     }
     private static ListTag list(CompoundTag tag, String key) {
-        require(tag.contains(key, Tag.TAG_LIST), "Missing shipment list: " + key);
+        require(tag.contains(key), "Missing shipment list: " + key);
         var list = (ListTag) tag.get(key);
-        require(list.isEmpty() || list.getElementType() == Tag.TAG_COMPOUND, "Invalid shipment list: " + key);
+        require(list.isEmpty() || com.millenairekingdoms.compat.KNbt.elementType(list) == Tag.TAG_COMPOUND, "Invalid shipment list: " + key);
         return list;
     }
     private static void keys(CompoundTag tag, Set<String> keys) {
-        require(keys.containsAll(tag.getAllKeys()), "Unknown shipment data; original file preserved");
+        require(keys.containsAll(tag.keySet()), "Unknown shipment data; original file preserved");
     }
     private static void sync(Path path) throws IOException {
         try (var channel = FileChannel.open(path, StandardOpenOption.READ)) {
             channel.force(true);
+        } catch (java.io.IOException windows) {
+            // Windows ne sait pas ouvrir un dossier comme un fichier ; l'écriture elle-même est déjà faite
         }
     }
     private <T> T locked(Function<Map<UUID, Entry>, T> operation) {

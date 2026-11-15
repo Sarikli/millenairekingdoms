@@ -70,7 +70,7 @@ public final class PoliticsService {
     }
     /** The living kingdom whose capital centre is nearest the player within reach, or null. */
     public static Kingdom nearbyCapital(ServerPlayer player) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         return data(level)
                 .kingdoms()
                 .stream()
@@ -101,7 +101,7 @@ public final class PoliticsService {
     }
 
     public static KingdomSavedData.Ruler claim(ServerPlayer player) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         var data = data(level);
         Kingdom kingdom = nearbyCapital(player);
         check(kingdom != null, "claim_near", "Stand within 64 blocks of a kingdom's capital centre to claim its rule.");
@@ -109,11 +109,11 @@ public final class PoliticsService {
         check(reputation >= CLAIM_REPUTATION, "claim_reputation",
                 "Claiming %s needs reputation %s at its capital; yours is %s.", kingdom.name(), CLAIM_REPUTATION,
                 reputation);
-        return data.claimRule(kingdom.id(), player.getUUID(), player.getGameProfile().getName(), level.getGameTime());
+        return data.claimRule(kingdom.id(), player.getUUID(), player.getGameProfile().name(), level.getGameTime());
     }
 
     public static Kingdom abdicate(ServerPlayer player) {
-        var data = data(player.serverLevel());
+        var data = data(player.level());
         UUID kingdomId = data.ruledBy(player.getUUID());
         check(kingdomId != null, "no_kingdom", "You do not rule a kingdom.");
         data.abdicate(kingdomId, player.getUUID());
@@ -125,7 +125,7 @@ public final class PoliticsService {
      * Millénaire's relations.
      */
     public static War requestWar(ServerPlayer player, String targetText) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         var data = data(level);
         Kingdom kingdom = nearbyCapital(player);
         check(kingdom != null, "petition_near", "Stand within 64 blocks of a capital to petition its leader.");
@@ -154,7 +154,7 @@ public final class PoliticsService {
     }
 
     public static War declareWar(ServerPlayer player, String targetText) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         var data = data(level);
         Kingdom kingdom = ruledKingdom(player);
         Kingdom target = resolveKingdom(data, targetText);
@@ -181,7 +181,7 @@ public final class PoliticsService {
      * relations are better than BAD, a ruled attacker receives an offer that its ruler accepts with the same command.
      */
     public static PeaceResult peace(ServerPlayer player) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         var data = data(level);
         Kingdom kingdom = ruledKingdom(player);
         War war = data.activeWar(kingdom.id());
@@ -229,7 +229,7 @@ public final class PoliticsService {
      * and relation 50. Millénaire's culture, buildings, owner and local chief stay exactly as they are.
      */
     public static JoinResult join(ServerPlayer player, String kingdomText) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         var data = data(level);
         Village village = nearbyIndependentVillage(player);
         check(village != null, "join_near",
@@ -248,10 +248,10 @@ public final class PoliticsService {
             check(owned, "join_ruler_only", "Only the ruler of %s can bring in a village that is not yours.",
                     kingdom.name());
             data.requestJoin(
-                    villageId, kingdom.id(), player.getUUID(), player.getGameProfile().getName(), level.getGameTime());
+                    villageId, kingdom.id(), player.getUUID(), player.getGameProfile().name(), level.getGameTime());
             notifyRuler(level, kingdom.id(),
                     com.millenairekingdoms.localization.PublicText
-                            .of("%s%s asks to bring %s into %s. ", TAG, player.getGameProfile().getName(),
+                            .of("%s%s asks to bring %s into %s. ", TAG, player.getGameProfile().name(),
                                     name(village), kingdom.name())
                             .withStyle(ChatFormatting.GOLD)
                             .append(button(com.millenairekingdoms.localization.PublicText.of("[Accept]"),
@@ -283,7 +283,7 @@ public final class PoliticsService {
 
     /** The ruler accepts an owner's application; ownership and the kingdom's state are checked again now. */
     public static Village accept(ServerPlayer player, UUID villageId) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         var data = data(level);
         Kingdom kingdom = ruledKingdom(player);
         var request = data.joinRequest(villageId);
@@ -311,7 +311,7 @@ public final class PoliticsService {
     }
 
     public static void refuse(ServerPlayer player, UUID villageId) {
-        var data = data(player.serverLevel());
+        var data = data(player.level());
         Kingdom kingdom = ruledKingdom(player);
         var request = data.joinRequest(villageId);
         check(request != null && request.kingdom().equals(kingdom.id()), "no_application",
@@ -324,7 +324,7 @@ public final class PoliticsService {
      * player rules. Development is Millénaire's own town hall level (see EconomyService.centerLevel).
      */
     public static Kingdom found(ServerPlayer player, String name) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         var data = data(level);
         Village village = nearbyIndependentVillage(player);
         check(village != null, "found_near", "Stand within 64 blocks of the centre of your own independent village.");
@@ -334,12 +334,12 @@ public final class PoliticsService {
         check(townhall >= FOUND_LEVEL, "found_level", "%s's town hall is at level %s; a capital needs level %s.",
                 name(village), townhall, FOUND_LEVEL);
         return data.found(
-                name, village.getId().uuid(), player.getUUID(), player.getGameProfile().getName(), level.getGameTime());
+                name, village.getId().uuid(), player.getUUID(), player.getGameProfile().name(), level.getGameTime());
     }
 
     /** The nearest known, non-lone village with a town hall within reach that belongs to no kingdom, or null. */
     public static Village nearbyIndependentVillage(ServerPlayer player) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         var data = KingdomSavedData.get(level);
         return VillageSavedData.get(level)
                 .getVillageManager()
@@ -362,7 +362,7 @@ public final class PoliticsService {
      * A ruler below the threshold keeps the title; only decisions wait until the reputation is regained.
      */
     public static Kingdom ruledKingdom(ServerPlayer player) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         var data = data(level);
         UUID id = data.ruledBy(player.getUUID());
         check(id != null, "ruler_only", "Only a kingdom's ruler can do this.");
@@ -378,7 +378,7 @@ public final class PoliticsService {
 
     /** The overview shown by /kingdom info and when a capital's leader is right-clicked. */
     public static void sendOverview(ServerPlayer player, Kingdom focus) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         var data = data(level);
         UUID ruled = data.ruledBy(player.getUUID());
         if (focus == null && ruled != null)
@@ -520,7 +520,7 @@ public final class PoliticsService {
      * /kingdom info near an independent village: what it would take to join a kingdom or, for an owner, to found one.
      */
     public static void sendVillageOverview(ServerPlayer player) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         var data = data(level);
         Village village = nearbyIndependentVillage(player);
         if (village == null)
@@ -539,10 +539,8 @@ public final class PoliticsService {
                             .withStyle(style
                                     -> style.withColor(ChatFormatting.AQUA)
                                             .withUnderlined(true)
-                                            .withClickEvent(new ClickEvent(
-                                                    ClickEvent.Action.SUGGEST_COMMAND, "/kingdom found "))
-                                            .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                                    com.millenairekingdoms.localization.PublicText.of(
+                                            .withClickEvent(new ClickEvent.SuggestCommand("/kingdom found "))
+                                            .withHoverEvent(new HoverEvent.ShowText(com.millenairekingdoms.localization.PublicText.of(
                                                             "Type the new kingdom's name")))));
         com.millenairekingdoms.localization.PublicText.send(player, line);
         if (village.getOwnerUUID() != null && !own)
@@ -574,8 +572,8 @@ public final class PoliticsService {
         return label.copy().withStyle(style
                 -> style.withColor(ChatFormatting.AQUA)
                         .withUnderlined(true)
-                        .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hover)));
+                        .withClickEvent(new ClickEvent.RunCommand(command))
+                        .withHoverEvent(new HoverEvent.ShowText(hover)));
     }
     /** Messages the kingdom's ruler if online; a null kingdom does nothing. */
     public static void notifyRuler(ServerLevel level, UUID kingdomId, Component message) {

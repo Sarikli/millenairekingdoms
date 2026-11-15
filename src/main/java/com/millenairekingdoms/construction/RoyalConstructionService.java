@@ -17,7 +17,7 @@ import java.util.UUID;
 import java.util.WeakHashMap;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -33,7 +33,6 @@ import org.millenaire.world.BuildingPlacer;
  * Engine placement/builders/resources remain responsible for construction; this service only fills an empty pending
  * slot.
  */
-@org.jetbrains.annotations.ApiStatus.Internal
 public final class RoyalConstructionService {
     private static final Map<MinecraftServer, Set<UUID>> BUSY = new WeakHashMap<>();
     private record Publication(Village village, Village.PendingProject pending) {}
@@ -58,21 +57,21 @@ public final class RoyalConstructionService {
                         .getWorldPath(LevelResource.ROOT)
                         .resolve("data/millenairekingdoms/royal-construction"));
     }
-    public Entry requestNpc(UUID kingdom, UUID village, ResourceLocation planSet, UUID id) {
+    public Entry requestNpc(UUID kingdom, UUID village, Identifier planSet, UUID id) {
         return request(null, kingdom, village, planSet, id, null);
     }
     /** Immutable server policy approval; reject changed prices before reserving a new domain intent. */
-    public Entry requestQuotedNpc(UUID kingdom, UUID village, ResourceLocation planSet, UUID id, long expectedFee) {
+    public Entry requestQuotedNpc(UUID kingdom, UUID village, Identifier planSet, UUID id, long expectedFee) {
         return request(null, kingdom, village, planSet, id, expectedFee);
     }
-    public Entry requestPlayer(ServerPlayer player, UUID village, ResourceLocation planSet, UUID id) {
+    public Entry requestPlayer(ServerPlayer player, UUID village, Identifier planSet, UUID id) {
         thread();
         dimension(player);
         return request(player, PoliticsService.ruledKingdom(player).id(), village, planSet, id, null);
     }
     /** The expected fee comes from a server-issued GUI offer. Current catalog pricing is still authoritative. */
     public Entry requestQuotedPlayer(
-            ServerPlayer player, UUID village, ResourceLocation planSet, UUID id, long expectedFee) {
+            ServerPlayer player, UUID village, Identifier planSet, UUID id, long expectedFee) {
         thread();
         dimension(player);
         return request(player, PoliticsService.ruledKingdom(player).id(), village, planSet, id, expectedFee);
@@ -99,7 +98,7 @@ public final class RoyalConstructionService {
         var entry = orders.load(id);
         if (entry == null)
             throw new IllegalArgumentException("Unknown royal order");
-        if (!entry.intent().dimension().equals(level.dimension().location().toString()))
+        if (!entry.intent().dimension().equals(level.dimension().identifier().toString()))
             throw new IllegalArgumentException("Order belongs to another dimension");
         return exclusive(entry.intent().village(), () -> {
             var current = orders.load(id);
@@ -113,7 +112,7 @@ public final class RoyalConstructionService {
                 if (RoyalConstructionCatalog.naturalWorkPending(waitingVillage))
                     return blocked(current, Blocked.NATURAL_PROJECT);
                 var actor = level.getServer().getPlayerList().getPlayer(current.intent().actor());
-                if (actor == null || actor.serverLevel() != level)
+                if (actor == null || actor.level() != level)
                     return blocked(current, Blocked.RULER_UNAVAILABLE);
             }
             return current.stage() == Stage.QUEUED && current.blocked() == Blocked.NO_SPACE ? retrySite(current)
@@ -196,7 +195,7 @@ public final class RoyalConstructionService {
         thread();
         int count = 0;
         for (var entry : orders.entries())
-            if (entry.intent().dimension().equals(level.dimension().location().toString())
+            if (entry.intent().dimension().equals(level.dimension().identifier().toString())
                     && entry.stage() == Stage.QUEUING) {
                 ambiguous(entry);
                 count++;
@@ -214,7 +213,7 @@ public final class RoyalConstructionService {
         var entry = orders.load(id);
         if (entry == null)
             throw new IllegalArgumentException("Unknown retired order");
-        if (!entry.intent().dimension().equals(level.dimension().location().toString()))
+        if (!entry.intent().dimension().equals(level.dimension().identifier().toString()))
             throw new IllegalArgumentException("Retired order belongs to another dimension");
         return exclusive(entry.intent().village(), () -> {
             var current = orders.load(id);
@@ -290,10 +289,10 @@ public final class RoyalConstructionService {
         return request(player, k.id(), villageId, building.getPlanSetId(), id, expectedFee, buildingId, expectedLevel);
     }
     private Entry request(
-            ServerPlayer player, UUID kingdom, UUID villageId, ResourceLocation selected, UUID id, Long expectedFee) {
+            ServerPlayer player, UUID kingdom, UUID villageId, Identifier selected, UUID id, Long expectedFee) {
         return request(player, kingdom, villageId, selected, id, expectedFee, null, null);
     }
-    private Entry request(ServerPlayer player, UUID kingdom, UUID villageId, ResourceLocation selected, UUID id,
+    private Entry request(ServerPlayer player, UUID kingdom, UUID villageId, Identifier selected, UUID id,
             Long expectedFee, UUID upgradeBuilding, Integer expectedTargetLevel) {
         thread();
         var catalog = catalog(player, kingdom, villageId);
@@ -331,7 +330,7 @@ public final class RoyalConstructionService {
             template(choice.plan());
             var data = KingdomSavedData.get(level);
             var village = PoliticsService.village(level, villageId);
-            var intent = new Intent(id, level.dimension().location().toString(), kingdom,
+            var intent = new Intent(id, level.dimension().identifier().toString(), kingdom,
                     data.kingdom(kingdom).capital(), villageId, player == null ? null : player.getUUID(),
                     player == null ? 0 : data.ruler(kingdom).sinceGameTime(), village.getVillageTypeId(),
                     choice.planSet(), choice.plan(), choice.variant(), choice.patronageFee(),
@@ -544,7 +543,7 @@ public final class RoyalConstructionService {
                 && (intent.upgrade()
                         || NormalGrowthBridge.conditions(PoliticsService.village(level, intent.village()), def));
     }
-    private void template(ResourceLocation id) {
+    private void template(Identifier id) {
         var plan = ModCultures.getBuildingPlan(id);
         if (plan == null || MillenaireServerConfig.SERVER.ignoreResourceCost.get()
                 || BuildingPlacer.compilePreviewSteps(level, plan).stream().noneMatch(s -> !s.blockState().isAir())) {
@@ -563,7 +562,7 @@ public final class RoyalConstructionService {
     }
     private void bind(Entry entry, ServerPlayer player, UUID kingdom) {
         var intent = entry.intent();
-        if (!intent.dimension().equals(level.dimension().location().toString()) || !intent.kingdom().equals(kingdom)
+        if (!intent.dimension().equals(level.dimension().identifier().toString()) || !intent.kingdom().equals(kingdom)
                 || !java.util.Objects.equals(intent.actor(), player == null ? null : player.getUUID()))
             throw new IllegalArgumentException("Order belongs to another dimension, kingdom or ruler");
         catalog(player, kingdom, intent.village());
@@ -593,7 +592,7 @@ public final class RoyalConstructionService {
         }
     }
     private void dimension(ServerPlayer player) {
-        if (player.serverLevel() != level)
+        if (player.level() != level)
             throw new IllegalArgumentException("Ruler moved to another dimension");
     }
     private void thread() {

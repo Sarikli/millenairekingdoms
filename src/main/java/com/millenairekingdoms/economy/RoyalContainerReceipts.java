@@ -21,8 +21,8 @@ final class RoyalContainerReceipts {
         var entries = read(chest);
         for (Tag raw : entries) {
             var entry = (CompoundTag) raw;
-            if (entry.getUUID("id").equals(operation)) {
-                if (!entry.getCompound("binding").equals(binding))
+            if (com.millenairekingdoms.compat.KNbt.getUUID(entry, "id").equals(operation)) {
+                if (!entry.getCompoundOrEmpty("binding").equals(binding))
                     throw new IllegalStateException(
                             "Physical operation receipt binding differs at " + chest.getBlockPos());
                 return true;
@@ -45,7 +45,7 @@ final class RoyalContainerReceipts {
             return;
         var entries = read(chest).copy();
         var entry = new CompoundTag();
-        entry.putUUID("id", operation);
+        com.millenairekingdoms.compat.KNbt.putUUID(entry, "id", operation);
         entry.put("binding", binding.copy());
         entries.add(entry);
         write(chest, entries);
@@ -55,7 +55,7 @@ final class RoyalContainerReceipts {
         if (!contains(chest, operation, binding))
             return;
         var entries = read(chest).copy();
-        entries.removeIf(raw -> ((CompoundTag) raw).getUUID("id").equals(operation));
+        entries.removeIf(raw -> com.millenairekingdoms.compat.KNbt.getUUID((CompoundTag) raw, "id").equals(operation));
         write(chest, entries);
     }
 
@@ -63,21 +63,21 @@ final class RoyalContainerReceipts {
         var data = chest.getPersistentData();
         if (!data.contains(KEY))
             return new ListTag();
-        if (!data.contains(KEY, Tag.TAG_COMPOUND))
+        if (!data.contains(KEY))
             throw invalid(chest);
-        var tag = data.getCompound(KEY);
-        if (!tag.getAllKeys().equals(Set.of("format", "entries")) || !tag.contains("format", Tag.TAG_INT)
-                || tag.getInt("format") != 1 || !tag.contains("entries", Tag.TAG_LIST))
+        var tag = data.getCompoundOrEmpty(KEY);
+        if (!tag.keySet().equals(Set.of("format", "entries")) || !com.millenairekingdoms.compat.KNbt.contains(tag, "format", Tag.TAG_INT)
+                || tag.getIntOr("format", 0) != 1 || !com.millenairekingdoms.compat.KNbt.contains(tag, "entries", Tag.TAG_LIST))
             throw invalid(chest);
         var entries = (ListTag) tag.get("entries");
-        if ((!entries.isEmpty() && entries.getElementType() != Tag.TAG_COMPOUND) || entries.size() > LIMIT)
+        if ((!entries.isEmpty() && com.millenairekingdoms.compat.KNbt.elementType(entries) != Tag.TAG_COMPOUND) || entries.size() > LIMIT)
             throw invalid(chest);
         var ids = new HashSet<UUID>();
         for (Tag raw : entries) {
             var entry = (CompoundTag) raw;
-            if (!entry.getAllKeys().equals(Set.of("id", "binding")) || !entry.hasUUID("id")
-                    || !entry.contains("binding", Tag.TAG_COMPOUND) || entry.getCompound("binding").isEmpty()
-                    || !ids.add(entry.getUUID("id")))
+            if (!entry.keySet().equals(Set.of("id", "binding")) || !com.millenairekingdoms.compat.KNbt.hasUUID(entry, "id")
+                    || !entry.contains("binding") || entry.getCompoundOrEmpty("binding").isEmpty()
+                    || !ids.add(com.millenairekingdoms.compat.KNbt.getUUID(entry, "id")))
                 throw invalid(chest);
         }
         return entries;

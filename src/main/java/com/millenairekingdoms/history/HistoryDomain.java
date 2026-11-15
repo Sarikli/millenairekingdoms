@@ -21,7 +21,6 @@ import net.minecraft.world.level.storage.LevelResource;
  * Separate verified history outbox. Prepare BEFORE the terminal domain write; reveal only AFTER exact durable
  * native/domain/payment acknowledgement. Recovery reads proofs, never replays gameplay or touches coin/cargo files.
  */
-@org.jetbrains.annotations.ApiStatus.Internal
 public final class HistoryDomain {
     private static final org.slf4j.Logger LOG = LogUtils.getLogger();
     private HistoryDomain() {}
@@ -101,7 +100,7 @@ public final class HistoryDomain {
         var file = root(level).resolve(events.getFirst().id() + ".dat");
         if (Files.exists(file)) {
             var old = read(file);
-            if (!old.getString("kind").equals(kind) || !old.getCompound("intent").equals(intent))
+            if (!old.getStringOr("kind", "").equals(kind) || !old.getCompoundOrEmpty("intent").equals(intent))
                 throw new IllegalArgumentException("History candidate is bound to another domain intent");
             return;
         }
@@ -133,7 +132,7 @@ public final class HistoryDomain {
     }
     private static void finish(ServerLevel level, UUID operation, HistoryEvent.Kind kind) {
         var file = root(level).resolve(
-                HistoryEvent.identity(level.dimension().location().toString(), kind, operation.toString()) + ".dat");
+                HistoryEvent.identity(level.dimension().identifier().toString(), kind, operation.toString()) + ".dat");
         if (!Files.exists(file))
             return;
         try {
@@ -145,32 +144,32 @@ public final class HistoryDomain {
     private static CompoundTag read(Path file) {
         var t = HistoryFiles.read(file);
         HistoryFiles.keys(t, Set.of("format", "kind", "intent", "confirmed", "events"));
-        if (!t.contains("format", Tag.TAG_INT) || t.getInt("format") != 1 || !t.contains("kind", Tag.TAG_STRING)
-                || !t.contains("intent", Tag.TAG_COMPOUND) || !t.contains("confirmed", Tag.TAG_BYTE)
-                || t.getByte("confirmed") < 0 || t.getByte("confirmed") > 1 || !t.contains("events", Tag.TAG_LIST))
+        if (!t.contains("format") || t.getIntOr("format", 0) != 1 || !t.contains("kind")
+                || !t.contains("intent") || !t.contains("confirmed")
+                || t.getByteOr("confirmed", (byte) 0) < 0 || t.getByteOr("confirmed", (byte) 0) > 1 || !t.contains("events"))
             throw new IllegalStateException("Unsupported domain history candidate; bytes preserved");
         var list = (ListTag) t.get("events");
-        if (list.isEmpty() || list.size() > 2 || list.getElementType() != Tag.TAG_COMPOUND)
+        if (list.isEmpty() || list.size() > 2 || com.millenairekingdoms.compat.KNbt.elementType(list) != Tag.TAG_COMPOUND)
             throw new IllegalArgumentException("Invalid domain history events");
         return t;
     }
     public static boolean confirm(ServerLevel level, Path file) {
         var t = read(file);
-        var kind = HistoryEvent.Kind.valueOf(t.getString("kind"));
+        var kind = HistoryEvent.Kind.valueOf(t.getStringOr("kind", ""));
         if (!Set.of(HistoryEvent.Kind.CONSTRUCTION_ORDER, HistoryEvent.Kind.CONSTRUCTION_COMPLETE,
                         HistoryEvent.Kind.SHIPMENT)
                         .contains(kind))
             throw new IllegalArgumentException("Unknown history domain");
-        var intent = t.getCompound("intent");
-        var events = t.getList("events", Tag.TAG_COMPOUND)
+        var intent = t.getCompoundOrEmpty("intent");
+        var events = t.getListOrEmpty("events")
                              .stream()
                              .map(raw -> HistoryEvent.load((CompoundTag) raw))
                              .toList();
         var event = events.getFirst();
         if (event.kind() != kind || !file.getFileName().toString().equals(event.id() + ".dat")
-                || !event.source().equals(intent.getUUID("id").toString())
-                || !event.dimension().equals(level.dimension().location().toString())
-                || !event.realms().getFirst().id().equals(intent.getUUID("kingdom"))
+                || !event.source().equals(com.millenairekingdoms.compat.KNbt.getUUID(intent, "id").toString())
+                || !event.dimension().equals(level.dimension().identifier().toString())
+                || !event.realms().getFirst().id().equals(com.millenairekingdoms.compat.KNbt.getUUID(intent, "kingdom"))
                 || events.size() == 2
                         && (kind != HistoryEvent.Kind.CONSTRUCTION_ORDER
                                 || events.get(1).kind() != HistoryEvent.Kind.INVESTMENT
@@ -179,15 +178,15 @@ public final class HistoryDomain {
         boolean verified;
         if (kind == HistoryEvent.Kind.SHIPMENT) {
             var i = RoyalShipmentStore.loadIntent(intent);
-            verified = t.getBoolean("confirmed") || shipmentCommitted(level, i);
+            verified = t.getBooleanOr("confirmed", false) || shipmentCommitted(level, i);
         } else {
             var i = RoyalConstructionStore.loadIntent(intent);
-            verified = t.getBoolean("confirmed")
+            verified = t.getBooleanOr("confirmed", false)
                     || constructionCommitted(level, i, kind == HistoryEvent.Kind.CONSTRUCTION_COMPLETE);
         }
         if (!verified)
             return false;
-        if (!t.getBoolean("confirmed")) {
+        if (!t.getBooleanOr("confirmed", false)) {
             t.putBoolean("confirmed", true);
             HistoryFiles.write(file, t);
         }
@@ -234,7 +233,7 @@ public final class HistoryDomain {
     }
     static boolean confirmLegacy(ServerLevel level, Path file) {
         var event = HistoryEvent.load(HistoryFiles.read(file));
-        if (!event.dimension().equals(level.dimension().location().toString()))
+        if (!event.dimension().equals(level.dimension().identifier().toString()))
             throw new IllegalArgumentException("Legacy history dimension mismatch");
         UUID id = UUID.fromString(event.source());
         boolean verified;

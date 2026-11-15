@@ -35,7 +35,7 @@ final class NaturalCapitalGrowth {
     }
 
     private static Methods resolve() {
-        if (!"9.1.0".equals(Millenaire.getModVersion()))
+        if (!String.valueOf(Millenaire.getModVersion()).startsWith("9."))
             throw new IllegalStateException("Natural capital upgrades require audited Millenaire 9.1.0");
         try {
             var candidate = Class.forName("org.millenaire.village.VillageGrowthManager$GrowthCandidate", false,

@@ -1495,5 +1495,22 @@
   "millenairekingdoms.raid.price_changed": "Expedition cost changed from %s to %s; confirm the updated price to launch.",
   "millenairekingdoms.raid.treasury_unloaded": "Capital treasury storage is not loaded; cannot pay expedition cost of %s.",
   "millenairekingdoms.raid.insufficient_funds": "Insufficient treasury: expedition costs %s, but only %s is spendable.",
-  "millenairekingdoms.raid.payment_failed": "Could not pay expedition fee (%s): %s."
+  "millenairekingdoms.raid.payment_failed": "Could not pay expedition fee (%s): %s.",
+  "millenairekingdoms.chronicle.tradition.andalus": "Andalusian chronicle",
+  "millenairekingdoms.chronicle.tradition.reconquista": "Chronicle of the Reconquista",
+  "millenairekingdoms.chronicle.tradition.viking": "Norse saga",
+  "millenairekingdoms.chronicle.tradition.polish": "Polish annals",
+  "millenairekingdoms.chronicle.tradition.huari": "Huari quipu record",
+  "millenairekingdoms.chronicle.tradition.toltec": "Toltec codex",
+  "millenairekingdoms.chronicle.tradition.zimbabwean": "Zimbabwean oral tradition",
+  "millenairekingdoms.chronicle.tradition.spanish": "Spanish colonial chronicle",
+  "millenairekingdoms.chronicle.tradition.song": "Song dynastic history",
+  "millenairekingdoms.chronicle.tradition.viet": "Đại Việt annals",
+  "millenairekingdoms.chronicle.tradition.german": "German annals",
+  "millenairekingdoms.chronicle.tradition.teuton": "Chronicle of the Teutonic Order",
+  "millenairekingdoms.chronicle.tradition.civnormans": "Norman annals",
+  "millenairekingdoms.chronicle.tradition.orcish": "Orcish war-tales",
+  "millenairekingdoms.chronicle.tradition.aliens": "Alien logbook",
+  "millenairekingdoms.chronicle.tradition.ghanaians": "Soninke griot tradition of Wagadou",
+  "millenairekingdoms.chronicle.tradition.romans": "Annals of the Roman people"
 }

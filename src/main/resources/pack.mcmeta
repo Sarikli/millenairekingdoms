@@ -1,6 +1,14 @@
 {
   "pack": {
-    "description": "Millénaire Kingdoms resources",
-    "pack_format": 34
+    "description": "Mill\u00e9naire Kingdoms resources",
+    "pack_format": 97,
+    "min_format": [
+      97,
+      1
+    ],
+    "max_format": [
+      97,
+      1
+    ]
   }
 }

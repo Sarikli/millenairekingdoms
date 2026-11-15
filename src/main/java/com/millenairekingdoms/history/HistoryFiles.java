@@ -32,8 +32,8 @@ public final class HistoryFiles {
             throw new IllegalArgumentException("Unsupported bounded presentation/history read budget");
     }
     public static void keys(CompoundTag tag, Set<String> expected) {
-        if (!tag.getAllKeys().equals(expected))
-            throw new IllegalArgumentException("Unknown or missing history fields: " + tag.getAllKeys());
+        if (!tag.keySet().equals(expected))
+            throw new IllegalArgumentException("Unknown or missing history fields: " + tag.keySet());
     }
     public static void write(Path file, CompoundTag tag) {
         write(file, tag, 1_048_576);
@@ -52,6 +52,8 @@ public final class HistoryFiles {
             Files.move(temp, file, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
             try (var ch = FileChannel.open(file.getParent(), StandardOpenOption.READ)) {
                 ch.force(true);
+            } catch (IOException windows) {
+                // Windows refuse d'ouvrir un dossier comme un fichier : le fichier est déjà écrit et relu, on continue
             }
         } catch (IOException e) {
             throw new IllegalStateException("Cannot acknowledge history write: " + file, e);

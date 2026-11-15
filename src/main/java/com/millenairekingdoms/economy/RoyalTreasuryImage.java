@@ -147,10 +147,10 @@ final class RoyalTreasuryImage {
     private CompoundTag binding(Chest chest) {
         var tag = new CompoundTag();
         tag.putInt("format", 1);
-        tag.putUUID("payment", payment);
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "payment", payment);
         tag.put("intent", intent.copy());
         tag.putString("role", refund ? "REFUND" : "DEBIT");
-        tag.putUUID("container", chest.identity);
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "container", chest.identity);
         tag.putLong("position", chest.position.asLong());
         tag.putLong("delta", RoyalCoinPlan.spendableValue(chest.after) - RoyalCoinPlan.spendableValue(chest.before));
         return tag;
@@ -190,15 +190,15 @@ final class RoyalTreasuryImage {
                 return null;
             var tag = new CompoundTag();
             tag.putInt("format", 1);
-            tag.putUUID("id", UUID.randomUUID());
+            com.millenairekingdoms.compat.KNbt.putUUID(tag, "id", UUID.randomUUID());
             data.put(IDENTITY, tag);
             chest.setChanged();
         }
-        var tag = data.getCompound(IDENTITY);
-        if (!tag.getAllKeys().equals(Set.of("format", "id")) || !tag.contains("format", Tag.TAG_INT)
-                || tag.getInt("format") != 1 || !tag.hasUUID("id"))
+        var tag = data.getCompoundOrEmpty(IDENTITY);
+        if (!tag.keySet().equals(Set.of("format", "id")) || !com.millenairekingdoms.compat.KNbt.contains(tag, "format", Tag.TAG_INT)
+                || tag.getIntOr("format", 0) != 1 || !com.millenairekingdoms.compat.KNbt.hasUUID(tag, "id"))
             throw new IllegalStateException("Unsupported/corrupt treasury identity; preserve chest data");
-        return tag.getUUID("id");
+        return com.millenairekingdoms.compat.KNbt.getUUID(tag, "id");
     }
 
     CompoundTag save(ServerLevel level) {
@@ -206,14 +206,14 @@ final class RoyalTreasuryImage {
         tag.putInt("format", payment == null ? 1 : FORMAT);
         var list = new ListTag();
         if (payment != null) {
-            tag.putUUID("payment", payment);
+            com.millenairekingdoms.compat.KNbt.putUUID(tag, "payment", payment);
             tag.put("intent", intent.copy());
             tag.putString("role", refund ? "REFUND" : "DEBIT");
         }
         for (Chest chest : chests) {
             var item = new CompoundTag();
             item.putLong("position", chest.position.asLong());
-            item.putUUID("identity", chest.identity);
+            com.millenairekingdoms.compat.KNbt.putUUID(item, "identity", chest.identity);
             item.put("state", chest.state.copy());
             item.put("before", saveSlots(level, chest.before));
             item.put("after", saveSlots(level, chest.after));
@@ -224,19 +224,19 @@ final class RoyalTreasuryImage {
     }
 
     static RoyalTreasuryImage read(ServerLevel level, CompoundTag tag) {
-        if (!tag.contains("format", Tag.TAG_INT) || (tag.getInt("format") != 1 && tag.getInt("format") != FORMAT)
-                || !tag.contains("chests", Tag.TAG_LIST))
+        if (!tag.contains("format") || (tag.getIntOr("format", 0) != 1 && tag.getIntOr("format", 0) != FORMAT)
+                || !tag.contains("chests"))
             throw new IllegalStateException("Unsupported treasury image; preserve payment journal");
-        boolean legacy = tag.getInt("format") == 1;
-        if (!tag.getAllKeys().equals(
+        boolean legacy = tag.getIntOr("format", 0) == 1;
+        if (!tag.keySet().equals(
                     legacy ? Set.of("format", "chests") : Set.of("format", "payment", "intent", "role", "chests"))
                 || (!legacy
-                        && (!tag.hasUUID("payment") || !tag.contains("intent", Tag.TAG_COMPOUND)
-                                || !(tag.getString("role").equals("DEBIT")
-                                        || tag.getString("role").equals("REFUND"))))) {
+                        && (!com.millenairekingdoms.compat.KNbt.hasUUID(tag, "payment") || !tag.contains("intent")
+                                || !(tag.getStringOr("role", "").equals("DEBIT")
+                                        || tag.getStringOr("role", "").equals("REFUND"))))) {
             throw new IllegalStateException("Unsupported/corrupt treasury operation binding; preserve journal");
         }
-        var list = tag.getList("chests", Tag.TAG_COMPOUND);
+        var list = tag.getListOrEmpty("chests");
         if (list.isEmpty() || list.size() > MAX_CHESTS)
             throw new IllegalStateException("Invalid treasury image size");
         var result = new ArrayList<Chest>();
@@ -244,21 +244,21 @@ final class RoyalTreasuryImage {
         var ids = new HashSet<UUID>();
         for (Tag raw : list) {
             var item = (CompoundTag) raw;
-            if (!item.getAllKeys().equals(Set.of("position", "identity", "state", "before", "after"))
-                    || !item.contains("position", Tag.TAG_LONG) || !item.hasUUID("identity")
-                    || !item.contains("state", Tag.TAG_COMPOUND)) {
+            if (!item.keySet().equals(Set.of("position", "identity", "state", "before", "after"))
+                    || !item.contains("position") || !com.millenairekingdoms.compat.KNbt.hasUUID(item, "identity")
+                    || !item.contains("state")) {
                 throw new IllegalStateException("Incomplete treasury chest image");
             }
-            var pos = BlockPos.of(item.getLong("position"));
-            var id = item.getUUID("identity");
+            var pos = BlockPos.of(item.getLongOr("position", 0L));
+            var id = com.millenairekingdoms.compat.KNbt.getUUID(item, "identity");
             if (!positions.add(pos) || !ids.add(id))
                 throw new IllegalStateException("Duplicate treasury image position or identity");
-            result.add(new Chest(pos, id, item.getCompound("state").copy(), readSlots(level, item, "before"),
+            result.add(new Chest(pos, id, item.getCompoundOrEmpty("state").copy(), readSlots(level, item, "before"),
                     readSlots(level, item, "after")));
         }
-        return new RoyalTreasuryImage(result, legacy ? null : tag.getUUID("payment"),
-                legacy ? new CompoundTag() : tag.getCompound("intent"),
-                !legacy && tag.getString("role").equals("REFUND"));
+        return new RoyalTreasuryImage(result, legacy ? null : com.millenairekingdoms.compat.KNbt.getUUID(tag, "payment"),
+                legacy ? new CompoundTag() : tag.getCompoundOrEmpty("intent"),
+                !legacy && tag.getStringOr("role", "").equals("REFUND"));
     }
 
     long value(boolean after) {
@@ -320,11 +320,11 @@ final class RoyalTreasuryImage {
     private static ListTag saveSlots(ServerLevel level, List<ItemStack> slots) {
         var list = new ListTag();
         for (ItemStack stack : slots)
-            list.add(stack.saveOptional(level.registryAccess()));
+            list.add(com.millenairekingdoms.compat.KNbt.saveStack(level.registryAccess(), stack));
         return list;
     }
     private static List<ItemStack> readSlots(ServerLevel level, CompoundTag tag, String key) {
-        var list = tag.getList(key, Tag.TAG_COMPOUND);
+        var list = tag.getListOrEmpty(key);
         if (list.size() != 27)
             throw new IllegalStateException("Incomplete physical chest slot image");
         var result = new ArrayList<ItemStack>();
@@ -332,7 +332,7 @@ final class RoyalTreasuryImage {
             var item = (CompoundTag) raw;
             result.add(item.isEmpty()
                             ? ItemStack.EMPTY
-                            : ItemStack.parse(level.registryAccess(), item)
+                            : com.millenairekingdoms.compat.KNbt.parseStack(level.registryAccess(), item)
                                       .orElseThrow(
                                               () -> new IllegalStateException("Invalid item in treasury slot image")));
         }

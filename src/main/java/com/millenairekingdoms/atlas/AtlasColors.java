@@ -32,18 +32,18 @@ public final class AtlasColors {
             return;
         var tag = HistoryFiles.read(file, MAX_BYTES);
         HistoryFiles.keys(tag, Set.of("format", "colors"));
-        if (tag.getInt("format") != 1 || !tag.contains("colors", Tag.TAG_LIST))
+        if (tag.getIntOr("format", 0) != 1 || !tag.contains("colors"))
             throw new IllegalArgumentException("Unsupported atlas colors; original file preserved");
         var list = (ListTag) tag.get("colors");
-        if (!list.isEmpty() && list.getElementType() != Tag.TAG_COMPOUND)
+        if (!list.isEmpty() && com.millenairekingdoms.compat.KNbt.elementType(list) != Tag.TAG_COMPOUND)
             throw new IllegalArgumentException("Invalid atlas color list");
         if (list.size() > AtlasSnapshotAssembler.MAX_SITES)
             throw new IllegalArgumentException("Too many atlas identities");
         for (var raw : list) {
             var entry = (CompoundTag) raw;
             HistoryFiles.keys(entry, Set.of("id", "color"));
-            if (!entry.hasUUID("id") || !entry.contains("color", Tag.TAG_INT) || entry.getInt("color") >>> 24 != 255
-                    || colors.putIfAbsent(entry.getUUID("id"), entry.getInt("color")) != null)
+            if (!com.millenairekingdoms.compat.KNbt.hasUUID(entry, "id") || !entry.contains("color") || entry.getIntOr("color", 0) >>> 24 != 255
+                    || colors.putIfAbsent(com.millenairekingdoms.compat.KNbt.getUUID(entry, "id"), entry.getIntOr("color", 0)) != null)
                 throw new IllegalArgumentException("Invalid atlas identity; original file preserved");
         }
     }
@@ -98,7 +98,7 @@ public final class AtlasColors {
         var list = new ListTag();
         updated.forEach((id, color) -> {
             var e = new CompoundTag();
-            e.putUUID("id", id);
+            com.millenairekingdoms.compat.KNbt.putUUID(e, "id", id);
             e.putInt("color", color);
             list.add(e);
         });

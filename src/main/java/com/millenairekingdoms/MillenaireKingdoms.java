@@ -29,7 +29,8 @@ public final class MillenaireKingdoms {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public MillenaireKingdoms(IEventBus modEventBus, ModContainer modContainer) {
-        modContainer.registerConfig(ModConfig.Type.SERVER, CapitalConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.SYNCED, CapitalConfig.SPEC);
+        com.millenairekingdoms.autonomy.RoyalEconomicActivation.TICKETS.register(modEventBus);
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::loadComplete);
         modEventBus.addListener(KingdomNetwork::register);

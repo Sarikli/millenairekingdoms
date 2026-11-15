@@ -286,12 +286,15 @@ public final class KingdomSavedData extends SavedData {
     private ServerLevel royalRuntimeLevel;
     UUID historyCommit;
 
-    public static Factory<KingdomSavedData> factory() {
-        return new Factory<>(KingdomSavedData::new, KingdomSavedData::load, null);
+    private static final net.minecraft.world.level.saveddata.SavedDataType<KingdomSavedData> TYPE = com.millenairekingdoms.compat.KNbt.savedType(NAME, KingdomSavedData::new,
+            KingdomSavedData::load, (data, registries) -> data.save(new CompoundTag(), registries));
+
+    public static net.minecraft.world.level.saveddata.SavedDataType<KingdomSavedData> factory() {
+        return TYPE;
     }
     public static KingdomSavedData get(ServerLevel level) {
         var storage = level.getDataStorage();
-        var data = storage.get(factory(), NAME);
+        var data = storage.get(factory());
         if (data != null) {
             data.royalRuntimeLevel = level;
             return data;
@@ -301,16 +304,16 @@ public final class KingdomSavedData extends SavedData {
                         .resolve("data");
         // DimensionDataStorage converts parse/IO failures to null. Never overwrite a damaged or newer file with an
         // empty registry.
-        check(Files.notExists(folder.resolve(NAME + ".dat")),
+        check(Files.notExists(folder.resolve("minecraft").resolve(NAME + ".dat")),
                 "Kingdom data could not be loaded; restore a valid backup before continuing.");
-        var legacy = storage.get(ConquestSavedData.factory(), ConquestSavedData.NAME);
-        check(legacy != null || Files.notExists(folder.resolve(ConquestSavedData.NAME + ".dat")),
+        var legacy = storage.get(ConquestSavedData.factory());
+        check(legacy != null || Files.notExists(folder.resolve("minecraft").resolve(ConquestSavedData.NAME + ".dat")),
                 "Legacy conquest data could not be loaded; migration refused.");
         data = legacy == null
                 ? new KingdomSavedData()
                 : fromLegacy(legacy.save(new CompoundTag(), level.registryAccess()), level.registryAccess());
         data.setDirty();
-        storage.set(NAME, data);
+        storage.set(factory(), data);
         data.royalRuntimeLevel = level;
         return data;
     }
@@ -855,7 +858,6 @@ public final class KingdomSavedData extends SavedData {
                 attacker, target, startGameTime, initiator, orderId, orderId != null ? orderId : UUID.randomUUID());
     }
     /** Internal durable-operation entry: the exact external operation ID cannot acquire a second political result. */
-    @org.jetbrains.annotations.ApiStatus.Internal
     public Raid beginIdentified(
             UUID attacker, UUID target, long startGameTime, UUID initiator, UUID orderId, UUID raidId) {
         check(startGameTime > 0, "Invalid conquest raid start time.");
@@ -1026,15 +1028,14 @@ public final class KingdomSavedData extends SavedData {
         return KingdomSavedDataCodec.fromLegacy(legacy, registries);
     }
     public int legacyWins(UUID target) {
-        for (Tag value : legacyArchive.getList("progress", Tag.TAG_COMPOUND)) {
+        for (Tag value : legacyArchive.getListOrEmpty("progress")) {
             CompoundTag entry = (CompoundTag) value;
-            if (entry.getUUID("target").equals(target))
-                return entry.getInt("wins");
+            if (com.millenairekingdoms.compat.KNbt.getUUID(entry, "target").equals(target))
+                return entry.getIntOr("wins", 0);
         }
         return 0;
     }
 
-    @Override
     public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         return KingdomSavedDataCodec.save(this, tag);
     }

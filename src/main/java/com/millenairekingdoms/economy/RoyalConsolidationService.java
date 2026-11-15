@@ -72,8 +72,8 @@ public final class RoyalConsolidationService {
         new RoyalPaymentService(level).reconcileExpeditions(data);
         return RoyalPaymentService.withCapitalLock(level, k.capital(), () -> {
             for (var entry : current())
-                if (entry.intent().getString("dimension").equals(dimension())
-                        && entry.intent().getUUID("capital").equals(k.capital()) && entry.state() != State.COMMITTED
+                if (entry.intent().getStringOr("dimension", "").equals(dimension())
+                        && com.millenairekingdoms.compat.KNbt.getUUID(entry.intent(), "capital").equals(k.capital()) && entry.state() != State.COMMITTED
                         && entry.state() != State.CANCELLED)
                     return settle(entry);
             var quote = RoyalTreasurySnapshot.forMaintenance(level, kingdom);
@@ -100,9 +100,9 @@ public final class RoyalConsolidationService {
                 request.putInt("schema", 1);
                 request.putString("kind", "CONSOLIDATION");
                 request.putString("dimension", dimension());
-                request.putUUID("kingdom", kingdom);
-                request.putUUID("capital", k.capital());
-                request.putUUID("reference", id);
+                com.millenairekingdoms.compat.KNbt.putUUID(request, "kingdom", kingdom);
+                com.millenairekingdoms.compat.KNbt.putUUID(request, "capital", k.capital());
+                com.millenairekingdoms.compat.KNbt.putUUID(request, "reference", id);
                 request.putLong("position", quote.positions().get(start / 27).asLong());
                 request.putLong("amount", 0);
                 request.putLong("value", value);
@@ -127,13 +127,13 @@ public final class RoyalConsolidationService {
         if (entry == null)
             throw new IllegalArgumentException("Unknown consolidation operation");
         var request = intent(entry);
-        if (!request.getString("dimension").equals(dimension()))
+        if (!request.getStringOr("dimension", "").equals(dimension()))
             throw new IllegalArgumentException("Consolidation belongs to another dimension");
-        return RoyalPaymentService.withCapitalLock(level, request.getUUID("capital"), () -> settle(entry));
+        return RoyalPaymentService.withCapitalLock(level, com.millenairekingdoms.compat.KNbt.getUUID(request, "capital"), () -> settle(entry));
     }
     private Result settle(Entry entry) {
         var request = intent(entry);
-        if (!request.getString("dimension").equals(dimension()))
+        if (!request.getStringOr("dimension", "").equals(dimension()))
             throw new IllegalArgumentException("Consolidation dimension changed");
         var image = image(entry);
         if (entry.state() == State.RECOVERY_REQUIRED)
@@ -150,8 +150,8 @@ public final class RoyalConsolidationService {
             return result(
                     done, Status.COMMITTED, "Previously acknowledged physical conservation; no new inventory access");
         }
-        var quote = RoyalTreasurySnapshot.forMaintenance(level, request.getUUID("kingdom"));
-        if (!quote.capital().equals(request.getUUID("capital")))
+        var quote = RoyalTreasurySnapshot.forMaintenance(level, com.millenairekingdoms.compat.KNbt.getUUID(request, "kingdom"));
+        if (!quote.capital().equals(com.millenairekingdoms.compat.KNbt.getUUID(request, "capital")))
             throw new IllegalStateException("Original consolidation capital changed; retain evidence");
         guard(quote, entry.id());
         List<ItemStack> after;
@@ -167,7 +167,7 @@ public final class RoyalConsolidationService {
         quote.applyConservingSingle(after);
         image.record(level);
         persistence.flush(level, quote.positions());
-        var current = RoyalTreasurySnapshot.forMaintenance(level, request.getUUID("kingdom"));
+        var current = RoyalTreasurySnapshot.forMaintenance(level, com.millenairekingdoms.compat.KNbt.getUUID(request, "kingdom"));
         image.requireAfter(level, current, after);
         persistence.verifyApplied(level, image, after);
         var acknowledged = journal().transition(entry.id(), State.PREPARED, State.PAID, entry.recovery());
@@ -193,11 +193,11 @@ public final class RoyalConsolidationService {
                         || entry.state() == State.REFUNDED)
                     continue;
                 var request = entry.intent();
-                if (!request.contains("dimension", Tag.TAG_STRING) || !request.hasUUID("capital"))
+                if (!request.contains("dimension") || !com.millenairekingdoms.compat.KNbt.hasUUID(request, "capital"))
                     throw new IllegalStateException("Unknown unresolved payment authority; consolidation deferred");
-                if (request.getString("dimension").equals(dimension())
-                        && request.getUUID("capital").equals(quote.capital())) {
-                    if (entry.state() == State.PAID && "EXPEDITION".equals(request.getString("purpose"))
+                if (request.getStringOr("dimension", "").equals(dimension())
+                        && com.millenairekingdoms.compat.KNbt.getUUID(request, "capital").equals(quote.capital())) {
+                    if (entry.state() == State.PAID && "EXPEDITION".equals(request.getStringOr("purpose", ""))
                             && KingdomSavedData.get(level).order(entry.id()) != null)
                         continue;
                     throw new IllegalStateException("Capital has active payment/refund/recovery reservation "
@@ -212,7 +212,7 @@ public final class RoyalConsolidationService {
             if (entry.id().equals(own) || entry.state() == State.COMMITTED || entry.state() == State.CANCELLED)
                 continue;
             var request = intent(entry);
-            if (!request.getString("dimension").equals(level.dimension().location().toString()))
+            if (!request.getStringOr("dimension", "").equals(level.dimension().identifier().toString()))
                 continue;
             var image = image(level, entry);
             if (image.chests().stream().anyMatch(c -> requested.contains(c.position())))
@@ -225,29 +225,29 @@ public final class RoyalConsolidationService {
     }
     private static RoyalTreasuryImage image(ServerLevel level, Entry entry) {
         var recovery = entry.recovery();
-        if (!Set.of("image", "diagnostic").containsAll(recovery.getAllKeys())
-                || !recovery.contains("image", Tag.TAG_COMPOUND)
-                || recovery.contains("diagnostic") && !recovery.contains("diagnostic", Tag.TAG_STRING))
+        if (!Set.of("image", "diagnostic").containsAll(recovery.keySet())
+                || !recovery.contains("image")
+                || recovery.contains("diagnostic") && !recovery.contains("diagnostic"))
             throw new IllegalStateException("Unsupported consolidation recovery image");
-        var image = RoyalTreasuryImage.read(level, recovery.getCompound("image"));
+        var image = RoyalTreasuryImage.read(level, recovery.getCompoundOrEmpty("image"));
         image.requireBinding(entry.id(), intent(entry), false);
         image.requireConservation();
-        if (image.value(false) != entry.intent().getLong("value") || image.value(true) != image.value(false)
-                || image.changedPosition().asLong() != entry.intent().getLong("position"))
+        if (image.value(false) != entry.intent().getLongOr("value", 0L) || image.value(true) != image.value(false)
+                || image.changedPosition().asLong() != entry.intent().getLongOr("position", 0L))
             throw new IllegalStateException("Consolidation historical value/container binding changed");
         return image;
     }
     private static CompoundTag intent(Entry entry) {
         var t = entry.intent();
-        if (!t.getAllKeys().equals(Set.of(
+        if (!t.keySet().equals(Set.of(
                     "schema", "kind", "dimension", "kingdom", "capital", "reference", "position", "amount", "value"))
-                || !t.contains("schema", Tag.TAG_INT) || t.getInt("schema") != 1
-                || !t.getString("kind").equals("CONSOLIDATION") || !t.contains("dimension", Tag.TAG_STRING)
-                || net.minecraft.resources.ResourceLocation.tryParse(t.getString("dimension")) == null
-                || !t.hasUUID("kingdom") || !t.hasUUID("capital") || !t.hasUUID("reference")
-                || !t.getUUID("reference").equals(entry.id()) || !t.contains("position", Tag.TAG_LONG)
-                || !t.contains("amount", Tag.TAG_LONG) || t.getLong("amount") != 0 || !t.contains("value", Tag.TAG_LONG)
-                || t.getLong("value") < 0
+                || !t.contains("schema") || t.getIntOr("schema", 0) != 1
+                || !t.getStringOr("kind", "").equals("CONSOLIDATION") || !t.contains("dimension")
+                || net.minecraft.resources.Identifier.tryParse(t.getStringOr("dimension", "")) == null
+                || !com.millenairekingdoms.compat.KNbt.hasUUID(t, "kingdom") || !com.millenairekingdoms.compat.KNbt.hasUUID(t, "capital") || !com.millenairekingdoms.compat.KNbt.hasUUID(t, "reference")
+                || !com.millenairekingdoms.compat.KNbt.getUUID(t, "reference").equals(entry.id()) || !t.contains("position")
+                || !t.contains("amount") || t.getLongOr("amount", 0L) != 0 || !t.contains("value")
+                || t.getLongOr("value", 0L) < 0
                 || !Set.of(State.PREPARED, State.PAID, State.COMMITTED, State.CANCELLED, State.RECOVERY_REQUIRED)
                         .contains(entry.state()))
             throw new IllegalStateException("Unsupported consolidation intent; original journal preserved");
@@ -270,7 +270,7 @@ public final class RoyalConsolidationService {
         }
     }
     private Result result(Entry entry, Status status, String reason) {
-        long value = entry.intent().getLong("value");
+        long value = entry.intent().getLongOr("value", 0L);
         return new Result(entry.id(), status, value, value, bound(reason));
     }
     private static boolean useful(List<ItemStack> before, List<ItemStack> after) {
@@ -289,10 +289,12 @@ public final class RoyalConsolidationService {
     private static void sync(Path dir) throws IOException {
         try (var ch = FileChannel.open(dir, StandardOpenOption.READ)) {
             ch.force(true);
+        } catch (java.io.IOException windows) {
+            // Windows ne sait pas ouvrir un dossier comme un fichier ; l'écriture elle-même est déjà faite
         }
     }
     private String dimension() {
-        return level.dimension().location().toString();
+        return level.dimension().identifier().toString();
     }
     private static String bound(String text) {
         return text.substring(0, Math.min(512, text.length()));

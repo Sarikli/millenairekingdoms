@@ -16,13 +16,13 @@ final class ClientText {
                 text, Minecraft.getInstance().options.languageCode);
     }
     static Component culture(String id, String fallback) {
-        var location = net.minecraft.resources.ResourceLocation.tryParse(id);
+        var location = net.minecraft.resources.Identifier.tryParse(id);
         return location == null ? Component.literal(fallback)
                                 : Component.translatableWithFallback(
                                           "culture." + location.getNamespace() + "." + location.getPath(), fallback);
     }
     static Component building(String id, String fallback) {
-        var location = net.minecraft.resources.ResourceLocation.tryParse(id);
+        var location = net.minecraft.resources.Identifier.tryParse(id);
         var key = location == null ? null : org.millenaire.language.BuildingNameHelper.getTranslationKey(location);
         return key == null ? Component.literal(fallback) : Component.translatableWithFallback(key, fallback);
     }

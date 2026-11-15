@@ -101,7 +101,7 @@ public final class TreasuryService {
 
     /** Whether the player's main inventory (36 slots) can take all these coins, simulated on copies. */
     public static boolean fits(ServerPlayer player, Coins coins) {
-        NonNullList<ItemStack> items = player.getInventory().items;
+        NonNullList<ItemStack> items = player.getInventory().getNonEquipmentItems();
         int[] counts = new int[items.size()];
         Item[] kinds = new Item[items.size()];
         for (int i = 0; i < items.size(); i++) {
@@ -151,7 +151,7 @@ public final class TreasuryService {
         }
     }
     private static Kingdom check(ServerPlayer player) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         Kingdom kingdom =
                 PoliticsService.ruledKingdom(player); // Only the ruler, with decision reputation, of an active kingdom.
         Village capital = PoliticsService.capital(level, kingdom);
@@ -168,7 +168,7 @@ public final class TreasuryService {
 
     /** Takes exactly `amount` deniers out of the capital storage into the ruler's inventory and returns it. */
     public static long withdraw(ServerPlayer player, long amount) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         KingdomException.check(level.getServer().isSameThread(), "millenairekingdoms.treasury.thread",
                 "Treasury actions run on the server thread.");
         Kingdom kingdom = check(player);
@@ -217,23 +217,23 @@ public final class TreasuryService {
                     // Cannot happen after fits(); never lose a coin: back into the storage, or at the player's feet.
                     int back = storage.add(level, items[i], stack.getCount());
                     if (back < stack.getCount())
-                        player.drop(new ItemStack(items[i], stack.getCount() - back), false);
+                        player.drop(new ItemStack(items[i], stack.getCount() - back), false, net.minecraft.util.Prediction.SERVER_ONLY);
                     LOGGER.warn("[Kingdoms] {} coins did not fit into {}'s inventory and were returned.",
-                            stack.getCount(), player.getGameProfile().getName());
+                            stack.getCount(), player.getGameProfile().name());
                 }
             }
         }
         EconomyService.markChanged(level, storage);
         player.getInventory().setChanged();
         LOGGER.info("[Kingdoms] {} withdrew {} ({} gold, {} silver, {} deniers) from the storage of {} ({} left).",
-                player.getGameProfile().getName(), EconomyService.format(amount), coins.gold, coins.silver,
+                player.getGameProfile().name(), EconomyService.format(amount), coins.gold, coins.silver,
                 coins.bronze, kingdom.name(), EconomyService.format(stored(level, kingdom).value()));
         return amount;
     }
 
     /** Localized chat presentation over the same existing authority/storage facts; never a new transaction. */
     public static net.minecraft.network.chat.Component describeComponent(ServerPlayer player) {
-        var level = player.serverLevel();
+        var level = player.level();
         var data = KingdomSavedData.get(level);
         var id = data.ruledBy(player.getUUID());
         KingdomException.check(
@@ -255,7 +255,7 @@ public final class TreasuryService {
     }
 
     public static String describe(ServerPlayer player) {
-        ServerLevel level = player.serverLevel();
+        ServerLevel level = player.level();
         var data = KingdomSavedData.get(level);
         var id = data.ruledBy(player.getUUID());
         KingdomException.check(

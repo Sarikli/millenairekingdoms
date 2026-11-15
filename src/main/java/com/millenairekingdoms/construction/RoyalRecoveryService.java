@@ -44,7 +44,7 @@ public final class RoyalRecoveryService {
         operator(source);
         return audit.entries()
                 .stream()
-                .filter(e -> e.intent().order().dimension().equals(level.dimension().location().toString()))
+                .filter(e -> e.intent().order().dimension().equals(level.dimension().identifier().toString()))
                 .toList();
     }
     public RoyalConstructionStore.Entry inspectOrder(CommandSourceStack source, UUID id) {
@@ -80,7 +80,6 @@ public final class RoyalRecoveryService {
         return apply(decision, actor(source), source.getTextName());
     }
     /** Scheduler may only resume a decision already authorized and persisted by an OP; it cannot create one. */
-    @org.jetbrains.annotations.ApiStatus.Internal
     public RoyalRecoveryStore.Entry resumeAuthorized(UUID decision) {
         thread();
         return apply(decision, null, "recovery-runtime");
@@ -211,13 +210,13 @@ public final class RoyalRecoveryService {
     }
     private RoyalConstructionStore.Entry order(UUID id) {
         var entry = orders.load(id);
-        if (entry == null || !entry.intent().dimension().equals(level.dimension().location().toString()))
+        if (entry == null || !entry.intent().dimension().equals(level.dimension().identifier().toString()))
             throw new IllegalArgumentException("Unknown order in this dimension");
         return entry;
     }
     private RoyalRecoveryStore.Entry decision(UUID id) {
         var entry = audit.load(id);
-        if (entry == null || !entry.intent().order().dimension().equals(level.dimension().location().toString()))
+        if (entry == null || !entry.intent().order().dimension().equals(level.dimension().identifier().toString()))
             throw new IllegalArgumentException("Unknown recovery decision in this dimension");
         return entry;
     }
@@ -230,7 +229,7 @@ public final class RoyalRecoveryService {
     }
     private void operator(CommandSourceStack source) {
         thread();
-        if (source.getLevel() != level || !source.hasPermission(2))
+        if (source.getLevel() != level || !source.permissions().hasPermission(net.minecraft.server.permissions.Permissions.COMMANDS_GAMEMASTER))
             throw new IllegalArgumentException("Operator permission level 2 in this dimension is required");
     }
     private static UUID actor(CommandSourceStack source) {

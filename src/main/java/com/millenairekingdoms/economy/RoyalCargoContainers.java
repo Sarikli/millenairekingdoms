@@ -25,7 +25,6 @@ import org.millenaire.item.ModItems;
  * and supply current mandate/storage revalidation before a new mutation. No network or scheduled consumer yet.
  * All acknowledgements load the durable operation rather than trusting a cached/stale pending DTO.
  */
-@org.jetbrains.annotations.ApiStatus.Internal
 public final class RoyalCargoContainers {
     private RoyalCargoContainers() {}
     private enum Evidence { BEFORE, APPLIED }
@@ -157,7 +156,7 @@ public final class RoyalCargoContainers {
     private static ChestBlockEntity requireContainer(ServerLevel level, Operation operation) {
         var chest = live(level, operation.position());
         if (!operation.container().equals(RoyalTreasuryImage.identity(chest, false))
-                || !operation.image().getCompound("state").equals(NbtUtils.writeBlockState(chest.getBlockState())))
+                || !operation.image().getCompoundOrEmpty("state").equals(NbtUtils.writeBlockState(chest.getBlockState())))
             throw new IllegalStateException("Cargo container identity/connection changed at " + operation.position());
         return chest;
     }
@@ -173,7 +172,7 @@ public final class RoyalCargoContainers {
                     + (applied ? "applied" : "unapplied before") + " image at " + operation.position());
     }
     private static Slots validate(ServerLevel level, Intent intent, Operation operation) {
-        if (!intent.dimension().equals(level.dimension().location().toString())
+        if (!intent.dimension().equals(level.dimension().identifier().toString())
                 || operation.quantity() > intent.quantity())
             throw new IllegalStateException("Cargo allocation dimension/quantity differs from shipment");
         var product = product(intent);
@@ -211,9 +210,9 @@ public final class RoyalCargoContainers {
         tag.putInt("format", 1);
         tag.putString("kind", "SHIPMENT");
         tag.put("intent", RoyalShipmentStore.saveIntent(intent));
-        tag.putUUID("operation", operation.id());
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "operation", operation.id());
         tag.putString("role", operation.role().name());
-        tag.putUUID("container", operation.container());
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "container", operation.container());
         tag.putLong("position", operation.position().asLong());
         tag.putInt("quantity", operation.quantity());
         tag.put("image", operation.image());
@@ -241,11 +240,11 @@ public final class RoyalCargoContainers {
     private static ListTag save(ServerLevel level, List<ItemStack> slots) {
         var list = new ListTag();
         for (var stack : slots)
-            list.add(stack.saveOptional(level.registryAccess()));
+            list.add(com.millenairekingdoms.compat.KNbt.saveStack(level.registryAccess(), stack));
         return list;
     }
     private static List<ItemStack> read(ServerLevel level, CompoundTag image, String key) {
-        var list = image.getList(key, Tag.TAG_COMPOUND);
+        var list = image.getListOrEmpty(key);
         if (list.size() != 27)
             throw new IllegalStateException("Incomplete native cargo slot image");
         var result = new ArrayList<ItemStack>();
@@ -253,7 +252,7 @@ public final class RoyalCargoContainers {
             var tag = (CompoundTag) raw;
             var stack = tag.isEmpty()
                     ? ItemStack.EMPTY
-                    : ItemStack.parse(level.registryAccess(), tag)
+                    : com.millenairekingdoms.compat.KNbt.parseStack(level.registryAccess(), tag)
                               .orElseThrow(() -> new IllegalStateException("Unknown native cargo stack"));
             if (!stack.isEmpty() && (stack.getCount() < 1 || stack.getCount() > Math.min(64, stack.getMaxStackSize())))
                 throw new IllegalStateException("Invalid native cargo stack extent");
@@ -265,20 +264,20 @@ public final class RoyalCargoContainers {
             ServerLevel level, Intent intent, Operation operation, List<ItemStack> expected, boolean applied) {
         var position = operation.position();
         var chunk = level.getChunkSource()
-                            .chunkMap.read(new ChunkPos(position))
+                            .chunkMap.read(ChunkPos.containing(position))
                             .join()
                             .orElseThrow(() -> new IllegalStateException("Cargo chunk not written"));
-        var state = RoyalTreasuryPersistence.savedState(chunk, position);
+        var state = RoyalTreasuryPersistence.savedState(level.registryAccess(), chunk, position);
         CompoundTag found = null;
-        for (Tag raw : chunk.getList("block_entities", Tag.TAG_COMPOUND)) {
+        for (Tag raw : chunk.getListOrEmpty("block_entities")) {
             var tag = (CompoundTag) raw;
-            if (BlockEntity.getPosFromTag(tag).equals(position)) {
+            if (BlockEntity.getPosFromTag(net.minecraft.world.level.ChunkPos.containing(position), tag).equals(position)) {
                 if (found != null)
                     throw new IllegalStateException("Duplicate saved cargo chest");
                 found = tag;
             }
         }
-        if (found == null || !operation.image().getCompound("state").equals(NbtUtils.writeBlockState(state))
+        if (found == null || !operation.image().getCompoundOrEmpty("state").equals(NbtUtils.writeBlockState(state))
                 || !(BlockEntity.loadStatic(position, state, found, level.registryAccess())
                                 instanceof ChestBlockEntity saved)
                 || !operation.container().equals(RoyalTreasuryImage.identity(saved, false)) || !matches(saved, expected)

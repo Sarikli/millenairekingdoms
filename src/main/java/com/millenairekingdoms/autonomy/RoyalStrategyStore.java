@@ -5,7 +5,7 @@ import com.millenairekingdoms.history.HistoryHooks;
 import java.nio.file.*;
 import java.util.*;
 import net.minecraft.nbt.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 
 /** Two bounded economic lanes per kingdom; neither is money, cargo or a completed native order. */
@@ -36,15 +36,15 @@ public final class RoyalStrategyStore {
         }
     }
     public enum Status { IDLE, CONDITIONAL, ISSUING, LINKED, INVALIDATED }
-    public record Plan(UUID kingdom, UUID capital, ResourceLocation capitalType, String dimension, UUID id, UUID target,
-            ResourceLocation selection, boolean logistics, long evaluatedDay, long nextDay, long metadataObservedTick,
+    public record Plan(UUID kingdom, UUID capital, Identifier capitalType, String dimension, UUID id, UUID target,
+            Identifier selection, boolean logistics, long evaluatedDay, long nextDay, long metadataObservedTick,
             String fingerprint, Status status, String reason) {
         public Plan {
             Objects.requireNonNull(kingdom);
             Objects.requireNonNull(capital);
             Objects.requireNonNull(capitalType);
             Objects.requireNonNull(status);
-            if (ResourceLocation.tryParse(dimension) == null || evaluatedDay < 0 || nextDay <= evaluatedDay
+            if (Identifier.tryParse(dimension) == null || evaluatedDay < 0 || nextDay <= evaluatedDay
                     || metadataObservedTick < 0 || reason == null || reason.length() > 512)
                 throw new IllegalArgumentException("Invalid strategic evaluation");
             UUID.fromString(fingerprint);
@@ -62,10 +62,10 @@ public final class RoyalStrategyStore {
     private final Path directory;
     private final String dimension;
     public RoyalStrategyStore(ServerLevel level) {
-        this(HistoryHooks.directory(level).resolve("royal-strategy"), level.dimension().location().toString());
+        this(HistoryHooks.directory(level).resolve("royal-strategy"), level.dimension().identifier().toString());
     }
     public RoyalStrategyStore(Path directory, String dimension) {
-        if (ResourceLocation.tryParse(dimension) == null)
+        if (Identifier.tryParse(dimension) == null)
             throw new IllegalArgumentException("Invalid strategy dimension");
         this.directory = directory;
         this.dimension = dimension;
@@ -85,13 +85,13 @@ public final class RoyalStrategyStore {
         if (!Files.exists(path))
             return new Portfolio(null, null);
         var tag = HistoryFiles.read(path);
-        if (!tag.contains("format", Tag.TAG_INT))
+        if (!tag.contains("format"))
             throw new IllegalArgumentException("Missing economic strategy version");
-        if (tag.getInt("format") == 1) {
+        if (tag.getIntOr("format", 0) == 1) {
             var legacy = decode(tag, kingdom);
             return legacy.logistics() ? new Portfolio(null, legacy) : new Portfolio(legacy, null);
         }
-        if (tag.getInt("format") != 2)
+        if (tag.getIntOr("format", 0) != 2)
             throw new IllegalArgumentException("Unsupported strategic data; original preserved");
         var fields = new HashSet<>(Set.of("format", "kingdom", "dimension"));
         if (tag.contains("development"))
@@ -99,14 +99,14 @@ public final class RoyalStrategyStore {
         if (tag.contains("logistics"))
             fields.add("logistics");
         HistoryFiles.keys(tag, fields);
-        if (!uuid(tag, "kingdom").equals(kingdom) || !tag.contains("dimension", Tag.TAG_STRING)
-                || !dimension.equals(tag.getString("dimension")))
+        if (!uuid(tag, "kingdom").equals(kingdom) || !tag.contains("dimension")
+                || !dimension.equals(tag.getStringOr("dimension", "")))
             throw new IllegalArgumentException("Economic strategy identity changed");
         for (var key : List.of("development", "logistics"))
-            if (tag.contains(key) && !tag.contains(key, Tag.TAG_COMPOUND))
+            if (tag.contains(key) && !tag.contains(key))
                 throw new IllegalArgumentException("Invalid economic lane");
-        return new Portfolio(tag.contains("development") ? decode(tag.getCompound("development"), kingdom) : null,
-                tag.contains("logistics") ? decode(tag.getCompound("logistics"), kingdom) : null);
+        return new Portfolio(tag.contains("development") ? decode(tag.getCompoundOrEmpty("development"), kingdom) : null,
+                tag.contains("logistics") ? decode(tag.getCompoundOrEmpty("logistics"), kingdom) : null);
     }
 
     /** Compatibility entry point: moves a legacy primary plan without dropping another lane. */
@@ -132,7 +132,7 @@ public final class RoyalStrategyStore {
     private void writePortfolio(UUID kingdom, Portfolio portfolio) {
         var tag = new CompoundTag();
         tag.putInt("format", 2);
-        tag.putUUID("kingdom", kingdom);
+        com.millenairekingdoms.compat.KNbt.putUUID(tag, "kingdom", kingdom);
         tag.putString("dimension", dimension);
         for (var lane : Lane.values()) {
             var plan = portfolio.get(lane);
@@ -150,24 +150,24 @@ public final class RoyalStrategyStore {
                 "nextDay", "metadataObservedTick", "fingerprint", "status", "reason");
         var allowed = new HashSet<>(required);
         allowed.addAll(Set.of("id", "target", "selection"));
-        if (!allowed.containsAll(t.getAllKeys()) || !t.getAllKeys().containsAll(required)
-                || !t.contains("format", Tag.TAG_INT) || t.getInt("format") != 1)
+        if (!allowed.containsAll(t.keySet()) || !t.keySet().containsAll(required)
+                || !t.contains("format") || t.getIntOr("format", 0) != 1)
             throw new IllegalArgumentException("Unsupported strategic data; original preserved");
         for (var field : List.of("capitalType", "dimension", "fingerprint", "status", "reason"))
-            if (!t.contains(field, Tag.TAG_STRING))
+            if (!t.contains(field))
                 throw new IllegalArgumentException("Invalid strategic text field");
         for (var field : List.of("evaluatedDay", "nextDay", "metadataObservedTick"))
-            if (!t.contains(field, Tag.TAG_LONG))
+            if (!t.contains(field))
                 throw new IllegalArgumentException("Invalid strategic clock field");
-        if (!t.contains("logistics", Tag.TAG_BYTE)
-                || t.contains("selection") && !t.contains("selection", Tag.TAG_STRING))
+        if (!t.contains("logistics")
+                || t.contains("selection") && !t.contains("selection"))
             throw new IllegalArgumentException("Invalid strategic selection");
-        var plan = new Plan(uuid(t, "kingdom"), uuid(t, "capital"), ResourceLocation.parse(t.getString("capitalType")),
-                t.getString("dimension"), optional(t, "id"), optional(t, "target"),
-                t.contains("selection") ? ResourceLocation.parse(t.getString("selection")) : null,
-                t.getBoolean("logistics"), t.getLong("evaluatedDay"), t.getLong("nextDay"),
-                t.getLong("metadataObservedTick"), t.getString("fingerprint"), Status.valueOf(t.getString("status")),
-                t.getString("reason"));
+        var plan = new Plan(uuid(t, "kingdom"), uuid(t, "capital"), Identifier.parse(t.getStringOr("capitalType", "")),
+                t.getStringOr("dimension", ""), optional(t, "id"), optional(t, "target"),
+                t.contains("selection") ? Identifier.parse(t.getStringOr("selection", "")) : null,
+                t.getBooleanOr("logistics", false), t.getLongOr("evaluatedDay", 0L), t.getLongOr("nextDay", 0L),
+                t.getLongOr("metadataObservedTick", 0L), t.getStringOr("fingerprint", ""), Status.valueOf(t.getStringOr("status", "")),
+                t.getStringOr("reason", ""));
         if (!plan.kingdom().equals(kingdom) || !plan.dimension().equals(dimension))
             throw new IllegalArgumentException("Strategic identity/dimension mismatch");
         return plan;
@@ -176,14 +176,14 @@ public final class RoyalStrategyStore {
     private CompoundTag encode(Plan next) {
         var t = new CompoundTag();
         t.putInt("format", 1);
-        t.putUUID("kingdom", next.kingdom());
-        t.putUUID("capital", next.capital());
+        com.millenairekingdoms.compat.KNbt.putUUID(t, "kingdom", next.kingdom());
+        com.millenairekingdoms.compat.KNbt.putUUID(t, "capital", next.capital());
         t.putString("capitalType", next.capitalType().toString());
         t.putString("dimension", dimension);
         if (next.id() != null)
-            t.putUUID("id", next.id());
+            com.millenairekingdoms.compat.KNbt.putUUID(t, "id", next.id());
         if (next.target() != null)
-            t.putUUID("target", next.target());
+            com.millenairekingdoms.compat.KNbt.putUUID(t, "target", next.target());
         if (next.selection() != null)
             t.putString("selection", next.selection().toString());
         t.putBoolean("logistics", next.logistics());
@@ -199,9 +199,9 @@ public final class RoyalStrategyStore {
         return text.substring(0, Math.min(512, text.length()));
     }
     private static UUID uuid(CompoundTag tag, String key) {
-        if (!tag.hasUUID(key))
+        if (!com.millenairekingdoms.compat.KNbt.hasUUID(tag, key))
             throw new IllegalArgumentException("Invalid strategic UUID " + key);
-        return tag.getUUID(key);
+        return com.millenairekingdoms.compat.KNbt.getUUID(tag, key);
     }
     private static UUID optional(CompoundTag tag, String key) {
         return tag.contains(key) ? uuid(tag, key) : null;

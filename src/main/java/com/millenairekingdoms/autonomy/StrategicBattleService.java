@@ -136,7 +136,7 @@ public final class StrategicBattleService {
             acknowledgePolitical(level, data);
             var settings = StrategicCombatConfig.settings();
             var roll = OpposedDice.roll(a.attack(), d.defense(), level.getRandom(), settings);
-            long tick = Math.max(1, level.getGameTime()), day = Math.max(0, level.getDayTime()) / 24000;
+            long tick = Math.max(1, level.getGameTime()), day = Math.max(0, level.getOverworldClockTime()) / 24000;
             var victor = roll.attackerWon() ? a.owner() : d.owner();
             var loser = roll.attackerWon() ? d.owner() : a.owner();
             var facts = new HashMap<>(Map.of("mode", "STRATEGIC", "attackingStrength", Long.toString(a.attack()),
@@ -150,7 +150,7 @@ public final class StrategicBattleService {
             } else
                 realms = List.of(HistoryHooks.realm(level, victor), HistoryHooks.realm(level, loser));
             var narrative = HistoryEvent.create(HistoryEvent.Kind.STRATEGIC_BATTLE, day, tick,
-                    level.dimension().location().toString(), order.id().toString(), realms,
+                    level.dimension().identifier().toString(), order.id().toString(), realms,
                     List.of(HistoryHooks.place(level, order.source()), HistoryHooks.place(level, order.target())), null,
                     "", "UNATTENDED_OPPOSED_DICE", roll.attackerWon() ? "ATTACKER_VICTORY" : "DEFENDED", facts);
             var operation = new Operation(order, data.revision(order.target()), a, d, settings, roll, day, tick,
@@ -296,13 +296,12 @@ public final class StrategicBattleService {
     /** Ordinary SavedData worker plus actual-file readback: queued or in-memory state cannot acknowledge a victory. */
     public static void acknowledgePolitical(ServerLevel level, KingdomSavedData data) {
         var file = DimensionType.getStorageFolder(level.dimension(), level.getServer().getWorldPath(LevelResource.ROOT))
-                           .resolve("data/" + KingdomSavedData.NAME + ".dat");
+                           .resolve("data/minecraft/" + KingdomSavedData.NAME + ".dat");
         if (Files.exists(file))
             KingdomSavedData.load(readPolitical(file), level.registryAccess());
         var expected = data.save(new CompoundTag(), level.registryAccess());
         data.setDirty();
-        level.getDataStorage().save();
-        IOUtilities.waitUntilIOWorkerComplete();
+        level.getDataStorage().saveAndJoin();
         var actual = readPolitical(file);
         KingdomSavedData.load(actual, level.registryAccess());
         if (!expected.equals(actual))
@@ -312,14 +311,13 @@ public final class StrategicBattleService {
     private static CompoundTag readPolitical(Path file) {
         try {
             var root = NbtIo.readCompressed(file, NbtAccounter.create(64L * 1024 * 1024));
-            if (!root.contains("data", Tag.TAG_COMPOUND)
+            if (!root.contains("data")
                     || root.contains("DataVersion")
-                            && (!root.contains("DataVersion", Tag.TAG_INT)
-                                    || root.getInt("DataVersion") > net.minecraft.SharedConstants.getCurrentVersion()
-                                                    .getDataVersion()
-                                                    .getVersion()))
+                            && (!root.contains("DataVersion")
+                                    || root.getIntOr("DataVersion", 0) > net.minecraft.SharedConstants.getCurrentVersion()
+                                                    .dataVersion().version()))
                 throw new IllegalArgumentException("Invalid/future political container; original preserved");
-            return root.getCompound("data");
+            return root.getCompoundOrEmpty("data");
         } catch (java.io.IOException e) {
             throw new IllegalStateException("Cannot acknowledge political military persistence", e);
         }

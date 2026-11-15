@@ -111,8 +111,8 @@ public final class RoyalConsolidationRuntime {
                                   .stream()
                                   .filter(e
                                           -> e.intent()
-                                                  .getString("dimension")
-                                                  .equals(level.dimension().location().toString()))
+                                                  .getStringOr("dimension", "")
+                                                  .equals(level.dimension().identifier().toString()))
                                   .sorted(Comparator.comparing(RoyalPaymentJournal.Entry::id))
                                   .toList();
             if (entries.isEmpty())

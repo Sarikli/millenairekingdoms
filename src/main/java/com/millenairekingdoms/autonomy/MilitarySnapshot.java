@@ -3,7 +3,7 @@ package com.millenairekingdoms.autonomy;
 import com.millenairekingdoms.kingdom.KingdomSavedData;
 import java.util.*;
 import net.minecraft.nbt.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import org.millenaire.culture.ModCultures;
 import org.millenaire.village.Village;
@@ -11,7 +11,7 @@ import org.millenaire.village.Village;
 /** Conservative capability estimate from canonical native records/equipment. No claim that physical entities fought. */
 public record MilitarySnapshot(UUID village, UUID owner, String villageType, long observedTick, String provenance,
         List<Unit> raiders, List<Unit> defenders, int militaryBuildings) {
-    public record Unit(UUID id, ResourceLocation type, int nativeStrength) {
+    public record Unit(UUID id, Identifier type, int nativeStrength) {
         public Unit {
             Objects.requireNonNull(id);
             Objects.requireNonNull(type);
@@ -21,7 +21,7 @@ public record MilitarySnapshot(UUID village, UUID owner, String villageType, lon
     }
     public MilitarySnapshot {
         Objects.requireNonNull(village);
-        if (ResourceLocation.tryParse(villageType) == null || observedTick < 0
+        if (Identifier.tryParse(villageType) == null || observedTick < 0
                 || !Set.of("NATIVE_REGISTERED_RECORDS", "NATIVE_LOADED_RECORDS").contains(provenance)
                 || militaryBuildings < 0)
             throw new IllegalArgumentException("Invalid military provenance");
@@ -82,9 +82,9 @@ public record MilitarySnapshot(UUID village, UUID owner, String villageType, lon
     }
     public CompoundTag save() {
         var t = new CompoundTag();
-        t.putUUID("village", village);
+        com.millenairekingdoms.compat.KNbt.putUUID(t, "village", village);
         if (owner != null)
-            t.putUUID("owner", owner);
+            com.millenairekingdoms.compat.KNbt.putUUID(t, "owner", owner);
         t.putString("type", villageType);
         t.putLong("tick", observedTick);
         t.putString("provenance", provenance);
@@ -99,19 +99,19 @@ public record MilitarySnapshot(UUID village, UUID owner, String villageType, lon
         if (t.contains("owner"))
             keys.add("owner");
         com.millenairekingdoms.history.HistoryFiles.keys(t, keys);
-        if (!t.hasUUID("village") || t.contains("owner") && !t.hasUUID("owner") || !t.contains("type", Tag.TAG_STRING)
-                || !t.contains("tick", Tag.TAG_LONG) || !t.contains("provenance", Tag.TAG_STRING)
-                || !t.contains("militaryBuildings", Tag.TAG_INT))
+        if (!com.millenairekingdoms.compat.KNbt.hasUUID(t, "village") || t.contains("owner") && !com.millenairekingdoms.compat.KNbt.hasUUID(t, "owner") || !t.contains("type")
+                || !t.contains("tick") || !t.contains("provenance")
+                || !t.contains("militaryBuildings"))
             throw new IllegalArgumentException("Invalid military snapshot types");
-        return new MilitarySnapshot(t.getUUID("village"), t.contains("owner") ? t.getUUID("owner") : null,
-                t.getString("type"), t.getLong("tick"), t.getString("provenance"), units(t, "raiders"),
-                units(t, "defenders"), t.getInt("militaryBuildings"));
+        return new MilitarySnapshot(com.millenairekingdoms.compat.KNbt.getUUID(t, "village"), t.contains("owner") ? com.millenairekingdoms.compat.KNbt.getUUID(t, "owner") : null,
+                t.getStringOr("type", ""), t.getLongOr("tick", 0L), t.getStringOr("provenance", ""), units(t, "raiders"),
+                units(t, "defenders"), t.getIntOr("militaryBuildings", 0));
     }
     private static ListTag units(List<Unit> units) {
         var out = new ListTag();
         for (var u : units) {
             var t = new CompoundTag();
-            t.putUUID("id", u.id());
+            com.millenairekingdoms.compat.KNbt.putUUID(t, "id", u.id());
             t.putString("type", u.type().toString());
             t.putInt("strength", u.nativeStrength());
             out.add(t);
@@ -119,20 +119,20 @@ public record MilitarySnapshot(UUID village, UUID owner, String villageType, lon
         return out;
     }
     private static List<Unit> units(CompoundTag t, String key) {
-        if (!t.contains(key, Tag.TAG_LIST))
+        if (!t.contains(key))
             throw new IllegalArgumentException("Missing military unit list");
         var list = (ListTag) t.get(key);
-        if (list.size() > 1024 || !list.isEmpty() && list.getElementType() != Tag.TAG_COMPOUND)
+        if (list.size() > 1024 || !list.isEmpty() && com.millenairekingdoms.compat.KNbt.elementType(list) != Tag.TAG_COMPOUND)
             throw new IllegalArgumentException("Invalid military unit list");
         var out = new ArrayList<Unit>();
         var ids = new HashSet<UUID>();
         for (var raw : list) {
             var u = (CompoundTag) raw;
             com.millenairekingdoms.history.HistoryFiles.keys(u, Set.of("id", "type", "strength"));
-            if (!u.hasUUID("id") || !u.contains("type", Tag.TAG_STRING) || !u.contains("strength", Tag.TAG_INT)
-                    || !ids.add(u.getUUID("id")))
+            if (!com.millenairekingdoms.compat.KNbt.hasUUID(u, "id") || !u.contains("type") || !u.contains("strength")
+                    || !ids.add(com.millenairekingdoms.compat.KNbt.getUUID(u, "id")))
                 throw new IllegalArgumentException("Invalid/duplicate military unit");
-            out.add(new Unit(u.getUUID("id"), ResourceLocation.parse(u.getString("type")), u.getInt("strength")));
+            out.add(new Unit(com.millenairekingdoms.compat.KNbt.getUUID(u, "id"), Identifier.parse(u.getStringOr("type", "")), u.getIntOr("strength", 0)));
         }
         return out;
     }

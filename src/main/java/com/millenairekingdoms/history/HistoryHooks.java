@@ -54,16 +54,16 @@ public final class HistoryHooks {
                     if (files.filter(p -> p.toString().endsWith(".dat")).count() >= 128)
                         throw new IllegalStateException("History pending limit; inspect unconfirmed transitions");
                 }
-            if (!after.hasUUID("historyCommit"))
+            if (!com.millenairekingdoms.compat.KNbt.hasUUID(after, "historyCommit"))
                 throw new IllegalArgumentException("Historical transition requires its own political commit identity");
             var tag = new CompoundTag();
             tag.putInt("format", 2);
-            tag.putUUID("commit", after.getUUID("historyCommit"));
+            com.millenairekingdoms.compat.KNbt.putUUID(tag, "commit", com.millenairekingdoms.compat.KNbt.getUUID(after, "historyCommit"));
             tag.putBoolean("confirmed", false);
             var list = new ListTag();
             events.forEach(e -> list.add(e.save()));
             tag.put("events", list);
-            var file = pending.resolve(after.getUUID("historyCommit") + ".dat");
+            var file = pending.resolve(com.millenairekingdoms.compat.KNbt.getUUID(after, "historyCommit") + ".dat");
             HistoryFiles.write(file, tag);
             return file;
         } catch (RuntimeException | IOException failure) {
@@ -83,8 +83,7 @@ public final class HistoryHooks {
             if (Files.exists(file))
                 KingdomSavedData.load(readPolitical(file), level.registryAccess());
             data.setDirty();
-            level.getDataStorage().save();
-            IOUtilities.waitUntilIOWorkerComplete();
+            level.getDataStorage().saveAndJoin();
             confirm(level, pending, readPolitical(file));
         } catch (RuntimeException failure) {
             LOG.error(
@@ -101,7 +100,7 @@ public final class HistoryHooks {
             case "domain-pending" -> HistoryDomain.confirmLegacy(level, path);
             case "pending" -> {
                 var candidate = HistoryFiles.read(path);
-                if (candidate.getInt("format") == 2 && candidate.getBoolean("confirmed")) {
+                if (candidate.getIntOr("format", 0) == 2 && candidate.getBooleanOr("confirmed", false)) {
                     confirm(level, path, new CompoundTag());
                     return;
                 }
@@ -116,23 +115,23 @@ public final class HistoryHooks {
     }
     static void confirm(ServerLevel level, Path pending, CompoundTag disk) {
         var tag = HistoryFiles.read(pending);
-        if (tag.contains("format", Tag.TAG_INT) && tag.getInt("format") == 1)
+        if (tag.contains("format") && tag.getIntOr("format", 0) == 1)
             throw new IllegalStateException("Legacy unconfirmed history candidate retained for review");
         HistoryFiles.keys(tag, Set.of("format", "commit", "confirmed", "events"));
-        if (!tag.contains("format", Tag.TAG_INT) || tag.getInt("format") != 2 || !tag.hasUUID("commit")
-                || !tag.contains("confirmed", Tag.TAG_BYTE) || tag.getByte("confirmed") < 0
-                || tag.getByte("confirmed") > 1 || !tag.contains("events", Tag.TAG_LIST))
+        if (!tag.contains("format") || tag.getIntOr("format", 0) != 2 || !com.millenairekingdoms.compat.KNbt.hasUUID(tag, "commit")
+                || !tag.contains("confirmed") || tag.getByteOr("confirmed", (byte) 0) < 0
+                || tag.getByteOr("confirmed", (byte) 0) > 1 || !tag.contains("events"))
             throw new IllegalArgumentException("Unsupported pending history; bytes preserved");
-        if (!pending.getFileName().toString().equals(tag.getUUID("commit") + ".dat"))
+        if (!pending.getFileName().toString().equals(com.millenairekingdoms.compat.KNbt.getUUID(tag, "commit") + ".dat"))
             throw new IllegalArgumentException("Political history filename/commit mismatch");
         var list = (ListTag) tag.get("events");
-        if (list.isEmpty() || list.size() > 16 || list.getElementType() != Tag.TAG_COMPOUND)
+        if (list.isEmpty() || list.size() > 16 || com.millenairekingdoms.compat.KNbt.elementType(list) != Tag.TAG_COMPOUND)
             throw new IllegalArgumentException("Invalid pending history batch");
         var events = new ArrayList<HistoryEvent>();
         for (var raw : list)
             events.add(HistoryEvent.load((CompoundTag) raw));
-        if (!tag.getBoolean("confirmed")) {
-            if (!disk.hasUUID("historyCommit") || !disk.getUUID("historyCommit").equals(tag.getUUID("commit")))
+        if (!tag.getBooleanOr("confirmed", false)) {
+            if (!com.millenairekingdoms.compat.KNbt.hasUUID(disk, "historyCommit") || !com.millenairekingdoms.compat.KNbt.getUUID(disk, "historyCommit").equals(com.millenairekingdoms.compat.KNbt.getUUID(tag, "commit")))
                 return;
             // Keep durable proof before append so later political transitions do not invalidate a verified backlog.
             tag.putBoolean("confirmed", true);
@@ -148,19 +147,18 @@ public final class HistoryHooks {
     }
     private static Path politicalFile(ServerLevel level) {
         return DimensionType.getStorageFolder(level.dimension(), level.getServer().getWorldPath(LevelResource.ROOT))
-                .resolve("data/" + KingdomSavedData.NAME + ".dat");
+                .resolve("data/minecraft/" + KingdomSavedData.NAME + ".dat");
     }
     private static CompoundTag readPolitical(Path file) {
         try {
             var root = NbtIo.readCompressed(file, NbtAccounter.create(64L * 1024 * 1024));
-            if (!root.contains("data", Tag.TAG_COMPOUND)
+            if (!root.contains("data")
                     || root.contains("DataVersion")
-                            && (!root.contains("DataVersion", Tag.TAG_INT)
-                                    || root.getInt("DataVersion") > net.minecraft.SharedConstants.getCurrentVersion()
-                                                    .getDataVersion()
-                                                    .getVersion()))
+                            && (!root.contains("DataVersion")
+                                    || root.getIntOr("DataVersion", 0) > net.minecraft.SharedConstants.getCurrentVersion()
+                                                    .dataVersion().version()))
                 throw new IllegalStateException("Invalid/future political history container; preserve original bytes");
-            return root.getCompound("data");
+            return root.getCompoundOrEmpty("data");
         } catch (IOException e) {
             throw new IllegalStateException("Political commit cannot be confirmed", e);
         }
@@ -185,8 +183,8 @@ public final class HistoryHooks {
     public static HistoryEvent event(ServerLevel level, HistoryEvent.Kind kind, String source,
             List<HistoryEvent.Realm> realms, List<HistoryEvent.Place> places, UUID actor, String actorName,
             String reason, String outcome, Map<String, String> facts) {
-        return HistoryEvent.create(kind, Math.max(0, level.getDayTime() / 24000), Math.max(0, level.getGameTime()),
-                level.dimension().location().toString(), source, realms, places, actor, bounded(actorName, 64),
+        return HistoryEvent.create(kind, Math.max(0, level.getOverworldClockTime() / 24000), Math.max(0, level.getGameTime()),
+                level.dimension().identifier().toString(), source, realms, places, actor, bounded(actorName, 64),
                 bounded(reason, 256), outcome, facts);
     }
     /** Durable domain stores/receipts must have acknowledged the factual outcome before calling this. */
@@ -230,65 +228,65 @@ public final class HistoryHooks {
             var k = newKingdoms.get(id);
             if (k == null)
                 k = oldKingdoms.get(id);
-            return realm(level, id, k.getString("name"), k.getUUID("capital"));
+            return realm(level, id, k.getStringOr("name", ""), com.millenairekingdoms.compat.KNbt.getUUID(k, "capital"));
         };
         for (var k : newKingdoms.values())
-            if (!oldKingdoms.containsKey(k.getUUID("id")))
-                out.add(event(level, HistoryEvent.Kind.FOUNDING, k.getUUID("id").toString(),
-                        List.of(describe.apply(k.getUUID("id"))), List.of(place(level, k.getUUID("capital"))), null, "",
+            if (!oldKingdoms.containsKey(com.millenairekingdoms.compat.KNbt.getUUID(k, "id")))
+                out.add(event(level, HistoryEvent.Kind.FOUNDING, com.millenairekingdoms.compat.KNbt.getUUID(k, "id").toString(),
+                        List.of(describe.apply(com.millenairekingdoms.compat.KNbt.getUUID(k, "id"))), List.of(place(level, com.millenairekingdoms.compat.KNbt.getUUID(k, "capital"))), null, "",
                         "RECORDED_FOUNDING", "FOUNDED", Map.of()));
         for (var r : index(after, "receipts", "id").values())
-            if (r.getBoolean("transferred") && !receipts.containsKey(r.getUUID("id"))) {
-                var village = r.getUUID("target");
+            if (r.getBooleanOr("transferred", false) && !receipts.containsKey(com.millenairekingdoms.compat.KNbt.getUUID(r, "id"))) {
+                var village = com.millenairekingdoms.compat.KNbt.getUUID(r, "target");
                 conquered.add(village);
                 var owner = owners.get(village);
                 if (owner == null)
                     continue;
-                UUID winner = owner.getUUID("kingdom");
+                UUID winner = com.millenairekingdoms.compat.KNbt.getUUID(owner, "kingdom");
                 var previous = oldOwners.get(village);
                 var rs = new ArrayList<HistoryEvent.Realm>();
                 rs.add(describe.apply(winner));
                 boolean capital = false;
                 if (previous != null) {
-                    var loser = previous.getUUID("kingdom");
+                    var loser = com.millenairekingdoms.compat.KNbt.getUUID(previous, "kingdom");
                     if (!loser.equals(winner)) {
                         rs.add(describe.apply(loser));
-                        capital = oldKingdoms.get(loser).getUUID("capital").equals(village);
+                        capital = com.millenairekingdoms.compat.KNbt.getUUID(oldKingdoms.get(loser), "capital").equals(village);
                     }
                 }
                 out.add(event(level, capital ? HistoryEvent.Kind.CAPITAL_CONQUEST : HistoryEvent.Kind.VILLAGE_CONQUEST,
-                        r.getUUID("id").toString(), rs, List.of(place(level, village)), null, "", "RECORDED_CONQUEST",
-                        r.getString("outcome"), Map.of()));
+                        com.millenairekingdoms.compat.KNbt.getUUID(r, "id").toString(), rs, List.of(place(level, village)), null, "", "RECORDED_CONQUEST",
+                        r.getStringOr("outcome", ""), Map.of()));
             }
         for (var entry : owners.entrySet())
             if (!oldOwners.containsKey(entry.getKey()) && !conquered.contains(entry.getKey())) {
-                var id = entry.getValue().getUUID("kingdom");
+                var id = com.millenairekingdoms.compat.KNbt.getUUID(entry.getValue(), "kingdom");
                 var k = newKingdoms.get(id);
-                if (!oldKingdoms.containsKey(id) && k.getUUID("capital").equals(entry.getKey()))
+                if (!oldKingdoms.containsKey(id) && com.millenairekingdoms.compat.KNbt.getUUID(k, "capital").equals(entry.getKey()))
                     continue;
                 out.add(event(level, HistoryEvent.Kind.INCORPORATION,
-                        entry.getKey() + "/" + revisions.get(entry.getKey()).getLong("revision"),
+                        entry.getKey() + "/" + revisions.get(entry.getKey()).getLongOr("revision", 0L),
                         List.of(describe.apply(id)), List.of(place(level, entry.getKey())), null, "",
                         "RECORDED_ATTACHMENT", "INCORPORATED", Map.of()));
             }
         for (var w : wars.values()) {
-            var id = w.getUUID("id");
+            var id = com.millenairekingdoms.compat.KNbt.getUUID(w, "id");
             var old = oldWars.get(id);
-            HistoryEvent.Kind kind = old == null && w.getString("status").equals("ACTIVE") ? HistoryEvent.Kind.WAR
-                    : old != null && old.getString("status").equals("ACTIVE") && w.getString("status").equals("PEACE")
+            HistoryEvent.Kind kind = old == null && w.getStringOr("status", "").equals("ACTIVE") ? HistoryEvent.Kind.WAR
+                    : old != null && old.getStringOr("status", "").equals("ACTIVE") && w.getStringOr("status", "").equals("PEACE")
                     ? HistoryEvent.Kind.PEACE
                     : null;
             if (kind != null)
                 out.add(event(level, kind, id.toString(),
-                        List.of(describe.apply(w.getUUID("attackerKingdom")),
-                                describe.apply(w.getUUID("defenderKingdom"))),
-                        List.of(), null, "", w.getString("endReason"), w.getString("status"), Map.of()));
+                        List.of(describe.apply(com.millenairekingdoms.compat.KNbt.getUUID(w, "attackerKingdom")),
+                                describe.apply(com.millenairekingdoms.compat.KNbt.getUUID(w, "defenderKingdom"))),
+                        List.of(), null, "", w.getStringOr("endReason", ""), w.getStringOr("status", ""), Map.of()));
         }
         for (var k : newKingdoms.values())
-            if (k.hasUUID("fallenInWar") && oldKingdoms.containsKey(k.getUUID("id"))
-                    && !oldKingdoms.get(k.getUUID("id")).hasUUID("fallenInWar"))
-                out.add(event(level, HistoryEvent.Kind.COLLAPSE, k.getUUID("fallenInWar") + "/" + k.getUUID("id"),
-                        List.of(describe.apply(k.getUUID("id"))), List.of(place(level, k.getUUID("capital"))), null, "",
+            if (com.millenairekingdoms.compat.KNbt.hasUUID(k, "fallenInWar") && oldKingdoms.containsKey(com.millenairekingdoms.compat.KNbt.getUUID(k, "id"))
+                    && !com.millenairekingdoms.compat.KNbt.hasUUID(oldKingdoms.get(com.millenairekingdoms.compat.KNbt.getUUID(k, "id")), "fallenInWar"))
+                out.add(event(level, HistoryEvent.Kind.COLLAPSE, com.millenairekingdoms.compat.KNbt.getUUID(k, "fallenInWar") + "/" + com.millenairekingdoms.compat.KNbt.getUUID(k, "id"),
+                        List.of(describe.apply(com.millenairekingdoms.compat.KNbt.getUUID(k, "id"))), List.of(place(level, com.millenairekingdoms.compat.KNbt.getUUID(k, "capital"))), null, "",
                         "CAPITAL_CONQUERED", "FALLEN", Map.of()));
         var allRulers = new java.util.HashSet<>(oldRulers.keySet());
         allRulers.addAll(rulers.keySet());
@@ -296,25 +294,25 @@ public final class HistoryHooks {
             if (!java.util.Objects.equals(oldRulers.get(id), rulers.get(id))) {
                 var old = oldRulers.get(id);
                 var next = rulers.get(id);
-                String operation = after.hasUUID("historyCommit") ? after.getUUID("historyCommit").toString()
+                String operation = com.millenairekingdoms.compat.KNbt.hasUUID(after, "historyCommit") ? com.millenairekingdoms.compat.KNbt.getUUID(after, "historyCommit").toString()
                                                                   : UUID.randomUUID().toString();
                 if (old != null)
                     out.add(event(level, HistoryEvent.Kind.RULER_RELEASE, operation + "/" + id,
-                            List.of(describe.apply(id)), List.of(), old.getUUID("player"),
-                            old.getString("lastKnownName"), "RECORDED_AUTHORITY_CHANGE", "RELEASED", Map.of()));
+                            List.of(describe.apply(id)), List.of(), com.millenairekingdoms.compat.KNbt.getUUID(old, "player"),
+                            old.getStringOr("lastKnownName", ""), "RECORDED_AUTHORITY_CHANGE", "RELEASED", Map.of()));
                 if (next != null)
                     out.add(event(level, HistoryEvent.Kind.RULER_CLAIM, operation + "/" + id,
-                            List.of(describe.apply(id)), List.of(), next.getUUID("player"),
-                            next.getString("lastKnownName"), "RECORDED_AUTHORITY_CHANGE", "CLAIMED", Map.of()));
+                            List.of(describe.apply(id)), List.of(), com.millenairekingdoms.compat.KNbt.getUUID(next, "player"),
+                            next.getStringOr("lastKnownName", ""), "RECORDED_AUTHORITY_CHANGE", "CLAIMED", Map.of()));
             }
         return List.copyOf(out);
     }
     private static Map<UUID, CompoundTag> index(CompoundTag tag, String list, String key) {
         var out = new HashMap<UUID, CompoundTag>();
-        for (var raw : tag.getList(list, Tag.TAG_COMPOUND)) {
+        for (var raw : tag.getListOrEmpty(list)) {
             var e = (CompoundTag) raw;
-            if (e.hasUUID(key))
-                out.put(e.getUUID(key), e);
+            if (com.millenairekingdoms.compat.KNbt.hasUUID(e, key))
+                out.put(com.millenairekingdoms.compat.KNbt.getUUID(e, key), e);
         }
         return out;
     }

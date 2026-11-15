@@ -74,7 +74,7 @@ public final class KingdomActions {
         } catch (IllegalArgumentException unknown) {
             return null;
         }
-        long now = player.serverLevel().getGameTime();
+        long now = player.level().getGameTime();
         Long last = LAST.get(player.getUUID());
         if (last != null && now >= last && now - last < MIN_TICKS)
             return null;
@@ -92,7 +92,7 @@ public final class KingdomActions {
                               .withStyle(ChatFormatting.DARK_RED)
                     : KingdomException.of(refused).withStyle(ChatFormatting.DARK_RED);
         } catch (RuntimeException failure) {
-            LOGGER.error("[Kingdoms] Kingdom screen action {} by {} failed.", action, player.getGameProfile().getName(),
+            LOGGER.error("[Kingdoms] Kingdom screen action {} by {} failed.", action, player.getGameProfile().name(),
                     failure);
             message =
                     Component
@@ -106,7 +106,7 @@ public final class KingdomActions {
 
     private static Component run(ServerPlayer player, Action action, KingdomActionPayload r) {
         UUID first = r.first().orElse(null), second = r.second().orElse(null);
-        var data = KingdomSavedData.get(player.serverLevel());
+        var data = KingdomSavedData.get(player.level());
         return switch (action) {
             case REFRESH -> null;
             case VIEW -> {
@@ -170,16 +170,16 @@ public final class KingdomActions {
             }
             case CONSTRUCTION_ORDER -> {
                 var order = RoyalConstructionView.order(player, nonNull(first), nonNull(second),
-                        net.minecraft.resources.ResourceLocation.parse(r.text()));
+                        net.minecraft.resources.Identifier.parse(r.text()));
                 yield constructionStatus(order);
             }
             case CONSTRUCTION_RESUME ->
                 constructionStatus(
-                        new com.millenairekingdoms.construction.RoyalConstructionService(player.serverLevel())
+                        new com.millenairekingdoms.construction.RoyalConstructionService(player.level())
                                 .retryPlayer(player, nonNull(first)));
             case CONSTRUCTION_CANCEL ->
                 constructionStatus(
-                        new com.millenairekingdoms.construction.RoyalConstructionService(player.serverLevel())
+                        new com.millenairekingdoms.construction.RoyalConstructionService(player.level())
                                 .cancelPlayer(player, nonNull(first)));
             case SHIPMENT_SOURCE -> {
                 RoyalShipmentView.selectVillage(player, nonNull(first), true);
@@ -190,7 +190,7 @@ public final class KingdomActions {
                 yield null;
             }
             case SHIPMENT_PRODUCT -> {
-                RoyalShipmentView.selectProduct(player, net.minecraft.resources.ResourceLocation.parse(r.text()));
+                RoyalShipmentView.selectProduct(player, net.minecraft.resources.Identifier.parse(r.text()));
                 yield null;
             }
             case SHIPMENT_QUANTITY -> {
@@ -199,10 +199,10 @@ public final class KingdomActions {
             }
             case SHIPMENT_ORDER -> shipmentStatus(RoyalShipmentView.order(player, nonNull(first)));
             case SHIPMENT_RESUME ->
-                shipmentStatus(new com.millenairekingdoms.shipping.RoyalShipmentService(player.serverLevel())
+                shipmentStatus(new com.millenairekingdoms.shipping.RoyalShipmentService(player.level())
                                 .resumePlayer(player, nonNull(first)));
             case SHIPMENT_CANCEL ->
-                shipmentStatus(new com.millenairekingdoms.shipping.RoyalShipmentService(player.serverLevel())
+                shipmentStatus(new com.millenairekingdoms.shipping.RoyalShipmentService(player.level())
                                 .cancelPlayer(player, nonNull(first)));
         };
     }

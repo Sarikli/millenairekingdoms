@@ -29,7 +29,11 @@ public final class RoyalEconomicActivation {
     // Use the actual vanilla generation-dependency radius/status for a level31 ticking ticket.
     private static final int GENERATION_HALO = ChunkLevel.RADIUS_AROUND_FULL_CHUNK + 2, MAX_PREFLIGHT = 16384,
                              MAX_PENDING_SCANS = 16, MAX_VERIFIED = 32768;
-    private static final TicketType<UUID> TICKET = TicketType.create("kingdoms_economic_work", UUID::compareTo, 100);
+    /** portage 26.3 : un TicketType est un enregistrement (durée, drapeaux) inscrit au registre ; plus de clé par propriétaire */
+    public static final net.neoforged.neoforge.registries.DeferredRegister<TicketType> TICKETS =
+            net.neoforged.neoforge.registries.DeferredRegister.create(net.minecraft.core.registries.Registries.TICKET_TYPE, "millenairekingdoms");
+    private static final net.neoforged.neoforge.registries.DeferredHolder<TicketType, TicketType> TICKET_HOLDER =
+            TICKETS.register("economic_work", () -> new TicketType(100L, TicketType.FLAG_LOADING | TicketType.FLAG_SIMULATION));
     private static final Map<MinecraftServer, Lease> ACTIVE = new WeakHashMap<>();
     private static final Map<ServerLevel, State> STATES = new WeakHashMap<>();
     // Released leases must not free IO capacity until their actual immutable scans finish.
@@ -203,7 +207,7 @@ public final class RoyalEconomicActivation {
                 for (int z = -GENERATION_HALO; z <= GENERATION_HALO; z++) {
                     var status = ChunkLevel.generationStatus(31 + Math.max(Math.abs(x), Math.abs(z)));
                     if (status != null)
-                        required.merge(new ChunkPos(pos.x + x, pos.z + z), status, ChunkStatus::max);
+                        required.merge(new ChunkPos(pos.x() + x, pos.z() + z), status, ChunkStatus::max);
                 }
         check.addAll(required.keySet());
         if (check.size() > MAX_PREFLIGHT) {
@@ -247,11 +251,11 @@ public final class RoyalEconomicActivation {
                 for (int n = 0; n < budget && lease.scanCursor < lease.preflight.size(); n++) {
                     var pos = lease.preflight.get(lease.scanCursor++);
                     net.minecraft.world.level.chunk.ChunkAccess loaded =
-                            level.getChunkSource().getChunkNow(pos.x, pos.z);
+                            level.getChunkSource().getChunkNow(pos.x(), pos.z());
                     // Native generation may retain a valid unsaved protochunk after nearby FULL chunks unload.
                     // This accessor only inspects an existing holder (no future wait, ticket or generation request).
                     if (loaded == null
-                            && level.getChunkSource().getChunkForLighting(pos.x, pos.z)
+                            && level.getChunkSource().getChunkForLighting(pos.x(), pos.z())
                                             instanceof net.minecraft.world.level.chunk.ChunkAccess existing)
                         loaded = existing;
                     var cached = state.verified.get(pos);
@@ -297,13 +301,13 @@ public final class RoyalEconomicActivation {
                 }
                 for (int n = 0; n < budget && lease.ticketCursor < lease.chunks.size(); n++) {
                     var pos = lease.chunks.get(lease.ticketCursor++);
-                    level.getChunkSource().addRegionTicket(TICKET, pos, 2, lease.owner, true);
+                    level.getChunkSource().addTicketWithRadius(TICKET_HOLDER.get(), pos, 2);
                     lease.owned.add(pos);
                 }
                 if (lease.ticketCursor == lease.chunks.size()
                         && lease.chunks.stream().allMatch(p
-                                -> level.getChunkSource().getChunkNow(p.x, p.z) != null
-                                        && level.areEntitiesLoaded(p.toLong()))
+                                -> level.getChunkSource().getChunkNow(p.x(), p.z()) != null
+                                        && level.areEntitiesLoaded(p.pack()))
                         && lease.villages.stream().allMatch(
                                 id -> level.isPositionEntityTicking(PoliticsService.village(level, id).getCenter()))) {
                     lease.phase = Phase.WORKING;
@@ -323,7 +327,7 @@ public final class RoyalEconomicActivation {
                 level.resetEmptyTime();
             if (now % 20 == 0)
                 for (var pos : lease.owned)
-                    level.getChunkSource().addRegionTicket(TICKET, pos, 2, lease.owner, true);
+                    level.getChunkSource().addTicketWithRadius(TICKET_HOLDER.get(), pos, 2);
             publish(lease, System.nanoTime() - start,
                     "Native activation/builders and existing physical domain services retain execution authority");
         } catch (RuntimeException failure) {
@@ -341,13 +345,13 @@ public final class RoyalEconomicActivation {
         return level.getChunkSource().chunkScanner().scanChunk(pos, collector).thenApply(ignored -> {
             if (!(collector.getResult() instanceof CompoundTag tag))
                 return null;
-            if (collector.getMissingFieldCount() != 0 || tag.getInt("xPos") != pos.x || tag.getInt("zPos") != pos.z
-                    || tag.getInt("DataVersion") <= 0
-                    || tag.getInt("DataVersion")
-                            > net.minecraft.SharedConstants.getCurrentVersion().getDataVersion().getVersion())
+            if (collector.getMissingFieldCount() != 0 || tag.getIntOr("xPos", 0) != pos.x() || tag.getIntOr("zPos", 0) != pos.z()
+                    || tag.getIntOr("DataVersion", 0) <= 0
+                    || tag.getIntOr("DataVersion", 0)
+                            > net.minecraft.SharedConstants.getCurrentVersion().dataVersion().version())
                 throw new IllegalStateException("Chunk status scan invalid at " + pos
                         + " missing=" + collector.getMissingFieldCount() + " selected=" + tag);
-            return ChunkStatus.byName(tag.getString("Status"));
+            return ChunkStatus.byName(tag.getStringOr("Status", ""));
         });
     }
     private static boolean validAuthority(Lease lease) {
@@ -364,7 +368,7 @@ public final class RoyalEconomicActivation {
         var occupied = new HashSet<>(lease.chunks);
         java.util.function.Predicate<UUID> inRegion = id -> {
             var v = id == null ? null : PoliticsService.village(lease.level, id);
-            return v != null && occupied.contains(new ChunkPos(v.getCenter()));
+            return v != null && occupied.contains(ChunkPos.containing(v.getCenter()));
         };
         if (data.orders().stream().anyMatch(o -> inRegion.test(o.source()) || inRegion.test(o.target())))
             return true;
@@ -400,7 +404,7 @@ public final class RoyalEconomicActivation {
                     village.syncRecords(lease.level);
             }
         for (var pos : lease.owned)
-            lease.level.getChunkSource().removeRegionTicket(TICKET, pos, 2, lease.owner, true);
+            lease.level.getChunkSource().removeTicketWithRadius(TICKET_HOLDER.get(), pos, 2);
         ACTIVE.remove(lease.level.getServer(), lease);
         defer(lease.level, lease.kingdom, reason);
     }

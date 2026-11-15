@@ -51,7 +51,7 @@ public final class ConquestService {
         Village target = manager.getVillage(new VillageId(targetId));
         require(attacker != null && target != null, "Both UUIDs must identify villages in the current dimension.");
         require(!attackerId.equals(targetId), "A village cannot raid itself.");
-        require(level.getGameTime() > 0 && level.getDayTime() > 0,
+        require(level.getGameTime() > 0 && level.getOverworldClockTime() > 0,
                 "World time must be positive for Millénaire raid timestamps.");
         require(!Military.busy(attacker) && !Military.busy(target),
                 "A village is already involved in a raid or raid preparation.");

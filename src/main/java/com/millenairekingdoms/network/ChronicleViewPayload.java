@@ -6,15 +6,15 @@ import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /** Separately bounded response; unrelated Kingdoms management screens retain their existing snapshot. */
 public record ChronicleViewPayload(CompoundTag view) implements CustomPacketPayload {
     public static final int MAX_BYTES = 524288;
     public static final Type<ChronicleViewPayload> TYPE =
-            new Type<>(ResourceLocation.fromNamespaceAndPath(MillenaireKingdoms.MOD_ID, "chronicle_view"));
+            new Type<>(Identifier.fromNamespaceAndPath(MillenaireKingdoms.MOD_ID, "chronicle_view"));
     public ChronicleViewPayload {
-        if (view == null || view.sizeInBytes() > MAX_BYTES || !view.hasUUID("session") || !view.contains("serial", 4))
+        if (view == null || view.sizeInBytes() > MAX_BYTES || !com.millenairekingdoms.compat.KNbt.hasUUID(view, "session") || !view.contains("serial"))
             throw new IllegalArgumentException("Invalid chronicle response");
         view = view.copy();
     }

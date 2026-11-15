@@ -8,14 +8,14 @@ import java.util.UUID;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /** Read-only requests; dimension, identity, visibility and economic rights come from the connection. */
 public record ChronicleRequestPayload(UUID session, long serial, String mode, Optional<UUID> kingdom, String kind,
         long fromDay, long toDay, Optional<UUID> cursor, String search, Optional<UUID> event, Optional<UUID> village)
         implements CustomPacketPayload {
     public static final Type<ChronicleRequestPayload> TYPE =
-            new Type<>(ResourceLocation.fromNamespaceAndPath(MillenaireKingdoms.MOD_ID, "chronicle_request"));
+            new Type<>(Identifier.fromNamespaceAndPath(MillenaireKingdoms.MOD_ID, "chronicle_request"));
     public ChronicleRequestPayload {
         if (session == null || serial < 0 || !Set.of("CHRONICLE", "REALMS", "ATLAS", "INFO").contains(mode)
                 || kingdom == null || cursor == null || event == null || village == null || kind == null

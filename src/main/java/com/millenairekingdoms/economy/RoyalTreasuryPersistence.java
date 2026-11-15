@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.PalettedContainer;
-import net.minecraft.world.level.chunk.storage.ChunkSerializer;
+import net.minecraft.world.level.chunk.storage.SerializableChunkData;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.ChunkDataEvent;
 
@@ -25,23 +25,22 @@ import net.neoforged.neoforge.event.level.ChunkDataEvent;
  * No chunk generation/loading and no reliance on ChunkMap.save's swallowed write exceptions.
  * This is a process-crash barrier on the supported filesystem, not a multi-file atomic commit.
  */
-@org.jetbrains.annotations.ApiStatus.Internal
 public class RoyalTreasuryPersistence {
-    private static final com.mojang.serialization.Codec<PalettedContainer<BlockState>> STATES =
-            PalettedContainer.codecRW(Block.BLOCK_STATE_REGISTRY, BlockState.CODEC,
-                    PalettedContainer.Strategy.SECTION_STATES, Blocks.AIR.defaultBlockState());
+    private static com.mojang.serialization.Codec<PalettedContainer<BlockState>> states(net.minecraft.core.RegistryAccess registries) {
+        return net.minecraft.world.level.chunk.PalettedContainerFactory.create(registries).blockStatesContainerCodec();
+    }
     public void flush(ServerLevel level, List<BlockPos> positions) {
         var source = level.getChunkSource();
         var map = source.chunkMap;
-        for (var pos : positions.stream().map(ChunkPos::new).distinct().toList()) {
-            var chunk = source.getChunkNow(pos.x, pos.z);
+        for (var pos : positions.stream().map(ChunkPos::containing).distinct().toList()) {
+            var chunk = source.getChunkNow(pos.x(), pos.z());
             if (chunk == null)
                 throw new IllegalStateException("Treasury chunk unloaded before persistence: " + pos);
-            CompoundTag tag = ChunkSerializer.write(level, chunk);
-            NeoForge.EVENT_BUS.post(new ChunkDataEvent.Save(chunk, level, tag));
-            map.write(pos, tag).join();
+            SerializableChunkData data = SerializableChunkData.copyOf(level, chunk);
+            NeoForge.EVENT_BUS.post(new ChunkDataEvent.Save(chunk, level, data));
+            map.write(pos, data::write).join();
         }
-        map.flushWorker();
+        map.synchronize(true).join();
     }
 
     void verify(ServerLevel level, RoyalTreasuryImage image, boolean after) {
@@ -57,21 +56,21 @@ public class RoyalTreasuryPersistence {
         int offset = 0;
         for (var chest : image.chests()) {
             var pos = chest.position();
-            var chunkPos = new ChunkPos(pos);
+            var chunkPos = ChunkPos.containing(pos);
             CompoundTag chunk = chunks.computeIfAbsent(chunkPos,
                     key
                     -> level.getChunkSource().chunkMap.read(key).join().orElseThrow(
                             () -> new IllegalStateException("Treasury chunk was not written: " + key)));
             CompoundTag found = null;
-            for (Tag raw : chunk.getList("block_entities", Tag.TAG_COMPOUND)) {
+            for (Tag raw : chunk.getListOrEmpty("block_entities")) {
                 var tag = (CompoundTag) raw;
-                if (BlockEntity.getPosFromTag(tag).equals(pos)) {
+                if (BlockEntity.getPosFromTag(chunkPos, tag).equals(pos)) {
                     if (found != null)
                         throw new IllegalStateException("Duplicate saved treasury block entity: " + pos);
                     found = tag;
                 }
             }
-            BlockState state = savedState(chunk, pos);
+            BlockState state = savedState(level.registryAccess(), chunk, pos);
             if (!chest.state().equals(NbtUtils.writeBlockState(state)) || found == null
                     || !(BlockEntity.loadStatic(pos, state, found, level.registryAccess())
                                     instanceof ChestBlockEntity saved)
@@ -85,12 +84,12 @@ public class RoyalTreasuryPersistence {
         }
     }
 
-    static BlockState savedState(CompoundTag chunk, BlockPos position) {
-        for (Tag raw : chunk.getList("sections", Tag.TAG_COMPOUND)) {
+    static BlockState savedState(net.minecraft.core.RegistryAccess registries, CompoundTag chunk, BlockPos position) {
+        for (Tag raw : chunk.getListOrEmpty("sections")) {
             var section = (CompoundTag) raw;
-            if (section.getByte("Y") == Math.floorDiv(position.getY(), 16)
-                    && section.contains("block_states", Tag.TAG_COMPOUND)) {
-                return STATES.parse(NbtOps.INSTANCE, section.getCompound("block_states"))
+            if (section.getByteOr("Y", (byte) 0) == Math.floorDiv(position.getY(), 16)
+                    && section.contains("block_states")) {
+                return states(registries).parse(NbtOps.INSTANCE, section.getCompoundOrEmpty("block_states"))
                         .getOrThrow()
                         .get(position.getX() & 15, position.getY() & 15, position.getZ() & 15);
             }

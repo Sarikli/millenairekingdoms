@@ -86,7 +86,7 @@ public final class RoyalPaymentService {
         if (entry == null)
             return null;
         var request = Request.read(id, entry.intent());
-        if (!request.dimension.equals(level.dimension().location().toString()) || !request.kingdom.equals(kingdom)
+        if (!request.dimension.equals(level.dimension().identifier().toString()) || !request.kingdom.equals(kingdom)
                 || !request.capital.equals(KingdomSavedData.get(level).kingdom(kingdom).capital())
                 || !Objects.equals(request.actor, actor)) {
             throw new IllegalArgumentException("Receipt does not belong to this dimension, capital and ruler");
@@ -100,7 +100,6 @@ public final class RoyalPaymentService {
      * Refunds stay in the same still-owned original physical capital, even when the original player is offline.
      * Accepted patronage commits without touching inventories; no old ruler is impersonated as an NPC.
      */
-    @org.jetbrains.annotations.ApiStatus.Internal
     public Receipt settleRetiredConstruction(
             UUID id, UUID kingdom, UUID capital, UUID actor, long amount, boolean refund) {
         if (!level.getServer().isSameThread())
@@ -109,7 +108,7 @@ public final class RoyalPaymentService {
         if (entry == null)
             return null;
         var request = new Request(
-                id, level.dimension().location().toString(), kingdom, capital, actor, Purpose.CONSTRUCTION, id, amount);
+                id, level.dimension().identifier().toString(), kingdom, capital, actor, Purpose.CONSTRUCTION, id, amount);
         if (!entry.intent().equals(request.save()))
             throw new IllegalArgumentException("Retired order does not match the original construction payment");
         if (refund) {
@@ -127,7 +126,6 @@ public final class RoyalPaymentService {
      * Internal domain inspection: a caller must load the immutable order and validate its authority/stage separately.
      * Full original intent binding is checked, including offline player UUID. No inventories or new spending.
      */
-    @org.jetbrains.annotations.ApiStatus.Internal
     public Receipt inspectConstruction(UUID id, UUID kingdom, UUID capital, UUID actor, long amount) {
         if (!level.getServer().isSameThread())
             throw new IllegalStateException("Royal recovery requires the server thread");
@@ -135,7 +133,7 @@ public final class RoyalPaymentService {
         if (entry == null)
             return null;
         var request = new Request(
-                id, level.dimension().location().toString(), kingdom, capital, actor, Purpose.CONSTRUCTION, id, amount);
+                id, level.dimension().identifier().toString(), kingdom, capital, actor, Purpose.CONSTRUCTION, id, amount);
         if (!entry.intent().equals(request.save()))
             throw new IllegalArgumentException("Order does not match the original construction payment");
         return receipt(request, entry);
@@ -145,7 +143,6 @@ public final class RoyalPaymentService {
      * Close only an existing PAID receipt after the domain has acknowledged original queue/building acceptance.
      * This never creates/reconciles a debit, requires no chunks and does not grant an offline actor NPC agency.
      */
-    @org.jetbrains.annotations.ApiStatus.Internal
     public Receipt acknowledgeConstruction(UUID id, UUID kingdom, UUID capital, UUID actor, long amount) {
         var receipt = inspectConstruction(id, kingdom, capital, actor, amount);
         if (receipt == null)
@@ -161,7 +158,6 @@ public final class RoyalPaymentService {
     }
 
     /** Trusted shipment ledger inspection, including an offline original actor. Never creates/reconciles spending. */
-    @org.jetbrains.annotations.ApiStatus.Internal
     public Receipt inspectShipment(UUID id, UUID kingdom, UUID capital, UUID actor, long amount) {
         return inspectPurpose(id, kingdom, capital, actor, Purpose.SHIPMENT_FEE, amount,
                 "Shipment does not match its original transport fee intent");
@@ -170,7 +166,7 @@ public final class RoyalPaymentService {
     /**
      * Commit only an existing matching PAID fee after durable dispatch. No chunks, new payment or offline NPC agency.
      */
-    @org.jetbrains.annotations.ApiStatus.Internal
+    // @ApiStatus.Internal (annotation absente en 26.3)
     public Receipt acknowledgeShipment(UUID id, UUID kingdom, UUID capital, UUID actor, long amount) {
         return acknowledgePurpose(id, kingdom, capital, actor, Purpose.SHIPMENT_FEE, amount,
                 "Shipment does not match its original transport fee intent");
@@ -180,28 +176,28 @@ public final class RoyalPaymentService {
      * Caller has persisted cancellation before settlement. Only the original existing fee can settle: no new charge,
      * purpose substitution or refund redirect. Original capital/storage eligibility still gates actual refunds.
      */
-    @org.jetbrains.annotations.ApiStatus.Internal
+    // @ApiStatus.Internal (annotation absente en 26.3)
     public Receipt settleRetiredShipment(UUID id, UUID kingdom, UUID capital, UUID actor, long amount, boolean refund) {
         return settleRetiredPurpose(id, kingdom, capital, actor, Purpose.SHIPMENT_FEE, amount, refund,
                 "Shipment does not match its original transport fee intent");
     }
 
     /** Trusted expedition ledger inspection, including an offline original actor. Never creates/reconciles spending. */
-    @org.jetbrains.annotations.ApiStatus.Internal
+    // @ApiStatus.Internal (annotation absente en 26.3)
     public Receipt inspectExpedition(UUID id, UUID kingdom, UUID capital, UUID actor, long amount) {
         return inspectPurpose(id, kingdom, capital, actor, Purpose.EXPEDITION, amount,
                 "Expedition does not match its original fee intent");
     }
 
     /** Commit an existing matching PAID expedition fee when the raid departs. Nonrefundable once committed. */
-    @org.jetbrains.annotations.ApiStatus.Internal
+    // @ApiStatus.Internal (annotation absente en 26.3)
     public Receipt acknowledgeExpedition(UUID id, UUID kingdom, UUID capital, UUID actor, long amount) {
         return acknowledgePurpose(id, kingdom, capital, actor, Purpose.EXPEDITION, amount,
                 "Expedition does not match its original fee intent");
     }
 
     /** Settle a cancelled/expired/retired expedition order before departure. */
-    @org.jetbrains.annotations.ApiStatus.Internal
+    // @ApiStatus.Internal (annotation absente en 26.3)
     public Receipt settleRetiredExpedition(UUID id, UUID kingdom, UUID capital, UUID actor, long amount, boolean refund) {
         return settleRetiredPurpose(id, kingdom, capital, actor, Purpose.EXPEDITION, amount, refund,
                 "Expedition does not match its original fee intent");
@@ -211,11 +207,11 @@ public final class RoyalPaymentService {
      * Reconciles any PAID/REFUND_PREPARED expedition payments whose order is no longer waiting in KingdomSavedData
      * (either because it departed or because it was retired/pruned while the capital was unloaded).
      */
-    @org.jetbrains.annotations.ApiStatus.Internal
+    // @ApiStatus.Internal (annotation absente en 26.3)
     public void reconcileExpeditions(KingdomSavedData data) {
         if (!level.getServer().isSameThread())
             return;
-        String dim = level.dimension().location().toString();
+        String dim = level.dimension().identifier().toString();
         java.util.List<Entry> entries;
         try {
             entries = journal.entries();
@@ -268,7 +264,7 @@ public final class RoyalPaymentService {
         if (entry == null)
             return null;
         var request = new Request(
-                id, level.dimension().location().toString(), kingdom, capital, actor, purpose, id, amount);
+                id, level.dimension().identifier().toString(), kingdom, capital, actor, purpose, id, amount);
         if (!entry.intent().equals(request.save()))
             throw new IllegalArgumentException(mismatchMessage);
         return receipt(request, entry);
@@ -307,7 +303,7 @@ public final class RoyalPaymentService {
     private Receipt pay(
             Supplier<RoyalTreasurySnapshot> source, UUID actor, UUID id, Purpose purpose, UUID reference, long amount) {
         var quote = source.get();
-        var request = new Request(id, level.dimension().location().toString(), quote.kingdom(), quote.capital(), actor,
+        var request = new Request(id, level.dimension().identifier().toString(), quote.kingdom(), quote.capital(), actor,
                 purpose, reference, amount);
         return exclusive(quote.capital(), () -> {
             Entry entry = journal.load(id);
@@ -345,7 +341,7 @@ public final class RoyalPaymentService {
             if (entry == null)
                 throw new IllegalArgumentException("Unknown royal payment");
             var request = Request.read(id, entry.intent());
-            if (!request.dimension.equals(level.dimension().location().toString())
+            if (!request.dimension.equals(level.dimension().identifier().toString())
                     || !request.kingdom.equals(quote.kingdom()) || !request.capital.equals(quote.capital())
                     || !Objects.equals(request.actor, actor)) {
                 throw new IllegalArgumentException("Payment does not belong to this capital and ruler");
@@ -447,9 +443,9 @@ public final class RoyalPaymentService {
     }
 
     private RoyalTreasuryImage image(CompoundTag recovery, String key, Request request, boolean refund) {
-        if (!recovery.contains(key, Tag.TAG_COMPOUND))
+        if (!recovery.contains(key))
             throw new IllegalStateException("Missing treasury recovery image; preserve journal");
-        var image = RoyalTreasuryImage.read(level, recovery.getCompound(key));
+        var image = RoyalTreasuryImage.read(level, recovery.getCompoundOrEmpty(key));
         image.requireBinding(request.id, request.save(), refund);
         image.requireDirection(refund);
         long delta = Math.subtractExact(image.value(true), image.value(false));
@@ -497,7 +493,7 @@ public final class RoyalPaymentService {
         }
     }
     private void requireDimension(ServerPlayer player) {
-        if (player.serverLevel() != level)
+        if (player.level() != level)
             throw new IllegalArgumentException("Ruler is in another dimension");
     }
     private static Receipt receipt(Request request, Entry entry) {
@@ -523,26 +519,26 @@ public final class RoyalPaymentService {
             var tag = new CompoundTag();
             tag.putInt("format", 1);
             tag.putString("dimension", dimension);
-            tag.putUUID("kingdom", kingdom);
-            tag.putUUID("capital", capital);
+            com.millenairekingdoms.compat.KNbt.putUUID(tag, "kingdom", kingdom);
+            com.millenairekingdoms.compat.KNbt.putUUID(tag, "capital", capital);
             tag.putString("agency", actor == null ? "NPC" : "PLAYER");
             if (actor != null)
-                tag.putUUID("actor", actor);
+                com.millenairekingdoms.compat.KNbt.putUUID(tag, "actor", actor);
             tag.putString("purpose", purpose.name());
-            tag.putUUID("reference", reference);
+            com.millenairekingdoms.compat.KNbt.putUUID(tag, "reference", reference);
             tag.putLong("amount", amount);
             return tag;
         }
         static Request read(UUID id, CompoundTag tag) {
-            if (tag.getInt("format") != 1 || tag.getString("dimension").isBlank() || !tag.hasUUID("kingdom")
-                    || !tag.hasUUID("capital") || !tag.hasUUID("reference") || !tag.contains("amount", Tag.TAG_LONG)
-                    || !(tag.getString("agency").equals("NPC") || tag.getString("agency").equals("PLAYER"))
-                    || (tag.getString("agency").equals("PLAYER") && !tag.hasUUID("actor"))) {
+            if (tag.getIntOr("format", 0) != 1 || tag.getStringOr("dimension", "").isBlank() || !com.millenairekingdoms.compat.KNbt.hasUUID(tag, "kingdom")
+                    || !com.millenairekingdoms.compat.KNbt.hasUUID(tag, "capital") || !com.millenairekingdoms.compat.KNbt.hasUUID(tag, "reference") || !tag.contains("amount")
+                    || !(tag.getStringOr("agency", "").equals("NPC") || tag.getStringOr("agency", "").equals("PLAYER"))
+                    || (tag.getStringOr("agency", "").equals("PLAYER") && !com.millenairekingdoms.compat.KNbt.hasUUID(tag, "actor"))) {
                 throw new IllegalStateException("Unsupported/incomplete royal payment intent; preserve journal");
             }
-            return new Request(id, tag.getString("dimension"), tag.getUUID("kingdom"), tag.getUUID("capital"),
-                    tag.getString("agency").equals("PLAYER") ? tag.getUUID("actor") : null,
-                    Purpose.valueOf(tag.getString("purpose")), tag.getUUID("reference"), tag.getLong("amount"));
+            return new Request(id, tag.getStringOr("dimension", ""), com.millenairekingdoms.compat.KNbt.getUUID(tag, "kingdom"), com.millenairekingdoms.compat.KNbt.getUUID(tag, "capital"),
+                    tag.getStringOr("agency", "").equals("PLAYER") ? com.millenairekingdoms.compat.KNbt.getUUID(tag, "actor") : null,
+                    Purpose.valueOf(tag.getStringOr("purpose", "")), com.millenairekingdoms.compat.KNbt.getUUID(tag, "reference"), tag.getLongOr("amount", 0L));
         }
     }
 }

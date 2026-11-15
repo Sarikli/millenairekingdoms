@@ -54,9 +54,9 @@ final class RoyalConstructionPersistence {
             super(reason);
         }
     }
-    private static final com.mojang.serialization.Codec<PalettedContainer<BlockState>> STATES =
-            PalettedContainer.codecRW(Block.BLOCK_STATE_REGISTRY, BlockState.CODEC,
-                    PalettedContainer.Strategy.SECTION_STATES, Blocks.AIR.defaultBlockState());
+    private static com.mojang.serialization.Codec<PalettedContainer<BlockState>> states(net.minecraft.core.RegistryAccess registries) {
+        return net.minecraft.world.level.chunk.PalettedContainerFactory.create(registries).blockStatesContainerCodec();
+    }
     private record EntityApi(Field manager, Field storage, Field regions, Method store) {}
     private static final class Pinned {
         static final EntityApi API = entityApi();
@@ -100,7 +100,7 @@ final class RoyalConstructionPersistence {
             var detached = task.save();
             detached.putInt("cursor", 0);
             // Read-only detached extent; the live original cursor/task is never reset or advanced.
-            var extent = ConstructionTask.load(detached, BuiltInRegistries.BLOCK.asLookup());
+            var extent = ConstructionTask.load(detached, BuiltInRegistries.BLOCK);
             for (var position : extent.upcomingAbsolutePositions(building.getOrigin(), extent.totalSteps())) {
                 // Native terrain tasks may attempt cells below a flat world's minimum height; those are not world data.
                 if (!level.isOutsideBuildHeight(position)) {
@@ -165,24 +165,24 @@ final class RoyalConstructionPersistence {
         var sections = new HashMap<String, PalettedContainer<BlockState>>();
         for (var item : expected.entrySet()) {
             var position = item.getKey();
-            var cp = new ChunkPos(position);
+            var cp = ChunkPos.containing(position);
             var chunk = chunks.computeIfAbsent(cp,
                     key
                     -> level.getChunkSource().chunkMap.read(key).join().orElseThrow(
                             () -> new IllegalStateException("Completed building chunk was not written: " + key)));
             int y = Math.floorDiv(position.getY(), 16);
-            String key = cp.toLong() + "/" + y;
+            String key = cp.pack() + "/" + y;
             if (!sections.containsKey(key)) {
                 PalettedContainer<BlockState> palette = null;
                 boolean found = false;
-                for (Tag raw : chunk.getList("sections", Tag.TAG_COMPOUND)) {
+                for (Tag raw : chunk.getListOrEmpty("sections")) {
                     var section = (CompoundTag) raw;
-                    if (section.getByte("Y") == y) {
+                    if (section.getByteOr("Y", (byte) 0) == y) {
                         if (found)
                             throw new IllegalStateException("Duplicate completed-building saved section");
                         found = true;
-                        if (section.contains("block_states", Tag.TAG_COMPOUND))
-                            palette = STATES.parse(NbtOps.INSTANCE, section.getCompound("block_states")).getOrThrow();
+                        if (section.contains("block_states"))
+                            palette = states(level.registryAccess()).parse(NbtOps.INSTANCE, section.getCompoundOrEmpty("block_states")).getOrThrow();
                     }
                 }
                 sections.put(key, palette);
@@ -193,9 +193,9 @@ final class RoyalConstructionPersistence {
             if (!state.equals(item.getValue()))
                 throw new IllegalStateException("Persisted completed building block differs at " + position);
             CompoundTag saved = null;
-            for (Tag raw : chunk.getList("block_entities", Tag.TAG_COMPOUND)) {
+            for (Tag raw : chunk.getListOrEmpty("block_entities")) {
                 var tag = (CompoundTag) raw;
-                if (BlockEntity.getPosFromTag(tag).equals(position)) {
+                if (BlockEntity.getPosFromTag(net.minecraft.world.level.ChunkPos.containing(position), tag).equals(position)) {
                     if (saved != null)
                         throw new IllegalStateException("Duplicate completed-building block entity");
                     saved = tag.copy();
@@ -229,18 +229,18 @@ final class RoyalConstructionPersistence {
             for (var root : roots.values()) {
                 loaded(level, root.blockPosition());
                 var cp = root.chunkPosition();
-                if (!manager.areEntitiesLoaded(cp.toLong()))
+                if (!manager.areEntitiesLoaded(cp.pack()))
                     throw new Unloaded(
                             "Resident entity section not fully loaded; defer without replacing its saved entities: "
                             + cp);
-                var snapshot = new CompoundTag();
-                if (!root.save(snapshot))
+                var snapshot = com.millenairekingdoms.compat.KNbt.saveEntity(root);
+                if (snapshot == null)
                     throw new IllegalStateException("Original resident/root entity cannot be saved");
                 snapshots.put(root.getUUID(), snapshot);
                 chunks.put(cp, true);
             }
             for (var cp : chunks.keySet())
-                if (!(boolean) api.store.invoke(manager, cp.toLong(), (Consumer<Entity>) entity -> {}))
+                if (!(boolean) api.store.invoke(manager, cp.pack(), (Consumer<Entity>) entity -> {}))
                     throw new Unloaded("Resident entity section is pending: " + cp);
             storage.flush(true);
             for (var cp : chunks.keySet()) {
@@ -249,16 +249,16 @@ final class RoyalConstructionPersistence {
                 for (var root : roots.values())
                     if (root.chunkPosition().equals(cp)) {
                         CompoundTag found = null;
-                        for (Tag raw : saved.getList("Entities", Tag.TAG_COMPOUND)) {
+                        for (Tag raw : saved.getListOrEmpty("Entities")) {
                             var tag = (CompoundTag) raw;
-                            if (tag.hasUUID("UUID") && tag.getUUID("UUID").equals(root.getUUID())) {
+                            if (com.millenairekingdoms.compat.KNbt.hasUUID(tag, "UUID") && com.millenairekingdoms.compat.KNbt.getUUID(tag, "UUID").equals(root.getUUID())) {
                                 if (found != null)
                                     throw new IllegalStateException("Duplicate saved resident root UUID");
                                 found = tag;
                             }
                         }
-                        var current = new CompoundTag();
-                        if (!snapshots.get(root.getUUID()).equals(found) || !root.save(current)
+                        var current = com.millenairekingdoms.compat.KNbt.saveEntity(root);
+                        if (!snapshots.get(root.getUUID()).equals(found) || current == null
                                 || !current.equals(snapshots.get(root.getUUID()))) {
                             throw new IllegalStateException(
                                     "Actual saved/live resident inventory/state differs; do not acknowledge completion: "

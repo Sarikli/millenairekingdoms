@@ -40,14 +40,14 @@ final class NativeVillageReadback {
             var index = parse(channel, -1);
             validateHeader(index);
             int selected = -1;
-            var villages = index.getCompound("data").getList("villages", Tag.TAG_COMPOUND);
+            var villages = index.getCompoundOrEmpty("data").getListOrEmpty("villages");
             var identities = new HashSet<UUID>();
             for (int n = 0; n < villages.size(); n++) {
-                var village = villages.getCompound(n);
-                if (!village.hasUUID("id") || !identities.add(village.getUUID("id")))
+                var village = villages.getCompoundOrEmpty(n);
+                if (!com.millenairekingdoms.compat.KNbt.hasUUID(village, "id") || !identities.add(com.millenairekingdoms.compat.KNbt.getUUID(village, "id")))
                     throw new IllegalStateException(
                             "Missing or duplicate saved construction village identity; original bytes preserved");
-                if (id != null && village.hasUUID("id") && id.equals(village.getUUID("id"))) {
+                if (id != null && com.millenairekingdoms.compat.KNbt.hasUUID(village, "id") && id.equals(com.millenairekingdoms.compat.KNbt.getUUID(village, "id"))) {
                     if (selected >= 0)
                         throw new IllegalStateException("Duplicate saved construction village identity");
                     selected = n;
@@ -59,11 +59,11 @@ final class NativeVillageReadback {
                 throw new IllegalStateException("Village missing from saved Millenaire data; do not commit patronage");
             var root = parse(channel, selected);
             validateHeader(root);
-            var result = root.getCompound("data").getList("villages", Tag.TAG_COMPOUND);
-            if (result.size() != 1 || !result.getCompound(0).hasUUID("id")
-                    || !id.equals(result.getCompound(0).getUUID("id")))
+            var result = root.getCompoundOrEmpty("data").getListOrEmpty("villages");
+            if (result.size() != 1 || !com.millenairekingdoms.compat.KNbt.hasUUID(result.getCompoundOrEmpty(0), "id")
+                    || !id.equals(com.millenairekingdoms.compat.KNbt.getUUID(result.getCompoundOrEmpty(0), "id")))
                 throw new IllegalStateException("Selected saved village identity changed; do not commit patronage");
-            return result.getCompound(0);
+            return result.getCompoundOrEmpty(0);
         } catch (IOException | NbtException e) {
             throw new IllegalStateException(
                     "Cannot read bounded original Millenaire save projection; preserve it and do not accept construction: "
@@ -92,15 +92,15 @@ final class NativeVillageReadback {
     }
 
     private static void validateHeader(CompoundTag root) {
-        var data = root.getCompound("data");
-        if (!root.contains("data", Tag.TAG_COMPOUND) || !data.contains("villages", Tag.TAG_LIST)
-                || data.getList("villages", Tag.TAG_COMPOUND).size() != ((ListTag) data.get("villages")).size()
-                || data.contains("version") && !data.contains("version", Tag.TAG_INT) || data.getInt("version") < 0
-                || data.getInt("version") > 6
+        var data = root.getCompoundOrEmpty("data");
+        if (!root.contains("data") || !data.contains("villages")
+                || data.getListOrEmpty("villages").size() != ((ListTag) data.get("villages")).size()
+                || data.contains("version") && !com.millenairekingdoms.compat.KNbt.contains(data, "version", Tag.TAG_INT) || data.getIntOr("version", 0) < 0
+                || data.getIntOr("version", 0) > 6
                 || root.contains("DataVersion")
-                        && (!root.contains("DataVersion", Tag.TAG_INT)
-                                || root.getInt("DataVersion")
-                                        > SharedConstants.getCurrentVersion().getDataVersion().getVersion()))
+                        && (!root.contains("DataVersion")
+                                || root.getIntOr("DataVersion", 0)
+                                        > SharedConstants.getCurrentVersion().dataVersion().version()))
             throw new IllegalStateException(
                     "Unsupported/future Millenaire saved data; preserve original and postpone royal acceptance");
     }

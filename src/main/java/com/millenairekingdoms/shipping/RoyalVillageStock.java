@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -33,7 +33,7 @@ import org.millenaire.village.Village;
 public final class RoyalVillageStock {
     /** Total retained ordinary units per product, including every native need and configured floor. */
     public static final int MAXIMUM_RETAINED = 50;
-    public record Availability(ResourceLocation product, int physical, int nativeCount, int nativeExport,
+    public record Availability(Identifier product, int physical, int nativeCount, int nativeExport,
             int construction, int target, int residents, int retained, int available) {}
     private record Chest(BlockPos position, ChestBlockEntity entity, BlockState state) {}
     private final ServerLevel level;
@@ -43,7 +43,7 @@ public final class RoyalVillageStock {
     private final ServerPlayer player;
     private final UUID kingdom, villageId, capital, localOwner;
     private final long tenure;
-    private final ResourceLocation villageType;
+    private final Identifier villageType;
     private final Village village;
     private final BuildingInstance townhall;
     private final BuildingInventory inventory;
@@ -55,12 +55,11 @@ public final class RoyalVillageStock {
         return new RoyalVillageStock(level, null, kingdom, village);
     }
     public static RoyalVillageStock forPlayer(ServerPlayer player, UUID village) {
-        if (!player.serverLevel().getServer().isSameThread())
+        if (!player.level().getServer().isSameThread())
             throw new IllegalStateException("Village stock access requires the server thread");
-        return new RoyalVillageStock(player.serverLevel(), player, PoliticsService.ruledKingdom(player).id(), village);
+        return new RoyalVillageStock(player.level(), player, PoliticsService.ruledKingdom(player).id(), village);
     }
     /** Existing paid mandate only: an offline actor keeps UUID/tenure/reputation checks, never NPC impersonation. */
-    @org.jetbrains.annotations.ApiStatus.Internal
     public static RoyalVillageStock forIssued(
             ServerLevel level, RoyalShipmentStore.Intent intent, RoyalShipmentStore.Endpoint endpoint) {
         return issued(level, intent, endpoint, false);
@@ -69,13 +68,12 @@ public final class RoyalVillageStock {
      * Previously acquired cargo return only; no removal/new spending. Original active kingdom membership and exact
      * original physical village identity remain required, even after its ruler changes.
      */
-    @org.jetbrains.annotations.ApiStatus.Internal
     public static RoyalVillageStock forReturn(ServerLevel level, RoyalShipmentStore.Intent intent) {
         return issued(level, intent, intent.source(), true);
     }
     private static RoyalVillageStock issued(ServerLevel level, RoyalShipmentStore.Intent intent,
             RoyalShipmentStore.Endpoint endpoint, boolean returning) {
-        if (!intent.dimension().equals(level.dimension().location().toString())
+        if (!intent.dimension().equals(level.dimension().identifier().toString())
                 || !endpoint.equals(intent.source()) && !endpoint.equals(intent.destination()))
             throw new IllegalArgumentException(
                     "Issued stock endpoint does not belong to this original shipment/dimension");
@@ -158,12 +156,12 @@ public final class RoyalVillageStock {
      * Read-only current native project deficits, with original anywood/fixed-log overlap semantics. All native
      * auxiliary storage has already passed loaded guards. This never reserves/removes/creates materials.
      */
-    public java.util.Map<ResourceLocation, Integer> missing(java.util.Map<ResourceLocation, Integer> required) {
+    public java.util.Map<Identifier, Integer> missing(java.util.Map<Identifier, Integer> required) {
         requireUnchanged();
         if (required.values().stream().anyMatch(q -> q < 0))
             throw new IllegalArgumentException("Unknown native material quantities");
         inventory.invalidateCache();
-        var missing = new java.util.LinkedHashMap<ResourceLocation, Integer>();
+        var missing = new java.util.LinkedHashMap<Identifier, Integer>();
         for (var entry : required.entrySet().stream().sorted(java.util.Map.Entry.comparingByKey()).toList()) {
             if (AnywoodHelper.isAnywood(entry.getKey()))
                 continue;
@@ -235,7 +233,7 @@ public final class RoyalVillageStock {
             needs += cost(definition(project.planSetId(), project.variant(), project.level()), item);
         return Math.toIntExact(needs);
     }
-    private static BuildingPlanSet.LevelDef definition(ResourceLocation set, String variant, int level) {
+    private static BuildingPlanSet.LevelDef definition(Identifier set, String variant, int level) {
         var planSet = set == null ? null : ModCultures.getBuildingPlanSet(set);
         var def = planSet == null || variant == null ? null : planSet.getLevel(variant, level);
         if (def == null || def.requiredResources().values().stream().anyMatch(q -> q < 0))
@@ -272,7 +270,7 @@ public final class RoyalVillageStock {
     private KingdomSavedData.Kingdom authorize() {
         if (!level.getServer().isSameThread())
             throw new IllegalStateException("Village stock access requires the server thread");
-        if (player != null && player.serverLevel() != level)
+        if (player != null && player.level() != level)
             throw new IllegalArgumentException("Quoted ruler changed dimension");
         var data = KingdomSavedData.get(level);
         var k = data.kingdom(kingdom);

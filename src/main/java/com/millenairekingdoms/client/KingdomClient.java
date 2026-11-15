@@ -13,12 +13,12 @@ public final class KingdomClient {
         Minecraft minecraft = Minecraft.getInstance();
         if (HistoryClient.updateManagement(view))
             return;
-        if (minecraft.screen instanceof KingdomScreen screen)
+        if (minecraft.gui.screen() instanceof KingdomScreen screen)
             screen.update(view);
         else
-            minecraft.setScreen(new KingdomScreen(view));
+            minecraft.gui.setScreen(new KingdomScreen(view));
     }
     static void send(KingdomActionPayload request) {
-        PacketDistributor.sendToServer(request);
+        net.neoforged.neoforge.client.network.ClientPacketDistributor.sendToServer(request);
     }
 }

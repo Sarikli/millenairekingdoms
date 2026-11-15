@@ -19,7 +19,7 @@ import java.util.UUID;
 import java.util.WeakHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,10 +32,9 @@ import org.millenaire.culture.ModCultures;
  * Paid timed royal logistics. Existing native villages/storage/trade stay autonomous; no physical caravan or chunk
  * forcing. Each step performs at most one cargo operation or one lifecycle boundary, preserving exact bound receipts.
  */
-@org.jetbrains.annotations.ApiStatus.Internal
 public final class RoyalShipmentService {
     public record Quote(UUID kingdom, UUID capital, UUID actor, long rulerSince, Endpoint source, Endpoint destination,
-            ResourceLocation product, int quantity, int available, long distance, long fee, long travelTicks) {}
+            Identifier product, int quantity, int available, long distance, long fee, long travelTicks) {}
     private static final Map<MinecraftServer, Set<UUID>> BUSY = new WeakHashMap<>();
     private final ServerLevel level;
     private final RoyalShipmentStore orders;
@@ -61,11 +60,11 @@ public final class RoyalShipmentService {
     public static Path directory(ServerLevel level) {
         return level.getServer().getWorldPath(LevelResource.ROOT).resolve("data/millenairekingdoms/royal-shipments");
     }
-    public Quote quoteNpc(UUID kingdom, UUID from, UUID to, ResourceLocation product, int quantity) {
+    public Quote quoteNpc(UUID kingdom, UUID from, UUID to, Identifier product, int quantity) {
         thread();
         return quote(null, kingdom, from, to, product, quantity);
     }
-    public Quote quotePlayer(ServerPlayer player, UUID from, UUID to, ResourceLocation product, int quantity) {
+    public Quote quotePlayer(ServerPlayer player, UUID from, UUID to, Identifier product, int quantity) {
         thread();
         dimension(player);
         return quote(player, PoliticsService.ruledKingdom(player).id(), from, to, product, quantity);
@@ -73,25 +72,25 @@ public final class RoyalShipmentService {
     /**
      * Read-only price/time preview also reports insufficient surplus; actual requests still require the full quantity.
      */
-    public Quote previewPlayer(ServerPlayer player, UUID from, UUID to, ResourceLocation product, int quantity) {
+    public Quote previewPlayer(ServerPlayer player, UUID from, UUID to, Identifier product, int quantity) {
         thread();
         dimension(player);
         return quote(player, PoliticsService.ruledKingdom(player).id(), from, to, product, quantity, false);
     }
-    public Entry requestNpc(UUID kingdom, UUID from, UUID to, ResourceLocation product, int quantity, UUID id) {
+    public Entry requestNpc(UUID kingdom, UUID from, UUID to, Identifier product, int quantity, UUID id) {
         return request(null, kingdom, from, to, product, quantity, id, null, null);
     }
-    public Entry requestQuotedNpc(UUID kingdom, UUID from, UUID to, ResourceLocation product, int quantity, UUID id,
+    public Entry requestQuotedNpc(UUID kingdom, UUID from, UUID to, Identifier product, int quantity, UUID id,
             long fee, long travelTicks) {
         return request(null, kingdom, from, to, product, quantity, id, fee, travelTicks);
     }
     public Entry requestPlayer(
-            ServerPlayer player, UUID from, UUID to, ResourceLocation product, int quantity, UUID id) {
+            ServerPlayer player, UUID from, UUID to, Identifier product, int quantity, UUID id) {
         thread();
         dimension(player);
         return request(player, PoliticsService.ruledKingdom(player).id(), from, to, product, quantity, id, null, null);
     }
-    public Entry requestQuotedPlayer(ServerPlayer player, UUID from, UUID to, ResourceLocation product, int quantity,
+    public Entry requestQuotedPlayer(ServerPlayer player, UUID from, UUID to, Identifier product, int quantity,
             UUID id, long fee, long travelTicks) {
         thread();
         dimension(player);
@@ -128,10 +127,10 @@ public final class RoyalShipmentService {
         return exclusive(id, () -> advance(id, null));
     }
 
-    private Quote quote(ServerPlayer player, UUID kingdom, UUID from, UUID to, ResourceLocation product, int quantity) {
+    private Quote quote(ServerPlayer player, UUID kingdom, UUID from, UUID to, Identifier product, int quantity) {
         return quote(player, kingdom, from, to, product, quantity, true);
     }
-    private Quote quote(ServerPlayer player, UUID kingdom, UUID from, UUID to, ResourceLocation product, int quantity,
+    private Quote quote(ServerPlayer player, UUID kingdom, UUID from, UUID to, Identifier product, int quantity,
             boolean requireStock) {
         if (from.equals(to) || quantity < 1 || quantity > RoyalShipmentConfig.current().maximumQuantity())
             throw new IllegalArgumentException("Choose distinct member villages and a supported positive quantity");
@@ -169,7 +168,7 @@ public final class RoyalShipmentService {
         return new Endpoint(villageId, village.getVillageTypeId(), village.getTownhall().getId().uuid(),
                 village.getCenter(), village.getOwnerUUID());
     }
-    private Entry request(ServerPlayer player, UUID kingdom, UUID from, UUID to, ResourceLocation product, int quantity,
+    private Entry request(ServerPlayer player, UUID kingdom, UUID from, UUID to, Identifier product, int quantity,
             UUID id, Long fee, Long duration) {
         thread();
         return exclusive(id, () -> {
@@ -185,7 +184,7 @@ public final class RoyalShipmentService {
             if (fee != null && (fee != quote.fee || duration == null || duration != quote.travelTicks))
                 throw new IllegalArgumentException(
                         "Shipment price/duration changed; refresh the server offer before ordering");
-            var intent = new Intent(id, level.dimension().location().toString(), kingdom, quote.capital, quote.actor,
+            var intent = new Intent(id, level.dimension().identifier().toString(), kingdom, quote.capital, quote.actor,
                     quote.rulerSince, quote.source, quote.destination, product, quantity, quote.fee,
                     Math.max(0, level.getGameTime()), quote.travelTicks);
             orders.reserve(intent);
@@ -265,7 +264,7 @@ public final class RoyalShipmentService {
             if (intent.actor() != null) {
                 if (actor == null)
                     actor = level.getServer().getPlayerList().getPlayer(intent.actor());
-                if (actor == null || actor.serverLevel() != level)
+                if (actor == null || actor.level() != level)
                     throw new Deferred(Blocked.PAYMENT,
                             "Original player must be online before a new or unacknowledged fee can be charged");
             }
@@ -518,7 +517,7 @@ public final class RoyalShipmentService {
         var data = KingdomSavedData.get(level);
         var k = data.kingdom(kingdom);
         var ruler = data.ruler(kingdom);
-        if (!intent.dimension().equals(level.dimension().location().toString()) || !intent.kingdom().equals(kingdom)
+        if (!intent.dimension().equals(level.dimension().identifier().toString()) || !intent.kingdom().equals(kingdom)
                 || k == null || !k.capital().equals(intent.capital())
                 || !Objects.equals(intent.actor(), player == null ? null : player.getUUID())
                 || !data.mayDecide(kingdom, intent.actor())
@@ -536,11 +535,11 @@ public final class RoyalShipmentService {
         var entry = orders.load(id);
         if (entry == null)
             throw new IllegalArgumentException("Unknown royal shipment");
-        if (!entry.intent().dimension().equals(level.dimension().location().toString()))
+        if (!entry.intent().dimension().equals(level.dimension().identifier().toString()))
             throw new IllegalArgumentException("Shipment belongs to another dimension");
         return entry;
     }
-    private static Item item(ResourceLocation id) {
+    private static Item item(Identifier id) {
         return BuiltInRegistries.ITEM.getOptional(id).orElseThrow(
                 () -> new IllegalArgumentException("Unknown shipment product"));
     }
@@ -564,7 +563,7 @@ public final class RoyalShipmentService {
                                : message.substring(0, Math.min(512, message.length()));
     }
     private void dimension(ServerPlayer player) {
-        if (player.serverLevel() != level)
+        if (player.level() != level)
             throw new IllegalArgumentException("Ruler changed dimension");
     }
     private void thread() {

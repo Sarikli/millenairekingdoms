@@ -37,8 +37,8 @@ public final class RoyalTreasurySnapshot {
         return new RoyalTreasurySnapshot(level, null, kingdom, null, true);
     }
     public static RoyalTreasurySnapshot forPlayer(ServerPlayer player) {
-        thread(player.serverLevel());
-        return new RoyalTreasurySnapshot(player.serverLevel(), player, PoliticsService.ruledKingdom(player).id());
+        thread(player.level());
+        return new RoyalTreasurySnapshot(player.level(), player, PoliticsService.ruledKingdom(player).id());
     }
 
     private RoyalTreasurySnapshot(ServerLevel level, ServerPlayer player, UUID kingdom) {
@@ -189,7 +189,7 @@ public final class RoyalTreasurySnapshot {
     }
 
     private KingdomSavedData.Kingdom authority() {
-        if (player != null && player.serverLevel() != level)
+        if (player != null && player.level() != level)
             throw new IllegalArgumentException("Ruler moved to another dimension; obtain a new quote");
         var data = KingdomSavedData.get(level);
         var current = data.kingdom(kingdom);
