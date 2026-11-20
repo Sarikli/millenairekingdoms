@@ -231,6 +231,8 @@ final class KingdomSavedDataCodec {
                 e.putLong("quotedCost", o.quotedCost());
             if (o.quotedStrength() > 0)
                 e.putInt("quotedStrength", o.quotedStrength());
+            if (o.autoResolve())
+                e.putBoolean("autoResolve", true);
             orders.add(e);
         });
         autonomy.put("orders", orders);
@@ -382,7 +384,8 @@ final class KingdomSavedDataCodec {
                         e.hasUUID("issuer") ? e.getUUID("issuer") : null, e.getLong("issuedGameTime"),
                         e.getLong("dueGameTime"), e.getLong("expiresGameTime"),
                         e.contains("quotedCost", Tag.TAG_LONG) ? e.getLong("quotedCost") : 0L,
-                        e.contains("quotedStrength", Tag.TAG_INT) ? e.getInt("quotedStrength") : 0);
+                        e.contains("quotedStrength", Tag.TAG_INT) ? e.getInt("quotedStrength") : 0,
+                        e.getBoolean("autoResolve"));
                 unique(orders, o.id(), o);
             }
             ledger = ledger.withDecision(a.getLong("nextDecisionDay"))

@@ -40,9 +40,12 @@ public final class RoyalShipmentStore {
         RETURNING,
         DELIVERED,
         CANCELLED,
-        RECOVERY_REQUIRED
+        RECOVERY_REQUIRED,
+        /** Terminal: a physical caravan was robbed in wartime; the escrow is accounted as SEIZE, never refunded. */
+        AMBUSHED
     }
-    public enum Role { COLLECT, DELIVER, RETURN }
+    /** SEIZE records cargo taken by a wartime ambush; it is only ever written already APPLIED by {@link #ambush}. */
+    public enum Role { COLLECT, DELIVER, RETURN, SEIZE }
     public enum Outcome { PREPARED, APPLIED, CANCELLED }
     public enum Blocked { NONE, UNLOADED, FULL, STOCK, AUTHORITY, MEMBERSHIP, STORAGE, PAYMENT, PHYSICAL_PROOF }
 
@@ -128,7 +131,10 @@ public final class RoyalShipmentStore {
                     throw new IllegalArgumentException("Duplicate shipment operation identity");
             int collected = sum(operations, Role.COLLECT, true), planned = sum(operations, Role.COLLECT, false);
             int delivered = sum(operations, Role.DELIVER, true), returned = sum(operations, Role.RETURN, true);
-            int allocated = Math.addExact(sum(operations, Role.DELIVER, false), sum(operations, Role.RETURN, false));
+            int seized = sum(operations, Role.SEIZE, true);
+            int allocated = Math.addExact(Math.addExact(sum(operations, Role.DELIVER, false),
+                                                  sum(operations, Role.RETURN, false)),
+                    sum(operations, Role.SEIZE, false));
             if (planned > intent.quantity || allocated > collected)
                 throw new IllegalArgumentException("Shipment allocates cargo that was never acknowledged collected");
             if (stage == Stage.PREPARING && (!operations.isEmpty() || due != -1)
@@ -146,12 +152,16 @@ public final class RoyalShipmentStore {
                 throw new IllegalArgumentException("Invalid retained dispatch time or incomplete accepted cargo");
             if (stage == Stage.DELIVERED && (delivered != intent.quantity || returned != 0)
                     || RoyalShipmentStore.terminal(stage)
-                            && (collected != delivered + returned || operations.stream().anyMatch(Operation::pending)))
+                            && (collected != delivered + returned + seized
+                                    || operations.stream().anyMatch(Operation::pending)))
                 throw new IllegalArgumentException(
                         "Terminal shipment must account for every collected item and resolve every physical operation");
             if ((stage == Stage.COLLECTING || stage == Stage.PREPARING || stage == Stage.IN_TRANSIT)
                     && operations.stream().anyMatch(o -> o.role != Role.COLLECT))
                 throw new IllegalArgumentException("Premature shipment credit allocation");
+            if (stage == Stage.AMBUSHED && (due < 0 || cancellationRequested || seized == 0)
+                    || stage != Stage.AMBUSHED && seized != 0)
+                throw new IllegalArgumentException("Seized cargo belongs only to a dispatched, ambushed shipment");
         }
         public int collected() {
             return sum(operations, Role.COLLECT, true);
@@ -162,11 +172,15 @@ public final class RoyalShipmentStore {
         public int returned() {
             return sum(operations, Role.RETURN, true);
         }
+        public int seized() {
+            return sum(operations, Role.SEIZE, true);
+        }
         public int escrow() {
-            return collected() - delivered() - returned();
+            return collected() - delivered() - returned() - seized();
         }
         public int allocatable() {
-            return collected() - sum(operations, Role.DELIVER, false) - sum(operations, Role.RETURN, false);
+            return collected() - sum(operations, Role.DELIVER, false) - sum(operations, Role.RETURN, false)
+                    - sum(operations, Role.SEIZE, false);
         }
         public boolean terminal() {
             return RoyalShipmentStore.terminal(stage);
@@ -240,6 +254,7 @@ public final class RoyalShipmentStore {
                 case COLLECT -> Stage.COLLECTING;
                 case DELIVER -> Stage.AWAITING_DELIVERY;
                 case RETURN -> Stage.RETURNING;
+                case SEIZE -> null; // Seizures never start as prepared mutations; see ambush().
             }, "Operation role does not match shipment lifecycle");
             for (var entry : entries.values())
                 for (var other : entry.operations) {
@@ -360,6 +375,25 @@ public final class RoyalShipmentStore {
                     "", old.due, old.operations);
         });
     }
+    /**
+     * Wartime ambush of a dispatched caravan: atomically records the whole remaining escrow as one APPLIED SEIZE
+     * operation and makes the shipment terminal, so {@code collected == delivered + returned + seized} holds.
+     */
+    public synchronized Entry ambush(UUID id, Operation seizure) {
+        return update(id, old -> {
+            if (old.stage == Stage.AMBUSHED)
+                return old;
+            require(old.stage == Stage.IN_TRANSIT && !old.cancellationRequested && old.dispatched(),
+                    "Only a live caravan in transit can be ambushed");
+            require(old.operations.stream().noneMatch(Operation::pending), "Pending cargo blocks an ambush");
+            require(seizure.role == Role.SEIZE && seizure.applied() && seizure.quantity == old.allocatable()
+                            && old.operations.stream().noneMatch(o -> o.id.equals(seizure.id)),
+                    "Ambush must seize exactly the remaining escrow under a fresh identity");
+            var operations = new ArrayList<>(old.operations);
+            operations.add(seizure);
+            return new Entry(old.intent, Stage.AMBUSHED, Blocked.NONE, "", old.due, false, operations);
+        });
+    }
     public synchronized Entry block(UUID id, Blocked blocked, String diagnosis) {
         return update(id, old -> {
             require(!old.terminal() && old.stage != Stage.RECOVERY_REQUIRED,
@@ -421,7 +455,7 @@ public final class RoyalShipmentStore {
         return total;
     }
     private static boolean terminal(Stage stage) {
-        return stage == Stage.DELIVERED || stage == Stage.CANCELLED;
+        return stage == Stage.DELIVERED || stage == Stage.CANCELLED || stage == Stage.AMBUSHED;
     }
     private static boolean sameSource(Intent a, Intent b) {
         return a.dimension.equals(b.dimension) && a.source.village.equals(b.source.village);

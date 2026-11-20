@@ -108,8 +108,6 @@ public final class RoyalConstructionService {
             current = new RoyalConstructionMonitor(level, orders, persistence).observe(current);
             if (current.stage() == Stage.WAITING) {
                 var waitingVillage = PoliticsService.village(level, current.intent().village());
-                if (!waitingVillage.isActive() || !level.isLoaded(waitingVillage.getCenter()))
-                    return blocked(current, Blocked.UNLOADED);
                 if (RoyalConstructionCatalog.naturalWorkPending(waitingVillage))
                     return blocked(current, Blocked.NATURAL_PROJECT);
                 var actor = level.getServer().getPlayerList().getPlayer(current.intent().actor());
@@ -299,7 +297,7 @@ public final class RoyalConstructionService {
         var catalog = catalog(player, kingdom, villageId);
         return exclusive(villageId, () -> {
             var old = orders.load(id);
-            if (old != null) {
+            if ( old != null) {
                 bind(old, player, kingdom);
                 if (upgradeBuilding != null
                         && (!upgradeBuilding.equals(old.intent().upgradeBuilding())
@@ -309,8 +307,6 @@ public final class RoyalConstructionService {
                     throw new IllegalArgumentException("Order ID is bound to another village or building");
                 return advance(old, player);
             }
-            if (!catalog.active() || !level.isLoaded(PoliticsService.village(level, villageId).getCenter()))
-                throw new IllegalStateException("Village is unloaded; postpone royal construction");
             if (catalog.naturalProjectPending() && player == null)
                 throw new IllegalStateException("Village already has natural pending work; wait without replacing it");
             var choice =
@@ -363,8 +359,6 @@ public final class RoyalConstructionService {
             return finishCancellation(entry, player);
         if (entry.stage() == Stage.WAITING) {
             var current = catalog(player, intent.kingdom(), intent.village());
-            if (!current.active() || !level.isLoaded(village.getCenter()))
-                return blocked(entry, Blocked.UNLOADED);
             if (current.naturalProjectPending())
                 return blocked(entry, Blocked.NATURAL_PROJECT);
             if (!eligible(current, intent))
@@ -383,8 +377,6 @@ public final class RoyalConstructionService {
         }
         if (entry.stage() == Stage.REQUESTED) {
             var current = catalog(player, intent.kingdom(), intent.village());
-            if (!current.active() || !level.isLoaded(village.getCenter()))
-                return blocked(entry, Blocked.UNLOADED);
             if (current.naturalProjectPending())
                 return blocked(entry, Blocked.NATURAL_PROJECT);
             if (!eligible(current, intent))
@@ -402,8 +394,6 @@ public final class RoyalConstructionService {
         boolean freshPublication = false;
         if (entry.stage() == Stage.PAID) {
             var current = catalog(player, intent.kingdom(), intent.village());
-            if (!current.active() || !level.isLoaded(village.getCenter()))
-                return blocked(entry, Blocked.UNLOADED);
             if (current.naturalProjectPending())
                 return blocked(entry, Blocked.NATURAL_PROJECT);
             if (!eligible(current, intent))
@@ -432,8 +422,6 @@ public final class RoyalConstructionService {
                     if (!freshPublication)
                         return ambiguous(entry);
                     var current = catalog(player, intent.kingdom(), intent.village());
-                    if (!current.active() || !level.isLoaded(village.getCenter()))
-                        return blocked(entry, Blocked.UNLOADED);
                     if (!eligible(current, intent))
                         return blocked(entry, Blocked.MISSING_PLAN);
                     template(intent.plan());

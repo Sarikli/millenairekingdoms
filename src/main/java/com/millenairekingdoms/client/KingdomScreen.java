@@ -31,7 +31,7 @@ public final class KingdomScreen extends Screen {
     // Millénaire's parchment palette (PanelRenderHelper).
     static final int TITLE = 0xFF2A1A00, TEXT = 0xFF333333, MUTED = 0xFF6E5B3E, GOOD = 0xFF2B6A1E, BAD = 0xFF8A1C1C,
                      LINE = 0xFFAA8866;
-    enum Tab { KINGDOM, MILITARY, DIPLOMACY, ECONOMY, RULERSHIP, CONSTRUCTION, SHIPMENTS }
+    enum Tab { KINGDOM, MILITARY, DIPLOMACY, ECONOMY, RULERSHIP, CONSTRUCTION, SHIPMENTS, ROADS }
     private static final List<Tab> MAIN_TABS =
             List.of(Tab.KINGDOM, Tab.MILITARY, Tab.DIPLOMACY, Tab.ECONOMY, Tab.RULERSHIP);
     private static Tab lastTab = Tab.KINGDOM;
@@ -46,6 +46,8 @@ public final class KingdomScreen extends Screen {
     String shipmentQuantity = "";
     UUID selectedShipmentOrder;
     boolean confirmShipmentCancel;
+    UUID selectedRoadA, selectedRoadB;
+    boolean confirmRoadCancel;
     private int left, top, panelWidth, panelHeight;
     private final List<Text> texts = new ArrayList<>();
     private final List<RowList> lists = new ArrayList<>();
@@ -147,6 +149,7 @@ public final class KingdomScreen extends Screen {
             case RULERSHIP -> rulershipTab();
             case CONSTRUCTION -> KingdomRoyalTabs.constructionTab(this);
             case SHIPMENTS -> KingdomRoyalTabs.shipmentTab(this);
+            case ROADS -> KingdomRoyalTabs.roadsTab(this);
         }
     }
 
@@ -163,7 +166,7 @@ public final class KingdomScreen extends Screen {
         return top + panelHeight - 28;
     }
     private static boolean isRoyalPage(Tab page) {
-        return page == Tab.CONSTRUCTION || page == Tab.SHIPMENTS;
+        return page == Tab.CONSTRUCTION || page == Tab.SHIPMENTS || page == Tab.ROADS;
     }
     private void navigate(Tab page) {
         tab = page;
@@ -171,6 +174,7 @@ public final class KingdomScreen extends Screen {
         confirmAbdicate = false;
         confirmConstructionCancel = false;
         confirmShipmentCancel = false;
+        confirmRoadCancel = false;
         rebuildWidgets();
     }
     @Override
@@ -327,6 +331,13 @@ public final class KingdomScreen extends Screen {
                     var econSettings = new com.millenairekingdoms.economy.RoyalEconomyConfig.Settings(
                             32, 4, 1, 1, offset, divisor);
                     quotedCost = com.millenairekingdoms.economy.RoyalPrices.expedition(econSettings, s, dist);
+                    int roadDiscount = view.contains("expeditionRoadDiscount")
+                            ? view.getInt("expeditionRoadDiscount") : 0;
+                    if (roadDiscount > 0
+                            && (effectiveSource.getBoolean("roadConnected") || selected.getBoolean("roadConnected"))) {
+                        quotedCost = com.millenairekingdoms.economy.RoyalPrices.roadDiscountedFee(
+                                quotedCost, roadDiscount);
+                    }
                     ry = wrapped(rx, ry,
                             t("expedition_quote", effectiveSource.getString("name"), s, Math.round(dist), quotedCost),
                             rw, TEXT, 2);
@@ -345,6 +356,13 @@ public final class KingdomScreen extends Screen {
                 button(rx, ry, rw, t("cancel_raid"),
                         b -> send(KingdomActionPayload.of("CANCEL_RAID")), !o.getBoolean("npc"), null);
                 ry += 20;
+                if (!o.getBoolean("npc")) {
+                    boolean auto = o.getBoolean("autoResolve");
+                    button(rx, ry, rw, t(auto ? "raid_mode_auto" : "raid_mode_player"),
+                            b -> send(KingdomActionPayload.of("RAID_MODE", null, null, auto ? 0L : 1L)),
+                            true, t("raid_mode_hint"));
+                    ry += 20;
+                }
                 ry = wrapped(rx, ry,
                         t("order_line", o.getString("target"), o.contains("source") ? o.getString("source") : "-",
                                 o.getLong("expiresIn") / 20,
@@ -679,11 +697,14 @@ public final class KingdomScreen extends Screen {
         CompoundTag rights = view.getCompound("rights");
         int x = x0(), y = y0(), w = contentWidth();
         int half = (w - 4) / 2;
+        int third = (w - 8) / 3;
         boolean rulerHere = view.getBoolean("isRuler");
-        button(x, y, half, t("tab.construction"),
+        button(x, y, third, t("tab.construction"),
                 b -> navigate(Tab.CONSTRUCTION), rulerHere, t("construction.reason.RULER_ONLY"));
-        button(x + half + 4, y, half, t("tab.shipments"),
+        button(x + third + 4, y, third, t("tab.shipments"),
                 b -> navigate(Tab.SHIPMENTS), rulerHere, t("shipment.reason.RULER_ONLY"));
+        button(x + 2 * (third + 4), y, w - 2 * (third + 4), t("tab.roads"),
+                b -> navigate(Tab.ROADS), rulerHere, t("roads.reason.RULER_ONLY"));
         var information = list(x, y + 21, w, bottom() - 24 - (y + 21));
         String ruler = k.getString("ruler");
         information.addWrapped(font, ruler.isEmpty() ? t("ruler_none") : t("ruler", ruler), TEXT);

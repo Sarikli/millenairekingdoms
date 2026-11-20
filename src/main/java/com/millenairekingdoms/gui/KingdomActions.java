@@ -39,6 +39,7 @@ public final class KingdomActions {
         REFUSE,
         FOUND,
         RAID,
+        RAID_MODE,
         CANCEL_RAID,
         WITHDRAW,
         CONSTRUCTION_SELECT,
@@ -51,7 +52,9 @@ public final class KingdomActions {
         SHIPMENT_QUANTITY,
         SHIPMENT_ORDER,
         SHIPMENT_RESUME,
-        SHIPMENT_CANCEL
+        SHIPMENT_CANCEL,
+        ROAD_BUILD,
+        ROAD_CANCEL
     }
     private static final Map<UUID, Long> LAST = new HashMap<>();
 
@@ -157,6 +160,14 @@ public final class KingdomActions {
                         ? ok("raid_started", "Conquest raid started.")
                         : ok("raid_waiting", "Conquest raid ordered; it starts when possible (%s).", attempt.reason());
             }
+            case RAID_MODE -> {
+                boolean auto = RaidOrderService.setAutoResolve(player, r.amount() != 0L);
+                yield auto
+                        ? ok("raid_mode_auto",
+                                "Raid mode set to Automatic (resolves in the background if target is unloaded on arrival).")
+                        : ok("raid_mode_player",
+                                "Raid mode set to By Player (waits for you at the target for live combat).");
+            }
             case CANCEL_RAID -> {
                 RaidOrderService.cancel(player);
                 yield ok("raid_cancelled", "The waiting conquest raid was called off.");
@@ -204,6 +215,15 @@ public final class KingdomActions {
             case SHIPMENT_CANCEL ->
                 shipmentStatus(new com.millenairekingdoms.shipping.RoyalShipmentService(player.serverLevel())
                                 .cancelPlayer(player, nonNull(first)));
+            case ROAD_BUILD -> {
+                var seg = com.millenairekingdoms.roads.RoadService.orderPlayerRoad(
+                        player, nonNull(first), nonNull(second));
+                yield ok("road_started", "Royal road project started (%s blocks).", seg.totalBlocks());
+            }
+            case ROAD_CANCEL -> {
+                com.millenairekingdoms.roads.RoadService.cancelPlayerRoad(player);
+                yield ok("road_cancelled", "Active royal road project cancelled.");
+            }
         };
     }
 

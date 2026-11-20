@@ -3,6 +3,6 @@
   "minVersion": "0.8.7",
   "package": "com.millenairekingdoms.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": ["RaidManagerMixin", "VillageSpawnQueueMixin", "VillageGrowthQueueMixin"],
+  "mixins": ["RaidManagerMixin", "VillageSpawnQueueMixin", "SiteHunterMixin", "VillageGrowthQueueMixin", "BuildTaskCreditMixin"],
   "injectors": { "defaultRequire": 1 }
 }

@@ -88,8 +88,59 @@ public final class MillenaireKingdoms {
                 net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class,
                 com.millenairekingdoms.economy.RoyalConsolidationRuntime::onTick);
         NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.economy.RoyalConsolidationRuntime::onStopped);
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStartedEvent event)
+                                               -> com.millenairekingdoms.roads.RoadRuntime.cleanupAllOnServerBoundary(
+                                                       event.getServer()));
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppingEvent event)
+                                               -> com.millenairekingdoms.roads.RoadRuntime.cleanupAllOnServerBoundary(
+                                                       event.getServer()));
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.level.ChunkEvent.Load event) -> {
+            if (event.getLevel() instanceof net.minecraft.server.level.ServerLevel serverLevel)
+                com.millenairekingdoms.roads.RoadRuntime.queueChunkForRealization(
+                        serverLevel, event.getChunk().getPos());
+        });
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.level.ChunkEvent.Unload event) -> {
+            if (event.getLevel() instanceof net.minecraft.server.level.ServerLevel serverLevel)
+                com.millenairekingdoms.roads.RoadRuntime.onChunkUnload(serverLevel, event.getChunk().getPos());
+        });
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.entity.EntityJoinLevelEvent event)
+                                               -> com.millenairekingdoms.roads.RoadRuntime.onEntityJoin(
+                                                       event.getEntity()));
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST, false,
+                net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class, event -> {
+                    if (event.getLevel() instanceof net.minecraft.server.level.ServerLevel serverLevel)
+                        com.millenairekingdoms.roads.RoadRuntime.onLevelTick(serverLevel);
+                });
+        registerMarches();
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST, false,
+                net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class,
+                com.millenairekingdoms.virtualeconomy.VirtualEconomyRuntime::onLevelTick);
+        NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.virtualeconomy.VirtualEconomyRuntime::onStopped);
         KingdomSavedData.defaultTruceDays = AutonomyConfig::truceDays;
         LOGGER.info("Millénaire Kingdoms {} initialized (modId={}).", modContainer.getModInfo().getVersion(), MOD_ID);
+    }
+
+    /** Hybrid physical caravans and marching armies (proximity materialization, chunk-safe cleanup). */
+    private static void registerMarches() {
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStartedEvent event)
+                                               -> com.millenairekingdoms.march.MarchRuntime.cleanupAllOnServerBoundary(
+                                                       event.getServer()));
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.server.ServerStoppingEvent event)
+                                               -> com.millenairekingdoms.march.MarchRuntime.cleanupAllOnServerBoundary(
+                                                       event.getServer()));
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.level.ChunkEvent.Unload event) -> {
+            if (event.getLevel() instanceof net.minecraft.server.level.ServerLevel serverLevel)
+                com.millenairekingdoms.march.MarchRuntime.onChunkUnload(serverLevel, event.getChunk().getPos());
+        });
+        NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.march.MarchRuntime::onEntityJoin);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST, false,
+                net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class,
+                com.millenairekingdoms.march.MarchRuntime::onLevelTick);
+        NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.march.MarchRuntime::onIncomingDamage);
+        NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.march.MarchRuntime::onDeath);
+        NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.march.MarchRuntime::onDrops);
+        NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.march.MarchRuntime::onInteract);
+        NeoForge.EVENT_BUS.addListener(com.millenairekingdoms.march.MarchRuntime::onInteractSpecific);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {

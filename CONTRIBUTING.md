@@ -1,6 +1,6 @@
 # Contributing
 
-Use Java 21 and the Gradle 8.14.3 wrapper. Minecraft 1.21.1, NeoForge 21.1.259 and the original unmodified Millénaire 9.0.3 dependency are pinned in gradle.properties. Never upload the original dependency, a world save or player information in a pull request.
+Use Java 21 and the Gradle 8.14.3 wrapper. Minecraft 1.21.1, NeoForge 21.1.259 and the original unmodified Millénaire 9.1.1 dependency are pinned in gradle.properties. Never upload the original dependency, a world save or player information in a pull request.
 
 ## Build and focused validation
 
@@ -9,8 +9,8 @@ From a clean checkout, obtain the checksum-pinned original dependency and build:
 ```sh
 bash scripts/setup-millenaire.sh
 ./gradlew --no-daemon build compileGametestJava
-python3 scripts/check-localization.py --jar build/libs/millenairekingdoms-1.2.2.jar
-python3 scripts/check-project.py --jar build/libs/millenairekingdoms-1.2.2.jar
+python3 scripts/check-localization.py --jar build/libs/millenairekingdoms-1.2.4.jar
+python3 scripts/check-project.py --jar build/libs/millenairekingdoms-1.2.4.jar
 ```
 
 The setup helper downloads only the official pinned JAR and verifies its SHA-256. It does not redistribute native assets or rewrite the dependency. Offline builds work after Gradle artifacts have been cached. The ordinary test task has no JUnit sources; build success alone is not a gameplay test result.

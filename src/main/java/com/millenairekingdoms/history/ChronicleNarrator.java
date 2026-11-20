@@ -43,6 +43,13 @@ public final class ChronicleNarrator {
                 opposing = true;
             }
         }
+        // Individual banditry or raid attack by a non-warring player records only the victim realm and the actor name.
+        if (event.kind() == HistoryEvent.Kind.STRATEGIC_BATTLE && event.realms().size() == 1
+                && !event.actorName().isBlank() && !"true".equals(event.facts().get("independentTarget"))) {
+            b = a;
+            a = event.actorName();
+            opposing = true;
+        }
         var name = event.facts().getOrDefault("buildingName", "");
         String structure = name.isBlank() ? text.resolve(P + "compact.structure.unknown")
                                           : text.resolve(P + "compact.structure.known", name);

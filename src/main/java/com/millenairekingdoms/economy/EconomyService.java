@@ -65,8 +65,14 @@ public final class EconomyService {
         if (kingdom == null || kingdom.fallen() || !kingdom.active())
             return 0;
         long income = 0;
+        var roadCfg = com.millenairekingdoms.roads.RoadConfig.current();
+        java.util.Set<UUID> connected = roadCfg.enabled()
+                ? com.millenairekingdoms.roads.RoadSavedData.get(level).connectedToCapital(data, kingdomId)
+                : java.util.Set.of();
         for (UUID member : data.members(kingdomId)) {
             income += (long) centerLevel(PoliticsService.village(level, member)) * DENIERS_PER_LEVEL;
+            if (connected.contains(member))
+                income += roadCfg.connectedVillageDailyBonus();
         }
         return income;
     }

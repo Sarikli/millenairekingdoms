@@ -333,4 +333,106 @@ final class KingdomRoyalTabs {
             button.setTooltip(Tooltip.create(hint));
         screen.widget(button);
     }
+
+    static void roadsTab(KingdomScreen screen) {
+        int x = screen.x0(), y = screen.y0(), w = screen.contentWidth(), half = w * 11 / 20;
+        var roads = screen.view.getCompound("roads");
+        screen.text(x, y, t("roads.pairs"), TITLE, half - 4);
+        int rx = x + half + 2, rw = w - half - 2;
+        screen.text(rx, y, t("roads.active_title"), TITLE, rw);
+
+        var pairs = roads.getList("pairs", Tag.TAG_COMPOUND);
+        CompoundTag selected = null;
+        for (Tag raw : pairs) {
+            CompoundTag p = (CompoundTag) raw;
+            if (screen.selectedRoadA != null && screen.selectedRoadB != null
+                    && p.getUUID("villageA").equals(screen.selectedRoadA)
+                    && p.getUUID("villageB").equals(screen.selectedRoadB)) {
+                selected = p;
+                break;
+            }
+        }
+        if (selected == null && !pairs.isEmpty()) {
+            selected = pairs.getCompound(0);
+            screen.selectedRoadA = selected.getUUID("villageA");
+            screen.selectedRoadB = selected.getUUID("villageB");
+        }
+
+        int listHeight = Math.max(40, screen.bottom() - y - 62);
+        var choices = screen.list(x, y + 11, half - 4, listHeight);
+        if (pairs.isEmpty()) {
+            choices.addWrapped(screen.font(), t("roads.no_pairs"), MUTED);
+        } else {
+            for (Tag raw : pairs) {
+                CompoundTag p = (CompoundTag) raw;
+                UUID a = p.getUUID("villageA");
+                UUID b = p.getUUID("villageB");
+                boolean isSelected = a.equals(screen.selectedRoadA) && b.equals(screen.selectedRoadB);
+                Component entry = t("roads.pair_entry", p.getString("nameA"), p.getString("nameB"),
+                        p.getInt("distance"));
+                choices.add(entry, p.getBoolean("canOrder") ? TEXT : MUTED, isSelected, () -> {
+                    screen.selectedRoadA = a;
+                    screen.selectedRoadB = b;
+                    screen.confirmRoadCancel = false;
+                    screen.rebuild();
+                });
+            }
+        }
+
+        if (selected != null) {
+            int previewY = y + 14 + listHeight;
+            screen.wrapped(x, previewY,
+                    t("roads.cost_preview", coins(selected.getLong("stipend")), selected.getInt("materials")),
+                    half - 4, TEXT, 2);
+            boolean canOrder = selected.getBoolean("canOrder");
+            String reason = selected.getString("reason");
+            Component tooltip = !canOrder && !reason.isEmpty() ? Component.translatable(reason) : null;
+            UUID vA = selected.getUUID("villageA");
+            UUID vB = selected.getUUID("villageB");
+            shipmentButton(screen, x, screen.bottom() - 20, half - 4,
+                    t("roads.build", coins(selected.getLong("stipend"))),
+                    b -> screen.send(new KingdomActionPayload("ROAD_BUILD", Optional.of(vA), Optional.of(vB), 0, "")),
+                    canOrder, tooltip);
+        }
+
+        var statusList = screen.list(rx, y + 11, rw, listHeight);
+        if (roads.contains("active", Tag.TAG_COMPOUND)) {
+            CompoundTag act = roads.getCompound("active");
+            statusList.addWrapped(screen.font(),
+                    t("roads.route", act.getString("nameA"), act.getString("nameB")), TITLE);
+            statusList.addWrapped(screen.font(),
+                    t("roads.progress", act.getInt("completed"), act.getInt("total")), TEXT);
+            String st = act.getString("status");
+            statusList.addWrapped(screen.font(),
+                    t("roads.status", t("roads.status." + st)),
+                    "BUILDING".equals(st) ? KingdomScreen.GOOD : MUTED);
+            if ("BUILDING".equals(st) || "PAUSED_MATERIALS".equals(st)) {
+                statusList.addWrapped(screen.font(),
+                        t("roads.expected_materials", act.getInt("neededMaterials"), act.getInt("availableSurplus")),
+                        TEXT);
+            }
+            shipmentButton(screen, rx, screen.bottom() - 20, rw,
+                    t(screen.confirmRoadCancel ? "roads.confirm_cancel" : "roads.cancel"), b -> {
+                        if (screen.confirmRoadCancel) {
+                            screen.confirmRoadCancel = false;
+                            screen.send(KingdomActionPayload.of("ROAD_CANCEL"));
+                        } else {
+                            screen.confirmRoadCancel = true;
+                            screen.rebuild();
+                        }
+                    }, roads.getBoolean("canDecide"), null);
+        } else {
+            statusList.addWrapped(screen.font(), t("roads.none_active"), MUTED);
+        }
+        var completed = roads.getList("completed", Tag.TAG_COMPOUND);
+        if (!completed.isEmpty()) {
+            statusList.addWrapped(screen.font(), t("roads.completed_count", completed.size()), TITLE);
+            for (Tag raw : completed) {
+                CompoundTag c = (CompoundTag) raw;
+                statusList.addWrapped(screen.font(),
+                        t("roads.completed_item", c.getString("nameA"), c.getString("nameB"), c.getInt("total")),
+                        KingdomScreen.GOOD);
+            }
+        }
+    }
 }

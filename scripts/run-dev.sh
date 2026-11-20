@@ -4,14 +4,17 @@ set -euo pipefail
 task=${1:-runClient}
 if (($#)); then shift; fi
 case "$task" in
-    runClient|runServer|runServerJar|verifyConquest|verifyWars|verifyStage5|verifyCapitals|verifyAutonomy|verifyGui|verifyFounding|verifyRoyalEconomy) ;;
-    *) printf 'Supported tasks: runClient, runServer, runServerJar, verifyConquest, verifyWars, verifyStage5, verifyCapitals, verifyAutonomy, verifyGui, verifyFounding, verifyRoyalEconomy\n' >&2; exit 2 ;;
+    runClient|runServer|runServerJar|verifyConquest|verifyWars|verifyStage5|verifyCapitals|verifyAutonomy|verifyGui|verifyFounding|verifyRoyalEconomy|verifyLocalization|verifyRoads|verifyMarches|verifyVirtualEconomy) ;;
+    *) printf 'Supported tasks: runClient, runServer, runServerJar, verifyConquest, verifyWars, verifyStage5, verifyCapitals, verifyAutonomy, verifyGui, verifyFounding, verifyRoyalEconomy, verifyLocalization, verifyRoads, verifyMarches, verifyVirtualEconomy\n' >&2; exit 2 ;;
 esac
 
 project_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)
 if [[ "$project_dir" != *[!\ -~]* ]]; then
-    exec "$project_dir/gradlew" --project-dir "$project_dir" \
-        --gradle-user-home "$project_dir/.gradle-user-home" --console=plain "$task" "$@"
+    if [[ -d "$project_dir/.gradle-user-home/caches" ]]; then
+        exec "$project_dir/gradlew" --project-dir "$project_dir" \
+            --gradle-user-home "$project_dir/.gradle-user-home" --console=plain "$task" "$@"
+    fi
+    exec "$project_dir/gradlew" --project-dir "$project_dir" --console=plain "$task" "$@"
 fi
 
 # A symlink does not work: Gradle canonicalizes it back to the non-ASCII path.

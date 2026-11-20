@@ -76,7 +76,10 @@ def pairedGameTestSuites = [
     [run: 'independentNativeGameTestServer', verify: 'verifyIndependentNative',    ns: 'millenairekingdoms_independent_native_tests',props: ['kingdoms.tests.historyWorld': 'true']],
     [run: 'economicQueueGameTestServer',     verify: 'verifyEconomicQueue',        ns: 'millenairekingdoms_economic_queue_tests'],
     [run: 'economicBackgroundGameTestServer',verify: 'verifyEconomicBackground',   ns: 'millenairekingdoms_economic_background_tests',props: ['kingdoms.tests.historyWorld': 'true', 'kingdoms.tests.liveShipments': 'true', 'kingdoms.tests.liveConstruction': 'true', 'kingdoms.tests.economicBackground': 'true']],
-    [run: 'economicNativeGameTestServer',    verify: 'verifyEconomicNative',       ns: 'millenairekingdoms_economic_native_tests',   props: ['kingdoms.tests.liveNpcEconomy': 'true', 'kingdoms.tests.liveConstruction': 'true']]
+    [run: 'economicNativeGameTestServer',    verify: 'verifyEconomicNative',       ns: 'millenairekingdoms_economic_native_tests',   props: ['kingdoms.tests.liveNpcEconomy': 'true', 'kingdoms.tests.liveConstruction': 'true']],
+    [run: 'roadGameTestServer',              verify: 'verifyRoads',                ns: 'millenairekingdoms_road_tests'],
+    [run: 'marchGameTestServer',             verify: 'verifyMarches',              ns: 'millenairekingdoms_march_tests',             props: ['kingdoms.tests.marches': 'true']],
+    [run: 'virtualEconomyGameTestServer',    verify: 'verifyVirtualEconomy',       ns: 'millenairekingdoms_virtual_economy_tests',  props: ['kingdoms.tests.virtualEconomy': 'true']]
 ]
 
 def extraGameTestRuns = [

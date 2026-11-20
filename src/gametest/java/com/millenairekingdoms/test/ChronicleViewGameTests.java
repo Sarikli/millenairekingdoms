@@ -26,7 +26,7 @@ public final class ChronicleViewGameTests {
         try {
             ChronicleRequestPayload.CODEC.encode(buf, request);
             h.assertTrue(
-                    ChronicleRequestPayload.CODEC.decode(buf).equals(request) && KingdomNetwork.VERSION.equals("11"),
+                    ChronicleRequestPayload.CODEC.decode(buf).equals(request) && KingdomNetwork.VERSION.equals("12"),
                     "New bounded read-only channel retains correlation and filters on matching clients");
         } finally {
             buf.release();

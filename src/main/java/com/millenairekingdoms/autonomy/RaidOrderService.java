@@ -77,7 +77,11 @@ public final class RaidOrderService {
                 continue;
             Attempt attempt;
             try {
-                attempt = StrategicBattleService.attempt(level, data, order);
+                // An army still on the road is never resolved abstractly; once it has arrived, an unattended
+                // (both-unloaded) NPC battle keeps the established strategic resolution.
+                attempt = com.millenairekingdoms.march.MarchService.blocksStrategic(level, order.id())
+                        ? null
+                        : StrategicBattleService.attempt(level, data, order);
                 if (attempt == null)
                     attempt = attempt(level, data, order, s);
             } catch (RuntimeException e) {
@@ -92,7 +96,10 @@ public final class RaidOrderService {
                 WAITING.remove(order.id());
                 continue;
             }
-            if (attempt.status() == Status.DROPPED || now >= order.expiresGameTime()) {
+            if (attempt.status() == Status.DROPPED
+                    || now >= order.expiresGameTime()
+                            && !com.millenairekingdoms.march.MarchService.holdsOrder(level, order.id())) {
+                com.millenairekingdoms.march.MarchService.finishArmy(level, order.id());
                 data.removeOrder(order.id());
                 refundOrder(level, data, order);
                 String previous = WAITING.remove(order.id());
@@ -125,7 +132,11 @@ public final class RaidOrderService {
         // retry.
         if (!order.equals(data.order(order.id())))
             return Attempt.dropped("the order was withdrawn or replaced");
-        if (level.getGameTime() >= order.expiresGameTime())
+        var march = com.millenairekingdoms.march.MarchService.army(level, order.id());
+        if (march != null && march.status() == com.millenairekingdoms.march.MarchSavedData.Status.DEFEATED)
+            return armyDefeated(level, data, order);
+        if (level.getGameTime() >= order.expiresGameTime()
+                && !com.millenairekingdoms.march.MarchService.holdsOrder(level, order.id()))
             return Attempt.dropped("the order expired");
         Village target = PoliticsService.village(level, order.target());
         if (target == null)
@@ -161,9 +172,10 @@ public final class RaidOrderService {
         if (data.involves(order.target()) || Military.busy(target))
             return Attempt.waiting("the target is busy with another raid");
         Village source;
-        if (order.source() != null) {
-            source = PoliticsService.village(level, order.source());
-            if (source == null || !order.kingdom().equals(data.owner(order.source())))
+        UUID fixedSource = order.source() != null ? order.source() : march != null ? march.source() : null;
+        if (fixedSource != null) {
+            source = PoliticsService.village(level, fixedSource);
+            if (source == null || !order.kingdom().equals(data.owner(fixedSource)))
                 return Attempt.dropped("the raiding village left the kingdom");
             String problem = Military.problem(source, target);
             if (problem != null)
@@ -173,10 +185,21 @@ public final class RaidOrderService {
             if (source == null)
                 return Attempt.waiting("no village of the kingdom is ready");
         }
-        if (!level.isPositionEntityTicking(target.getCenter()))
+        // Bannered expedition army: march along friendly roads and the planned approach first. The native raid (and its
+        // 23000-tick timer) only starts once the army reaches the target perimeter.
+        if (march == null && com.millenairekingdoms.march.MarchService.marchEligible(source, target))
+            march = com.millenairekingdoms.march.MarchService.startArmy(
+                    level, order.id(), order.kingdom(), source, target);
+        if (march != null && march.marching()) {
+            tellOnce(level, data, order, march, source, target);
+            return Attempt.waiting("the army is marching on " + PoliticsService.name(target) + " ("
+                    + march.remainingSteps() + " blocks to go)");
+        }
+        if (!level.isPositionEntityTicking(target.getCenter())) {
+            if (!order.byNpc() && order.autoResolve())
+                return resolveAutoPlayerBattle(level, data, order, source, target, campaign);
             return Attempt.waiting(PoliticsService.name(target) + " is not loaded (no player nearby)");
-        if (!level.getChunkSource().hasChunk(source.getCenter().getX() >> 4, source.getCenter().getZ() >> 4))
-            return Attempt.waiting(PoliticsService.name(source) + " is not loaded (no player nearby)");
+        }
         if (order.quotedCost() > 0) {
             int currentStrength = source.getVillageRaidingStrength();
             if (currentStrength <= 0)
@@ -193,6 +216,7 @@ public final class RaidOrderService {
         }
         try {
             var raid = ConquestService.launch(level, source.getId().uuid(), order.target(), order.issuer(), order.id());
+            com.millenairekingdoms.march.MarchService.finishArmy(level, order.id());
             acknowledgeOrderPayment(level, data, order);
             LOGGER.info("[Kingdoms] Conquest order {} started raid {}: {} -> {}.", order.id(), raid.id(),
                     PoliticsService.name(source), PoliticsService.name(target));
@@ -205,6 +229,55 @@ public final class RaidOrderService {
         } catch (IllegalArgumentException notNow) {
             return Attempt.waiting(notNow.getMessage());
         }
+    }
+
+    /**
+     * The order's army lost on the road: the expedition fee was spent (acknowledged, never refunded), the order ends
+     * and the march record is removed. Reported as RESOLVED so the order is not refunded as a dropped one.
+     */
+    private static Attempt armyDefeated(ServerLevel level, KingdomSavedData data, RaidOrder order) {
+        failDefeatedArmy(level, order.id());
+        tell(level, data, order,
+                com.millenairekingdoms.localization.PublicText
+                        .of("[Kingdoms] The conquest raid on %s failed: the army was defeated on the road.",
+                                targetName(level, order))
+                        .withStyle(ChatFormatting.RED));
+        return new Attempt(Status.RESOLVED, "the army was defeated on the road", null);
+    }
+
+    /**
+     * Ends the order of a defeated army immediately: the expedition fee stays spent (acknowledged, never refunded),
+     * the order is removed and the march leaves the road. Idempotent.
+     */
+    public static void failDefeatedArmy(ServerLevel level, UUID orderId) {
+        var data = KingdomSavedData.get(level);
+        RaidOrder order = data.order(orderId);
+        if (order != null) {
+            try {
+                acknowledgeOrderPayment(level, data, order);
+            } catch (RuntimeException deferred) {
+                // reconcileExpeditions settles a launched/ended fee later; the order still ends now.
+                LOGGER.warn("[Kingdoms] Defeated army {} fee acknowledgement deferred: {}", orderId,
+                        deferred.getMessage());
+            }
+            data.removeOrder(order.id());
+            WAITING.remove(order.id());
+            LOGGER.info("[Kingdoms] Conquest order {} failed: its army was defeated on the road.", order.id());
+        }
+        com.millenairekingdoms.march.MarchService.finishArmy(level, orderId);
+    }
+
+    private static final java.util.Set<UUID> ANNOUNCED = java.util.concurrent.ConcurrentHashMap.newKeySet();
+
+    private static void tellOnce(ServerLevel level, KingdomSavedData data, RaidOrder order,
+            com.millenairekingdoms.march.MarchSavedData.March march, Village source, Village target) {
+        if (!ANNOUNCED.add(order.id()))
+            return;
+        tell(level, data, order,
+                com.millenairekingdoms.localization.PublicText
+                        .of("[Kingdoms] The army of %s marches on %s under its banner.", PoliticsService.name(source),
+                                PoliticsService.name(target))
+                        .withStyle(ChatFormatting.GOLD));
     }
 
     /** Remaining cooldown days before the next conquest raid on target may start (0 = none). */
@@ -338,6 +411,97 @@ public final class RaidOrderService {
         return kingdom;
     }
 
+    /** Updates whether a waiting player order resolves automatically when arriving at an unloaded target. */
+    public static boolean setAutoResolve(ServerPlayer player, boolean autoResolve) {
+        var data = KingdomSavedData.get(player.serverLevel());
+        Kingdom kingdom = PoliticsService.ruledKingdom(player);
+        RaidOrder order = data.orderOf(kingdom.id());
+        KingdomException.check(order != null && !order.byNpc(), "millenairekingdoms.raid.no_order",
+                "Your kingdom has no conquest raid waiting.");
+        data.setOrderAutoResolve(order.id(), autoResolve);
+        return autoResolve;
+    }
+
+    private static Attempt resolveAutoPlayerBattle(ServerLevel level, KingdomSavedData data, RaidOrder order,
+            Village source, Village target, KingdomSavedData.Campaign campaign) {
+        int currentStrength = source.getVillageRaidingStrength();
+        if (currentStrength <= 0)
+            return Attempt.dropped("the raiding village no longer has available raiding strength");
+        if (order.quotedCost() > 0 && currentStrength > order.quotedStrength()) {
+            return Attempt.dropped(
+                    "source raiding strength increased since quoting; place a new order at the updated cost");
+        }
+        int defense = Math.max(0, target.getVillageDefendingStrength());
+        OpposedDice.Roll roll = defense == 0
+                ? null
+                : OpposedDice.roll(currentStrength, defense, level.getRandom(), StrategicCombatConfig.settings());
+        boolean attackerWon = roll == null || roll.attackerWon();
+        long tick = Math.max(1L, level.getGameTime());
+        var raid = data.beginIdentified(
+                source.getId().uuid(), order.target(), tick, order.issuer(), order.id(), order.id());
+        if (attackerWon)
+            data.recordVictory(raid);
+        data.finish(data.raid(order.target()), KingdomSavedData.Outcome.LOST);
+        var receipt = data.receipt(order.id());
+        com.millenairekingdoms.march.MarchService.finishArmy(level, order.id());
+        acknowledgeOrderPayment(level, data, order);
+
+        try {
+            var facts = new HashMap<String, String>();
+            facts.put("mode", "STRATEGIC_PLAYER_AUTO");
+            facts.put("attackingStrength", Integer.toString(currentStrength));
+            facts.put("defendingStrength", Integer.toString(defense));
+            if (roll != null) {
+                facts.put("attackerDie", Integer.toString(roll.attackDie()));
+                facts.put("defenderDie", Integer.toString(roll.defenseDie()));
+                facts.put("modifier", Integer.toString(roll.relativeModifier()));
+            }
+            UUID defenderOwner = data.owner(order.target());
+            var realms = new java.util.ArrayList<com.millenairekingdoms.history.HistoryEvent.Realm>();
+            if (defenderOwner != null && !defenderOwner.equals(order.kingdom())) {
+                realms.add(com.millenairekingdoms.history.HistoryHooks.realm(
+                        level, attackerWon ? order.kingdom() : defenderOwner));
+                realms.add(com.millenairekingdoms.history.HistoryHooks.realm(
+                        level, attackerWon ? defenderOwner : order.kingdom()));
+            } else {
+                realms.add(com.millenairekingdoms.history.HistoryHooks.realm(level, order.kingdom()));
+            }
+            var places = List.of(
+                    com.millenairekingdoms.history.HistoryHooks.place(level, source.getId().uuid()),
+                    com.millenairekingdoms.history.HistoryHooks.place(level, order.target()));
+            com.millenairekingdoms.history.HistoryHooks.record(level,
+                    com.millenairekingdoms.history.HistoryHooks.event(level,
+                            com.millenairekingdoms.history.HistoryEvent.Kind.STRATEGIC_BATTLE,
+                            "auto-assault:" + order.id(), realms, places, null, "", "PLAYER_AUTOMATIC_ASSAULT",
+                            attackerWon ? "ATTACKER_VICTORY" : "DEFENDED", facts));
+        } catch (RuntimeException failure) {
+            LOGGER.warn("[Kingdoms] Auto-assault history {} not recorded: {}", order.id(), failure.getMessage());
+        }
+
+        if (attackerWon && receipt != null && receipt.transferred()) {
+            tell(level, data, order,
+                    Component.translatableWithFallback("millenairekingdoms.raid.auto_conquered",
+                                     "[Kingdoms] Automatic assault succeeded: %s conquered %s (%s vs %s).",
+                                     PoliticsService.name(source), PoliticsService.name(target), currentStrength,
+                                     defense)
+                            .withStyle(ChatFormatting.GOLD));
+        } else if (attackerWon) {
+            tell(level, data, order,
+                    Component.translatableWithFallback("millenairekingdoms.raid.auto_won",
+                                     "[Kingdoms] Automatic assault on %s succeeded (%s/%s victories, %s vs %s).",
+                                     PoliticsService.name(target), data.wins(campaign),
+                                     KingdomSavedData.requiredWins(campaign), currentStrength, defense)
+                            .withStyle(ChatFormatting.GOLD));
+        } else {
+            tell(level, data, order,
+                    Component.translatableWithFallback("millenairekingdoms.raid.auto_lost",
+                                     "[Kingdoms] Automatic assault on %s was repelled by its defenders (%s vs %s).",
+                                     PoliticsService.name(target), currentStrength, defense)
+                            .withStyle(ChatFormatting.RED));
+        }
+        return new Attempt(Status.RESOLVED, "Automatic strategic battle resolved", null);
+    }
+
     /** The ruler cancels the kingdom's waiting order, refunding any upfront expedition fee. */
     public static RaidOrder cancel(ServerPlayer player) {
         var level = player.serverLevel();
@@ -348,6 +512,7 @@ public final class RaidOrderService {
                 order != null, "millenairekingdoms.raid.no_order", "Your kingdom has no conquest raid waiting.");
         data.removeOrder(order.id());
         WAITING.remove(order.id());
+        com.millenairekingdoms.march.MarchService.finishArmy(level, order.id());
         refundOrder(level, data, order);
         return order;
     }

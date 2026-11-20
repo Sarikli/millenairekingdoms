@@ -19,6 +19,9 @@ import org.millenaire.building.BuildingInventory;
 /** Authorized physical treasury quote. Public access is read-only; the payment coordinator owns mutations. */
 public final class RoyalTreasurySnapshot {
     private record Chest(BlockPos position, ChestBlockEntity entity, BlockState state) {}
+    /** Logs each set of chest-less declared spots once instead of on every quote. */
+    private static final java.util.Set<List<BlockPos>> REPORTED_ABSENT =
+            java.util.concurrent.ConcurrentHashMap.newKeySet();
     private final ServerLevel level;
     private final ServerPlayer player;
     private final UUID kingdom, capital;
@@ -27,6 +30,8 @@ public final class RoyalTreasurySnapshot {
     private final BuildingInventory storage;
     private final List<BlockPos> declaredChests;
     private final List<Chest> chests;
+    /** Declared, loaded chest spots that held no chest when quoted; a chest appearing there invalidates the quote. */
+    private final List<BlockPos> absentChests;
     private final List<ItemStack> slots;
 
     public static RoyalTreasurySnapshot forNpc(ServerLevel level, UUID kingdom) {
@@ -66,7 +71,15 @@ public final class RoyalTreasurySnapshot {
             throw new IllegalStateException("Capital town hall storage is unavailable");
         this.declaredChests = storage.getChestPositions().stream().map(BlockPos::immutable).toList();
         var resolved = new LinkedHashMap<BlockPos, Chest>();
+        var absent = new ArrayList<BlockPos>();
         for (BlockPos position : declaredChests) {
+            // Millénaire declares chest spots from the building plan; a loaded spot can hold no chest (not built yet,
+            // replaced by the player). Millénaire's own inventory skips such spots, so a new quote does too: it holds
+            // no coins. Existing-receipt recovery stays strict so a payment's chests are never silently dropped.
+            if (recoveryCapital == null && level.isLoaded(position) && !isChest(position)) {
+                absent.add(position.immutable());
+                continue;
+            }
             Chest chest = resolve(position);
             resolved.putIfAbsent(position, chest);
             if (chest.state.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
@@ -81,8 +94,26 @@ public final class RoyalTreasurySnapshot {
                 resolved.putIfAbsent(neighbor, other);
             }
         }
+        if (!absent.isEmpty() && REPORTED_ABSENT.add(List.copyOf(absent))) {
+            var found = new StringBuilder();
+            for (BlockPos position : absent)
+                found.append(' ').append(position.toShortString()).append('=')
+                        .append(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(
+                                level.getBlockState(position).getBlock()));
+            com.mojang.logging.LogUtils.getLogger().warn(
+                    "[Kingdoms] Capital town hall declares {} chest spot(s) without a chest (skipped):{}; chests found: {}",
+                    absent.size(), found, resolved.keySet().stream().map(BlockPos::toShortString).toList());
+        }
+        if (resolved.isEmpty())
+            throw new IllegalStateException("Town hall chest is missing or unsupported");
         this.chests = List.copyOf(resolved.values());
+        this.absentChests = List.copyOf(absent);
         this.slots = readSlots();
+    }
+
+    private boolean isChest(BlockPos position) {
+        return level.getBlockState(position).getBlock() instanceof ChestBlock
+                && level.getBlockEntity(position) instanceof ChestBlockEntity;
     }
 
     public UUID kingdom() {
@@ -179,6 +210,9 @@ public final class RoyalTreasurySnapshot {
                 throw new IllegalStateException("Treasury chest unloaded, replaced or reconnected; obtain a new quote");
             }
         }
+        for (BlockPos position : absentChests)
+            if (!level.isLoaded(position) || isChest(position))
+                throw new IllegalStateException("Treasury chest unloaded, replaced or reconnected; obtain a new quote");
         var actual = readSlots();
         if (actual.size() != slots.size())
             throw new IllegalStateException("Treasury inventory size changed");

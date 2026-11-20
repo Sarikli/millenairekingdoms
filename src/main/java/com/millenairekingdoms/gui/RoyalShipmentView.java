@@ -62,7 +62,7 @@ public final class RoyalShipmentView {
     }
     public static void selectProduct(ServerPlayer player, ResourceLocation product) {
         var state = session(player, PoliticsService.ruledKingdom(player));
-        if (RoyalVillageStock.forPlayer(player, state.source)
+        if (RoyalVillageStock.forPlayerShipment(player, state.source)
                         .products()
                         .stream()
                         .limit(MAX_PRODUCTS)
@@ -103,7 +103,8 @@ public final class RoyalShipmentView {
                 var v = new CompoundTag();
                 v.putUUID("id", id);
                 v.putString("name", PoliticsService.name(village));
-                v.putBoolean("loaded", village.isActive() && level.isLoaded(village.getCenter()));
+                v.putBoolean("loaded", RoyalVillageStock.physicallyAvailable(level, village)
+                                || com.millenairekingdoms.virtualeconomy.VirtualEconomyConfig.shipments());
                 villages.add(v);
             }
             out.put("villages", villages);
@@ -174,7 +175,7 @@ public final class RoyalShipmentView {
             }
             RoyalVillageStock stock;
             try {
-                stock = RoyalVillageStock.forPlayer(player, state.source);
+                stock = RoyalVillageStock.forPlayerShipment(player, state.source);
             } catch (IllegalStateException unavailable) {
                 state.offer = null;
                 out.putString("reason", "SOURCE_UNAVAILABLE");

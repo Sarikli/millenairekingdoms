@@ -87,6 +87,12 @@ public final class KingdomDay {
             LOGGER.error("[Kingdoms] Kingdom founding evaluation of day {} failed; the next period evaluates again.",
                     day, e);
         }
+        try {
+            com.millenairekingdoms.roads.RoadService.dailyStep(level, data, day);
+        } catch (RuntimeException e) {
+            LOGGER.error("[Kingdoms] Daily road construction of day {} failed; remaining progress continues tomorrow.",
+                    day, e);
+        }
         return true;
     }
 }

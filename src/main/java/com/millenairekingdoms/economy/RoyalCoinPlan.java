@@ -56,10 +56,13 @@ public final class RoyalCoinPlan {
     }
 
     /**
-     * Payment-only allocation: never move value between separately saved physical containers.
-     * A full container which cannot make exact change is skipped; no partial mutation escapes planning.
+     * Payment-only allocation over a treasury made of physical containers of {@code size} slots. Each container first
+     * pays what it can with its own change. When a full container cannot hold its change (for example one gold coin in
+     * a chest full of goods), its coins are taken and the change goes into another container of the same treasury.
+     * Total value is exact and the plan is all-or-nothing: no partial mutation escapes planning. The caller journals
+     * every changed container, so the payment stays recoverable per chest.
      */
-    static Plan debitSeparate(List<ItemStack> slots, int size, long amount) {
+    public static Plan debitSeparate(List<ItemStack> slots, int size, long amount) {
         if (amount <= 0 || size <= 0 || slots.size() % size != 0)
             throw new IllegalArgumentException("Invalid physical treasury payment");
         long before = spendableValue(slots);
@@ -81,6 +84,39 @@ public final class RoyalCoinPlan {
             for (int i = 0; i < size; i++)
                 after.set(start + i, plan.after.get(i).copy());
             remaining -= take;
+        }
+        // Spill pass: a container with no room for its change gives up all its coins and another container of the
+        // same treasury receives the change.
+        for (int start = 0; start < slots.size() && remaining > 0; start += size) {
+            var part = after.subList(start, start + size);
+            long value = spendableValue(part);
+            long take = Math.min(remaining, value);
+            long change = value - take;
+            if (take == 0 || change == 0)
+                continue;
+            List<ItemStack> emptied = debit(part, value).after;
+            boolean placed = false;
+            for (int other = 0; other < slots.size() && !placed; other += size) {
+                if (other == start)
+                    continue;
+                var target = after.subList(other, other + size);
+                Plan credited;
+                try {
+                    credited = credit(target, change);
+                } catch (IllegalArgumentException noRoom) {
+                    continue;
+                }
+                // A chest whose coins change but whose value ends where it started would look like a corrupt image.
+                if (spendableValue(credited.after) == spendableValue(slots.subList(other, other + size)))
+                    continue;
+                for (int i = 0; i < size; i++) {
+                    after.set(start + i, emptied.get(i).copy());
+                    after.set(other + i, credited.after.get(i).copy());
+                }
+                placed = true;
+            }
+            if (placed)
+                remaining -= take;
         }
         if (remaining != 0)
             throw new IllegalArgumentException(

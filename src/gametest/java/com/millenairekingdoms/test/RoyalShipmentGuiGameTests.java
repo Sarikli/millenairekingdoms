@@ -447,8 +447,8 @@ public final class RoyalShipmentGuiGameTests {
                     Optional.empty(), Long.MAX_VALUE, CHERRY.toString());
             KingdomActionPayload.CODEC.encode(buffer, payload);
             h.assertTrue(
-                    KingdomActionPayload.CODEC.decode(buffer).equals(payload) && KingdomNetwork.VERSION.equals("11"),
-                    "Shared version11 bounded wire codec preserves shipment IDs/quantity with server-side validation");
+                    KingdomActionPayload.CODEC.decode(buffer).equals(payload) && KingdomNetwork.VERSION.equals("12"),
+                    "Shared version 12 bounded wire codec preserves shipment IDs/quantity with server-side validation");
         } finally {
             buffer.release();
         }

@@ -74,7 +74,7 @@ def main():
                 raise ValueError(f"{locale}/{key}: semantic parameter identity/type/multiplicity differs")
 
     props = dict(re.findall(r'^([a-z_][a-z0-9_]*)=(.*)$', (ROOT / "gradle.properties").read_text(), re.M))
-    mv = props.get("millenaire_version", "9.1.0")
+    mv = props.get("millenaire_version", "9.1.1")
     original = ROOT / f"millenaire-{mv}.jar"
     if original.exists():
         with zipfile.ZipFile(original) as native:

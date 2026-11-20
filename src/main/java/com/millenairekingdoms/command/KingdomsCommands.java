@@ -26,6 +26,28 @@ public final class KingdomsCommands {
         event.getDispatcher().register(Commands.literal("kingdoms").requires(source -> source.hasPermission(2))
                 .then(RoyalRecoveryCommands.tree())
                 .then(RoyalNpcCommands.tree())
+                .then(Commands.literal("road")
+                        .then(Commands.literal("status").then(kingdomArgument().executes(c -> guarded(c, () -> {
+                            var level = c.getSource().getLevel();
+                            var data = data(c);
+                            UUID kId = PoliticalArguments.kingdom(c, "kingdom");
+                            var k = data.kingdom(kId);
+                            if (k == null)
+                                throw new IllegalArgumentException("Unknown kingdom.");
+                            var roadData = com.millenairekingdoms.roads.RoadSavedData.get(level);
+                            var connected = roadData.connectedToCapital(data, kId);
+                            var segs = roadData.segmentsForKingdom(kId);
+                            reply(c, Component.translatable("millenairekingdoms.commands.road.op_summary",
+                                    k.name(), connected.size(), segs.size()));
+                            var active = roadData.activeSegment(kId);
+                            if (active != null) {
+                                reply(c, Component.translatable("millenairekingdoms.commands.road.status_active",
+                                        active.villageA().toString(), active.villageB().toString(),
+                                        active.completedBlocks(), active.totalBlocks(),
+                                        Component.translatable(
+                                                "millenairekingdoms.gui.roads.status." + active.status().name())));
+                            }
+                        })))))
                 .then(Commands.literal("war")
                         .then(Commands.literal("declare").then(kingdomArgument("attackerKingdom")
                                 .then(kingdomArgument("defenderKingdom").executes(c -> guarded(c, () -> {

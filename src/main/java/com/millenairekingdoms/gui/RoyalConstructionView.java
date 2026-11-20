@@ -83,7 +83,7 @@ public final class RoyalConstructionView {
                 return out;
             }
             out.putUUID("village", state.village);
-            out.putBoolean("available", village.isActive() && level.isLoaded(village.getCenter()));
+            out.putBoolean("available", true);
             out.putBoolean("naturalPending", RoyalConstructionCatalog.naturalWorkPending(village));
             var type = ModCultures.getVillageType(village.getVillageTypeId());
             var path = level.getServer()
@@ -147,7 +147,6 @@ public final class RoyalConstructionView {
             String reason = type == null || type.playerControlled() || village.getOwnerUUID() != null ? "CONTROLLED"
                     : MillenaireServerConfig.SERVER.ignoreResourceCost.get() ? "RESOURCE_COSTS_DISABLED"
                     : busy                                                   ? "ORDER_PENDING"
-                    : !out.getBoolean("available")                           ? "UNLOADED"
                                                                              : "";
             long funds = 0;
             boolean treasury = false;

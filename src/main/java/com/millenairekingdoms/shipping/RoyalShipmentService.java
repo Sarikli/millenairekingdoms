@@ -135,8 +135,8 @@ public final class RoyalShipmentService {
             boolean requireStock) {
         if (from.equals(to) || quantity < 1 || quantity > RoyalShipmentConfig.current().maximumQuantity())
             throw new IllegalArgumentException("Choose distinct member villages and a supported positive quantity");
-        var stock = player == null ? RoyalVillageStock.forNpc(level, kingdom, from)
-                                   : RoyalVillageStock.forPlayer(player, from);
+        var stock = player == null ? RoyalVillageStock.forNpcShipment(level, kingdom, from)
+                                   : RoyalVillageStock.forPlayerShipment(player, from);
         var item = item(product);
         var available = stock.availability(item);
         if (requireStock && available.available() < quantity)
@@ -150,10 +150,17 @@ public final class RoyalShipmentService {
         long distance = (long) Math.ceil(Math.hypot((double) source.center().getX() - target.center().getX(),
                 (double) source.center().getZ() - target.center().getZ()));
         stock.requireUnchanged();
+        long duration = RoyalShipmentConfig.transit().duration(distance);
+        var roadCfg = com.millenairekingdoms.roads.RoadConfig.current();
+        if (roadCfg.enabled()
+                && com.millenairekingdoms.roads.RoadSavedData.get(level).areLinkedOnNetwork(
+                        data, kingdom, from, to)) {
+            duration = RoyalPrices.roadAcceleratedDuration(duration, roadCfg.shipmentDurationReductionPercent());
+        }
         return new Quote(kingdom, k.capital(), player == null ? null : player.getUUID(),
                 player == null ? 0 : data.ruler(kingdom).sinceGameTime(), source, target, product, quantity,
                 available.available(), distance, RoyalPrices.shipment(RoyalEconomyConfig.current(), quantity, distance),
-                RoyalShipmentConfig.transit().duration(distance));
+                duration);
     }
     private Endpoint endpoint(UUID kingdom, UUID villageId, boolean npc) {
         var data = KingdomSavedData.get(level);
@@ -304,6 +311,8 @@ public final class RoyalShipmentService {
         int remaining = intent.quantity() - entry.collected();
         if (source.availability(item(intent.product())).available() < remaining)
             throw new Deferred(Blocked.STOCK, "Current native reserves leave insufficient remaining dispatch surplus");
+        if (source.virtual())
+            return allocateVirtual(entry, Role.COLLECT, source, remaining);
         var slots = source.slots();
         var positions = source.positions();
         var product = new ItemStack(item(intent.product()));
@@ -324,13 +333,52 @@ public final class RoyalShipmentService {
         if (receipt == null || receipt.state() != State.PAID && receipt.state() != State.COMMITTED)
             return orders.quarantine(
                     entry.intent().id(), "Dispatched shipment lacks its original paid logistics receipt");
+        // Road-linked shipments travel as a hybrid caravan (background timer, physical near players).
+        com.millenairekingdoms.march.MarchService.ensureCaravan(level, entry);
         if (receipt.state() == State.PAID) {
             commit(entry);
             return orders.block(entry.intent().id(), Blocked.NONE, "");
         }
         if (level.getGameTime() < entry.due())
             return orders.block(entry.intent().id(), Blocked.NONE, "");
+        // A caravan that players are watching walks for real; delivery waits until it reaches the destination.
+        if (com.millenairekingdoms.march.MarchService.holdsDelivery(level, entry.intent().id()))
+            return orders.block(entry.intent().id(), Blocked.NONE, "");
+        com.millenairekingdoms.march.MarchService.removeCaravan(level, entry.intent().id());
         return orders.awaitDelivery(entry.intent().id(), level.getGameTime());
+    }
+    /**
+     * Wartime ambush of a dispatched caravan. The original fee stays committed (the trip happened), the whole escrow is
+     * recorded as one applied SEIZE so the conservation invariant holds, and the shipment becomes terminal AMBUSHED.
+     * Returns the terminal entry, or the unchanged entry when it can no longer be ambushed.
+     */
+    public Entry ambush(UUID id, BlockPos where) {
+        thread();
+        return exclusive(id, () -> {
+            var entry = require(id);
+            if (entry.stage() != Stage.IN_TRANSIT || entry.cancellationRequested()
+                    || entry.operations().stream().anyMatch(Operation::pending) || entry.allocatable() < 1)
+                return entry;
+            var receipt = receipt(entry);
+            if (receipt == null || receipt.state() != State.PAID && receipt.state() != State.COMMITTED)
+                return entry;
+            if (receipt.state() == State.PAID)
+                commit(entry);
+            var empty = new net.minecraft.nbt.ListTag();
+            for (int slot = 0; slot < 27; slot++)
+                empty.add(new net.minecraft.nbt.CompoundTag());
+            var image = new net.minecraft.nbt.CompoundTag();
+            image.putInt("format", 1);
+            image.put("state", new net.minecraft.nbt.CompoundTag());
+            image.put("before", empty.copy());
+            image.put("after", empty.copy());
+            var seizure = new Operation(
+                    UUID.nameUUIDFromBytes(("mk-ambush-op|" + id).getBytes(java.nio.charset.StandardCharsets.UTF_8)),
+                    Role.SEIZE,
+                    UUID.nameUUIDFromBytes(("mk-ambush-caravan|" + id).getBytes(java.nio.charset.StandardCharsets.UTF_8)),
+                    where, entry.allocatable(), image, Outcome.APPLIED);
+            return orders.ambush(id, seizure);
+        });
     }
     private Entry credit(Entry entry, Role role) {
         if (role == Role.DELIVER) {
@@ -348,6 +396,15 @@ public final class RoyalShipmentService {
                 throw new Deferred(Blocked.MEMBERSHIP,
                         "Original source identity/ownership no longer permits return; cargo remains held");
             throw changed;
+        }
+        if (destination.virtual()) {
+            var village = PoliticsService.village(level, destination.village());
+            int capacity = com.millenairekingdoms.virtualeconomy.VirtualEconomyService.cargoCapacity(
+                    level, village, intent.product());
+            if (capacity < 1)
+                throw new Deferred(Blocked.FULL,
+                        "Unloaded receiving town hall's virtual storage is full; remaining goods stay held");
+            return allocateVirtual(entry, role, destination, Math.min(capacity, entry.allocatable()));
         }
         var product = new ItemStack(item(intent.product()));
         var slots = destination.slots();
@@ -376,6 +433,8 @@ public final class RoyalShipmentService {
         return settle(require(entry.intent().id()), operation);
     }
     private Entry settle(Entry entry, Operation operation) {
+        if (VirtualShipmentCargo.isVirtual(operation))
+            return settleVirtual(entry, operation);
         try {
             return RoyalCargoContainers.settle(level, orders, entry.intent().id(), operation.id(), persistence, () -> {
                 var current = require(entry.intent().id());
@@ -407,6 +466,55 @@ public final class RoyalShipmentService {
                             Blocked.STOCK, "Original source now needs its reserved goods; new removal waits");
                 view.requireUnchanged();
             });
+        } finally {
+            invalidate(entry.intent().source());
+            invalidate(entry.intent().destination());
+        }
+    }
+    /** Unloaded endpoint: journal a prepared virtual operation first, then apply it to the buffer exactly once. */
+    private Entry allocateVirtual(Entry entry, Role role, RoyalVillageStock view, int amount) {
+        if (amount < 1)
+            throw new Deferred(Blocked.PHYSICAL_PROOF, "Cargo is reserved by an unresolved physical operation");
+        var village = PoliticsService.village(level, view.village());
+        if (village == null)
+            throw new Deferred(Blocked.STORAGE, "Original village/town hall records are unavailable");
+        var operation =
+                VirtualShipmentCargo.prepared(UUID.randomUUID(), role, view.village(), village.getCenter(), amount);
+        view.requireUnchanged();
+        orders.prepare(entry.intent().id(), operation);
+        return settleVirtual(require(entry.intent().id()), operation);
+    }
+    /**
+     * Settles a journaled virtual operation: the ledger of virtual_economy.dat proves whether it already applied, so a
+     * replay after a crash neither repeats nor loses it. An unapplied collection/delivery of a cancelled or no longer
+     * authorized shipment is released instead; returns always complete.
+     */
+    private Entry settleVirtual(Entry entry, Operation operation) {
+        var id = entry.intent().id();
+        try {
+            var current = require(id);
+            var village = VirtualShipmentCargo.village(operation);
+            boolean applied = com.millenairekingdoms.virtualeconomy.VirtualEconomySavedData.get(level).cargoApplied(
+                    operation.id());
+            if (!applied) {
+                if (operation.role() != Role.RETURN
+                        && (current.cancellationRequested() || !political(current.intent()))) {
+                    if (!current.cancellationRequested())
+                        orders.returning(id);
+                    if (require(id).stage() == Stage.RETURNING)
+                        return orders.cancelOperation(id, operation.id());
+                    throw new Deferred(Blocked.AUTHORITY, "Unapplied virtual cargo waits for its cancellation");
+                }
+                int delta = operation.role() == Role.COLLECT ? -operation.quantity() : operation.quantity();
+                var result = com.millenairekingdoms.virtualeconomy.VirtualEconomyService.applyCargo(
+                        level, village, operation.id(), current.intent().product(), delta);
+                if (result == com.millenairekingdoms.virtualeconomy.VirtualEconomyService.Cargo.INSUFFICIENT) {
+                    if (current.stage() == Stage.RETURNING)
+                        return orders.cancelOperation(id, operation.id());
+                    throw new Deferred(Blocked.STOCK, "Unloaded source's virtual stock no longer holds this cargo");
+                }
+            }
+            return orders.acknowledge(id, operation.id());
         } finally {
             invalidate(entry.intent().source());
             invalidate(entry.intent().destination());
@@ -476,7 +584,8 @@ public final class RoyalShipmentService {
         var village = PoliticsService.village(level, endpoint.village());
         if (village == null || village.getTownhall() == null)
             throw new Deferred(Blocked.STORAGE, "Original village/town hall records are unavailable");
-        if (!village.isActive() || !level.isLoaded(village.getCenter()))
+        if (!com.millenairekingdoms.virtualeconomy.VirtualEconomyConfig.shipments()
+                && !RoyalVillageStock.physicallyAvailable(level, village))
             throw new Deferred(Blocked.UNLOADED, "Original village is inactive/unloaded; never force chunks");
         try {
             return returning ? RoyalVillageStock.forReturn(level, intent)

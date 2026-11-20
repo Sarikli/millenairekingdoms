@@ -7,15 +7,15 @@ import net.minecraft.core.BlockPos;
 import org.millenaire.Millenaire;
 import org.millenaire.building.BuildingInventory;
 
-/** Narrow read-only 9.0.3 inventory boundary; never calls the native loadChunks method. */
-final class NativeStockBridge {
-    record Positions(List<BlockPos> chests, List<BlockPos> furnaces, List<BlockPos> firepits) {}
+/** Narrow read-only 9.1.1 inventory boundary; never calls the native loadChunks method. */
+public final class NativeStockBridge {
+    public record Positions(List<BlockPos> chests, List<BlockPos> furnaces, List<BlockPos> firepits) {}
     private record Fields(Field furnaces, Field firepits) {}
     private static final class Pinned {
         static final Fields FIELDS = resolve();
     }
     private NativeStockBridge() {}
-    static Positions positions(BuildingInventory inventory) {
+    public static Positions positions(BuildingInventory inventory) {
         if (inventory.getClass() != BuildingInventory.class)
             throw new IllegalStateException("Unsupported village storage implementation; preserve stock");
         try {
@@ -37,8 +37,8 @@ final class NativeStockBridge {
         return List.copyOf(result);
     }
     private static Fields resolve() {
-        if (!"9.1.0".equals(Millenaire.getModVersion()))
-            throw new IllegalStateException("Royal stock adapter requires the audited original Millenaire 9.1.0");
+        if (!"9.1.1".equals(Millenaire.getModVersion()))
+            throw new IllegalStateException("Royal stock adapter requires the audited original Millenaire 9.1.1");
         try {
             var furnaces = BuildingInventory.class.getDeclaredField("furnacePositions");
             var firepits = BuildingInventory.class.getDeclaredField("firepitPositions");

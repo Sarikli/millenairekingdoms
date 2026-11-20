@@ -73,6 +73,36 @@ public final class RoyalCoinGameTests {
     }
 
     @GameTest(templateNamespace = NS, template = "empty", timeoutTicks = 200)
+    public static void treasuryChangeSpillsIntoAnotherChest(GameTestHelper h) {
+        // Chest 1: one gold coin and goods in every other slot. Chest 2: goods and some free slots.
+        var slots = new ArrayList<ItemStack>();
+        slots.add(new ItemStack(ModItems.DENIER_OR.get()));
+        for (int i = 1; i < 27; i++)
+            slots.add(new ItemStack(Items.DIRT, 64));
+        for (int i = 0; i < 27; i++)
+            slots.add(i < 20 ? new ItemStack(Items.STONE, 64) : ItemStack.EMPTY);
+        var plan = RoyalCoinPlan.debitSeparate(slots, 27, 6);
+        var after = plan.after();
+        h.assertTrue(plan.afterValue() == 4090 && RoyalCoinPlan.spendableValue(after) == 4090, "Exactly 6 paid");
+        h.assertTrue(RoyalCoinPlan.spendableValue(after.subList(0, 27)) == 0
+                        && RoyalCoinPlan.spendableValue(after.subList(27, 54)) == 4090,
+                "The gold leaves the full chest and its change goes into the second chest");
+        for (int i = 1; i < 27; i++)
+            h.assertTrue(ItemStack.matches(slots.get(i), after.get(i)), "Goods in the first chest stay");
+        for (int i = 27; i < 47; i++)
+            h.assertTrue(ItemStack.matches(slots.get(i), after.get(i)), "Goods in the second chest stay");
+        h.assertTrue(RoyalCoinPlan.spendableValue(slots) == 4096, "Planning does not mutate stock");
+
+        // Every chest full: nothing can hold the change, so nothing is taken.
+        var full = new ArrayList<ItemStack>(slots.subList(0, 27));
+        for (int i = 0; i < 27; i++)
+            full.add(new ItemStack(Items.STONE, 64));
+        rejected(h, () -> RoyalCoinPlan.debitSeparate(full, 27, 6));
+        h.assertTrue(RoyalCoinPlan.spendableValue(full) == 4096, "No partial debit when no chest has room");
+        h.succeed();
+    }
+
+    @GameTest(templateNamespace = NS, template = "empty", timeoutTicks = 200)
     public static void refundPlanUsesRealDenominationsAndRejectsFullStorage(GameTestHelper h) {
         var slots = List.of(new ItemStack(ModItems.DENIER.get(), 64));
         var plan = RoyalCoinPlan.credit(slots, 64);

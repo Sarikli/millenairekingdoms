@@ -98,9 +98,10 @@ public final class RoyalRequestGameTests {
                     "Existing natural pending work is untouched and not charged");
             f.village().setPendingProject(null);
             f.village().setActive(false);
-            refused(h, () -> service.requestNpc(f.kingdom(), f.village().getId().uuid(), choice.planSet(), id));
-            h.assertTrue(store(f.level()).load(id) == null && funds(f) == 128,
-                    "Inactive village cannot be made active or charged by a royal request");
+            var inactiveOrder = service.requestNpc(f.kingdom(), f.village().getId().uuid(), choice.planSet(), id);
+            h.assertTrue(inactiveOrder.stage() == Stage.QUEUED && funds(f) == 96
+                            && f.village().getPendingProject() != null,
+                    "Inactive village accepts royal order immediately and places pending project in front of village");
             h.succeed();
         } finally {
             VillageSavedData.get(h.getLevel()).setDirty();

@@ -49,10 +49,28 @@ public final class RoyalVillageStock {
     private final BuildingInventory inventory;
     private final NativeStockBridge.Positions declared;
     private final List<Chest> chests;
+    private final List<BlockPos> absentChests;
     private final List<ItemStack> slots;
+    /** Unloaded endpoint: royal cargo moves through the village's virtual Town Hall buffer, never its chunks. */
+    private final boolean virtual;
 
     public static RoyalVillageStock forNpc(ServerLevel level, UUID kingdom, UUID village) {
         return new RoyalVillageStock(level, null, kingdom, village);
+    }
+    /** Shipment quote: an unloaded source is read from its virtual buffer instead of failing. */
+    public static RoyalVillageStock forNpcShipment(ServerLevel level, UUID kingdom, UUID village) {
+        return new RoyalVillageStock(level, null, kingdom, village, null, null, false, true);
+    }
+    /** Shipment quote/GUI for the ruler: an unloaded source is read from its virtual buffer instead of failing. */
+    public static RoyalVillageStock forPlayerShipment(ServerPlayer player, UUID village) {
+        if (!player.serverLevel().getServer().isSameThread())
+            throw new IllegalStateException("Village stock access requires the server thread");
+        return new RoyalVillageStock(player.serverLevel(), player, PoliticsService.ruledKingdom(player).id(), village,
+                null, null, false, true);
+    }
+    /** Physical chests readable without forcing chunks: the village is active and its center chunk is loaded. */
+    public static boolean physicallyAvailable(ServerLevel level, Village village) {
+        return village.isActive() && level.isLoaded(village.getCenter());
     }
     public static RoyalVillageStock forPlayer(ServerPlayer player, UUID village) {
         if (!player.serverLevel().getServer().isSameThread())
@@ -79,13 +97,19 @@ public final class RoyalVillageStock {
                 || !endpoint.equals(intent.source()) && !endpoint.equals(intent.destination()))
             throw new IllegalArgumentException(
                     "Issued stock endpoint does not belong to this original shipment/dimension");
-        return new RoyalVillageStock(level, null, intent.kingdom(), endpoint.village(), intent, endpoint, returning);
+        return new RoyalVillageStock(
+                level, null, intent.kingdom(), endpoint.village(), intent, endpoint, returning, true);
     }
     private RoyalVillageStock(ServerLevel level, ServerPlayer player, UUID kingdom, UUID villageId) {
-        this(level, player, kingdom, villageId, null, null, false);
+        this(level, player, kingdom, villageId, null, null, false, false);
     }
     private RoyalVillageStock(ServerLevel level, ServerPlayer player, UUID kingdom, UUID villageId,
-            RoyalShipmentStore.Intent issued, RoyalShipmentStore.Endpoint endpoint, boolean returning) {
+            RoyalShipmentStore.Intent issued, RoyalShipmentStore.Endpoint endpoint, boolean returning,
+            boolean allowVirtual) {
+        var candidate = PoliticsService.village(level, villageId);
+        this.virtual = allowVirtual && candidate != null
+                && com.millenairekingdoms.virtualeconomy.VirtualEconomyConfig.shipments()
+                && !physicallyAvailable(level, candidate);
         this.level = level;
         this.player = player;
         this.kingdom = kingdom;
@@ -104,15 +128,32 @@ public final class RoyalVillageStock {
         if (inventory == null)
             throw new IllegalStateException("Original townhall stock is unavailable");
         declared = NativeStockBridge.positions(inventory);
-        if (declared.chests().isEmpty() || declared.chests().size() > 128)
+        if (declared.chests().isEmpty() || declared.chests().size() > 512)
             throw new IllegalStateException("Unsupported village chest count");
+        if (virtual) {
+            chests = List.of();
+            absentChests = List.of();
+            slots = List.of();
+            return;
+        }
         guardAuxiliary();
         var physical = new LinkedHashMap<BlockPos, Chest>();
+        var absent = new ArrayList<BlockPos>();
         for (var position : declared.chests()) {
+            // Millenaire declares chest spots from the building plan; a loaded spot can hold no chest (e.g. an empty
+            // slot in a Town Hall layout). Skip loaded non-chest spots instead of failing the whole village's stock.
+            if (level.isLoaded(position) && !isChest(position)) {
+                absent.add(position.immutable());
+                continue;
+            }
             var chest = resolve(position);
             physical.putIfAbsent(position, chest);
             if (chest.state.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
                 var neighbor = position.relative(ChestBlock.getConnectedDirection(chest.state));
+                if (level.isLoaded(neighbor) && !isChest(neighbor)) {
+                    absent.add(neighbor.immutable());
+                    continue;
+                }
                 var other = resolve(neighbor);
                 if (other.state.getBlock() != chest.state.getBlock()
                         || other.state.getValue(ChestBlock.FACING) != chest.state.getValue(ChestBlock.FACING)
@@ -122,9 +163,12 @@ public final class RoyalVillageStock {
                 physical.putIfAbsent(neighbor, other);
             }
         }
-        if (physical.size() > 128)
+        if (physical.isEmpty())
+            throw new IllegalStateException("Missing or unsupported ordinary village chest");
+        if (physical.size() > 512)
             throw new IllegalStateException("Too many physical village chest halves");
         chests = List.copyOf(physical.values());
+        absentChests = List.copyOf(absent);
         slots = readSlots();
     }
 
@@ -139,6 +183,10 @@ public final class RoyalVillageStock {
     public UUID village() {
         return villageId;
     }
+    /** True when this endpoint is unloaded and cargo goes through its virtual Town Hall buffer. */
+    public boolean virtual() {
+        return virtual;
+    }
     public List<BlockPos> positions() {
         return chests.stream().map(Chest::position).toList();
     }
@@ -146,6 +194,21 @@ public final class RoyalVillageStock {
         return slots.stream().map(ItemStack::copy).toList();
     }
     public List<Item> products() {
+        if (virtual) {
+            requireUnchanged();
+            var state = com.millenairekingdoms.virtualeconomy.VirtualEconomySavedData.get(level).state(villageId);
+            if (state == null)
+                return List.of();
+            return state.virtualChest()
+                    .entrySet()
+                    .stream()
+                    .filter(e -> e.getValue() > 0)
+                    .map(e -> BuiltInRegistries.ITEM.getOptional(e.getKey()).orElse(Items.AIR))
+                    .filter(i -> i != Items.AIR && ordinary(new ItemStack(i)))
+                    .distinct()
+                    .sorted(java.util.Comparator.comparing(i -> BuiltInRegistries.ITEM.getKey(i).toString()))
+                    .toList();
+        }
         return slots.stream()
                 .filter(RoyalVillageStock::ordinary)
                 .map(ItemStack::getItem)
@@ -159,6 +222,8 @@ public final class RoyalVillageStock {
      * auxiliary storage has already passed loaded guards. This never reserves/removes/creates materials.
      */
     public java.util.Map<ResourceLocation, Integer> missing(java.util.Map<ResourceLocation, Integer> required) {
+        if (virtual)
+            throw new IllegalStateException("Unloaded village has no readable native project stock");
         requireUnchanged();
         if (required.values().stream().anyMatch(q -> q < 0))
             throw new IllegalArgumentException("Unknown native material quantities");
@@ -196,6 +261,12 @@ public final class RoyalVillageStock {
         if (item == null || item == Items.AIR || !ordinary(new ItemStack(item)))
             throw new IllegalArgumentException("Only ordinary noncurrency goods may be offered as royal cargo");
         requireUnchanged();
+        if (virtual) {
+            // The virtual buffer only ever holds net surplus produced or delivered while unloaded: all of it ships.
+            var id = BuiltInRegistries.ITEM.getKey(item);
+            int count = com.millenairekingdoms.virtualeconomy.VirtualEconomyService.virtualCount(level, villageId, id);
+            return new Availability(id, count, count, 0, 0, 0, 0, 0, count);
+        }
         int physical = 0;
         for (var stack : slots)
             if (ordinary(stack) && stack.is(item))
@@ -258,10 +329,15 @@ public final class RoyalVillageStock {
                 || !Objects.equals(localOwner, current.getOwnerUUID()) || current.getTownhall() != townhall
                 || townhall.getInventory() != inventory || !declared.equals(NativeStockBridge.positions(inventory)))
             throw new IllegalStateException("Village stock mandate, type or storage changed; obtain a new quote");
+        if (virtual)
+            return;
         guardAuxiliary();
         for (var chest : chests)
             if (!level.isLoaded(chest.position) || level.getBlockEntity(chest.position) != chest.entity
                     || !level.getBlockState(chest.position).equals(chest.state))
+                throw new IllegalStateException("Village chest unloaded, replaced or reconnected; obtain a new quote");
+        for (var position : absentChests)
+            if (!level.isLoaded(position) || isChest(position))
                 throw new IllegalStateException("Village chest unloaded, replaced or reconnected; obtain a new quote");
         var actual = readSlots();
         for (int i = 0; i < slots.size(); i++)
@@ -310,7 +386,7 @@ public final class RoyalVillageStock {
         if (player == null && (issued == null || issued.actor() == null && !returning)
                 && (type.playerControlled() || v.getOwnerUUID() != null))
             throw new IllegalArgumentException("NPC stock decisions cannot use player-controlled village storage");
-        if (!v.isActive() || !level.isLoaded(v.getCenter()))
+        if (!virtual && !physicallyAvailable(level, v))
             throw new IllegalStateException("Village is unavailable; never force its chunks for stock");
         return k;
     }
@@ -320,6 +396,11 @@ public final class RoyalVillageStock {
                 if (!level.isLoaded(position))
                     throw new IllegalStateException(
                             "Native auxiliary stock chunk is unavailable; postpone without loading it");
+    }
+    private boolean isChest(BlockPos position) {
+        return level.getBlockState(position).getBlock() instanceof ChestBlock
+                && level.getBlockEntity(position) instanceof ChestBlockEntity chest
+                && chest.getContainerSize() == 27;
     }
     private Chest resolve(BlockPos position) {
         if (!level.isLoaded(position))

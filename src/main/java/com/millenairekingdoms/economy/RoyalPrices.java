@@ -75,6 +75,31 @@ public final class RoyalPrices {
             return false;
         return spendableTreasury >= reserve && cost <= spendableTreasury - reserve;
     }
+    /** Applies a percentage discount (e.g., 25% -> pays 75%, rounded up, minimum 1 denier). */
+    public static long roadDiscountedFee(long cost, int discountPercent) {
+        if (cost <= 0)
+            return cost;
+        int pct = Math.clamp(discountPercent, 0, 90);
+        if (pct == 0)
+            return cost;
+        long keep = 100L - pct;
+        return Math.max(1L, BigDecimal.valueOf(cost)
+                                     .multiply(BigDecimal.valueOf(keep))
+                                     .divide(BigDecimal.valueOf(100L), 0, RoundingMode.CEILING)
+                                     .longValueExact());
+    }
+
+    /** Reduces travel ticks by {@code reductionPercent}% (clamped to >= 1 tick). */
+    public static long roadAcceleratedDuration(long ticks, int reductionPercent) {
+        if (ticks <= 1)
+            return Math.max(1L, ticks);
+        int pct = Math.clamp(reductionPercent, 0, 90);
+        if (pct == 0)
+            return ticks;
+        long keep = 100L - pct;
+        return Math.max(1L, (ticks * keep + 99L) / 100L);
+    }
+
     private static long ceil(long value, long divisor) {
         return value / divisor + (value % divisor == 0 ? 0 : 1);
     }

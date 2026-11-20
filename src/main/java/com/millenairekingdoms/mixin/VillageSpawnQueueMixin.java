@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 /**
- * Millénaire 9.0.2 has no event for natural village creation. This call site in VillageSpawnQueue.trySpawnVillage
+ * Millénaire has no event for natural village creation. This call site in VillageSpawnQueue.trySpawnVillage (used only when SiteHunter is disabled, see {@link SiteHunterMixin})
  * runs only for natural world generation; commands (SpawnVillageCommand, SpawnLoneBuildingCommand), quests, hamlets and
  * player villages (VillageCreationRequestPayload) call spawnVillage elsewhere and are never wrapped. The call itself is
  * unchanged: same arguments, same result.

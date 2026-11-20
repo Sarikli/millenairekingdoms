@@ -97,19 +97,19 @@ public final class RoyalUpgradeGameTests {
                                  .filter(o -> f.target.getId().uuid().equals(o.upgradeBuilding()))
                                  .findFirst()
                                  .orElseThrow();
-            h.assertTrue(choice.targetLevel() == 1 && choice.patronageFee() == 128
+            h.assertTrue(choice.targetLevel() == 1 && choice.patronageFee() == 64
                             && f.catalog().upgrades().stream().noneMatch(
                                     o -> o.upgradeBuilding().equals(f.bank.village().getTownhall().getId().uuid())),
                     "Only the real next level of a non-centre building is offered");
-            h.assertTrue(RoyalPrices.upgrade(RoyalEconomyConfig.current(), 1) == 128
-                            && RoyalPrices.upgrade(RoyalEconomyConfig.current(), 2) == 192
-                            && RoyalPrices.upgrade(RoyalEconomyConfig.current(), 3) == 256,
+            h.assertTrue(RoyalPrices.upgrade(RoyalEconomyConfig.current(), 1) == 64
+                            && RoyalPrices.upgrade(RoyalEconomyConfig.current(), 2) == 96
+                            && RoyalPrices.upgrade(RoyalEconomyConfig.current(), 3) == 128,
                     "Each next level costs one more64 base fee, independent of materials");
             boolean refused = false;
             try {
                 new RoyalConstructionService(f.bank.level())
                         .requestQuotedUpgrade(f.player, f.bank.village().getId().uuid(),
-                                f.bank.village().getTownhall().getId().uuid(), UUID.randomUUID(), 128);
+                                f.bank.village().getTownhall().getId().uuid(), UUID.randomUUID(), 64);
             } catch (IllegalArgumentException expected) {
                 refused = true;
             }
@@ -131,7 +131,7 @@ public final class RoyalUpgradeGameTests {
                             && entry.intent().originalBuildings().contains(f.target.getId().uuid())
                             && pending.isUpgrade() && pending.level() == 1
                             && pending.buildingId().equals(f.target.getId()) && f.target.getLevel() == 0
-                            && f.target.getStatus() == BuildingInstance.Status.COMPLETE && f.bank.value() == 384,
+                            && f.target.getStatus() == BuildingInstance.Status.COMPLETE && f.bank.value() == 448,
                     "Actual GUI offer pays128 once and publishes original upgrade pending without fabricating work");
             h.assertTrue(new RoyalPaymentService(f.bank.level()).inspectPlayer(f.player, entry.intent().id()).state()
                             == RoyalPaymentJournal.State.COMMITTED,
@@ -307,7 +307,7 @@ public final class RoyalUpgradeGameTests {
             service.retryPlayer(player, entry.intent().id());
             h.assertTrue(entry.stage() == RoyalConstructionStore.Stage.RECOVERY_REQUIRED && entry.building() == null
                             && target.getLevel() == 0 && target.getStatus() == BuildingInstance.Status.COMPLETE
-                            && RoyalTreasurySnapshot.forPlayer(player).spendableValue() == 384
+                            && RoyalTreasurySnapshot.forPlayer(player).spendableValue() == 448
                             && new RoyalPaymentService(level).inspectPlayer(player, entry.intent().id()).state()
                                     == RoyalPaymentJournal.State.PAID,
                     "Existing level0 building is not proof of upgrade publication; retain paid128 liability without reissue/refund/adoption");
@@ -330,12 +330,12 @@ public final class RoyalUpgradeGameTests {
         });
         boolean failed = false;
         try {
-            service.requestQuotedUpgrade(f.player, f.bank.village().getId().uuid(), f.target.getId().uuid(), id, 128);
+            service.requestQuotedUpgrade(f.player, f.bank.village().getId().uuid(), f.target.getId().uuid(), id, 64);
         } catch (IllegalStateException expected) {
             failed = true;
         }
         h.assertTrue(failed && f.store().load(id).stage() == RoyalConstructionStore.Stage.QUEUING
-                        && f.bank.value() == 384 && f.target.getLevel() == 0,
+                        && f.bank.value() == 448 && f.target.getLevel() == 0,
                 "Real128 debit/publication interrupted before acknowledgement; target still original level0");
         var tag = new CompoundTag();
         tag.putUUID("village", f.bank.village().getId().uuid());
@@ -366,11 +366,11 @@ public final class RoyalUpgradeGameTests {
                             .resolve("data/millenairekingdoms/royal-construction"));
             var entry = store.load(tag.getUUID("order"));
             h.assertTrue(entry.intent().upgradeBuilding().equals(tag.getUUID("building"))
-                            && entry.intent().targetLevel() == 1 && entry.intent().fee() == 128
+                            && entry.intent().targetLevel() == 1 && entry.intent().fee() == 64
                             && entry.intent().pending().equals(village.getPendingProject()),
                     "Target/level/quote and actual original pending persist without repair");
             new RoyalConstructionService(level).retryPlayer(player, entry.intent().id());
-            h.assertTrue(RoyalTreasurySnapshot.forPlayer(player).spendableValue() == 384
+            h.assertTrue(RoyalTreasurySnapshot.forPlayer(player).spendableValue() == 448
                             && new RoyalPaymentService(level).inspectPlayer(player, entry.intent().id()).state()
                                     == RoyalPaymentJournal.State.COMMITTED,
                     "Reopen/replay does not debit128 again");

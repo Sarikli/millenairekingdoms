@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.state.properties.ChestType;
 import org.millenaire.building.BuildingId;
 import org.millenaire.building.BuildingInstance;
 import org.millenaire.culture.ModCultures;
-import org.millenaire.village.Village;
 
 /**
  * Observe original engine records. Never places blocks, advances tasks, chooses locations, loads chunks or starts
@@ -71,8 +70,15 @@ final class RoyalConstructionMonitor {
                         intent.id(), intent.kingdom(), intent.capital(), intent.actor(), intent.fee());
             com.millenairekingdoms.history.HistoryDomain.finishConstruction(level, intent.id(), false);
         }
-        if (!village.isActive() || !level.isLoaded(village.getCenter()))
+        if (!village.isActive() || !level.isLoaded(village.getCenter())) {
+            if (entry.stage() == Stage.QUEUED && entry.blocked() != Blocked.NO_SPACE
+                    && village.getPendingProject() == null) {
+                village.setPendingProject(intent.pending());
+                village.setNoProjectsLeftUntil(0);
+                org.millenaire.village.VillageSavedData.get(level).setDirty();
+            }
             return blocked(entry, Blocked.UNLOADED);
+        }
         var set = ModCultures.getBuildingPlanSet(intent.planSet());
         var definition = set == null ? null : set.getLevel(intent.variant(), intent.targetLevel());
         if (definition == null || !definition.planId().equals(intent.plan()))

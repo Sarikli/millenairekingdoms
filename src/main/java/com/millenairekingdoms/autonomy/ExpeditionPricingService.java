@@ -3,7 +3,6 @@ package com.millenairekingdoms.autonomy;
 import com.millenairekingdoms.economy.EconomyService;
 import com.millenairekingdoms.economy.RoyalEconomyConfig;
 import com.millenairekingdoms.economy.RoyalPrices;
-import com.millenairekingdoms.economy.RoyalTreasurySnapshot;
 import com.millenairekingdoms.economy.TreasuryService;
 import com.millenairekingdoms.kingdom.KingdomSavedData;
 import com.millenairekingdoms.kingdom.KingdomSavedData.Kingdom;
@@ -60,7 +59,8 @@ public final class ExpeditionPricingService {
             throw new KingdomException("millenairekingdoms.raid.no_strength",
                     "%s has no available raiding strength.", PoliticsService.name(source));
         double distance = RoyalPrices.horizontalDistance(source.getCenter(), target.getCenter());
-        long cost = RoyalPrices.expedition(RoyalEconomyConfig.current(), strength, distance);
+        long cost = applyRoadDiscount(level, data, kingdomId, source.getId().uuid(), target.getId().uuid(),
+                RoyalPrices.expedition(RoyalEconomyConfig.current(), strength, distance));
         long spendable = spendableTreasury(level, data, kingdomId);
         long reserve = npc ? RoyalPrices.npcReserve(EconomyService.dailyIncome(level, data, kingdomId)) : 0L;
         return new Quote(source.getId().uuid(), PoliticsService.name(source), target.getId().uuid(),
@@ -105,7 +105,8 @@ public final class ExpeditionPricingService {
             if (defense > 0 && 10L * s < 13L * defense)
                 continue;
             double dist = RoyalPrices.horizontalDistance(v.getCenter(), target.getCenter());
-            long cost = RoyalPrices.expedition(settings, s, dist);
+            long cost = applyRoadDiscount(
+                    level, data, kingdomId, memberId, target.getId().uuid(), RoyalPrices.expedition(settings, s, dist));
             militaryReady.add(new NpcCandidate(v.getId().uuid(), PoliticsService.name(v), s, dist, cost));
         }
         if (militaryReady.isEmpty())
@@ -157,5 +158,20 @@ public final class ExpeditionPricingService {
         if (defense == 0)
             return 1L;
         return Math.min(10L * strength, 16L * defense);
+    }
+
+    private static long applyRoadDiscount(ServerLevel level, KingdomSavedData data, UUID kingdomId,
+            UUID sourceVillageId, UUID targetVillageId, long baseCost) {
+        var roadCfg = com.millenairekingdoms.roads.RoadConfig.current();
+        if (!roadCfg.enabled() || roadCfg.expeditionFeeDiscountPercent() <= 0)
+            return baseCost;
+        var roads = com.millenairekingdoms.roads.RoadSavedData.get(level);
+        boolean srcConnected = roads.connectedToCapital(data, kingdomId).contains(sourceVillageId);
+        UUID targetOwner = data.owner(targetVillageId);
+        boolean dstConnected =
+                targetOwner != null && roads.connectedToCapital(data, targetOwner).contains(targetVillageId);
+        if (srcConnected || dstConnected)
+            return RoyalPrices.roadDiscountedFee(baseCost, roadCfg.expeditionFeeDiscountPercent());
+        return baseCost;
     }
 }

@@ -10,7 +10,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  * requests.
  */
 public final class KingdomNetwork {
-    public static final String VERSION = "11";
+    public static final String VERSION = "12";
     private KingdomNetwork() {}
 
     public static void register(RegisterPayloadHandlersEvent event) {

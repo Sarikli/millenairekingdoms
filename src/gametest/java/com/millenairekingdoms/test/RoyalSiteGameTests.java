@@ -46,7 +46,7 @@ public final class RoyalSiteGameTests {
                 System.out.println("ROYAL_SITE_RETRY_PROBE stage=" + resumed.stage() + " blocked=" + resumed.blocked()
                         + " pending=" + c.f.village().getPendingProject() + " balance=" + c.f.value());
                 h.assertTrue(resumed.stage() == Stage.QUEUED && resumed.blocked() == Blocked.NONE
-                                && c.pending().equals(c.f.village().getPendingProject()) && c.f.value() == 64,
+                                && c.pending().equals(c.f.village().getPendingProject()) && c.f.value() == 96,
                         "After native cooldown, accepted work retries through an empty original slot without a new fee or forced location");
             });
             h.succeed();
@@ -59,12 +59,12 @@ public final class RoyalSiteGameTests {
             var service = new RoyalConstructionService(c.f.level());
             for (int n = 0; n < 4; n++)
                 service.observe(c.id());
-            h.assertTrue(c.f.village().getPendingProject() == null && c.f.value() == 64,
+            h.assertTrue(c.f.village().getPendingProject() == null && c.f.value() == 96,
                     "Repeated refresh preserves native placement cooldown without charging");
             released(c, () -> {
                 c.f.village().setActive(false);
                 service.observe(c.id());
-                h.assertTrue(c.f.village().getPendingProject() == null && c.f.value() == 64,
+                h.assertTrue(c.f.village().getPendingProject() == null && c.f.value() == 96,
                         "Unavailable village is deferred without forcing activation or spending");
                 c.f.village().setActive(true);
                 service.observe(c.id());
@@ -83,7 +83,7 @@ public final class RoyalSiteGameTests {
             released(c, () -> {
                 var result = new RoyalConstructionService(c.f.level()).observe(c.id());
                 h.assertTrue(result.stage() == Stage.QUEUED && result.blocked() == Blocked.NO_SPACE
-                                && c.f.village().getPendingProject() == natural && c.f.value() == 64,
+                                && c.f.village().getPendingProject() == natural && c.f.value() == 96,
                         "Even an equal-field natural pending object is preserved, never overwritten or adopted as a new retry publication");
             });
             h.succeed();
@@ -98,12 +98,12 @@ public final class RoyalSiteGameTests {
                 var failed = service(c.f.level(), failure(false));
                 refused(h, () -> failed.observe(c.id()));
                 var pending = c.f.village().getPendingProject();
-                h.assertTrue(store(c.f.level()).load(c.id()).stage() == Stage.QUEUING && c.f.value() == 64
+                h.assertTrue(store(c.f.level()).load(c.id()).stage() == Stage.QUEUING && c.f.value() == 96
                                 && pending != null,
                         "Failed domain acknowledgement retains republishing boundary and previously earned fee");
                 var result = new RoyalConstructionService(c.f.level()).observe(c.id());
                 h.assertTrue(result.stage() == Stage.QUEUED && c.f.village().getPendingProject() == pending
-                                && c.f.value() == 64 && receipt(c).state() == RoyalPaymentJournal.State.COMMITTED,
+                                && c.f.value() == 96 && receipt(c).state() == RoyalPaymentJournal.State.COMMITTED,
                         "Same JVM retries exact publication acknowledgement without a new fee");
             });
             h.succeed();
@@ -120,7 +120,7 @@ public final class RoyalSiteGameTests {
                 c.f.village().setPendingProject(natural);
                 var result = new RoyalConstructionService(c.f.level()).observe(c.id());
                 h.assertTrue(result.stage() == Stage.RECOVERY_REQUIRED && c.f.village().getPendingProject() == natural
-                                && c.f.value() == 64 && receipt(c).state() == RoyalPaymentJournal.State.COMMITTED,
+                                && c.f.value() == 96 && receipt(c).state() == RoyalPaymentJournal.State.COMMITTED,
                         "Field equality cannot prove ownership after interrupted site retry; preserve world and earned patronage");
             });
             h.succeed();
@@ -163,7 +163,7 @@ public final class RoyalSiteGameTests {
                             "Actual original growth starts a genuine nonempty task after terrain becomes legal, without assigning a forced site");
                     var result = new RoyalConstructionService(level).observe(c.id());
                     h.assertTrue(result.stage() == Stage.IN_PROGRESS
-                                    && result.building().equals(fresh.getFirst().getId().uuid()) && c.f.value() == 64,
+                                    && result.building().equals(fresh.getFirst().getId().uuid()) && c.f.value() == 96,
                             "Same JVM resumes its real publication by acknowledging the exact native building, without reissuing or charging");
                 } finally {
                     for (var e : original.entrySet())
@@ -185,7 +185,7 @@ public final class RoyalSiteGameTests {
                 data.setActive(c.f.kingdom(), true);
                 var result = new RoyalConstructionService(c.f.level()).observe(c.id());
                 h.assertTrue(result.stage() == Stage.CANCELLING && result.blocked() == Blocked.AUTHORITY
-                                && c.f.village().getPendingProject() == pending && c.f.value() == 64,
+                                && c.f.village().getPendingProject() == pending && c.f.value() == 96,
                         "Permanent mandate retirement wins over same-tick restoration and original retry publication");
             });
             h.succeed();
@@ -202,7 +202,7 @@ public final class RoyalSiteGameTests {
                 h.assertTrue(result.stage() == Stage.QUEUED && result.intent().actor().equals(c.player.getUUID())
                                 && c.pending().equals(c.f.village().getPendingProject())
                                 && new RoyalPaymentService(c.f.level()).inspectPlayer(c.player, c.id()).state()
-                                        == RoyalPaymentJournal.State.COMMITTED&& c.f.value() == 64,
+                                        == RoyalPaymentJournal.State.COMMITTED&& c.f.value() == 96,
                         "Existing player patronage is reused under the same UUID mandate without NPC agency or new spending");
             });
             h.succeed();
@@ -237,13 +237,13 @@ public final class RoyalSiteGameTests {
             h.assertTrue(before.stage() == (interrupted ? Stage.RECOVERY_REQUIRED : Stage.QUEUED)
                             && result.stage() == (interrupted ? Stage.RECOVERY_REQUIRED : Stage.QUEUED)
                             && village.getPendingProject() != null
-                            && RoyalTreasurySnapshot.forNpc(level, tag.getUUID("kingdom")).spendableValue() == 64
+                            && RoyalTreasurySnapshot.forNpc(level, tag.getUUID("kingdom")).spendableValue() == 96
                             && new RoyalPaymentService(level).inspectNpc(tag.getUUID("kingdom"), id).state()
                                     == RoyalPaymentJournal.State.COMMITTED,
                     "Separate JVM retries only known acknowledged site failure; uncertain republishing stays quarantined with original pending and one earned fee");
             village.setActive(false);
             System.out.println("ROYAL_SITE_RESTART_READ_PASS interrupted=" + interrupted + " stage=" + result.stage()
-                    + " balance=64");
+                    + " balance=96");
             h.succeed();
             return;
         }
@@ -313,7 +313,7 @@ public final class RoyalSiteGameTests {
         h.assertTrue(until > f.level().getGameTime() && f.village().getPendingProject() == null
                         && f.village().getBuildings().size() == 1,
                 "Actual original placement rejects invalid terrain, clears pending and creates no commissioned building");
-        h.assertTrue(service.observe(id).blocked() == Blocked.NO_SPACE && f.value() == 64,
+        h.assertTrue(service.observe(id).blocked() == Blocked.NO_SPACE && f.value() == 96,
                 "Native failure is NO_SPACE after the one paid fee");
         return new Case(f, order, until, player);
     }

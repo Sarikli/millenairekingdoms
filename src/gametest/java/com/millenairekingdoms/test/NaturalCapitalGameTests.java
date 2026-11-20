@@ -41,7 +41,6 @@ import org.millenaire.building.BuildingPlanSet;
 import org.millenaire.culture.ModCultures;
 import org.millenaire.culture.VillageType;
 import org.millenaire.entity.MillVillager;
-import org.millenaire.item.ModItems;
 import org.millenaire.village.Village;
 import org.millenaire.village.VillageChunkLoader;
 import org.millenaire.village.VillageId;
@@ -64,6 +63,8 @@ public final class NaturalCapitalGameTests {
      */
     private static final double MIN_MATCH = 0.90;
     private static final int LOAD_RADIUS = 8;
+    /** SiteHunter judges at most 64 sites per tick and tries one per tick; a lone sampled site spawns within a few. */
+    private static final int HUNT_TIMEOUT_TICKS = 400;
     private static final int CHIEF_LOAD_TIMEOUT_TICKS = 600;
 
     private static boolean read() {
@@ -379,6 +380,11 @@ public final class NaturalCapitalGameTests {
             verifyAfterRestart(h, level, file);
             return;
         }
+        // The production path: 9.1.x natural villages come from SiteHunter, so its spawn call must carry the hook.
+        h.assertTrue(org.millenaire.world.SiteHunter.ENABLED
+                        && java.util.Arrays.stream(org.millenaire.world.SiteHunter.class.getDeclaredMethods())
+                                   .anyMatch(m -> m.getName().contains("kingdoms$naturalCapital")),
+                "SiteHunter natural spawns are not wrapped by the capital hook");
         BlockPos spawnPos = level.getSharedSpawnPos();
         h.assertTrue(NaturalCapitals.farFromCapitals(level, KingdomSavedData.get(level), spawnPos, 2700),
                 "Run this suite on a fresh world: another suite left a capital near spawn");
@@ -389,7 +395,7 @@ public final class NaturalCapitalGameTests {
         BlockPos[] pos = {null};
         Set<VillageId>[] before = new Set[1];
         Map<UUID, BlockPos> watched = new HashMap<>();
-        long[] watchFrom = {0}, loadFrom = {0};
+        long[] watchFrom = {0}, loadFrom = {0}, phaseFrom = {0};
         h.onEachTick(() -> {
             int i = step.get(0), phase = step.get(1);
             if (i < CANDIDATES.size()) {
@@ -406,12 +412,24 @@ public final class NaturalCapitalGameTests {
                     before[0] = ids(manager(level));
                     queue.reset(); // Only this candidate: candidates queued before suppression would keep the queue
                                    // busy.
+                    // Millénaire 9.1.x founds natural villages through SiteHunter, which scores a site only from the
+                    // terrain samples it keeps per loaded chunk; reset() dropped them, so sample the loaded area again
+                    // exactly as its chunk-load listener does.
+                    ChunkPos centre = new ChunkPos(pos[0]);
+                    for (int x = -LOAD_RADIUS; x <= LOAD_RADIUS; x++)
+                        for (int z = -LOAD_RADIUS; z <= LOAD_RADIUS; z++)
+                            queue.hunter().onChunkLoad(level, new ChunkPos(centre.x + x, centre.z + z));
                     queue.enqueue(pos[0]);
+                    phaseFrom[0] = level.getGameTime();
                     step.set(1, 2);
                 } else if (phase == 2) {
                     queue.trySpawnNext(level);
-                    if (((Number) queue.getStats().get("mainQueueSize")).intValue() == 0) {
-                        Village v = newVillage(manager(level), before[0], null, pos[0]);
+                    Village v = newVillage(manager(level), before[0], null, pos[0]);
+                    long waited = level.getGameTime() - phaseFrom[0];
+                    if (v != null || waited >= HUNT_TIMEOUT_TICKS) {
+                        if (v == null)
+                            System.out.println("CAPITAL_HUNT " + c.key + " no village after " + waited
+                                    + " ticks: " + queue.hunter().sitesStatus());
                         force(level, pos[0], false);
                         if (v == null) {
                             if (step.get(2) >= 3)

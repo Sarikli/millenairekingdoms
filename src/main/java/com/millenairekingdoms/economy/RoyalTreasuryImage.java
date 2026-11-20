@@ -271,7 +271,9 @@ final class RoyalTreasuryImage {
             long delta = RoyalCoinPlan.spendableValue(chest.after) - RoyalCoinPlan.spendableValue(chest.before);
             if (delta == 0 && changed(chest))
                 throw new IllegalStateException("Payment mutates slots without changing coin value; preserve journal");
-            if (refund ? delta < 0 : delta > 0)
+            // A debit may put its change into another chest of the same treasury (that chest gains value; the
+            // journal still images each chest). A refund only ever adds coins.
+            if (refund && delta < 0)
                 throw new IllegalStateException(
                         "Payment image transfers value between independently saved chests; preserve journal");
         }
@@ -306,9 +308,14 @@ final class RoyalTreasuryImage {
     RoyalCoinPlan.Plan refundPlan(RoyalTreasurySnapshot quote) {
         var before = quote.slots();
         var after = new ArrayList<ItemStack>();
+        // The net paid amount goes back to the chests that lost value. A chest that received change keeps it, so a
+        // refund never takes coins out of any chest.
+        long left = value(false) - value(true);
         int offset = 0;
         for (Chest chest : chests) {
-            long amount = RoyalCoinPlan.spendableValue(chest.before) - RoyalCoinPlan.spendableValue(chest.after);
+            long lost = RoyalCoinPlan.spendableValue(chest.before) - RoyalCoinPlan.spendableValue(chest.after);
+            long amount = Math.max(0L, Math.min(lost, left));
+            left -= amount;
             var current = before.subList(offset, offset + 27);
             after.addAll(amount == 0 ? current : RoyalCoinPlan.credit(current, amount).after());
             offset += 27;

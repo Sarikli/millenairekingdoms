@@ -123,10 +123,17 @@ public final class KingdomSavedData extends SavedData {
      * expiresGameTime is dropped.
      */
     public record RaidOrder(UUID id, UUID kingdom, UUID target, UUID source, UUID warId, UUID issuer,
-            long issuedGameTime, long dueGameTime, long expiresGameTime, long quotedCost, int quotedStrength) {
+            long issuedGameTime, long dueGameTime, long expiresGameTime, long quotedCost, int quotedStrength,
+            boolean autoResolve) {
         public RaidOrder(UUID id, UUID kingdom, UUID target, UUID source, UUID warId, UUID issuer,
                 long issuedGameTime, long dueGameTime, long expiresGameTime) {
-            this(id, kingdom, target, source, warId, issuer, issuedGameTime, dueGameTime, expiresGameTime, 0L, 0);
+            this(id, kingdom, target, source, warId, issuer, issuedGameTime, dueGameTime, expiresGameTime, 0L, 0,
+                    false);
+        }
+        public RaidOrder(UUID id, UUID kingdom, UUID target, UUID source, UUID warId, UUID issuer,
+                long issuedGameTime, long dueGameTime, long expiresGameTime, long quotedCost, int quotedStrength) {
+            this(id, kingdom, target, source, warId, issuer, issuedGameTime, dueGameTime, expiresGameTime, quotedCost,
+                    quotedStrength, false);
         }
         public boolean byNpc() {
             return issuer == null;
@@ -783,6 +790,19 @@ public final class KingdomSavedData extends SavedData {
         orders.remove(orderId);
         publishLedger(state.ledger.withOrders(orders));
         return removed;
+    }
+    public RaidOrder setOrderAutoResolve(UUID orderId, boolean autoResolve) {
+        RaidOrder existing = order(orderId);
+        check(existing != null, "The raid order no longer exists.");
+        if (existing.autoResolve() == autoResolve)
+            return existing;
+        var updated = new RaidOrder(existing.id(), existing.kingdom(), existing.target(), existing.source(),
+                existing.warId(), existing.issuer(), existing.issuedGameTime(), existing.dueGameTime(),
+                existing.expiresGameTime(), existing.quotedCost(), existing.quotedStrength(), autoResolve);
+        var orders = new HashMap<>(state.ledger.orders);
+        orders.put(orderId, updated);
+        publishLedger(state.ledger.withOrders(orders));
+        return updated;
     }
 
     /** ceil(initial * 60%) in integer arithmetic; 0 initial members open the capital immediately. */

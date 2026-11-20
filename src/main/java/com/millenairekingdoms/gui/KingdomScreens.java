@@ -102,10 +102,14 @@ public final class KingdomScreens {
         view.put("rights", rights(player, data, focus, isRuler));
         view.put("construction", RoyalConstructionView.build(player, focus.id()));
         view.put("shipments", RoyalShipmentView.build(player, focus.id()));
+        view.put("roads", RoyalRoadView.build(player, focus.id()));
         if (isRuler) {
             var economy = com.millenairekingdoms.economy.RoyalEconomyConfig.current();
             view.putInt("expeditionOffset", economy.expeditionDistanceOffset());
             view.putInt("expeditionDivisor", economy.expeditionStrengthDivisor());
+            var roadCfg = com.millenairekingdoms.roads.RoadConfig.current();
+            view.putInt("expeditionRoadDiscount",
+                    roadCfg.enabled() ? Math.max(0, roadCfg.expeditionFeeDiscountPercent()) : 0);
             view.putLong("spendableTreasury",
                     com.millenairekingdoms.autonomy.ExpeditionPricingService.spendableTreasury(
                             level, data, focus.id()));
@@ -169,6 +173,10 @@ public final class KingdomScreens {
         e.putString("personality", personality.category().name());
         e.putBoolean("personalityFallback", !personality.specialized());
         ListTag members = new ListTag();
+        var roadCfg = com.millenairekingdoms.roads.RoadConfig.current();
+        java.util.Set<UUID> roadConnected = roadCfg.enabled()
+                ? com.millenairekingdoms.roads.RoadSavedData.get(level).connectedToCapital(data, k.id())
+                : java.util.Set.of();
         data.members(k.id())
                 .stream()
                 .map(id -> PoliticsService.village(level, id))
@@ -181,7 +189,9 @@ public final class KingdomScreens {
                     m.putBoolean("capital", v.getId().uuid().equals(k.capital()));
                     int townhall = EconomyService.centerLevel(v);
                     m.putInt("level", townhall);
-                    m.putLong("income", (long) townhall * EconomyService.DENIERS_PER_LEVEL);
+                    long memberIncome = (long) townhall * EconomyService.DENIERS_PER_LEVEL
+                            + (roadConnected.contains(v.getId().uuid()) ? roadCfg.connectedVillageDailyBonus() : 0L);
+                    m.putLong("income", memberIncome);
                     members.add(m);
                 });
         e.put("members", members);
@@ -275,6 +285,7 @@ public final class KingdomScreens {
                 o.putString("waiting", waiting);
             o.putLong("expiresIn", Math.max(0, order.expiresGameTime() - level.getGameTime()));
             o.putBoolean("npc", order.byNpc());
+            o.putBoolean("autoResolve", order.autoResolve());
             if (order.quotedCost() > 0)
                 o.putLong("quotedCost", order.quotedCost());
             e.put("order", o);
@@ -319,6 +330,8 @@ public final class KingdomScreens {
         }
         ListTag list = new ListTag();
         var settings = AutonomyConfig.current();
+        var roadCfg = com.millenairekingdoms.roads.RoadConfig.current();
+        var roads = com.millenairekingdoms.roads.RoadSavedData.get(level);
         for (Village v : candidates) {
             UUID id = v.getId().uuid();
             CompoundTag e = new CompoundTag();
@@ -327,6 +340,8 @@ public final class KingdomScreens {
             UUID owner = data.owner(id);
             if (owner != null)
                 e.putString("owner", data.kingdom(owner).name());
+            e.putBoolean("roadConnected",
+                    roadCfg.enabled() && owner != null && roads.connectedToCapital(data, owner).contains(id));
             e.putBoolean("capital", data.isCapital(id));
             e.putBoolean("playerVillage", v.getOwnerUUID() != null);
             if (capital != null)
@@ -357,6 +372,10 @@ public final class KingdomScreens {
     }
 
     private static ListTag sources(ServerLevel level, KingdomSavedData data, Kingdom k) {
+        var roadCfg = com.millenairekingdoms.roads.RoadConfig.current();
+        java.util.Set<UUID> roadConnected = roadCfg.enabled()
+                ? com.millenairekingdoms.roads.RoadSavedData.get(level).connectedToCapital(data, k.id())
+                : java.util.Set.of();
         ListTag list = new ListTag();
         data.members(k.id())
                 .stream()
@@ -367,6 +386,7 @@ public final class KingdomScreens {
                     CompoundTag e = new CompoundTag();
                     e.putUUID("id", v.getId().uuid());
                     e.putString("name", PoliticsService.name(v));
+                    e.putBoolean("roadConnected", roadConnected.contains(v.getId().uuid()));
                     e.putInt("raiders", Military.availableRaiders(v));
                     e.putInt("strength", v.getVillageRaidingStrength());
                     e.putBoolean("carries", Military.carriesRaids(v));

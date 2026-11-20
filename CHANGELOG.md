@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.2.4 — 2026-11-20 — By Royal Decree
+
+- **Millénaire 9.1.1 compatibility & natural capital worldgen (`SiteHunterMixin`):**
+  - Pinned to unmodified `millenaire-9.1.1.jar` (`SHA-256: f25350c1ba954f08258a6bd47373f37597a0c7b893e91fc8a85373ffa13df9c4`).
+  - Added `SiteHunterMixin` alongside `VillageSpawnQueueMixin` so Millénaire 9.1.x's primary natural village spawner (`SiteHunter.attempt`) funnels through the natural-capital rule without modifying the dependency JAR.
+- **Royal Roads (`royalRoads`, `data/millenairekingdoms_roads.dat` format 1):**
+  - Rulers can plan, inspect, and cancel kingdom highways connecting member villages through **Rulership → Roads** or `/kingdom road build <villageA> <villageB>`, `/kingdom road cancel`, `/kingdom road status` (OP: `/kingdoms road status <kingdom>`).
+  - Chunk-free memoized A* routing plans across terrain, rivers, and coastal gaps (`maxSegmentDistance = 1200`, `maxDeepOceanBlocks = 120`) without forcing chunks, then applies smooth Catmull-Rom organic curvature and existing-road/bridge reuse (`ExistingRoadIndex`) so highways share approaches smoothly instead of stacking parallel spans.
+  - Physical realization applies cultural road styles, graded slabs, cut-and-fill causeways, non-overlapping milestones, and single/multi-arch river bridges with overlap protection around existing bridge decks and parapets while sparing farms, chests, buildings, and lantern/banner posts.
+  - A live frontier builder NPC spawns only near players (`frontierWorkerRange = 64`), inactive-endpoint road orders complete automatically after `inactiveCompletionTicks = 72000`, and road-connected villages earn `+2` deniers/day while connected Royal Shipments travel `38%` faster and road-connected conquest expeditions receive a `25%` fee discount.
+- **Hybrid Physical Marches & Caravans (`royalMarches`, `data/millenairekingdoms_marches.dat` format 1):**
+  - Continuous road-linked Royal Shipments travel as proximity-materialized caravans (`spawnRange = 88`, `despawnRange = 96`: cultural merchant/trader leader + 1–3 chested pack mules on leads), advancing via background timer when unwatched.
+  - Conquest expeditions of `128` blocks or more march as bannered squads along friendly roads and a chunk-free approach to the target perimeter before launching the native Millénaire raid; unwatched opposing marches clash deterministically via `OpposedDice`, and watched parties fight live on the road.
+  - Wartime ambushes and individual player banditry against foreign or NPC caravans and armies are enabled (while own-kingdom rulers, non-player mobs, and environmental damage remain blocked): caravan leaders retaliate, killing a caravan settles the shipment as `AMBUSHED`, drops the seized cargo and coin purse, deducts reputation (`2048` per caravan kill, `5096` per attacked army by default), notifies the owning ruler naming the attacker, and records single-realm banditry events cleanly in Chronicles.
+- **Chunk-Free Virtual Economy (`virtualEconomy`, `data/millenairekingdoms_virtual_economy.dat` format 1):**
+  - Bounded round-robin background simulation (`intervalTicks = 100`, `maxVillagesPerStep = 8`, `maxCatchUpDays = 14`) tracks unloaded villages' daily `abstracted_production` and `requiredGoods` upkeep in a bounded virtual Town Hall buffer (`maxVirtualSlots = 1728`).
+  - Unloaded projects accumulate background construction credit (`creditDays = 4`, up to `75%` per-block action speed-up via `BuildTaskCreditMixin`) and hand off one-way to native builders on load; Royal Shipments can collect from and deliver to unloaded Town Hall buffers (`shipments = true`), and Town Hall storage lookups handle missing chest blocks safely when villagers lack placed chest containers.
+- **Player-Selectable Conquest Raid Mode:**
+  - Added a Military tab toggle between **By Player** (default: waits at the target for live native combat) and **Automatic** (resolves via `OpposedDice` if the target is unloaded on arrival), stored backward-compatibly on `RaidOrder` (`autoResolve` in political format 7).
+- **Network Protocol & Build Fixes:**
+  - Bumped network protocol to **12** for the new 1.2.4 raid mode and road actions/view state (matching 1.2.4 clients and servers required).
+  - Kept transaction, political format 7, and new format-1 road/march/virtual-economy stores cleanly separated.
+
 ## 1.2.3 — 2026-11-13 — By Royal Decree
 
 - **Millénaire 9.1.0 compatibility:** Built and verified against `millenaire-9.1.0.jar`, adapting `NormalGrowthBridge`, `NativeStockBridge`, and `NaturalCapitalGrowth` to 9.1.0 APIs without modifying the dependency JAR.

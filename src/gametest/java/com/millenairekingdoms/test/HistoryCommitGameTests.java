@@ -199,11 +199,11 @@ public final class HistoryCommitGameTests {
             var recorded = HistoryHooks.store(f.level()).get(HistoryEvent.identity(
                     order.intent().dimension(), HistoryEvent.Kind.CONSTRUCTION_ORDER, id.toString()));
             service.requestNpc(f.kingdom(), f.village().getId().uuid(), option.planSet(), id);
-            h.assertTrue(recorded != null && recorded.outcome().equals("ACCEPTED") && f.value() == 64
+            h.assertTrue(recorded != null && recorded.outcome().equals("ACCEPTED") && f.value() == 96
                             && f.village().getPendingProject() != null
                             && !HistoryHooks.store(f.level()).contains(HistoryEvent.identity(order.intent().dimension(),
                                     HistoryEvent.Kind.CONSTRUCTION_COMPLETE, id.toString())),
-                    "Real64 fee/durable original pending yields one accepted mandate, no fabricated finished building");
+                    "Real 32 fee/durable original pending yields one accepted mandate, no fabricated finished building");
             h.assertTrue(recorded.equals(HistoryHooks.store(f.level()).get(recorded.id())),
                     "Exact retry retains first event time/names/facts");
             service.cancelNpc(f.kingdom(), id);

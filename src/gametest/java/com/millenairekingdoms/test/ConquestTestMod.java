@@ -104,6 +104,9 @@ public final class ConquestTestMod {
             event.register(RoyalNpcBuilderLiveGameTests.class);
             event.register(RoyalIntegrationGameTests.class);
             event.register(RoyalSimulationGameTests.class);
+            event.register(RoadGameTests.class);
+            event.register(MarchGameTests.class);
+            event.register(VirtualEconomyGameTests.class);
         });
         NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOW, false,
                 net.neoforged.neoforge.event.tick.LevelTickEvent.Post.class, event -> {
@@ -139,6 +142,15 @@ public final class ConquestTestMod {
                     Boolean.getBoolean("kingdoms.tests.liveShipments"));
             com.millenairekingdoms.economy.RoyalConsolidationConfig.ENABLED.set(
                     Boolean.getBoolean("kingdoms.tests.liveConsolidation"));
+            // Existing suites verify the established direct native raid launch; the march suite opts in.
+            com.millenairekingdoms.march.MarchConfig.ARMIES.set(Boolean.getBoolean("kingdoms.tests.marches"));
+            // The shared test world's fixture villages are never entity-ticking; the virtual economy suite drives the
+            // service directly, so the scheduled pass must not buffer or hand off projects for other tests' villages.
+            com.millenairekingdoms.virtualeconomy.VirtualEconomyConfig.ENABLED.set(false);
+            // Older suites verify that shipments to/from unloaded villages wait (Blocked.UNLOADED); only the virtual
+            // economy suite opts into virtual cargo.
+            com.millenairekingdoms.virtualeconomy.VirtualEconomyConfig.SHIPMENTS.set(
+                    Boolean.getBoolean("kingdoms.tests.virtualEconomy"));
             System.out.println("KINGDOMS_TESTS: scheduled NPC autonomy=" + AutonomyConfig.current().autonomy()
                     + ", founding disabled for the isolated test world");
             System.out.println("KINGDOMS_TESTS: scheduled existing construction tracking=" + liveConstruction);

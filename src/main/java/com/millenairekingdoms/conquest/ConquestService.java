@@ -73,10 +73,11 @@ public final class ConquestService {
             var type = ModCultures.getVillageType(village.getVillageTypeId());
             require(type != null && !type.loneBuilding(), "Only known, non-lone-building village types are supported.");
             require(village.getTownhall() != null, "Both villages need an existing town hall.");
-            require(level.getChunkSource().hasChunk(village.getCenter().getX() >> 4, village.getCenter().getZ() >> 4)
-                            && level.getWorldBorder().isWithinBounds(village.getCenter()),
-                    "Both village centers must be loaded and inside the world border.");
+            require(level.getWorldBorder().isWithinBounds(village.getCenter()),
+                    "Both village centers must be inside the world border.");
         }
+        require(level.getChunkSource().hasChunk(target.getCenter().getX() >> 4, target.getCenter().getZ() >> 4),
+                "Target village center must be loaded.");
         require(Military.availableRaiders(attacker) > 0,
                 "No living, available raider with positive military strength.");
         if (orderId != null) {

@@ -70,6 +70,15 @@ public final class KingdomCommands {
                         .executes(c -> run(c, p -> reply(p, TreasuryService.describeComponent(p))))
                         .then(Commands.literal("withdraw").then(Commands.argument("deniers", IntegerArgumentType.integer(1)).executes(c -> run(c, p -> reply(p,
                                 com.millenairekingdoms.localization.PublicText.of("Withdrew %s from the capital's town hall storage.", EconomyService.format(TreasuryService.withdraw(p, IntegerArgumentType.getInteger(c, "deniers"))))))))))
+                .then(Commands.literal("road")
+                        .then(Commands.literal("build")
+                                .then(PoliticalArguments.villageArgument("villageA")
+                                        .then(PoliticalArguments.villageArgument("villageB")
+                                                .executes(c -> run(c, p -> roadBuild(p,
+                                                        PoliticalArguments.village(c, "villageA"),
+                                                        PoliticalArguments.village(c, "villageB")))))))
+                        .then(Commands.literal("cancel").executes(c -> run(c, KingdomCommands::roadCancel)))
+                        .then(Commands.literal("status").executes(c -> run(c, KingdomCommands::roadStatus))))
                 .then(Commands.literal("gui").executes(c -> run(c, KingdomScreens::open)))
                 .executes(c -> run(c, KingdomScreens::open)));
     }
@@ -106,6 +115,41 @@ public final class KingdomCommands {
                                         data.wins(r.campaign()), KingdomSavedData.requiredWins(r.campaign()))));
         if (order == null && data.activeConquests(kingdom.id()) == 0)
             reply(p, com.millenairekingdoms.localization.PublicText.of("No conquest raid under way."));
+    }
+
+    private static void roadBuild(ServerPlayer p, java.util.UUID villageA, java.util.UUID villageB) {
+        var seg = com.millenairekingdoms.roads.RoadService.orderPlayerRoad(p, villageA, villageB);
+        reply(p, Component.translatable("millenairekingdoms.commands.road.started", villageName(p, seg.villageA()),
+                villageName(p, seg.villageB()), seg.totalBlocks(), seg.stipendPaid()));
+    }
+
+    private static void roadCancel(ServerPlayer p) {
+        var seg = com.millenairekingdoms.roads.RoadService.cancelPlayerRoad(p);
+        reply(p, Component.translatable("millenairekingdoms.commands.road.cancelled", villageName(p, seg.villageA()),
+                villageName(p, seg.villageB())));
+    }
+
+    private static void roadStatus(ServerPlayer p) {
+        var level = p.serverLevel();
+        var data = KingdomSavedData.get(level);
+        var kingdom = PoliticsService.ruledKingdom(p);
+        var roadData = com.millenairekingdoms.roads.RoadSavedData.get(level);
+        var active = roadData.activeSegment(kingdom.id());
+        if (active != null) {
+            reply(p, Component.translatable("millenairekingdoms.commands.road.status_active",
+                    villageName(p, active.villageA()), villageName(p, active.villageB()),
+                    active.completedBlocks(), active.totalBlocks(),
+                    Component.translatable("millenairekingdoms.gui.roads.status." + active.status().name())));
+        } else {
+            reply(p, Component.translatable("millenairekingdoms.commands.road.status_none"));
+        }
+        var connected = roadData.connectedToCapital(data, kingdom.id());
+        long completedCount = roadData.segmentsForKingdom(kingdom.id())
+                                      .stream()
+                                      .filter(com.millenairekingdoms.roads.RoadSavedData.RoadSegment::isCompleted)
+                                      .count();
+        reply(p, Component.translatable("millenairekingdoms.commands.road.network_summary",
+                connected.size(), completedCount));
     }
     private static String villageName(ServerPlayer p, java.util.UUID id) {
         var v = PoliticsService.village(p.serverLevel(), id);

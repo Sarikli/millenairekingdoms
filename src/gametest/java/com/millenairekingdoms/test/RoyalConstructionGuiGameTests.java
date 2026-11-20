@@ -387,7 +387,7 @@ public final class RoyalConstructionGuiGameTests {
                             + "a".repeat(100));
             KingdomActionPayload.CODEC.encode(buffer, payload);
             h.assertTrue(
-                    KingdomActionPayload.CODEC.decode(buffer).equals(payload) && KingdomNetwork.VERSION.equals("11"),
+                    KingdomActionPayload.CODEC.decode(buffer).equals(payload) && KingdomNetwork.VERSION.equals("12"),
                     "Actual bounded wire codec preserves server offer IDs and longer real registry identifiers");
             boolean rejected = false;
             try {
@@ -549,8 +549,8 @@ public final class RoyalConstructionGuiGameTests {
             var service = new RoyalConstructionService(f.f.level());
             f.f.village().setPendingProject(null);
             f.f.village().setActive(false);
-            h.assertTrue(service.retryPlayer(f.player, id).blocked() == Blocked.UNLOADED && f.f.value() == 0,
-                    "Inactive village defers without a debit");
+            h.assertTrue(service.retryPlayer(f.player, id).blocked() == Blocked.INSUFFICIENT_FUNDS && f.f.value() == 0,
+                    "Inactive village advances without blocking on UNLOADED");
             f.f.village().setActive(true);
             h.assertTrue(service.retryPlayer(f.player, id).blocked() == Blocked.INSUFFICIENT_FUNDS
                             && store(f.f.level()).load(id).stage() == Stage.WAITING
