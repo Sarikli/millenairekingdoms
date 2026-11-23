@@ -1,11 +1,11 @@
 package com.millenairekingdoms.economy;
 
+import com.millenairekingdoms.util.DurableFiles;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.OverlappingFileLockException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
@@ -168,7 +168,7 @@ public final class RoyalPaymentJournal {
             }
             // Validate the same bounded format used on recovery before replacing a previous record.
             NbtIo.readCompressed(temporary, NbtAccounter.create(MAX_NBT_BYTES));
-            Files.move(temporary, file(entry.id), StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+            DurableFiles.move(temporary, file(entry.id), true);
             syncDirectory(directory);
         } finally {
             Files.deleteIfExists(temporary);
@@ -180,9 +180,7 @@ public final class RoyalPaymentJournal {
     }
 
     private static void syncDirectory(Path directory) throws IOException {
-        try (FileChannel parent = FileChannel.open(directory, StandardOpenOption.READ)) {
-            parent.force(true);
-        }
+        DurableFiles.syncDirectory(directory);
     }
 
     @FunctionalInterface

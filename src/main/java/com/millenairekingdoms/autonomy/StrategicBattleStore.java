@@ -2,8 +2,8 @@ package com.millenairekingdoms.autonomy;
 
 import com.millenairekingdoms.history.*;
 import com.millenairekingdoms.kingdom.KingdomSavedData;
+import com.millenairekingdoms.util.DurableFiles;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.nio.file.*;
 import java.util.*;
 import net.minecraft.nbt.*;
@@ -130,7 +130,7 @@ public final class StrategicBattleStore {
             return;
         try {
             Files.createDirectories(target.getParent());
-            Files.move(source, target, StandardCopyOption.ATOMIC_MOVE);
+            DurableFiles.move(source, target, false);
             sync(source.getParent());
             sync(target.getParent());
             sync(directory);
@@ -139,9 +139,7 @@ public final class StrategicBattleStore {
         }
     }
     private static void sync(Path directory) throws IOException {
-        try (var ch = FileChannel.open(directory, StandardOpenOption.READ)) {
-            ch.force(true);
-        }
+        DurableFiles.syncDirectory(directory);
     }
     public static CompoundTag encode(Operation op) {
         var t = new CompoundTag();

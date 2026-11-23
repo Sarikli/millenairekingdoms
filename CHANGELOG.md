@@ -22,6 +22,7 @@
 - **Network Protocol & Build Fixes:**
   - Bumped network protocol to **12** for the new 1.2.4 raid mode and road actions/view state (matching 1.2.4 clients and servers required).
   - Kept transaction, political format 7, and new format-1 road/march/virtual-economy stores cleanly separated.
+  - **Windows filesystem durability hotfix (`DurableFiles`):** Replaced direct POSIX-only `FileChannel.open(dir, READ)` directory fsync calls across all persistent stores with `DurableFiles.syncDirectory(...)` and `DurableFiles.move(...)`, preventing `AccessDeniedException` on Windows hosts and falling back cleanly when `ATOMIC_MOVE` is unsupported.
 
 ## 1.2.3 — 2026-11-13 — By Royal Decree
 

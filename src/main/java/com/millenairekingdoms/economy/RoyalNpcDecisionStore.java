@@ -1,10 +1,10 @@
 package com.millenairekingdoms.economy;
 
+import com.millenairekingdoms.util.DurableFiles;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -207,10 +207,8 @@ public final class RoyalNpcDecisionStore {
                 try (var data = FileChannel.open(temporary, StandardOpenOption.WRITE)) {
                     data.force(true);
                 }
-                Files.move(temporary, file, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
-                try (var dir = FileChannel.open(directory, StandardOpenOption.READ)) {
-                    dir.force(true);
-                }
+                DurableFiles.move(temporary, file, true);
+                DurableFiles.syncDirectory(directory);
             } finally {
                 Files.deleteIfExists(temporary);
             }

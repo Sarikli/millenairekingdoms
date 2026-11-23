@@ -2,8 +2,8 @@ package com.millenairekingdoms.economy;
 
 import com.millenairekingdoms.economy.RoyalPaymentJournal.*;
 import com.millenairekingdoms.kingdom.KingdomSavedData;
+import com.millenairekingdoms.util.DurableFiles;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.nio.file.*;
 import java.util.*;
 import net.minecraft.core.BlockPos;
@@ -262,7 +262,7 @@ public final class RoyalConsolidationService {
             throw new IllegalStateException("Consolidation archive identity collision; preserve both originals");
         try {
             Files.createDirectories(target.getParent());
-            Files.move(source, target, StandardCopyOption.ATOMIC_MOVE);
+            DurableFiles.move(source, target, false);
             sync(directory(level));
             sync(target.getParent());
         } catch (IOException e) {
@@ -287,9 +287,7 @@ public final class RoyalConsolidationService {
                 < before.stream().filter(s -> RoyalCoinPlan.spendableValue(List.of(s)) > 0).count();
     }
     private static void sync(Path dir) throws IOException {
-        try (var ch = FileChannel.open(dir, StandardOpenOption.READ)) {
-            ch.force(true);
-        }
+        DurableFiles.syncDirectory(dir);
     }
     private String dimension() {
         return level.dimension().location().toString();

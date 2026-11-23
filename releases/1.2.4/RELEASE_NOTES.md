@@ -8,5 +8,6 @@ Minecraft 1.21.1 · NeoForge 21.1.259 · Java 21 · Millénaire 9.1.1
 - Enabled wartime ambushes and individual player **banditry** against foreign/NPC caravans and armies (dropping seized cargo and fee coins while penalizing Millénaire reputation, triggering retaliation, and recording attacker-named chronicles; own-kingdom parties, mobs, and environmental damage stay protected).
 - Added player-selectable conquest raid mode (**By Player** default / **Automatic** fallback on the Military tab).
 - Added chunk-free **Virtual Economy** simulation for unloaded villages (`abstracted_production` / `requiredGoods` virtual Town Hall buffer, background construction credit via `BuildTaskCreditMixin`, and unloaded shipment collection/delivery).
+- **Windows durability hotfix:** Centralized directory sync and file replacement through `DurableFiles` (`syncDirectory` skips POSIX-only directory channel fsync on Windows; `move` falls back cleanly when `ATOMIC_MOVE` is unavailable), resolving `AccessDeniedException` when persisting history, treasury, construction, shipment, and strategic battle records on Windows.
 
 Use matching 1.2.4 clients and servers (network protocol 12). Back up your world before upgrading.

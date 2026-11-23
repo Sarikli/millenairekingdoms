@@ -1,11 +1,11 @@
 package com.millenairekingdoms.construction;
 
+import com.millenairekingdoms.util.DurableFiles;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.OverlappingFileLockException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -397,7 +397,7 @@ public final class RoyalConstructionStore {
                     channel.force(true);
                 }
                 NbtIo.readCompressed(temporary, NbtAccounter.create(MAX_BYTES));
-                Files.move(temporary, file, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+                DurableFiles.move(temporary, file, true);
                 sync(directory);
             } finally {
                 Files.deleteIfExists(temporary);
@@ -485,9 +485,7 @@ public final class RoyalConstructionStore {
         return a.dimension.equals(b.dimension) && a.village.equals(b.village);
     }
     private static void sync(Path directory) throws IOException {
-        try (var channel = FileChannel.open(directory, StandardOpenOption.READ)) {
-            channel.force(true);
-        }
+        DurableFiles.syncDirectory(directory);
     }
     private <T> T locked(Function<Map<UUID, Entry>, T> operation) {
         try (var channel = FileChannel.open(

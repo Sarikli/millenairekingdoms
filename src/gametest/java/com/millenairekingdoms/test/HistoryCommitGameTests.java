@@ -5,6 +5,8 @@ import com.millenairekingdoms.economy.*;
 import com.millenairekingdoms.history.*;
 import com.millenairekingdoms.kingdom.KingdomSavedData;
 import com.millenairekingdoms.shipping.*;
+import com.millenairekingdoms.util.DurableFiles;
+import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.file.*;
 import java.util.*;
@@ -274,5 +276,70 @@ public final class HistoryCommitGameTests {
         h.assertTrue(refused && Arrays.equals(bytes, Files.readAllBytes(file)),
                 "A newer Minecraft container remains untouched and cannot prove a history commit");
         h.succeed();
+    }
+
+    @GameTest(templateNamespace = NS, template = "empty", timeoutTicks = 200)
+    public static void durableFilesSyncAndMoveSupportWindowsAndPosix(GameTestHelper h) throws Exception {
+        var dir = HistoryGameTests.directory(h);
+        Files.createDirectories(dir);
+        try {
+            DurableFiles.syncDirectory(dir, false);
+            DurableFiles.syncDirectory(dir, true);
+
+            Path missing = dir.resolve("missing");
+            boolean missingPosixThrew = false;
+            try {
+                DurableFiles.syncDirectory(missing, false);
+            } catch (IOException expected) {
+                missingPosixThrew = true;
+            }
+            boolean missingWinThrew = false;
+            try {
+                DurableFiles.syncDirectory(missing, true);
+            } catch (IOException expected) {
+                missingWinThrew = true;
+            }
+
+            Path regularFile = dir.resolve("regular.dat");
+            Files.write(regularFile, new byte[] {1, 2});
+            boolean fileWinThrew = false;
+            try {
+                DurableFiles.syncDirectory(regularFile, true);
+            } catch (IOException expected) {
+                fileWinThrew = true;
+            }
+            h.assertTrue(missingPosixThrew && missingWinThrew && fileWinThrew,
+                    "Directory sync rejects missing paths and non-directory targets in both modes");
+
+            Path src = dir.resolve("src.tmp");
+            Path dst = dir.resolve("dst.dat");
+            Files.write(src, new byte[] {10, 20, 30});
+            DurableFiles.move(src, dst, false);
+            h.assertTrue(!Files.exists(src) && Arrays.equals(Files.readAllBytes(dst), new byte[] {10, 20, 30}),
+                    "Move creates new destination cleanly");
+
+            Files.write(src, new byte[] {40, 50});
+            boolean nonReplacingThrew = false;
+            try {
+                DurableFiles.move(src, dst, false);
+            } catch (FileAlreadyExistsException expected) {
+                nonReplacingThrew = true;
+            }
+            h.assertTrue(nonReplacingThrew && Arrays.equals(Files.readAllBytes(dst), new byte[] {10, 20, 30}),
+                    "Non-replacing move rejects existing destination without overwriting");
+
+            DurableFiles.move(src, dst, true);
+            h.assertTrue(!Files.exists(src) && Arrays.equals(Files.readAllBytes(dst), new byte[] {40, 50}),
+                    "Replacing move atomically overwrites existing destination");
+            h.succeed();
+        } finally {
+            try (var walk = Files.walk(dir)) {
+                walk.sorted(Comparator.reverseOrder()).forEach(p -> {
+                    try {
+                        Files.deleteIfExists(p);
+                    } catch (IOException ignored) {}
+                });
+            }
+        }
     }
 }

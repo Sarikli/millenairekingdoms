@@ -1,10 +1,10 @@
 package com.millenairekingdoms.history;
 
+import com.millenairekingdoms.util.DurableFiles;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.Set;
 import java.util.UUID;
@@ -49,10 +49,8 @@ public final class HistoryFiles {
             }
             if (!read(temp, maxBytes).equals(tag))
                 throw new IOException("History read-back mismatch");
-            Files.move(temp, file, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
-            try (var ch = FileChannel.open(file.getParent(), StandardOpenOption.READ)) {
-                ch.force(true);
-            }
+            DurableFiles.move(temp, file, true);
+            DurableFiles.syncDirectory(file.getParent());
         } catch (IOException e) {
             throw new IllegalStateException("Cannot acknowledge history write: " + file, e);
         } finally {
