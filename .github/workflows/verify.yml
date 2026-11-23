@@ -43,3 +43,60 @@ jobs:
             build/verification
             build/libs/millenairekingdoms-*.jar
           if-no-files-found: ignore
+  verify-windows:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    env:
+      PYTHONUTF8: "1"
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - shard: core
+            suites: verifyHistory,verifyRoyalEconomy,verifyRoyalRecovery,verifyStrategicMilitary
+          - shard: construction-npc
+            suites: verifyRoyalConstruction,verifyRoyalNpcEconomy
+          - shard: shipments
+            suites: verifyRoyalShipments
+          - shard: consolidation
+            suites: verifyConsolidation
+    steps:
+      - name: Preserve LF line endings on Windows checkout
+        shell: pwsh
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Obtain the pinned native dependency
+        shell: pwsh
+        run: python scripts/setup-millenaire.py
+      - name: Build addon and test sources
+        shell: pwsh
+        run: .\gradlew.bat --no-daemon build compileGametestJava
+      - name: Audit packaged resources and Windows file I/O invariants
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $PSNativeCommandUseErrorActionPreference = $true
+          $releaseVersion = (Get-Content gradle.properties | Where-Object { $_ -match '^mod_version=' } | Select-Object -First 1).Split('=', 2)[1].Trim()
+          python scripts/check-localization.py --jar "build/libs/millenairekingdoms-${releaseVersion}.jar"
+          python scripts/check-project.py --jar "build/libs/millenairekingdoms-${releaseVersion}.jar"
+      - name: Run Windows durable store verification gates
+        shell: pwsh
+        run: python scripts/verify-regression.py --suites ${{ matrix.suites }} -- gradlew.bat --no-daemon
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-verification-${{ matrix.shard }}
+          path: |
+            build/verification
+            build/libs/millenairekingdoms-*.jar
+          if-no-files-found: ignore

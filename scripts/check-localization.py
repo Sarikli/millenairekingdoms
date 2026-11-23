@@ -73,7 +73,7 @@ def main():
             if slots(source) != slots(target):
                 raise ValueError(f"{locale}/{key}: semantic parameter identity/type/multiplicity differs")
 
-    props = dict(re.findall(r'^([a-z_][a-z0-9_]*)=(.*)$', (ROOT / "gradle.properties").read_text(), re.M))
+    props = dict(re.findall(r'^([a-z_][a-z0-9_]*)=(.*)$', (ROOT / "gradle.properties").read_text(encoding="utf-8"), re.M))
     mv = props.get("millenaire_version", "9.1.1")
     original = ROOT / f"millenaire-{mv}.jar"
     if original.exists():
@@ -105,7 +105,7 @@ def main():
     # The English baseline must also cover literal PublicText call sites, not just match its own target key sets.
     source_templates = set()
     for source_file in (ROOT / "src/main/java").rglob("*.java"):
-        for match in re.finditer(r'PublicText\.of\(\s*("(?:\\.|[^"\\])*")', source_file.read_text()):
+        for match in re.finditer(r'PublicText\.of\(\s*("(?:\\.|[^"\\])*")', source_file.read_text(encoding="utf-8")):
             template = json.loads(match[1])
             source_templates.add(template)
             key = "millenairekingdoms.text." + hashlib.sha256(template.encode()).hexdigest()[:16]
@@ -134,7 +134,7 @@ def main():
     }
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
+        args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({key: value for key, value in result.items() if not key.endswith("review_queue")}, ensure_ascii=False, indent=2))
 
 

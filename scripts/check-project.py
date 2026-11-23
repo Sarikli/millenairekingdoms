@@ -12,18 +12,27 @@ ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--jar', type=Path)
 args = parser.parse_args()
-properties = dict(re.findall(r'^([a-z_][a-z0-9_]*)=(.*)$', (ROOT / 'gradle.properties').read_text(), re.M))
+properties = dict(re.findall(r'^([a-z_][a-z0-9_]*)=(.*)$', (ROOT / 'gradle.properties').read_text(encoding='utf-8'), re.M))
 files = list((ROOT / 'src/main/java').rglob('*.java'))
 for source in files:
     text = source.read_text(encoding='utf-8')
     package = re.search(r'^package\s+([\w.]+);', text, re.M)
     if not package or source.parent.relative_to(ROOT / 'src/main/java').as_posix() != package[1].replace('.', '/'):
         raise ValueError('Java package/path mismatch: ' + str(source))
+    rel = source.relative_to(ROOT / 'src/main/java').as_posix()
+    code = re.sub(r'/\*.*?\*/|^\s*//[^\n]*', ' ', text, flags=re.S | re.M)
+    if rel != 'com/millenairekingdoms/util/DurableFiles.java':
+        if re.search(r'(?<![A-Za-z0-9_$])Files\s*\.\s*move\s*\(', code):
+            raise ValueError('Use DurableFiles.move instead of raw Files.move for Windows compatibility: ' + rel)
+        if (rel != 'com/millenairekingdoms/construction/NativeVillageReadback.java'
+                and re.search(r'FileChannel\s*\.\s*open\s*\([^;{}]*StandardOpenOption\s*\.\s*READ\b', code, re.S)):
+            raise ValueError('Use DurableFiles.syncDirectory instead of FileChannel.open(..., READ) for Windows compatibility: ' + rel)
 native = ROOT / ('millenaire-' + properties['millenaire_version'] + '.jar')
 if native.exists() and hashlib.sha256(native.read_bytes()).hexdigest() != properties['millenaire_sha256']:
     raise ValueError('Original native dependency checksum mismatch')
 report = {'production_java_files': len(files), 'java_release': 21,
-          'native_checksum_verified': native.exists(), 'version': properties['mod_version']}
+          'native_checksum_verified': native.exists(), 'version': properties['mod_version'],
+          'windows_file_io_invariants_verified': True}
 if args.jar:
     with zipfile.ZipFile(args.jar) as archive:
         for entry in archive.infolist():
@@ -41,7 +50,7 @@ if args.jar:
                 raise ValueError('Production class is not Java21: ' + name)
         if archive.read('META-INF/LICENSE') != (ROOT / 'LICENSE').read_bytes():
             raise ValueError('Packaged addon license differs from its preserved attribution')
-        metadata = archive.read('META-INF/neoforge.mods.toml').decode()
+        metadata = archive.read('META-INF/neoforge.mods.toml').decode('utf-8')
         if 'version="' + properties['mod_version'] + '"' not in metadata.replace(' ', ''):
             raise ValueError('Packaged mod version differs from checkout')
         report.update(jar_classes=len(classes), license_verified=True, canonical_zip_permissions=True,

@@ -28,7 +28,9 @@ if not 60 <= args.timeout_seconds <= 14400:
 runner = args.runner
 if runner[:1] == ['--']:
     runner = runner[1:]
-runner = runner or ['bash', str(project / 'gradlew')]
+runner = runner or ([str(project / 'gradlew.bat')] if os.name == 'nt' else ['bash', str(project / 'gradlew')])
+if os.name == 'nt' and runner and not Path(runner[0]).is_absolute() and (project / runner[0]).is_file():
+    runner = [str(project / runner[0]), *runner[1:]]
 suites = {'verifyWars': 30, 'verifyConquest': 25, 'verifyStage5': 26, 'verifyCapitals': 5, 'verifyAutonomy': 22, 'verifyGui': 7, 'verifyFounding': 12, 'verifyRoyalEconomy': 50, 'verifyRoyalConstruction': 56, 'verifyRoyalRecovery': 17, 'verifyRoyalSites': 10, 'verifyRoyalLive': 3, 'verifyRoyalGui': 28, 'verifyRoyalGoods': 20, 'verifyRoyalReceipts': 12, 'verifyRoyalShipments': 49, 'verifyRoyalShipmentRuntime': 1, 'verifyRoyalShipmentLive': 1, 'verifyRoyalShipmentGui': 18, 'verifyPersonalities': 9, 'verifyRoyalPolicy': 7, 'verifyRoyalNpcBudget': 13, 'verifyRoyalNpcEconomy': 12, 'verifyRoyalNpcRuntime': 4, 'verifyRoyalNpcLive': 1, 'verifyRoyalNpcBuilders': 1, 'verifyRoyalIntegration': 9, 'verifyHistory': 39, 'verifyHistoryWorld': 1, 'verifyAtlas': 22, 'verifyGeography': 4, 'verifyLocalization': 8, 'verifyRoyalStrategy': 7, 'verifyStrategyRecovery': 3, 'verifyStrategicMilitary': 19, 'verifyStrategicRestart': 2, 'verifyNativeBattle': 1, 'verifyNativeWar': 1, 'verifyConsolidation': 22, 'verifyConsolidationLive': 1, 'verifyEconomicQueue': 11, 'verifyEconomicBackground': 4, 'verifyEconomicNative': 1, 'verifyMaintenance': 1, 'verifyIndependentNative': 1, 'verifyRoads': 17, 'verifyMarches': 9, 'verifyVirtualEconomy': 9}
 if args.suites:
     selected = args.suites.split(',')
@@ -67,10 +69,10 @@ for suite, expected in suites.items():
                 else:
                     process.kill()
                 code = process.wait()
-    text = logfile.read_text()
+    text = logfile.read_text(encoding='utf-8', errors='replace')
     counts = [int(n) for n in re.findall(r'All (\d+) required tests passed', text)]
-    launches = re.findall(r'ISOLATED_TEST suite=\S+ task=(\S+) world=(.+)', text)
-    version = re.search(r'^mod_version=(.+)$', (project / 'gradle.properties').read_text(), re.MULTILINE).group(1)
+    launches = [(task, world.strip()) for task, world in re.findall(r'ISOLATED_TEST suite=\S+ task=(\S+) world=([^\r\n]+)', text)]
+    version = re.search(r'^mod_version=([^\r\n]+)$', (project / 'gradle.properties').read_text(encoding='utf-8'), re.MULTILINE).group(1).strip()
     jar = project / 'build/libs' / ('millenairekingdoms-' + version + '.jar')
     jar_sha256 = hashlib.sha256(jar.read_bytes()).hexdigest() if jar.is_file() else None
     staged_sha256 = []
@@ -82,7 +84,7 @@ for suite, expected in suites.items():
     results.append(dict(suite=suite, exit_code=code, timed_out=timed_out, required_pass_counts=counts,
                         expected_per_pass=expected, launches=launches, jar_sha256=jar_sha256,
                         staged_sha256=staged_sha256, image_matches=image_matches, passed=passed))
-    (output / 'results.json').write_text(json.dumps(results, indent=2))
+    (output / 'results.json').write_text(json.dumps(results, indent=2), encoding='utf-8')
     print(json.dumps(results[-1]), flush=True)
     if not passed:
         print('Required isolated write/reopen gate failed; inspect the retained startup/test failure before continuing.', flush=True)
